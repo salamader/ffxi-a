@@ -1,0 +1,1339 @@
+[1;32m[Status][0m Memory manager initialised: [1;37mlog/DSP.leaks[0m
+[1;37m[Info][0m DarkStar - onetimexi - SVN Revision: [1;37mUnknown[0m.
+[1;32m[Status][0m do_init: begin server initialization...
+[09:01:47][1;37m[Info][0m Console Silent Setting: 0 			 - [1;32m[OK][0m
+[09:01:47][1;32m[Status][0m do_init: map_config is reading 		 - [1;32m[OK][0m
+[09:01:47][1;32m[Status][0m luautils::init:lua initializing... 		 - [1;32m[OK][0m
+[09:01:47][1;32m[Status][0m cmdhandler::init: initializing...		 - [1;32m[OK][0m
+[09:01:47][1;32m[Status][0m do_init: sqlhandle is allocating[09:01:47][1;35m[SQL][0m Access denied for user 'root'@'localhost' (using password: YES)
+[1;32m[Status][0m Memory manager initialised: [1;37mlog/DSP.leaks[0m
+[1;37m[Info][0m DarkStar - onetimexi - SVN Revision: [1;37mUnknown[0m.
+[1;32m[Status][0m do_init: begin server initialization...
+[09:02:07][1;37m[Info][0m Console Silent Setting: 0 			 - [1;32m[OK][0m
+[09:02:07][1;32m[Status][0m do_init: map_config is reading 		 - [1;32m[OK][0m
+[09:02:07][1;32m[Status][0m luautils::init:lua initializing... 		 - [1;32m[OK][0m
+[09:02:07][1;32m[Status][0m cmdhandler::init: initializing...		 - [1;32m[OK][0m
+[09:02:07][1;32m[Status][0m do_init: sqlhandle is allocating[09:02:07][1;35m[SQL][0m Access denied for user 'root'@'localhost' (using password: YES)
+[1;32m[Status][0m Memory manager initialised: [1;37mlog/DSP.leaks[0m
+[1;37m[Info][0m DarkStar - onetimexi - SVN Revision: [1;37mUnknown[0m.
+[1;32m[Status][0m do_init: begin server initialization...
+[09:02:10][1;37m[Info][0m Console Silent Setting: 0 			 - [1;32m[OK][0m
+[09:02:10][1;32m[Status][0m do_init: map_config is reading 		 - [1;32m[OK][0m
+[09:02:10][1;32m[Status][0m luautils::init:lua initializing... 		 - [1;32m[OK][0m
+[09:02:10][1;32m[Status][0m cmdhandler::init: initializing...		 - [1;32m[OK][0m
+[09:02:10][1;32m[Status][0m do_init: sqlhandle is allocating[09:02:10][1;35m[SQL][0m Access denied for user 'root'@'localhost' (using password: YES)
+[1;32m[Status][0m Memory manager initialised: [1;37mlog/DSP.leaks[0m
+[1;37m[Info][0m DarkStar - onetimexi - SVN Revision: [1;37mUnknown[0m.
+[1;32m[Status][0m do_init: begin server initialization...
+[09:03:39][1;37m[Info][0m Console Silent Setting: 0 			 - [1;32m[OK][0m
+[09:03:39][1;32m[Status][0m do_init: map_config is reading 		 - [1;32m[OK][0m
+[09:03:39][1;32m[Status][0m luautils::init:lua initializing... 		 - [1;32m[OK][0m
+[09:03:39][1;32m[Status][0m cmdhandler::init: initializing...		 - [1;32m[OK][0m
+[09:03:39][1;32m[Status][0m do_init: sqlhandle is allocating[09:03:39][1;35m[SQL][0m Access denied for user 'root'@'localhost' (using password: YES)
+[1;32m[Status][0m Memory manager initialised: [1;37mlog/DSP.leaks[0m
+[1;37m[Info][0m DarkStar - onetimexi - SVN Revision: [1;37mUnknown[0m.
+[1;32m[Status][0m do_init: begin server initialization...
+[09:04:46][1;37m[Info][0m Console Silent Setting: 0 			 - [1;32m[OK][0m
+[09:04:46][1;32m[Status][0m do_init: map_config is reading 		 - [1;32m[OK][0m
+[09:04:46][1;32m[Status][0m luautils::init:lua initializing... 		 - [1;32m[OK][0m
+[09:04:46][1;32m[Status][0m cmdhandler::init: initializing...		 - [1;32m[OK][0m
+[09:04:46][1;32m[Status][0m do_init: sqlhandle is allocating 		 - [1;32m[OK][0m
+[09:04:47][1;32m[Status][0m do_init: zlib is reading 			 - [1;32m[OK][0m
+[09:04:47][1;32m[Status][0m do_init: loading items 			 - [1;32m[OK][0m
+[09:04:48][1;32m[Status][0m do_init: loading spells 			 - [1;32m[OK][0m
+[09:04:48][1;32m[Status][0m do_init: loading zones[09:06:10][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m 			 - [1;32m[OK][0m
+[09:06:12][1;32m[Status][0m do_init: server is binding with port 54230 	 - [1;32m[OK][0m
+[09:06:12][1;32m[Status][0m The map-server is [1;32mready[0m to work...
+ =======================================================================
+[09:06:12][1;36m[Debug][0m [1;36m[Lua] Garbage Collected. Current State Top: 0
+[0m[09:07:02][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.8[0m:[1;37m54090[0m is coming to world...
+[09:07:02][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 0
+[09:07:02][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 1
+[09:07:02][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 247
+[09:07:02][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[09:07:02][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 2 
+[0m[09:07:02][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Bronystaw
+[09:07:02][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION
+[0m[09:07:02][1;37m[Notice][0m [1;31mELSE MY DESTINATION 0
+[0m[09:07:02][1;37m[Notice][0m [1;31mTRACER: WE ARE NEW CHARATER FIRST TIME LOGIN CharId 1 Status=0
+[0m[09:07:02][1;37m[Notice][0m [1;31mTRACER: getNation 0
+[0m[09:07:02][1;37m[Notice][0m [1;31mTRACER: SANDY 0
+[0m[09:07:02][1;37m[Notice][0m [1;31mTRACER: SANDY GETZONE 0
+[0m[09:07:02][1;37m[Notice][0m [1;31mWE ARE AT FIRST LOGIN IN EVENT 1
+[0m[09:07:02][1;37m[Notice][0m [1;31mEVENT == 1
+[0m[09:07:02][1;37m[Notice][0m [1;31mEVENT NUMBER == 503
+[0m[09:07:02][1;36m[Debug][0m [1;36mGET ZONE 230 BY CHAR Bronystaw 
+[0m[09:07:02][1;36m[Debug][0m [1;36mGET IN EVENT ID 1 BY CHAR Bronystaw
+[0m[09:07:02][1;36m[Debug][0m [1;36mGET EVENT ID 503 BY CHAR Bronystaw 
+[0m[09:07:02][1;36m[Debug][0m [1;31mPLAYER Bronystaw HOME ZONE 230
+[0m[09:07:02][1;36m[Debug][0m [1;31mPLAYER Bronystaw HOME x -96.000
+[0m[09:07:02][1;36m[Debug][0m [1;31mPLAYER Bronystaw HOME y -1.000
+[0m[09:07:02][1;36m[Debug][0m [1;31mPLAYER Bronystaw HOME z -40.000
+[0m[09:07:02][1;36m[Debug][0m [1;31mPLAYER Bronystaw HOME r 224
+[0m[1;32m[Status][0m Memory manager initialised: [1;37mlog/DSP.leaks[0m
+[1;37m[Info][0m DarkStar - onetimexi - SVN Revision: [1;37mUnknown[0m.
+[1;32m[Status][0m do_init: begin server initialization...
+[09:08:35][1;37m[Info][0m Console Silent Setting: 0 			 - [1;32m[OK][0m
+[09:08:35][1;32m[Status][0m do_init: map_config is reading 		 - [1;32m[OK][0m
+[09:08:35][1;32m[Status][0m luautils::init:lua initializing... 		 - [1;32m[OK][0m
+[09:08:35][1;32m[Status][0m cmdhandler::init: initializing...		 - [1;32m[OK][0m
+[09:08:35][1;32m[Status][0m do_init: sqlhandle is allocating 		 - [1;32m[OK][0m
+[09:08:35][1;32m[Status][0m do_init: zlib is reading 			 - [1;32m[OK][0m
+[09:08:35][1;32m[Status][0m do_init: loading items 			 - [1;32m[OK][0m
+[09:08:36][1;32m[Status][0m do_init: loading spells 			 - [1;32m[OK][0m
+[09:08:37][1;32m[Status][0m do_init: loading zones[09:09:54][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m 			 - [1;32m[OK][0m
+[09:09:55][1;32m[Status][0m do_init: server is binding with port 54230 	 - [1;32m[OK][0m
+[09:09:55][1;32m[Status][0m The map-server is [1;32mready[0m to work...
+ =======================================================================
+[09:09:55][1;36m[Debug][0m [1;36m[Lua] Garbage Collected. Current State Top: 0
+[0m[09:11:58][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.8[0m:[1;37m54090[0m is coming to world...
+[09:11:58][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 0
+[09:11:58][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 1
+[09:11:58][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 247
+[09:11:58][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[09:11:58][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 2 
+[0m[09:11:58][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Botewolf
+[09:11:58][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION
+[0m[09:11:58][1;37m[Notice][0m [1;31mELSE MY DESTINATION 0
+[0m[09:11:58][1;37m[Notice][0m [1;31mTRACER: WE ARE NEW CHARATER FIRST TIME LOGIN CharId 1 Status=0
+[0m[09:11:58][1;37m[Notice][0m [1;31mTRACER: getNation 0
+[0m[09:11:58][1;37m[Notice][0m [1;31mTRACER: SANDY 0
+[0m[09:11:58][1;37m[Notice][0m [1;31mTRACER: SANDY GETZONE 0
+[0m[09:11:58][1;37m[Notice][0m [1;31mWE ARE AT FIRST LOGIN IN EVENT 1
+[0m[09:11:58][1;37m[Notice][0m [1;31mEVENT == 1
+[0m[09:11:58][1;37m[Notice][0m [1;31mEVENT NUMBER == 503
+[0m[09:11:58][1;36m[Debug][0m [1;36mGET ZONE 230 BY CHAR Botewolf 
+[0m[09:11:58][1;36m[Debug][0m [1;36mGET IN EVENT ID 1 BY CHAR Botewolf
+[0m[09:11:58][1;36m[Debug][0m [1;36mGET EVENT ID 503 BY CHAR Botewolf 
+[0m[09:11:58][1;36m[Debug][0m [1;31mPLAYER Botewolf HOME ZONE 230
+[0m[09:11:58][1;36m[Debug][0m [1;31mPLAYER Botewolf HOME x -96.000
+[0m[09:11:58][1;36m[Debug][0m [1;31mPLAYER Botewolf HOME y -1.000
+[0m[09:11:58][1;36m[Debug][0m [1;31mPLAYER Botewolf HOME z -40.000
+[0m[09:11:58][1;36m[Debug][0m [1;31mPLAYER Botewolf HOME r 224
+[0m[09:11:58][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Botewolf
+[09:12:00][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Botewolf
+[09:12:00][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Botewolf
+[09:12:00][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Botewolf
+[09:12:00][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Botewolf
+[09:12:00][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Botewolf
+[09:12:00][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Botewolf
+[09:12:10][1;37m[Info][0m parse: 016 | 0017 0016 04 from user: Botewolf
+[09:12:10][1;37m[Info][0m parse: 01A | 0017 0016 08 from user: Botewolf
+[09:12:10][1;36m[Debug][0m [1;36mCLIENT Botewolf PERFORMING ACTION 14
+[0m[09:12:10][1;37m[Info][0m parse: 016 | 0018 0017 04 from user: Botewolf
+[09:12:10][1;37m[Info][0m parse: 016 | 0019 0018 04 from user: Botewolf
+[09:12:11][1;37m[Info][0m parse: 016 | 001A 0019 04 from user: Botewolf
+[09:12:11][1;37m[Info][0m parse: 016 | 001B 001A 04 from user: Botewolf
+[09:12:12][1;37m[Info][0m parse: 016 | 001C 001B 04 from user: Botewolf
+[09:12:12][1;37m[Info][0m parse: 016 | 001D 001C 04 from user: Botewolf
+[09:12:12][1;37m[Info][0m parse: 016 | 001E 001D 04 from user: Botewolf
+[09:12:13][1;37m[Info][0m parse: 016 | 001F 001E 04 from user: Botewolf
+[09:12:13][1;37m[Info][0m parse: 016 | 0020 001F 04 from user: Botewolf
+[09:12:14][1;37m[Info][0m parse: 016 | 0021 0020 04 from user: Botewolf
+[09:12:14][1;37m[Info][0m parse: 016 | 0022 0021 04 from user: Botewolf
+[09:12:15][1;37m[Info][0m parse: 016 | 0023 0022 04 from user: Botewolf
+[09:12:15][1;37m[Info][0m parse: 016 | 0024 0023 04 from user: Botewolf
+[09:12:16][1;37m[Info][0m parse: 016 | 0025 0024 04 from user: Botewolf
+[09:12:16][1;37m[Info][0m parse: 016 | 0026 0025 04 from user: Botewolf
+[09:12:16][1;37m[Info][0m parse: 016 | 0027 0026 04 from user: Botewolf
+[09:12:17][1;37m[Info][0m parse: 016 | 0028 0027 04 from user: Botewolf
+[09:12:17][1;37m[Info][0m parse: 016 | 0029 0028 04 from user: Botewolf
+[09:12:18][1;37m[Info][0m parse: 016 | 002A 0029 04 from user: Botewolf
+[09:12:18][1;37m[Info][0m parse: 016 | 002B 002A 04 from user: Botewolf
+[09:12:19][1;37m[Info][0m parse: 016 | 002C 002B 04 from user: Botewolf
+[09:12:19][1;37m[Info][0m parse: 016 | 002D 002C 04 from user: Botewolf
+[09:12:20][1;37m[Info][0m parse: 016 | 002E 002D 04 from user: Botewolf
+[09:12:20][1;37m[Info][0m parse: 016 | 002F 002E 04 from user: Botewolf
+[09:12:21][1;37m[Info][0m parse: 016 | 0030 002F 04 from user: Botewolf
+[09:12:21][1;37m[Info][0m parse: 016 | 0031 0030 04 from user: Botewolf
+[09:12:21][1;37m[Info][0m parse: 016 | 0032 0031 04 from user: Botewolf
+[09:12:22][1;37m[Info][0m parse: 016 | 0033 0032 04 from user: Botewolf
+[09:12:22][1;37m[Info][0m parse: 016 | 0034 0033 04 from user: Botewolf
+[09:14:51][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.15[0m:[1;37m54090[0m is coming to world...
+[09:14:51][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 0
+[09:14:51][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 1
+[09:14:51][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 247
+[09:14:51][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[09:14:51][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 24 
+[0m[09:14:51][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Artic
+[09:14:51][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION
+[0m[09:14:51][1;37m[Notice][0m [1;31mELSE MY DESTINATION 0
+[0m[09:14:51][1;37m[Notice][0m [1;31mTRACER: WE ARE NEW CHARATER FIRST TIME LOGIN CharId 2 Status=0
+[0m[09:14:51][1;37m[Notice][0m [1;31mTRACER: getNation 0
+[0m[09:14:51][1;37m[Notice][0m [1;31mTRACER: SANDY 0
+[0m[09:14:51][1;37m[Notice][0m [1;31mTRACER: SANDY GETZONE 0
+[0m[09:14:51][1;37m[Notice][0m [1;31mWE ARE AT FIRST LOGIN IN EVENT 1
+[0m[09:14:51][1;37m[Notice][0m [1;31mEVENT == 1
+[0m[09:14:51][1;37m[Notice][0m [1;31mEVENT NUMBER == 503
+[0m[09:14:51][1;36m[Debug][0m [1;36mGET ZONE 230 BY CHAR Artic 
+[0m[09:14:51][1;36m[Debug][0m [1;36mGET IN EVENT ID 1 BY CHAR Artic
+[0m[09:14:51][1;36m[Debug][0m [1;36mGET EVENT ID 503 BY CHAR Artic 
+[0m[09:14:51][1;36m[Debug][0m [1;31mPLAYER Artic HOME ZONE 230
+[0m[09:14:51][1;36m[Debug][0m [1;31mPLAYER Artic HOME x -96.000
+[0m[09:14:51][1;36m[Debug][0m [1;31mPLAYER Artic HOME y -1.000
+[0m[09:14:51][1;36m[Debug][0m [1;31mPLAYER Artic HOME z -40.000
+[0m[09:14:51][1;36m[Debug][0m [1;31mPLAYER Artic HOME r 224
+[0m[09:14:51][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Artic
+[09:14:53][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Artic
+[09:14:53][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Artic
+[09:14:53][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Artic
+[09:14:53][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Artic
+[09:14:53][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Artic
+[09:14:53][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Artic
+[09:15:02][1;37m[Info][0m parse: 016 | 0017 0016 04 from user: Artic
+[09:15:02][1;37m[Info][0m parse: 01A | 0017 0016 08 from user: Artic
+[09:15:02][1;36m[Debug][0m [1;36mCLIENT Artic PERFORMING ACTION 14
+[0m[09:15:03][1;37m[Info][0m parse: 016 | 0018 0017 04 from user: Artic
+[09:15:03][1;37m[Info][0m parse: 016 | 0019 0018 04 from user: Artic
+[09:15:03][1;37m[Info][0m parse: 016 | 001A 0019 04 from user: Artic
+[09:15:04][1;37m[Info][0m parse: 016 | 001B 001A 04 from user: Artic
+[09:15:04][1;37m[Info][0m parse: 016 | 001C 001B 04 from user: Artic
+[09:15:05][1;37m[Info][0m parse: 016 | 001D 001C 04 from user: Artic
+[09:15:05][1;37m[Info][0m parse: 016 | 001E 001D 04 from user: Artic
+[09:15:06][1;37m[Info][0m parse: 016 | 001F 001E 04 from user: Artic
+[09:15:06][1;37m[Info][0m parse: 016 | 0020 001F 04 from user: Artic
+[09:15:07][1;37m[Info][0m parse: 016 | 0021 0020 04 from user: Artic
+[09:15:07][1;37m[Info][0m parse: 016 | 0022 0021 04 from user: Artic
+[09:15:08][1;37m[Info][0m parse: 016 | 0023 0022 04 from user: Artic
+[09:15:09][1;37m[Info][0m parse: 016 | 0024 0023 04 from user: Artic
+[09:15:09][1;37m[Info][0m parse: 016 | 0025 0024 04 from user: Artic
+[09:15:10][1;37m[Info][0m parse: 016 | 0026 0025 04 from user: Artic
+[09:15:10][1;37m[Info][0m parse: 016 | 0027 0026 04 from user: Artic
+[09:15:11][1;37m[Info][0m parse: 016 | 0028 0027 04 from user: Artic
+[09:15:11][1;37m[Info][0m parse: 016 | 0029 0028 04 from user: Artic
+[09:15:12][1;37m[Info][0m parse: 016 | 002A 0029 04 from user: Artic
+[09:15:12][1;37m[Info][0m parse: 016 | 002B 002A 04 from user: Artic
+[09:15:13][1;37m[Info][0m parse: 016 | 002C 002B 04 from user: Artic
+[09:15:14][1;37m[Info][0m parse: 016 | 002D 002C 04 from user: Artic
+[09:15:14][1;37m[Info][0m parse: 016 | 002E 002D 04 from user: Artic
+[09:15:15][1;37m[Info][0m parse: 016 | 002F 002E 04 from user: Artic
+[09:15:15][1;37m[Info][0m parse: 016 | 0030 002F 04 from user: Artic
+[09:15:16][1;37m[Info][0m parse: 016 | 0031 0030 04 from user: Artic
+[09:15:17][1;37m[Info][0m parse: 016 | 0032 0031 04 from user: Artic
+[09:15:17][1;37m[Info][0m parse: 016 | 0033 0032 04 from user: Artic
+[09:15:18][1;37m[Info][0m parse: 016 | 0034 0033 04 from user: Artic
+[09:17:24][1;37m[Info][0m parse: 05B | 0296 0295 0A from user: Botewolf
+[09:17:24][1;37m[Info][0m parse: 04B | 0296 0295 0C from user: Botewolf
+[09:17:30][1;37m[Info][0m parse: 016 | 02A3 02A2 04 from user: Botewolf
+[09:17:42][1;37m[Info][0m parse: 01A | 02C0 02BF 08 from user: Botewolf
+[09:17:42][1;36m[Debug][0m [1;36mCLIENT Botewolf PERFORMING ACTION 00
+[0m[09:18:02][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m[09:18:30][1;37m[Info][0m parse: 0F2 | 0333 0331 04 from user: Botewolf
+[09:18:43][1;37m[Info][0m parse: 0F2 | 0352 0350 04 from user: Botewolf
+[09:19:00][1;37m[Info][0m parse: 0F2 | 037A 0378 04 from user: Botewolf
+[09:19:02][1;37m[Info][0m parse: 01A | 037F 037D 08 from user: Botewolf
+[09:19:02][1;36m[Debug][0m [1;36mCLIENT Botewolf PERFORMING ACTION 00
+[0m[09:19:11][1;37m[Info][0m parse: 05B | 0395 0393 0A from user: Botewolf
+[09:19:16][1;37m[Info][0m parse: 01A | 03A0 039E 08 from user: Botewolf
+[09:19:16][1;36m[Debug][0m [1;36mCLIENT Botewolf PERFORMING ACTION 00
+[0m[09:19:19][1;37m[Info][0m parse: 05B | 03A7 03A5 0A from user: Botewolf
+[09:19:24][1;37m[Info][0m parse: 016 | 03B4 03B2 04 from user: Botewolf
+[09:19:52][1;37m[Info][0m parse: 05B | 02BB 02BA 0A from user: Artic
+[09:19:52][1;37m[Info][0m parse: 04B | 02BB 02BA 0C from user: Artic
+[09:19:58][1;37m[Info][0m parse: 016 | 02C8 02C7 04 from user: Artic
+[09:20:06][1;37m[Info][0m parse: 037 | 0416 0414 0A from user: Botewolf
+[09:20:17][1;37m[Info][0m parse: 05E | 0435 0433 0C from user: Botewolf
+[09:20:18][1;37m[Info][0m [1;37mZoning from zone 230 to zone 100: Botewolf
+[0m[09:20:18][1;37m[Info][0m parse: 00D | 0436 0434 04 from user: Botewolf
+[09:20:18][1;36m[Debug][0m [1;36mCZone:: Southern_San_dOria DecreaseZoneCounter <0> Botewolf
+[0m[09:20:21][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Botewolf
+[09:20:21][1;37m[Notice][0m [1;31mMY FIRST ZONING SYAS I AM AT ZONELINE
+[0m[09:20:21][1;37m[Notice][0m [1;31mMY DESTINATION 100
+[0m[09:20:21][1;37m[Notice][0m [1;31mMY DESTINATION IS NORM ZONE 100
+[0m[09:20:21][1;31m[Error][0m [1;31m1 TARGET ID IS 1
+[0m[09:20:21][1;36m[Debug][0m [1;36mCZone:: West_Ronfaure IncreaseZoneCounter <1> Botewolf 
+[0m[09:20:21][1;37m[Notice][0m [1;31mWE ARE A RETURNING PLAYER IN STATUS 2
+[0m[09:20:21][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-552.888611, -59.207588, 473.195862) 
+[09:20:21][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:20:21][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-552.340881, -59.361553, 467.224213) 
+[09:20:21][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:20:21][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-284.632233, -20.003399, -118.562851) 
+[09:20:22][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:20:22][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-283.831604, -10.131645, -358.987183) 
+[09:20:22][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:20:22][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-293.573608, -9.976048, -357.699646) 
+[09:20:22][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:20:22][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-550.521729, 0.296100, -441.814697) 
+[09:20:22][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:20:22][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-552.456299, -3.422316, -421.782684) 
+[09:20:22][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:20:22][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Botewolf
+[09:20:23][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Botewolf
+[09:20:23][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Botewolf
+[09:20:23][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Botewolf
+[09:20:23][1;36m[Debug][0m [1;36mCLIENT Botewolf PERFORMING ACTION 14
+[0m[09:20:23][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Botewolf
+[09:20:23][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Botewolf
+[09:20:23][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Botewolf
+[09:20:23][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Botewolf
+[09:20:28][1;37m[Info][0m parse: 05E | 0310 030F 0C from user: Artic
+[09:20:28][1;37m[Info][0m [1;37mZoning from zone 230 to zone 100: Artic
+[0m[09:20:28][1;37m[Info][0m parse: 00D | 0311 0310 04 from user: Artic
+[09:20:28][1;36m[Debug][0m [1;36mCZone:: Southern_San_dOria DecreaseZoneCounter <0> Artic
+[0m[09:20:31][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Artic
+[09:20:31][1;37m[Notice][0m [1;31mMY FIRST ZONING SYAS I AM AT ZONELINE
+[0m[09:20:31][1;37m[Notice][0m [1;31mMY DESTINATION 100
+[0m[09:20:31][1;37m[Notice][0m [1;31mMY DESTINATION IS NORM ZONE 100
+[0m[09:20:31][1;31m[Error][0m [1;31m2 TARGET ID IS 2
+[0m[09:20:31][1;36m[Debug][0m [1;36mCZone:: West_Ronfaure IncreaseZoneCounter <2> Artic 
+[0m[09:20:31][1;37m[Notice][0m [1;31mWE ARE A RETURNING PLAYER IN STATUS 2
+[0m[09:20:31][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Artic
+[09:20:33][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Artic
+[09:20:33][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Artic
+[09:20:33][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Artic
+[09:20:33][1;36m[Debug][0m [1;36mCLIENT Artic PERFORMING ACTION 14
+[0m[09:20:33][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Artic
+[09:20:33][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Artic
+[09:20:33][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Artic
+[09:20:33][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Artic
+[09:20:35][1;37m[Info][0m parse: 037 | 001C 001B 0A from user: Botewolf
+[09:20:40][1;37m[Info][0m parse: 037 | 0026 0025 0A from user: Botewolf
+[09:20:50][1;37m[Info][0m parse: 037 | 003A 0039 0A from user: Botewolf
+[09:20:51][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-559.471802, -60.317551, 454.912079) 
+[09:20:51][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:20:51][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-558.718140, -59.996296, 474.215027) 
+[09:20:51][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:20:51][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-325.573212, -10.789761, -356.138489) 
+[09:20:51][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:20:51][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-555.641357, -0.024970, -448.879608) 
+[09:20:51][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:20:51][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-557.086731, -7.053531, -412.808655) 
+[09:20:51][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:21:00][1;37m[Info][0m parse: 037 | 004B 004A 0A from user: Botewolf
+[09:21:06][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-285.062836, -20.062101, -116.972961) 
+[09:21:06][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:21:06][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-298.126129, -10.129093, -358.637421) 
+[09:21:06][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:21:08][1;37m[Info][0m parse: 037 | 0057 0056 0A from user: Botewolf
+[09:21:21][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-554.984619, -59.991802, 453.846832) 
+[09:21:21][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:21:21][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-552.672913, -59.886951, 463.855927) 
+[09:21:21][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:21:21][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-286.747467, -10.004406, -358.079376) 
+[09:21:21][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:21:21][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-550.834534, 0.646446, -465.979004) 
+[09:21:21][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:21:21][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-558.019348, -1.796876, -425.525146) 
+[09:21:21][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:21:51][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-559.507813, -60.235100, 464.786865) 
+[09:21:51][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:21:51][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-551.918335, -58.922867, 470.432495) 
+[09:21:51][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:21:51][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-285.853333, -20.004602, -117.092453) 
+[09:21:51][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:21:51][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-279.886749, -10.116034, -358.553772) 
+[09:21:51][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:21:51][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-317.608032, -9.925684, -353.150360) 
+[09:21:51][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:21:51][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-554.287415, 0.284428, -458.817993) 
+[09:21:51][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:21:51][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-552.944336, -1.110906, -429.832092) 
+[09:21:51][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+ [1;33mFLAGS  STATUS = 262144 FOR PCHAR Botewolf
+[0m [1;33mSHUTDOWN STATUS = 1 FOR PCHAR Botewolf
+[0m[09:22:00][1;36m[Debug][0m [1;36mmap_cleanup: Botewolf timed 1377015720
+[0m[09:22:00][1;36m[Debug][0m [1;36mmap_cleanup: Botewolf timed out, closing session
+[0m[09:22:00][1;36m[Debug][0m [1;36mCZone:: West_Ronfaure DecreaseZoneCounter <1> Botewolf
+[0m[09:22:00][1;36m[Debug][0m [1;36mmap_close_session: session closed
+[0m [1;33mFLAGS  STATUS = 262144 FOR PCHAR Artic
+[0m [1;33mSHUTDOWN STATUS = 0 FOR PCHAR Artic
+[0m[09:22:21][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-551.495239, -59.528519, 453.005829) 
+[09:22:21][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:22:21][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-557.366455, -59.611118, 469.776154) 
+[09:22:21][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:22:21][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-312.788971, -10.408648, -352.386292) 
+[09:22:21][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:22:21][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-556.593018, -0.191254, -463.440094) 
+[09:22:21][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:22:21][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-557.304932, -5.203647, -418.191345) 
+[09:22:21][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+ [1;33mSHUTDOWN STATUS = 0 FOR PCHAR Artic
+[0m [1;33mSHUTDOWN CHECKING PLAYER STATUS MAY HAVE KILLED BOOT  = 0 FOR PCHAR Artic
+[0m [1;33mSHUTDOWN STATUS = 1 FOR PCHAR Artic
+[0m[09:22:30][1;36m[Debug][0m [1;36mmap_cleanup: Artic timed 1377015750
+[0m[09:22:30][1;36m[Debug][0m [1;36mmap_cleanup: Artic timed out, closing session
+[0m[09:22:30][1;36m[Debug][0m [1;36mCZone:: West_Ronfaure DecreaseZoneCounter <0> Artic
+[0m[09:22:30][1;36m[Debug][0m [1;36mmap_close_session: session closed
+[0m[09:22:56][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.8[0m:[1;37m54090[0m is coming to world...
+[09:22:56][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 2
+[09:22:56][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 0
+[09:22:56][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 247
+[09:22:56][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[09:22:56][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 2 
+[0m[09:22:56][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Botewolf
+[09:22:56][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A RETURNING PLAYER
+[0m[09:22:56][1;37m[Notice][0m [1;31mMY DESTINATION 100
+[0m[09:22:56][1;37m[Notice][0m [1;31mMY DESTINATION IS NORM ZONE 100
+[0m[09:22:56][1;31m[Error][0m [1;31m1 TARGET ID IS 1
+[0m[09:22:56][1;36m[Debug][0m [1;36mCZone:: West_Ronfaure IncreaseZoneCounter <1> Botewolf 
+[0m[09:22:56][1;37m[Notice][0m [1;31mWE ARE A RETURNING PLAYER IN STATUS 2
+[0m[09:22:56][1;37m[Notice][0m [1;31mRETURNING TO X -137.539
+[0m[09:22:56][1;37m[Notice][0m [1;31mRETURNING TO Y -61.294
+[0m[09:22:56][1;37m[Notice][0m [1;31mRETURNING TO Z 263.783
+[0m[09:22:56][1;37m[Notice][0m [1;31mRETURNING TO R 94
+[0m[09:22:56][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-553.190063, -59.501434, 466.381348) 
+[09:22:56][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:22:56][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-554.014587, -59.421955, 467.735535) 
+[09:22:56][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:22:56][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-286.640930, -19.967588, -116.838776) 
+[09:22:56][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:22:56][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-284.853912, -9.938252, -359.465271) 
+[09:22:56][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:22:56][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-309.142029, -9.957717, -355.911652) 
+[09:22:56][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:22:56][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-556.618530, 0.041106, -478.403748) 
+[09:22:56][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:22:56][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-553.731689, -5.577992, -417.339172) 
+[09:22:56][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:22:56][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Botewolf
+[09:22:58][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Botewolf
+[09:22:58][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Botewolf
+[09:22:58][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Botewolf
+[09:22:58][1;36m[Debug][0m [1;36mCLIENT Botewolf PERFORMING ACTION 14
+[0m[09:22:58][1;37m[Info][0m parse: 04B | 0003 0002 0C from user: Botewolf
+[09:22:58][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Botewolf
+[09:22:58][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Botewolf
+[09:22:58][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Botewolf
+[09:22:58][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Botewolf
+[09:23:03][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.15[0m:[1;37m54090[0m is coming to world...
+[09:23:03][1;31m[Error][0m [1;31mrecv_parse: Cannot load session_key for charid 2[0m[09:23:03][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 2
+[09:23:03][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 0
+[09:23:03][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 247
+[09:23:03][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[09:23:03][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 24 
+[0m[09:23:03][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Artic
+[09:23:03][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A RETURNING PLAYER
+[0m[09:23:03][1;37m[Notice][0m [1;31mMY DESTINATION 100
+[0m[09:23:03][1;37m[Notice][0m [1;31mMY DESTINATION IS NORM ZONE 100
+[0m[1;32m[Status][0m Memory manager initialised: [1;37mlog/DSP.leaks[0m
+[1;37m[Info][0m DarkStar - onetimexi - SVN Revision: [1;37mUnknown[0m.
+[1;32m[Status][0m do_init: begin server initialization...
+[09:24:23][1;37m[Info][0m Console Silent Setting: 0 			 - [1;32m[OK][0m
+[09:24:23][1;32m[Status][0m do_init: map_config is reading 		 - [1;32m[OK][0m
+[09:24:23][1;32m[Status][0m luautils::init:lua initializing... 		 - [1;32m[OK][0m
+[09:24:23][1;32m[Status][0m cmdhandler::init: initializing...		 - [1;32m[OK][0m
+[09:24:23][1;32m[Status][0m do_init: sqlhandle is allocating 		 - [1;32m[OK][0m
+[09:24:23][1;32m[Status][0m do_init: zlib is reading 			 - [1;32m[OK][0m
+[09:24:23][1;32m[Status][0m do_init: loading items 			 - [1;32m[OK][0m
+[09:24:24][1;32m[Status][0m do_init: loading spells 			 - [1;32m[OK][0m
+[09:24:25][1;32m[Status][0m do_init: loading zones[09:25:41][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m 			 - [1;32m[OK][0m
+[09:25:41][1;32m[Status][0m do_init: server is binding with port 54230 	 - [1;32m[OK][0m
+[09:25:41][1;32m[Status][0m The map-server is [1;32mready[0m to work...
+ =======================================================================
+[09:25:41][1;36m[Debug][0m [1;36m[Lua] Garbage Collected. Current State Top: 0
+[0m[09:26:34][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.8[0m:[1;37m54090[0m is coming to world...
+[09:26:34][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 2
+[09:26:34][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 0
+[09:26:34][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 247
+[09:26:34][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[09:26:34][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 2 
+[0m[09:26:34][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Botewolf
+[09:26:34][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A RETURNING PLAYER
+[0m[09:26:34][1;37m[Notice][0m [1;31mMY DESTINATION 100
+[0m[09:26:34][1;37m[Notice][0m [1;31mMY DESTINATION IS NORM ZONE 100
+[0m[09:26:34][1;31m[Error][0m [1;31m1 TARGET ID IS 1
+[0m[09:26:34][1;36m[Debug][0m [1;36mCZone:: West_Ronfaure IncreaseZoneCounter <1> Botewolf 
+[0m[09:26:34][1;37m[Notice][0m [1;31mWE ARE A RETURNING PLAYER IN STATUS 2
+[0m[09:26:34][1;37m[Notice][0m [1;31mRETURNING TO X -137.539
+[0m[09:26:34][1;37m[Notice][0m [1;31mRETURNING TO Y -61.294
+[0m[09:26:34][1;37m[Notice][0m [1;31mRETURNING TO Z 263.783
+[0m[09:26:34][1;37m[Notice][0m [1;31mRETURNING TO R 94
+[0m[09:26:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-553.847717, -60.109001, 456.652191) 
+[09:26:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:26:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-557.519592, -59.899395, 474.181549) 
+[09:26:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:26:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-287.088135, -19.791876, -119.538635) 
+[09:26:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:26:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-286.233887, -9.933189, -358.739166) 
+[09:26:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:26:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-326.646515, -11.130689, -353.003784) 
+[09:26:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:26:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-550.423645, 1.157548, -471.015228) 
+[09:26:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:26:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-558.805969, -8.308846, -409.837677) 
+[09:26:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:26:35][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Botewolf
+[09:26:36][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Botewolf
+[09:26:36][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Botewolf
+[09:26:36][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Botewolf
+[09:26:36][1;36m[Debug][0m [1;36mCLIENT Botewolf PERFORMING ACTION 14
+[0m[09:26:36][1;37m[Info][0m parse: 04B | 0003 0002 0C from user: Botewolf
+[09:26:36][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Botewolf
+[09:26:36][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Botewolf
+[09:26:36][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Botewolf
+[09:26:36][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Botewolf
+[09:26:37][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.15[0m:[1;37m54090[0m is coming to world...
+[09:26:37][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 2
+[09:26:37][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 0
+[09:26:37][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 247
+[09:26:37][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[09:26:37][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 24 
+[0m[09:26:37][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Artic
+[09:26:37][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A RETURNING PLAYER
+[0m[09:26:37][1;37m[Notice][0m [1;31mMY DESTINATION 100
+[0m[09:26:37][1;37m[Notice][0m [1;31mMY DESTINATION IS NORM ZONE 100
+[0m[09:26:37][1;31m[Error][0m [1;31m2 TARGET ID IS 2
+[0m[09:26:37][1;36m[Debug][0m [1;36mCZone:: West_Ronfaure IncreaseZoneCounter <2> Artic 
+[0m[09:26:37][1;37m[Notice][0m [1;31mWE ARE A RETURNING PLAYER IN STATUS 2
+[0m[09:26:37][1;37m[Notice][0m [1;31mRETURNING TO X -141.114
+[0m[09:26:37][1;37m[Notice][0m [1;31mRETURNING TO Y -60.412
+[0m[09:26:37][1;37m[Notice][0m [1;31mRETURNING TO Z 260.303
+[0m[09:26:37][1;37m[Notice][0m [1;31mRETURNING TO R 228
+[0m[09:26:37][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Artic
+[09:26:38][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Artic
+[09:26:38][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Artic
+[09:26:38][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Artic
+[09:26:38][1;36m[Debug][0m [1;36mCLIENT Artic PERFORMING ACTION 14
+[0m[09:26:38][1;37m[Info][0m parse: 04B | 0003 0002 0C from user: Artic
+[09:26:38][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Artic
+[09:26:38][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Artic
+[09:26:38][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Artic
+[09:26:38][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Artic
+[09:26:57][1;37m[Info][0m parse: 037 | 003E 003D 0A from user: Botewolf
+[09:27:02][1;37m[Info][0m parse: 037 | 004F 004E 0A from user: Botewolf
+[09:27:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-550.761658, -59.291538, 465.401367) 
+[09:27:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:27:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-555.178589, -59.774200, 467.032990) 
+[09:27:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:27:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-310.335388, -10.617069, -351.926147) 
+[09:27:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:27:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-557.486816, 0.277390, -452.592102) 
+[09:27:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:27:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-554.273804, -9.681762, -406.027161) 
+[09:27:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:27:19][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-287.239136, -19.815489, -118.925415) 
+[09:27:19][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:27:19][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-287.832336, -9.777151, -358.714355) 
+[09:27:19][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:27:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-551.174744, -58.689507, 469.040039) 
+[09:27:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:27:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-556.985718, -59.564892, 471.368408) 
+[09:27:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:27:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-289.409546, -9.760459, -357.315918) 
+[09:27:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:27:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-557.057190, 0.296100, -449.890472) 
+[09:27:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:27:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-550.888733, -5.272877, -418.207367) 
+[09:27:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:27:37][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m[09:27:46][1;37m[Info][0m parse: 037 | 00DD 00DB 0A from user: Botewolf
+[09:28:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-555.466614, -60.106583, 462.839233) 
+[09:28:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:28:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-556.612549, -59.483501, 470.631500) 
+[09:28:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:28:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-286.653717, -19.920568, -117.688042) 
+[09:28:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:28:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-287.564972, -9.878342, -358.451050) 
+[09:28:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:28:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-299.692322, -10.047928, -355.349731) 
+[09:28:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:28:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-551.822266, 0.680320, -468.949036) 
+[09:28:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:28:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-553.487610, -0.936350, -430.966888) 
+[09:28:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:28:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-553.866882, -59.239632, 468.992432) 
+[09:28:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:28:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-552.722290, -59.647926, 465.600830) 
+[09:28:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:28:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-321.781433, -9.703983, -350.376343) 
+[09:28:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:28:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-554.056030, 0.422993, -475.347931) 
+[09:28:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:28:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-552.372498, -1.920777, -425.388580) 
+[09:28:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:28:49][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-285.328583, -20.075218, -116.416649) 
+[09:28:49][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:28:49][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-300.377106, -9.940139, -358.451508) 
+[09:28:49][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:29:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-559.464478, -60.193474, 463.441132) 
+[09:29:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:29:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-554.314209, -59.967297, 464.317413) 
+[09:29:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:29:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-288.644897, -9.911738, -355.313202) 
+[09:29:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:29:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-558.821289, -0.035978, -480.116150) 
+[09:29:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:29:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-555.367981, -0.066637, -435.790222) 
+[09:29:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:29:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-552.163696, -59.103901, 473.313751) 
+[09:29:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:29:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-559.120789, -59.944595, 460.878113) 
+[09:29:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:29:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-283.359283, -20.208364, -116.304573) 
+[09:29:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:29:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-291.174805, -9.668281, -359.033569) 
+[09:29:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:29:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-301.360718, -9.975789, -358.835358) 
+[09:29:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:29:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-558.341736, 0.245336, -471.289429) 
+[09:29:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:29:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-554.327148, -0.905026, -430.494019) 
+[09:29:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:30:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-559.389526, -59.699448, 470.276520) 
+[09:30:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:30:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-555.278564, -59.726231, 467.524170) 
+[09:30:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:30:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-315.870270, -9.754174, -348.977264) 
+[09:30:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:30:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-550.972534, 0.296100, -440.573517) 
+[09:30:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:30:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-552.501953, -9.308619, -407.581482) 
+[09:30:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:30:19][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-285.285767, -20.052050, -116.893333) 
+[09:30:19][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:30:19][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-291.686066, -9.717066, -359.025879) 
+[09:30:19][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:30:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-556.955933, -60.042477, 465.558502) 
+[09:30:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:30:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-552.063660, -59.781769, 461.334686) 
+[09:30:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:30:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-317.595032, -9.713168, -348.453003) 
+[09:30:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:30:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-551.691589, 0.296100, -445.079254) 
+[09:30:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:30:34][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-559.644653, -1.705029, -426.279327) 
+[09:30:34][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:31:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-551.352966, -59.004353, 476.892090) 
+[09:31:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:31:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-552.820923, -59.200455, 468.177460) 
+[09:31:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:31:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-288.095276, -19.788521, -118.405807) 
+[09:31:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:31:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-287.526550, -9.779228, -359.141174) 
+[09:31:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:31:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-315.286774, -10.207490, -358.230652) 
+[09:31:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:31:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-559.525635, -0.386210, -433.998779) 
+[09:31:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:31:04][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-557.404358, -6.524894, -415.238586) 
+[09:31:04][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[1;32m[Status][0m Memory manager initialised: [1;37mlog/DSP.leaks[0m
+[1;37m[Info][0m DarkStar - onetimexi - SVN Revision: [1;37mUnknown[0m.
+[1;32m[Status][0m do_init: begin server initialization...
+[09:32:39][1;37m[Info][0m Console Silent Setting: 0 			 - [1;32m[OK][0m
+[09:32:39][1;32m[Status][0m do_init: map_config is reading 		 - [1;32m[OK][0m
+[09:32:39][1;32m[Status][0m luautils::init:lua initializing... 		 - [1;32m[OK][0m
+[09:32:39][1;32m[Status][0m cmdhandler::init: initializing...		 - [1;32m[OK][0m
+[09:32:39][1;32m[Status][0m do_init: sqlhandle is allocating 		 - [1;32m[OK][0m
+[09:32:39][1;32m[Status][0m do_init: zlib is reading 			 - [1;32m[OK][0m
+[09:32:39][1;32m[Status][0m do_init: loading items 			 - [1;32m[OK][0m
+[09:32:40][1;32m[Status][0m do_init: loading spells 			 - [1;32m[OK][0m
+[09:32:40][1;32m[Status][0m do_init: loading zones[09:33:53][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m 			 - [1;32m[OK][0m
+[09:33:53][1;32m[Status][0m do_init: server is binding with port 54230 	 - [1;32m[OK][0m
+[09:33:53][1;32m[Status][0m The map-server is [1;32mready[0m to work...
+ =======================================================================
+[09:33:53][1;36m[Debug][0m [1;36m[Lua] Garbage Collected. Current State Top: 0
+[0m[09:34:45][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.8[0m:[1;37m54090[0m is coming to world...
+[09:34:45][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 2
+[09:34:45][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 0
+[09:34:45][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 247
+[09:34:45][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[09:34:45][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 2 
+[0m[09:34:45][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Botewolf
+[09:34:45][1;31m[Error][0m [1;31m1 TARGET ID IS 1
+[0m[09:34:45][1;36m[Debug][0m [1;36mCZone:: West_Ronfaure IncreaseZoneCounter <1> Botewolf 
+[0m[09:34:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-551.606567, -59.808113, 456.527985) 
+[09:34:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:34:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-558.894165, -60.184128, 463.232727) 
+[09:34:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:34:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-284.310760, -20.042870, -118.218529) 
+[09:34:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:34:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-297.598511, -10.171720, -358.643829) 
+[09:34:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:34:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-283.117859, -10.263465, -358.223083) 
+[09:34:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:34:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-554.986755, -0.000312, -462.280273) 
+[09:34:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:34:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-555.759705, -4.161725, -420.397339) 
+[09:34:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:34:45][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Botewolf
+[09:34:47][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Botewolf
+[09:34:47][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Botewolf
+[09:34:47][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Botewolf
+[09:34:47][1;36m[Debug][0m [1;36mCLIENT Botewolf PERFORMING ACTION 14
+[0m[09:34:47][1;37m[Info][0m parse: 04B | 0003 0002 0C from user: Botewolf
+[09:34:47][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Botewolf
+[09:34:47][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Botewolf
+[09:34:47][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Botewolf
+[09:34:47][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Botewolf
+ [1;33mELSE FLAGS  STATUS = 0 FOR PCHAR Botewolf
+[0m[09:34:54][1;37m[Info][0m parse: 037 | 0012 0011 0A from user: Botewolf
+[09:35:12][1;37m[Info][0m parse: 037 | 0047 0046 0A from user: Botewolf
+[09:35:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-557.855713, -60.056412, 465.438507) 
+[09:35:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:35:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-553.701721, -59.891331, 464.339233) 
+[09:35:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:35:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-313.402893, -9.962046, -358.970398) 
+[09:35:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:35:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-559.397461, 0.329214, -450.917389) 
+[09:35:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:35:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-552.025818, -6.687617, -414.970154) 
+[09:35:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:35:15][1;37m[Info][0m parse: 037 | 0051 0050 0A from user: Botewolf
+[09:35:30][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-285.051025, -20.004248, -118.050560) 
+[09:35:30][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:35:30][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-288.014160, -9.738165, -359.373413) 
+[09:35:30][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:35:38][1;37m[Info][0m parse: 037 | 009D 009C 0A from user: Botewolf
+[09:35:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-557.237061, -59.609463, 468.513672) 
+[09:35:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:35:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-556.863342, -59.786812, 473.623169) 
+[09:35:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:35:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-291.026764, -9.782145, -356.509644) 
+[09:35:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:35:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-556.717896, 0.296100, -470.778473) 
+[09:35:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:35:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-556.208679, -6.341034, -415.787720) 
+[09:35:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:36:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-552.904358, -59.047546, 469.587219) 
+[09:36:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:36:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-559.238647, -59.907543, 466.511505) 
+[09:36:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:36:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-284.043365, -19.992748, -119.457085) 
+[09:36:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:36:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-293.378510, -10.036248, -358.539368) 
+[09:36:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:36:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-324.672943, -10.330632, -352.311676) 
+[09:36:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:36:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-558.506470, -0.245339, -475.019531) 
+[09:36:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:36:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-554.253113, -8.163363, -410.085999) 
+[09:36:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:36:40][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.15[0m:[1;37m54090[0m is coming to world...
+[09:36:40][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 0
+[09:36:40][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 1
+[09:36:40][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 247
+[09:36:40][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[09:36:40][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 24 
+[0m[09:36:40][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Erichdietrich
+[09:36:40][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Erichdietrich
+[09:36:42][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Erichdietrich
+[09:36:42][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Erichdietrich
+[09:36:42][1;37m[Info][0m parse: 04B | 0003 0002 0C from user: Erichdietrich
+[09:36:42][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Erichdietrich
+[09:36:42][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Erichdietrich
+[09:36:42][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Erichdietrich
+[09:36:42][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Erichdietrich
+[09:36:42][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Erichdietrich
+[09:36:42][1;36m[Debug][0m [1;36mCLIENT Erichdietrich PERFORMING ACTION 14
+[0m[09:36:42][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Erichdietrich
+[09:36:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-554.727234, -59.870285, 459.612823) 
+[09:36:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:36:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-555.504944, -59.650124, 474.307861) 
+[09:36:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:36:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-327.324036, -11.521809, -355.930969) 
+[09:36:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:36:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-557.284607, -0.106495, -445.378479) 
+[09:36:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:36:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-557.457153, -0.208751, -437.369202) 
+[09:36:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:37:00][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-283.665680, -20.221918, -115.692047) 
+[09:37:00][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:37:00][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-289.821472, -9.640359, -358.918945) 
+[09:37:00][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:37:00][1;37m[Info][0m parse: 05E | 002E 002D 0C from user: Erichdietrich
+[09:37:00][1;37m[Info][0m [1;37mZoning from zone 0 to zone 234: Erichdietrich
+[0m[09:37:00][1;37m[Info][0m parse: 00D | 002F 002E 04 from user: Erichdietrich
+[09:37:00][1;36m[Debug][0m [1;36mCZone:: Residential_Area DecreaseZoneCounter <0> Erichdietrich
+[0m[09:37:02][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Erichdietrich
+[09:37:02][1;31m[Error][0m [1;31m3 TARGET ID IS 1024
+[0m[09:37:02][1;36m[Debug][0m [1;36mCZone:: Bastok_Mines IncreaseZoneCounter <1> Erichdietrich 
+[0m[09:37:02][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Erichdietrich
+[09:37:04][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Erichdietrich
+[09:37:04][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Erichdietrich
+[09:37:04][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Erichdietrich
+[09:37:04][1;36m[Debug][0m [1;36mCLIENT Erichdietrich PERFORMING ACTION 14
+[0m[09:37:04][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Erichdietrich
+[09:37:04][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Erichdietrich
+[09:37:04][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Erichdietrich
+[09:37:04][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Erichdietrich
+[09:37:10][1;37m[Info][0m parse: 037 | 000E 000D 0A from user: Erichdietrich
+[09:37:13][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m[09:37:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-557.415771, -59.612995, 469.711884) 
+[09:37:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:37:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-557.790222, -59.872566, 466.698273) 
+[09:37:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:37:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-285.707825, -9.941911, -358.888458) 
+[09:37:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:37:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-555.653870, -0.093203, -465.557526) 
+[09:37:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:37:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-554.426758, -6.827124, -414.244598) 
+[09:37:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:37:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-551.580383, -59.771374, 457.974365) 
+[09:37:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:37:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-557.874084, -59.905975, 466.467346) 
+[09:37:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:37:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-283.167511, -20.152416, -117.560585) 
+[09:37:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:37:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-297.268219, -10.195740, -358.588318) 
+[09:37:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:37:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-310.990448, -10.437156, -352.899170) 
+[09:37:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:37:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-552.730835, 0.637470, -458.549744) 
+[09:37:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:37:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-551.144897, -3.434425, -421.807495) 
+[09:37:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:38:00][1;37m[Info][0m parse: 05E | 00B3 00B2 0C from user: Erichdietrich
+[09:38:00][1;37m[Info][0m [1;37mZoning from zone 234 to zone 107: Erichdietrich
+[0m[09:38:01][1;37m[Info][0m parse: 00D | 00B4 00B3 04 from user: Erichdietrich
+[09:38:01][1;36m[Debug][0m [1;36mCZone:: Bastok_Mines DecreaseZoneCounter <0> Erichdietrich
+[0m[09:38:03][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Erichdietrich
+[09:38:03][1;31m[Error][0m [1;31m3 TARGET ID IS 1024
+[0m[09:38:03][1;36m[Debug][0m [1;36mCZone:: South_Gustaberg IncreaseZoneCounter <1> Erichdietrich 
+[0m[09:38:03][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Erichdietrich
+[09:38:04][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Erichdietrich
+[09:38:04][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Erichdietrich
+[09:38:04][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Erichdietrich
+[09:38:04][1;36m[Debug][0m [1;36mCLIENT Erichdietrich PERFORMING ACTION 14
+[0m[09:38:04][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Erichdietrich
+[09:38:04][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Erichdietrich
+[09:38:04][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Erichdietrich
+[09:38:04][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Erichdietrich
+[09:38:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-554.351440, -60.170094, 455.512146) 
+[09:38:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:38:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-550.911499, -58.696766, 469.846985) 
+[09:38:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:38:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-292.497223, -10.284638, -351.180542) 
+[09:38:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:38:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-559.037781, 0.296100, -469.768799) 
+[09:38:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:38:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-559.489441, -5.326267, -417.921783) 
+[09:38:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:38:19][1;37m[Info][0m parse: 01A | 0021 0020 08 from user: Erichdietrich
+[09:38:19][1;36m[Debug][0m [1;36mCLIENT Erichdietrich PERFORMING ACTION 03
+[0m[09:38:30][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-283.360657, -20.070648, -118.834724) 
+[09:38:30][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:38:30][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-290.228973, -9.672654, -358.771118) 
+[09:38:30][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:38:38][1;37m[Info][0m parse: 01A | 003A 0039 08 from user: Erichdietrich
+[09:38:38][1;36m[Debug][0m [1;36mCLIENT Erichdietrich PERFORMING ACTION 03
+[0m[09:38:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-558.402466, -60.004089, 465.781555) 
+[09:38:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:38:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-551.615845, -58.819386, 469.742340) 
+[09:38:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:38:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-305.415710, -10.265763, -350.626892) 
+[09:38:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:38:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-554.996460, 0.250217, -451.765442) 
+[09:38:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:38:45][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-559.284241, -9.800467, -405.790039) 
+[09:38:45][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:39:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-551.546997, -58.852440, 470.404053) 
+[09:39:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:39:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-553.099182, -59.081661, 468.815063) 
+[09:39:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:39:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-284.157593, -20.208622, -115.353020) 
+[09:39:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:39:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-287.091675, -9.817547, -358.893005) 
+[09:39:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:39:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-306.115356, -9.960940, -355.131500) 
+[09:39:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:39:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-553.005127, 0.730275, -456.575806) 
+[09:39:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:39:15][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-554.838989, -0.040785, -436.086304) 
+[09:39:15][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+ [1;33mFLAGS  STATUS = 262144 FOR PCHAR Botewolf
+[0m [1;33mSHUTDOWN STATUS = 1 FOR PCHAR Botewolf
+[0m[09:39:43][1;36m[Debug][0m [1;36mmap_cleanup: Botewolf timed 1377016783
+[0m[09:39:43][1;36m[Debug][0m [1;36mmap_cleanup: Botewolf timed out, closing session
+[0m[09:39:43][1;36m[Debug][0m [1;36mCZone:: West_Ronfaure DecreaseZoneCounter <0> Botewolf
+[0m[09:39:46][1;36m[Debug][0m [1;36mmap_close_session: session closed
+[0m[09:40:24][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.8[0m:[1;37m54090[0m is coming to world...
+[09:40:24][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 0
+[09:40:24][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 1
+[09:40:24][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 1
+[09:40:24][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[09:40:24][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 2 
+[0m[09:40:24][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Gilianne
+[09:40:24][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Gilianne
+[09:40:26][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Gilianne
+[09:40:26][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Gilianne
+[09:40:26][1;37m[Info][0m parse: 04B | 0003 0002 0C from user: Gilianne
+[09:40:26][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Gilianne
+[09:40:26][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Gilianne
+[09:40:26][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Gilianne
+[09:40:26][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Gilianne
+[09:40:26][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Gilianne
+[09:40:26][1;36m[Debug][0m [1;36mCLIENT Gilianne PERFORMING ACTION 14
+[0m[09:40:26][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Gilianne
+[09:40:33][1;37m[Info][0m parse: 05E | 0012 0011 0C from user: Gilianne
+[09:40:33][1;37m[Info][0m [1;37mZoning from zone 0 to zone 234: Gilianne
+[0m[09:40:34][1;37m[Info][0m parse: 00D | 0013 0012 04 from user: Gilianne
+[09:40:34][1;36m[Debug][0m [1;36mCZone:: Residential_Area DecreaseZoneCounter <0> Gilianne
+[0m[09:40:37][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Gilianne
+[09:40:37][1;31m[Error][0m [1;31m4 TARGET ID IS 1024
+[0m[09:40:37][1;36m[Debug][0m [1;36mCZone:: Bastok_Mines IncreaseZoneCounter <1> Gilianne 
+[0m[09:40:37][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Gilianne
+[09:40:38][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Gilianne
+[09:40:38][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Gilianne
+[09:40:39][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Gilianne
+[09:40:39][1;36m[Debug][0m [1;36mCLIENT Gilianne PERFORMING ACTION 14
+[0m[09:40:39][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Gilianne
+[09:40:39][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Gilianne
+[09:40:39][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Gilianne
+[09:40:39][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Gilianne
+[09:41:24][1;37m[Info][0m parse: 05E | 0078 0075 0C from user: Gilianne
+[09:41:24][1;37m[Info][0m [1;37mZoning from zone 234 to zone 107: Gilianne
+[0m[09:41:24][1;37m[Info][0m parse: 00D | 0079 0076 04 from user: Gilianne
+[09:41:24][1;36m[Debug][0m [1;36mCZone:: Bastok_Mines DecreaseZoneCounter <0> Gilianne
+[0m[09:41:28][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Gilianne
+[09:41:28][1;31m[Error][0m [1;31m4 TARGET ID IS 1024
+[0m[09:41:28][1;36m[Debug][0m [1;36mCZone:: South_Gustaberg IncreaseZoneCounter <2> Gilianne 
+[0m[09:41:28][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Gilianne
+[09:41:29][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Gilianne
+[09:41:29][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Gilianne
+[09:41:29][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Gilianne
+[09:41:29][1;36m[Debug][0m [1;36mCLIENT Gilianne PERFORMING ACTION 14
+[0m[09:41:29][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Gilianne
+[09:41:29][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Gilianne
+[09:41:29][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Gilianne
+[09:41:29][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Gilianne
+[09:41:44][1;37m[Info][0m parse: 037 | 0023 0022 0A from user: Gilianne
+[09:46:49][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m[09:48:53][1;36m[Debug][0m [1;36m[Lua] Garbage Collected. Current State Top: 0
+[0m[1;32m[Status][0m Memory manager initialised: [1;37mlog/DSP.leaks[0m
+[1;37m[Info][0m DarkStar - onetimexi - SVN Revision: [1;37mUnknown[0m.
+[1;32m[Status][0m do_init: begin server initialization...
+[09:51:19][1;37m[Info][0m Console Silent Setting: 0 			 - [1;32m[OK][0m
+[09:51:19][1;32m[Status][0m do_init: map_config is reading 		 - [1;32m[OK][0m
+[09:51:19][1;32m[Status][0m luautils::init:lua initializing... 		 - [1;32m[OK][0m
+[09:51:19][1;32m[Status][0m cmdhandler::init: initializing...		 - [1;32m[OK][0m
+[09:51:19][1;32m[Status][0m do_init: sqlhandle is allocating 		 - [1;32m[OK][0m
+[09:51:19][1;32m[Status][0m do_init: zlib is reading 			 - [1;32m[OK][0m
+[09:51:19][1;32m[Status][0m do_init: loading items 			 - [1;32m[OK][0m
+[09:51:21][1;32m[Status][0m do_init: loading spells 			 - [1;32m[OK][0m
+[09:51:21][1;32m[Status][0m do_init: loading zones[09:52:36][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m 			 - [1;32m[OK][0m
+[09:52:36][1;32m[Status][0m do_init: server is binding with port 54230 	 - [1;32m[OK][0m
+[09:52:36][1;32m[Status][0m The map-server is [1;32mready[0m to work...
+ =======================================================================
+[09:52:36][1;36m[Debug][0m [1;36m[Lua] Garbage Collected. Current State Top: 0
+[0m[09:54:07][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.8[0m:[1;37m54090[0m is coming to world...
+[09:54:07][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 0
+[09:54:07][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 1
+[09:54:07][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 1
+[09:54:07][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[09:54:07][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 2 
+[0m[09:54:07][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Bezobisha
+[09:54:07][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION
+[0m[09:54:07][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Bezobisha
+[09:54:09][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Bezobisha
+[09:54:09][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Bezobisha
+[09:54:09][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Bezobisha
+[09:54:09][1;37m[Info][0m parse: 04B | 0003 0002 0C from user: Bezobisha
+[09:54:09][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Bezobisha
+[09:54:09][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Bezobisha
+[09:54:09][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Bezobisha
+[09:54:09][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Bezobisha
+[09:54:09][1;36m[Debug][0m [1;36mCLIENT Bezobisha PERFORMING ACTION 14
+[0m[09:54:09][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Bezobisha
+[09:55:12][1;36m[Debug][0m [1;36mUpdateGuildsStock is finished
+[0m[09:55:15][1;36m[Debug][0m [1;36mUpdateGuildsStock is finished
+[0m[09:55:29][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.15[0m:[1;37m54090[0m is coming to world...
+[09:55:29][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 2
+[09:55:29][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 0
+[09:55:29][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 247
+[09:55:29][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[09:55:29][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 24 
+[0m[09:55:29][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Artic
+[09:55:29][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A RETURNING PLAYER
+[0m[09:55:29][1;31m[Error][0m [1;31m2 TARGET ID IS 2
+[0m[09:55:29][1;36m[Debug][0m [1;36mCZone:: West_Ronfaure IncreaseZoneCounter <1> Artic 
+[0m[09:55:29][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-557.284424, -59.978561, 447.200195) 
+[09:55:29][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:55:29][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-554.082825, -59.306011, 471.935303) 
+[09:55:29][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:55:29][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-287.219055, -19.894590, -117.495071) 
+[09:55:29][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:55:29][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-287.906433, -9.835410, -358.456055) 
+[09:55:29][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:55:29][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-327.788483, -11.722656, -354.196014) 
+[09:55:29][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:55:29][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-552.413818, 0.698538, -458.408630) 
+[09:55:29][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:55:29][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-558.519775, -9.777489, -405.811584) 
+[09:55:29][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:55:29][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Artic
+[09:55:31][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Artic
+[09:55:31][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Artic
+[09:55:31][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Artic
+[09:55:31][1;36m[Debug][0m [1;36mCLIENT Artic PERFORMING ACTION 14
+[0m[09:55:31][1;37m[Info][0m parse: 04B | 0003 0002 0C from user: Artic
+[09:55:31][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Artic
+[09:55:31][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Artic
+[09:55:31][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Artic
+[09:55:31][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Artic
+ [1;33mELSE FLAGS  STATUS = 0 FOR PCHAR Artic
+[0m[09:55:42][1;37m[Info][0m parse: 0E7 | 001C 001B 04 from user: Artic
+[09:55:51][1;37m[Info][0m parse: 05E | 0137 0133 0C from user: Bezobisha
+[09:55:51][1;37m[Info][0m [1;37mZoning from zone 0 to zone 234: Bezobisha
+[0m[09:55:52][1;37m[Info][0m parse: 00D | 0138 0134 04 from user: Bezobisha
+[09:55:52][1;36m[Debug][0m [1;36mCZone:: Residential_Area DecreaseZoneCounter <0> Bezobisha
+[0m[09:55:54][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Bezobisha
+[09:55:54][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION
+[0m[09:55:54][1;31m[Error][0m [1;31m5 TARGET ID IS 1
+[0m[09:55:54][1;36m[Debug][0m [1;36mCZone:: Bastok_Mines IncreaseZoneCounter <1> Bezobisha 
+[0m[09:55:54][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Bezobisha
+[09:55:55][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Bezobisha
+[09:55:55][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Bezobisha
+[09:55:55][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Bezobisha
+[09:55:55][1;36m[Debug][0m [1;36mCLIENT Bezobisha PERFORMING ACTION 14
+[0m[09:55:55][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Bezobisha
+[09:55:55][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Bezobisha
+[09:55:55][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Bezobisha
+[09:55:55][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Bezobisha
+[09:55:59][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-572.030029, -61.785000, 465.119995)->(-555.473572, -60.139782, 463.918152) 
+[09:55:59][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186945) could not find path
+[09:55:59][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-573.030029, -61.660999, 464.766998)->(-551.500427, -59.687309, 459.965393) 
+[09:55:59][1;31m[Error][0m CPathFind::FindRandomPath Entity (17186946) could not find path
+[09:55:59][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-310.059998, -12.204000, -371.365997)->(-294.177979, -10.049724, -358.710999) 
+[09:55:59][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187159) could not find path
+[09:55:59][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-570.598022, -3.047000, -458.596985)->(-558.650513, 0.296100, -470.237244) 
+[09:55:59][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187173) could not find path
+[09:55:59][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-571.314026, -4.891000, -424.566010)->(-556.016479, -4.304800, -420.051636) 
+[09:55:59][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187187) could not find path
+[09:56:14][1;37m[Info][0m parse: 00D | 006A 0069 04 from user: Artic
+[09:56:14][1;36m[Debug][0m [1;36mCZone:: West_Ronfaure DecreaseZoneCounter <0> Artic
+[0m[09:56:14][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-282.781006, -21.430000, -132.300995)->(-282.643188, -20.177767, -117.562927) 
+[09:56:14][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187030) could not find path
+[09:56:14][1;31m[Error][0m CNavMesh::findPath Couldn't find path (-286.928986, -11.617000, -371.378998)->(-298.778748, -10.077060, -358.644958) 
+[09:56:14][1;31m[Error][0m CPathFind::FindRandomPath Entity (17187157) could not find path
+[09:56:16][1;36m[Debug][0m [1;36mmap_close_session: session closed
+[0m[09:56:24][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m[09:56:27][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m[09:56:31][1;37m[Info][0m parse: 037 | 0066 0065 0A from user: Bezobisha
+[09:56:44][1;37m[Info][0m parse: 05E | 008D 008C 0C from user: Bezobisha
+[09:56:44][1;37m[Info][0m [1;37mZoning from zone 234 to zone 107: Bezobisha
+[0m[09:56:44][1;37m[Info][0m parse: 00D | 008E 008D 04 from user: Bezobisha
+[09:56:44][1;36m[Debug][0m [1;36mCZone:: Bastok_Mines DecreaseZoneCounter <0> Bezobisha
+[0m[09:56:46][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Bezobisha
+[09:56:46][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION
+[0m[09:56:46][1;31m[Error][0m [1;31m5 TARGET ID IS 1
+[0m[09:56:46][1;36m[Debug][0m [1;36mCZone:: South_Gustaberg IncreaseZoneCounter <1> Bezobisha 
+[0m[09:56:46][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Bezobisha
+[09:56:48][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Bezobisha
+[09:56:48][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Bezobisha
+[09:56:48][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Bezobisha
+[09:56:48][1;36m[Debug][0m [1;36mCLIENT Bezobisha PERFORMING ACTION 14
+[0m[09:56:48][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Bezobisha
+[09:56:48][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Bezobisha
+[09:56:48][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Bezobisha
+[09:56:48][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Bezobisha
+[09:56:55][1;37m[Info][0m parse: 037 | 0011 0010 0A from user: Bezobisha
+[09:57:05][1;37m[Info][0m parse: 037 | 0028 0027 0A from user: Bezobisha
+[09:57:08][1;37m[Info][0m parse: 037 | 002F 002E 0A from user: Bezobisha
+[10:00:54][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.15[0m:[1;37m54090[0m is coming to world...
+[10:00:54][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 0
+[10:00:54][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 1
+[10:00:54][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 1
+[10:00:54][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[10:00:54][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 24 
+[0m[10:00:54][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Fiwuddada
+[10:00:54][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION
+[0m[10:00:54][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Fiwuddada
+[10:00:56][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Fiwuddada
+[10:00:56][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Fiwuddada
+[10:00:56][1;37m[Info][0m parse: 04B | 0003 0002 0C from user: Fiwuddada
+[10:00:56][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Fiwuddada
+[10:00:56][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Fiwuddada
+[10:00:56][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Fiwuddada
+[10:00:56][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Fiwuddada
+[10:00:56][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Fiwuddada
+[10:00:56][1;36m[Debug][0m [1;36mCLIENT Fiwuddada PERFORMING ACTION 14
+[0m[10:00:56][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Fiwuddada
+[10:01:47][1;37m[Info][0m parse: 05E | 0289 0288 0C from user: Bezobisha
+[10:01:47][1;37m[Info][0m [1;37mZoning from zone 107 to zone 234: Bezobisha
+[0m[10:01:48][1;37m[Info][0m parse: 00D | 028A 0289 04 from user: Bezobisha
+[10:01:48][1;36m[Debug][0m [1;36mCZone:: South_Gustaberg DecreaseZoneCounter <0> Bezobisha
+[0m[10:01:54][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Bezobisha
+[10:01:54][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION
+[0m[10:01:54][1;31m[Error][0m [1;31m5 TARGET ID IS 1024
+[0m[10:01:54][1;36m[Debug][0m [1;36mCZone:: Bastok_Mines IncreaseZoneCounter <1> Bezobisha 
+[0m[10:01:54][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Bezobisha
+[10:01:56][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Bezobisha
+[10:01:56][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Bezobisha
+[10:01:56][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Bezobisha
+[10:01:56][1;36m[Debug][0m [1;36mCLIENT Bezobisha PERFORMING ACTION 14
+[0m[10:01:56][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Bezobisha
+[10:01:56][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Bezobisha
+[10:01:56][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Bezobisha
+[10:01:56][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Bezobisha
+[10:02:01][1;37m[Info][0m parse: 037 | 000D 000C 0A from user: Bezobisha
+[10:02:08][1;37m[Info][0m parse: 05E | 001D 001C 0C from user: Bezobisha
+[10:02:08][1;37m[Info][0m [1;37mZoning from zone 234 to zone 107: Bezobisha
+[0m[10:02:08][1;37m[Info][0m parse: 00D | 001E 001D 04 from user: Bezobisha
+[10:02:08][1;36m[Debug][0m [1;36mCZone:: Bastok_Mines DecreaseZoneCounter <0> Bezobisha
+[0m[10:02:10][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Bezobisha
+[10:02:10][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION
+[0m[10:02:10][1;31m[Error][0m [1;31m5 TARGET ID IS 1024
+[0m[10:02:10][1;36m[Debug][0m [1;36mCZone:: South_Gustaberg IncreaseZoneCounter <1> Bezobisha 
+[0m[10:02:11][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Bezobisha
+[10:02:12][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Bezobisha
+[10:02:12][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Bezobisha
+[10:02:12][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Bezobisha
+[10:02:12][1;36m[Debug][0m [1;36mCLIENT Bezobisha PERFORMING ACTION 14
+[0m[10:02:12][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Bezobisha
+[10:02:12][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Bezobisha
+[10:02:12][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Bezobisha
+[10:02:12][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Bezobisha
+[10:02:27][1;37m[Info][0m parse: 01A | 0024 0023 08 from user: Bezobisha
+[10:02:27][1;36m[Debug][0m [1;36mCLIENT Bezobisha PERFORMING ACTION 03
+[0m[10:02:35][1;37m[Info][0m parse: 01A | 003B 003A 08 from user: Bezobisha
+[10:02:35][1;36m[Debug][0m [1;36mCLIENT Bezobisha PERFORMING ACTION 03
+[0m[10:02:37][1;37m[Info][0m parse: 01A | 003E 003D 08 from user: Bezobisha
+[10:02:37][1;36m[Debug][0m [1;36mCLIENT Bezobisha PERFORMING ACTION 03
+[0m[10:03:09][1;37m[Info][0m parse: 05E | 00EA 00E9 0C from user: Fiwuddada
+[10:03:09][1;37m[Info][0m [1;37mZoning from zone 0 to zone 234: Fiwuddada
+[0m[10:03:10][1;37m[Info][0m parse: 00D | 00EB 00EA 04 from user: Fiwuddada
+[10:03:10][1;36m[Debug][0m [1;36mCZone:: Residential_Area DecreaseZoneCounter <0> Fiwuddada
+[0m[10:03:16][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Fiwuddada
+[10:03:16][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION
+[0m[10:03:16][1;31m[Error][0m [1;31m6 TARGET ID IS 1025
+[0m[10:03:16][1;36m[Debug][0m [1;36mCZone:: Bastok_Mines IncreaseZoneCounter <1> Fiwuddada 
+[0m[10:03:16][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Fiwuddada
+[10:03:17][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Fiwuddada
+[10:03:17][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Fiwuddada
+[10:03:17][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Fiwuddada
+[10:03:17][1;36m[Debug][0m [1;36mCLIENT Fiwuddada PERFORMING ACTION 14
+[0m[10:03:17][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Fiwuddada
+[10:03:17][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Fiwuddada
+[10:03:17][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Fiwuddada
+[10:03:17][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Fiwuddada
+[10:04:03][1;37m[Info][0m parse: 05E | 004D 004C 0C from user: Fiwuddada
+[10:04:03][1;37m[Info][0m [1;37mZoning from zone 234 to zone 107: Fiwuddada
+[0m[10:04:03][1;37m[Info][0m parse: 00D | 004E 004D 04 from user: Fiwuddada
+[10:04:03][1;36m[Debug][0m [1;36mCZone:: Bastok_Mines DecreaseZoneCounter <0> Fiwuddada
+[0m[10:04:09][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Fiwuddada
+[10:04:09][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION
+[0m[10:04:09][1;31m[Error][0m [1;31m6 TARGET ID IS 1025
+[0m[10:04:09][1;36m[Debug][0m [1;36mCZone:: South_Gustaberg IncreaseZoneCounter <2> Fiwuddada 
+[0m[10:04:09][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Fiwuddada
+[10:04:11][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Fiwuddada
+[10:04:11][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Fiwuddada
+[10:04:11][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Fiwuddada
+[10:04:11][1;36m[Debug][0m [1;36mCLIENT Fiwuddada PERFORMING ACTION 14
+[0m[10:04:11][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Fiwuddada
+[10:04:11][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Fiwuddada
+[10:04:11][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Fiwuddada
+[10:04:11][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Fiwuddada
+[10:04:52][1;37m[Info][0m parse: 061 | 0072 006F 02 from user: Fiwuddada
+[10:04:59][1;37m[Info][0m parse: 0DC | 0084 0081 0A from user: Fiwuddada
+[10:05:09][1;37m[Info][0m parse: 06E | 01CA 01C7 06 from user: Bezobisha
+[10:05:13][1;37m[Info][0m parse: 074 | 00A6 00A3 04 from user: Fiwuddada
+[10:05:22][1;37m[Info][0m parse: 01A | 01EA 01E7 08 from user: Bezobisha
+[10:05:22][1;36m[Debug][0m [1;36mCLIENT Bezobisha PERFORMING ACTION 03
+[0m[10:05:34][1;37m[Info][0m parse: 0E8 | 020A 0207 04 from user: Bezobisha
+[10:05:40][1;37m[Info][0m parse: 061 | 00EC 00E9 02 from user: Fiwuddada
+[10:05:42][1;37m[Info][0m parse: 050 | 00F0 00ED 04 from user: Fiwuddada
+[10:05:42][1;37m[Info][0m parse: 061 | 00F0 00ED 02 from user: Fiwuddada
+[10:05:48][1;37m[Info][0m parse: 01A | 00FE 00FB 08 from user: Fiwuddada
+[10:05:48][1;36m[Debug][0m [1;36mCLIENT Fiwuddada PERFORMING ACTION 02
+[0m[10:05:56][1;37m[Info][0m parse: 0E8 | 023F 023C 04 from user: Bezobisha
+[10:06:00][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m[10:06:03][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m[10:06:04][1;37m[Info][0m parse: 01A | 0253 0250 08 from user: Bezobisha
+[10:06:04][1;36m[Debug][0m [1;36mCLIENT Bezobisha PERFORMING ACTION 03
+[0m[10:06:08][1;37m[Info][0m parse: 01A | 012E 012B 08 from user: Fiwuddada
+[10:06:08][1;36m[Debug][0m [1;36mCLIENT Fiwuddada PERFORMING ACTION 02
+[0m[10:07:36][1;36m[Debug][0m [1;36m[Lua] Garbage Collected. Current State Top: 0
+[0m[1;32m[Status][0m Memory manager initialised: [1;37mlog/DSP.leaks[0m
+[1;37m[Info][0m DarkStar - onetimexi - SVN Revision: [1;37mUnknown[0m.
+[1;32m[Status][0m do_init: begin server initialization...
+[10:12:32][1;37m[Info][0m Console Silent Setting: 0 			 - [1;32m[OK][0m
+[10:12:32][1;32m[Status][0m do_init: map_config is reading 		 - [1;32m[OK][0m
+[10:12:32][1;32m[Status][0m luautils::init:lua initializing... 		 - [1;32m[OK][0m
+[10:12:32][1;32m[Status][0m cmdhandler::init: initializing...		 - [1;32m[OK][0m
+[10:12:32][1;32m[Status][0m do_init: sqlhandle is allocating 		 - [1;32m[OK][0m
+[10:12:32][1;32m[Status][0m do_init: zlib is reading 			 - [1;32m[OK][0m
+[10:12:32][1;32m[Status][0m do_init: loading items 			 - [1;32m[OK][0m
+[10:12:33][1;32m[Status][0m do_init: loading spells 			 - [1;32m[OK][0m
+[10:12:33][1;32m[Status][0m do_init: loading zones[10:13:49][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m 			 - [1;32m[OK][0m
+[10:13:49][1;32m[Status][0m do_init: server is binding with port 54230 	 - [1;32m[OK][0m
+[10:13:49][1;32m[Status][0m The map-server is [1;32mready[0m to work...
+ =======================================================================
+[10:13:49][1;36m[Debug][0m [1;36m[Lua] Garbage Collected. Current State Top: 0
+[0m[10:15:37][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m[10:16:07][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.15[0m:[1;37m54090[0m is coming to world...
+[10:16:07][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 0
+[10:16:07][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 1
+[10:16:07][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 1
+[10:16:07][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[10:16:07][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 24 
+[0m[10:16:07][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Fiwuddada
+[10:16:07][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION
+[0m[10:16:07][1;37m[Notice][0m [1;31mMY DESTINATION 107
+[0m[10:16:07][1;37m[Notice][0m [1;31mMY DESTINATION IS NORM ZONE 107
+[0m[10:16:07][1;31m[Error][0m [1;31m6 TARGET ID IS 1025
+[0m[10:16:07][1;36m[Debug][0m [1;36mCZone:: South_Gustaberg IncreaseZoneCounter <1> Fiwuddada 
+[0m[10:16:07][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Fiwuddada
+[10:16:08][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Fiwuddada
+[10:16:08][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Fiwuddada
+[10:16:08][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Fiwuddada
+[10:16:08][1;36m[Debug][0m [1;36mCLIENT Fiwuddada PERFORMING ACTION 14
+[0m[10:16:08][1;37m[Info][0m parse: 04B | 0003 0002 0C from user: Fiwuddada
+[10:16:08][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Fiwuddada
+[10:16:08][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Fiwuddada
+[10:16:08][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Fiwuddada
+[10:16:08][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Fiwuddada
+[10:16:21][1;37m[Info][0m [1;37mmapsession[0m:[1;37m10.0.0.8[0m:[1;37m54090[0m is coming to world...
+[10:16:21][1;31m[Error][0m luautils::OnGameIn: PChar Frist Login Status = 0
+[10:16:21][1;31m[Error][0m luautils::OnGameIn: PChar In Event Status = 1
+[10:16:21][1;31m[Error][0m luautils::OnGameIn: PChar Event ID Status = 1
+[10:16:21][1;31m[Error][0m luautils::OnGameIn: PChar DEATH TIME Status = 0
+[10:16:21][1;36m[Debug][0m [1;31mPLAYERS ACCOUNT ID 2 
+[0m[10:16:21][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Shetafuletafu
+[10:16:21][1;37m[Notice][0m [1;31mMY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION
+[0m[10:16:21][1;37m[Notice][0m [1;31mELSE MY DESTINATION 0
+[0m[10:16:21][1;37m[Notice][0m [1;31mTRACER: WE ARE NEW CHARATER FIRST TIME LOGIN CharId 7 Status=0
+[0m[10:16:21][1;37m[Notice][0m [1;31mTRACER: getNation 1
+[0m[10:16:21][1;37m[Notice][0m [1;31mTRACER: BASTOCK 1
+[0m[10:16:21][1;37m[Notice][0m [1;31mTRACER: BASTOCK GETZONE 0
+[0m[10:16:21][1;37m[Notice][0m [1;31mWE ARE AT FIRST LOGIN IN EVENT 1
+[0m[10:16:21][1;37m[Notice][0m [1;31mEVENT == 1
+[0m[10:16:21][1;37m[Notice][0m [1;31mEVENT NUMBER == 1
+[0m[10:16:21][1;36m[Debug][0m [1;36mGET ZONE 234 BY CHAR Shetafuletafu 
+[0m[10:16:21][1;36m[Debug][0m [1;36mGET IN EVENT ID 1 BY CHAR Shetafuletafu
+[0m[10:16:21][1;36m[Debug][0m [1;36mGET EVENT ID 1 BY CHAR Shetafuletafu 
+[0m[10:16:21][1;36m[Debug][0m [1;31mPLAYER Shetafuletafu HOME ZONE 234
+[0m[10:16:21][1;36m[Debug][0m [1;31mPLAYER Shetafuletafu HOME x -45.000
+[0m[10:16:21][1;36m[Debug][0m [1;31mPLAYER Shetafuletafu HOME y 0.000
+[0m[10:16:21][1;36m[Debug][0m [1;31mPLAYER Shetafuletafu HOME z 26.000
+[0m[10:16:21][1;36m[Debug][0m [1;31mPLAYER Shetafuletafu HOME r 213
+[0m[10:16:21][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Shetafuletafu
+[10:16:23][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Shetafuletafu
+[10:16:23][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Shetafuletafu
+[10:16:23][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Shetafuletafu
+[10:16:23][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Shetafuletafu
+[10:16:23][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Shetafuletafu
+[10:16:23][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Shetafuletafu
+[10:16:32][1;37m[Info][0m parse: 016 | 0017 0016 04 from user: Shetafuletafu
+[10:16:32][1;37m[Info][0m parse: 01A | 0017 0016 08 from user: Shetafuletafu
+[10:16:32][1;36m[Debug][0m [1;36mCLIENT Shetafuletafu PERFORMING ACTION 14
+[0m[10:16:33][1;37m[Info][0m parse: 016 | 0018 0017 04 from user: Shetafuletafu
+[10:16:33][1;37m[Info][0m parse: 016 | 0019 0018 04 from user: Shetafuletafu
+[10:16:33][1;37m[Info][0m parse: 016 | 001A 0019 04 from user: Shetafuletafu
+[10:16:34][1;37m[Info][0m parse: 016 | 001B 001A 04 from user: Shetafuletafu
+[10:16:34][1;37m[Info][0m parse: 016 | 001C 001B 04 from user: Shetafuletafu
+[10:16:35][1;37m[Info][0m parse: 016 | 001D 001C 04 from user: Shetafuletafu
+[10:16:35][1;37m[Info][0m parse: 016 | 001E 001D 04 from user: Shetafuletafu
+[10:16:36][1;37m[Info][0m parse: 016 | 001F 001E 04 from user: Shetafuletafu
+[10:16:36][1;37m[Info][0m parse: 016 | 0020 001F 04 from user: Shetafuletafu
+[10:16:37][1;37m[Info][0m parse: 016 | 0021 0020 04 from user: Shetafuletafu
+[10:16:37][1;37m[Info][0m parse: 016 | 0022 0021 04 from user: Shetafuletafu
+[10:16:38][1;37m[Info][0m parse: 016 | 0023 0022 04 from user: Shetafuletafu
+[10:16:38][1;37m[Info][0m parse: 016 | 0024 0023 04 from user: Shetafuletafu
+[10:16:39][1;37m[Info][0m parse: 016 | 0025 0024 04 from user: Shetafuletafu
+[10:16:58][1;37m[Info][0m parse: 01A | 0056 0055 08 from user: Fiwuddada
+[10:16:58][1;36m[Debug][0m [1;36mCLIENT Fiwuddada PERFORMING ACTION 02
+[0m[10:17:37][1;37m[Info][0m parse: 05E | 008F 008E 0C from user: Fiwuddada
+[10:17:37][1;37m[Info][0m [1;37mZoning from zone 107 to zone 234: Fiwuddada
+[0m[10:17:38][1;37m[Info][0m parse: 00D | 0090 008F 04 from user: Fiwuddada
+[10:17:38][1;36m[Debug][0m [1;36mCZone:: South_Gustaberg DecreaseZoneCounter <0> Fiwuddada
+[0m[10:17:43][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Fiwuddada
+[10:17:43][1;37m[Notice][0m [1;31mMY FIRST ZONING SYAS I AM AT ZONELINE
+[0m[10:17:43][1;37m[Notice][0m [1;31mMY DESTINATION 234
+[0m[10:17:43][1;37m[Notice][0m [1;31mMY DESTINATION IS NORM ZONE 234
+[0m[10:17:43][1;31m[Error][0m [1;31m6 TARGET ID IS 1025
+[0m[10:17:43][1;36m[Debug][0m [1;36mCZone:: Bastok_Mines IncreaseZoneCounter <1> Fiwuddada 
+[0m[10:17:43][1;37m[Notice][0m [1;31mWE ARE A RETURNING PLAYER IN STATUS 2
+[0m[10:17:43][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Fiwuddada
+[10:17:45][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Fiwuddada
+[10:17:45][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Fiwuddada
+[10:17:45][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Fiwuddada
+[10:17:45][1;36m[Debug][0m [1;36mCLIENT Fiwuddada PERFORMING ACTION 14
+[0m[10:17:45][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Fiwuddada
+[10:17:45][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Fiwuddada
+[10:17:45][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Fiwuddada
+[10:17:45][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Fiwuddada
+[10:20:10][1;37m[Info][0m parse: 05B | 01DD 01DC 0A from user: Shetafuletafu
+[10:20:10][1;37m[Info][0m parse: 04B | 01DD 01DC 0C from user: Shetafuletafu
+[10:20:15][1;37m[Info][0m parse: 016 | 01EA 01E9 04 from user: Shetafuletafu
+[10:20:53][1;37m[Info][0m parse: 0DC | 023F 023E 0A from user: Fiwuddada
+[10:21:03][1;37m[Info][0m parse: 0DC | 025D 025C 0A from user: Shetafuletafu
+[10:21:13][1;37m[Info][0m parse: 0DC | 0274 0273 0A from user: Shetafuletafu
+[10:22:10][1;37m[Info][0m parse: 05E | 02F6 02F5 0C from user: Fiwuddada
+[10:22:10][1;37m[Info][0m [1;37mZoning from zone 234 to zone 107: Fiwuddada
+[0m[10:22:10][1;37m[Info][0m parse: 00D | 02F7 02F6 04 from user: Fiwuddada
+[10:22:10][1;36m[Debug][0m [1;36mCZone:: Bastok_Mines DecreaseZoneCounter <0> Fiwuddada
+[0m[10:22:13][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Fiwuddada
+[10:22:13][1;37m[Notice][0m [1;31mMY FIRST ZONING SYAS I AM AT ZONELINE
+[0m[10:22:13][1;37m[Notice][0m [1;31mMY DESTINATION 107
+[0m[10:22:13][1;37m[Notice][0m [1;31mMY DESTINATION IS NORM ZONE 107
+[0m[10:22:13][1;31m[Error][0m [1;31m6 TARGET ID IS 1025
+[0m[10:22:13][1;36m[Debug][0m [1;36mCZone:: South_Gustaberg IncreaseZoneCounter <1> Fiwuddada 
+[0m[10:22:13][1;37m[Notice][0m [1;31mWE ARE A RETURNING PLAYER IN STATUS 2
+[0m[10:22:13][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Fiwuddada
+[10:22:15][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Fiwuddada
+[10:22:15][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Fiwuddada
+[10:22:15][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Fiwuddada
+[10:22:15][1;36m[Debug][0m [1;36mCLIENT Fiwuddada PERFORMING ACTION 14
+[0m[10:22:15][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Fiwuddada
+[10:22:15][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Fiwuddada
+[10:22:15][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Fiwuddada
+[10:22:15][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Fiwuddada
+[10:25:13][1;36m[Debug][0m [1;36mUpdateWeather Finished
+[0m[10:25:57][1;37m[Info][0m parse: 05E | 0520 051F 0C from user: Shetafuletafu
+[10:25:57][1;37m[Info][0m [1;37mZoning from zone 234 to zone 107: Shetafuletafu
+[0m[10:25:58][1;37m[Info][0m parse: 00D | 0521 0520 04 from user: Shetafuletafu
+[10:25:58][1;36m[Debug][0m [1;36mCZone:: Bastok_Mines DecreaseZoneCounter <0> Shetafuletafu
+[0m[10:26:01][1;37m[Info][0m parse: 00A | 0001 0000 2E from user: Shetafuletafu
+[10:26:01][1;37m[Notice][0m [1;31mMY FIRST ZONING SYAS I AM AT ZONELINE
+[0m[10:26:01][1;37m[Notice][0m [1;31mMY DESTINATION 107
+[0m[10:26:01][1;37m[Notice][0m [1;31mMY DESTINATION IS NORM ZONE 107
+[0m[10:26:01][1;31m[Error][0m [1;31m7 TARGET ID IS 1024
+[0m[10:26:01][1;36m[Debug][0m [1;36mCZone:: South_Gustaberg IncreaseZoneCounter <2> Shetafuletafu 
+[0m[10:26:01][1;37m[Notice][0m [1;31mWE ARE A RETURNING PLAYER IN STATUS 2
+[0m[10:26:01][1;37m[Info][0m parse: 011 | 0002 0001 04 from user: Shetafuletafu
+[10:26:02][1;37m[Info][0m parse: 00C | 0003 0002 06 from user: Shetafuletafu
+[10:26:02][1;37m[Info][0m parse: 061 | 0003 0002 02 from user: Shetafuletafu
+[10:26:02][1;37m[Info][0m parse: 01A | 0003 0002 08 from user: Shetafuletafu
+[10:26:02][1;36m[Debug][0m [1;36mCLIENT Shetafuletafu PERFORMING ACTION 14
+[0m[10:26:02][1;37m[Info][0m parse: 0E0 | 0003 0002 4C from user: Shetafuletafu
+[10:26:02][1;37m[Info][0m parse: 00F | 0003 0002 12 from user: Shetafuletafu
+[10:26:02][1;37m[Info][0m parse: 0DB | 0003 0002 14 from user: Shetafuletafu
+[10:26:02][1;37m[Info][0m parse: 05A | 0003 0002 02 from user: Shetafuletafu
+[10:26:09][1;37m[Info][0m parse: 0DC | 0010 000F 0A from user: Shetafuletafu
+[10:26:14][1;37m[Info][0m parse: 0DC | 01B7 01B6 0A from user: Fiwuddada
+[10:26:16][1;37m[Info][0m parse: 0DC | 01BA 01B9 0A from user: Fiwuddada
+[10:26:17][1;37m[Info][0m parse: 0DC | 01BE 01BD 0A from user: Fiwuddada
+[10:26:19][1;37m[Info][0m parse: 0DC | 01C2 01C1 0A from user: Fiwuddada
+[10:26:20][1;37m[Info][0m parse: 0DC | 01C5 01C4 0A from user: Fiwuddada
+[10:26:26][1;37m[Info][0m parse: 06E | 01D2 01D1 06 from user: Fiwuddada
+[10:26:28][1;37m[Info][0m parse: 074 | 0040 003F 04 from user: Shetafuletafu
+[10:26:50][1;37m[Info][0m parse: 01A | 0077 0076 08 from user: Shetafuletafu
+[10:26:50][1;36m[Debug][0m [1;36mCLIENT Shetafuletafu PERFORMING ACTION 02
+[0m[10:26:56][1;37m[Info][0m parse: 01A | 0088 0087 08 from user: Shetafuletafu
+[10:26:56][1;36m[Debug][0m [1;36mCLIENT Shetafuletafu PERFORMING ACTION 04
+[0m[10:27:04][1;37m[Info][0m parse: 037 | 009E 009D 0A from user: Shetafuletafu
+[10:27:21][1;37m[Info][0m parse: 01A | 00CD 00CC 08 from user: Shetafuletafu
+[10:27:21][1;36m[Debug][0m [1;36mCLIENT Shetafuletafu PERFORMING ACTION 03
+[0m[10:27:34][1;37m[Info][0m parse: 01A | 00F2 00F1 08 from user: Shetafuletafu
+[10:27:34][1;36m[Debug][0m [1;36mCLIENT Shetafuletafu PERFORMING ACTION 03
+[0m[10:27:42][1;37m[Info][0m parse: 01A | 0288 0287 08 from user: Fiwuddada
+[10:27:42][1;36m[Debug][0m [1;36mCLIENT Fiwuddada PERFORMING ACTION 02
+[0m[10:28:20][1;37m[Info][0m parse: 01A | 02E1 02E0 08 from user: Fiwuddada
+[10:28:20][1;36m[Debug][0m [1;36mCLIENT Fiwuddada PERFORMING ACTION 02
+[0m[10:28:49][1;36m[Debug][0m [1;36m[Lua] Garbage Collected. Current State Top: 0
+[0m[1;32m[Status][0m Memory manager initialised: [1;37mlog/DSP.leaks[0m
+[1;37m[Info][0m DarkStar - onetimexi - SVN Revision: [1;37mUnknown[0m.
+[1;32m[Status][0m do_init: begin server initialization...
+[10:32:42][1;37m[Info][0m Console Silent Setting: 0 			 - [1;32m[OK][0m
+[10:32:42][1;32m[Status][0m do_init: map_config is reading 		 - [1;32m[OK][0m
+[10:32:42][1;32m[Status][0m luautils::init:lua initializing... 		 - [1;32m[OK][0m
+[10:32:42][1;32m[Status][0m cmdhandler::init: initializing...		 - [1;32m[OK][0m
+[10:32:42][1;32m[Status][0m do_init: sqlhandle is allocating 		 - [1;32m[OK][0m
+[10:32:42][1;32m[Status][0m do_init: zlib is reading 			 - [1;32m[OK][0m
+[10:32:42][1;32m[Status][0m do_init: loading items 			 - [1;32m[OK][0m
+[10:32:43][1;32m[Status][0m do_init: loading spells 			 - [1;32m[OK][0m
+[10:32:43][1;32m[Status][0m do_init: loading zones[1;32m[Status][0m Memory manager initialised: [1;37mlog/DSP.leaks[0m
+[1;37m[Info][0m DarkStar - onetimexi - SVN Revision: [1;37mUnknown[0m.
+[1;32m[Status][0m do_init: begin server initialization...
+[11:13:21][1;37m[Info][0m Console Silent Setting: 0 			 - [1;32m[OK][0m
+[11:13:21][1;32m[Status][0m do_init: map_config is reading 		 - [1;32m[OK][0m
+[11:13:21][1;32m[Status][0m luautils::init:lua initializing... 		 - [1;32m[OK][0m
+[11:13:21][1;32m[Status][0m cmdhandler::init: initializing...		 - [1;32m[OK][0m
+[11:13:21][1;32m[Status][0m do_init: sqlhandle is allocating[11:13:21][1;35m[SQL][0m Access denied for user 'root'@'localhost' (using password: YES)
