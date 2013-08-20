@@ -60,7 +60,7 @@ struct SearchCommInfo
 	uint16 port;
 };
 
-
+const int8* SEARCH_CONF_FILENAME = "./conf/search_server.conf";
 ppuint32 __stdcall TCPComm(void* lpParam);
 
 extern void HandleSearchRequest(CTCPRequestPacket* PTCPRequest);
@@ -73,7 +73,7 @@ extern std::string toStr(int number);
 
 search_config_t search_config;
 
-
+void search_config_read(const int8* file);
 
 
 /************************************************************************
@@ -125,7 +125,7 @@ int32 main (int32 argc, int8 **argv)
     struct addrinfo *result = NULL;
     struct addrinfo  hints;
 
-    
+    search_config_read(SEARCH_CONF_FILENAME);
 
     // Initialize Winsock
     iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -233,7 +233,60 @@ int32 main (int32 argc, int8 **argv)
 *  DSSearch-Server config                                               *
 *                                                                       *
 ************************************************************************/
+void search_config_read(const int8* file)
+{
+	int8 line[1024], w1[1024], w2[1024];
+	FILE* fp;
 
+	fp = fopen(file,"r");
+	if( fp == NULL )
+	{
+		ShowError("configuration file not found at: %s\n", file);
+		return;
+	}
+
+	while( fgets(line, sizeof(line), fp) )
+	{
+		int8* ptr;
+
+        if( line[0] == '#' )
+			continue;
+		if( sscanf(line, "%[^:]: %[^\t\r\n]", w1, w2) < 2 )
+			continue;
+
+		//Strip trailing spaces
+		ptr = w2 + strlen(w2);
+		while (--ptr >= w2 && *ptr == ' ');
+		ptr++;
+		*ptr = '\0';
+		
+		if (strcmp(w1,"mysql_host") == 0)
+		{
+			search_config.mysql_host = aStrdup(w2);
+		}
+		else if (strcmp(w1,"mysql_login") == 0)
+		{
+			search_config.mysql_login = aStrdup(w2);
+		}
+		else if (strcmp(w1,"mysql_password") == 0)
+		{
+			search_config.mysql_password = aStrdup(w2);
+		}
+		else if (strcmp(w1,"mysql_port") == 0)
+		{
+			search_config.mysql_port = atoi(w2);
+		}
+		else if (strcmp(w1,"mysql_database") == 0)
+		{
+			search_config.mysql_database = aStrdup(w2);
+		}
+		else
+		{
+			ShowWarning(CL_YELLOW"Unknown setting '%s' in file %s\n" CL_RESET, w1, file);
+		}
+	}
+	fclose(fp);
+}
 
 /************************************************************************
 *																		*
@@ -746,3 +799,4 @@ search_req _HandleSearchRequest(CTCPRequestPacket* PTCPRequest, SOCKET socket)
 	return sr;
 	// не обрабатываем последние биты, что мешает в одну кучу например "/blacklist delete Name" и "/sea all Name"
 }
+
