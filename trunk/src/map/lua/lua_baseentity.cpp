@@ -7476,7 +7476,97 @@ inline int32 CLuaBaseEntity::unlockAttachment(lua_State* L)
 	lua_pushboolean(L,puppetutils::UnlockAttachment((CCharEntity*)m_PBaseEntity, PItem));
 	return 1;
 }
+///////////////////////////////////////////////////////////////
+//COMMAND SYSTEM
+///////////////////////////////////////////////////////////////
+inline int32 CLuaBaseEntity::Zone(lua_State *L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	char buf[110];
+	if(PChar !=NULL)
+	{
+     //PChar->PRecastContainer =NULL;
+   if(lua_isnil(L,1) || !lua_isnumber(L,1) || !lua_tolstring(L,1,NULL))
+	{
+		//sprintf(buf,"COMMAND Example: .zone ID CS", (uint8)lua_tointeger(L,1));
+	   //            PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	}
+   if(lua_tolstring(L,1,NULL))
+   {
+	   //sprintf(buf,"STRING TEST", (uint8)lua_tointeger(L,1));
+	   //            PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+   }
+  
+   if(lua_isnil(L,2) || !lua_isnumber(L,2))
+	{
+		PChar->eventid =-1;
+	}
 
+	if( !lua_isnil(L,2) && lua_isnumber(L,2) )
+	{
+			
+		uint8 eventid = (uint8)lua_tointeger(L,2);
+		PChar->eventid =eventid;
+	}
+		float to_x = 0;
+		float to_y = 0;
+		float to_z = 0;
+		uint8 to_rot = 0;
+		uint8 zone =(uint8)lua_tointeger(L,1);
+		const char * Query = "SELECT x,y,z,r FROM zonesystem WHERE zone= '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,(uint8)lua_tointeger(L,1));
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				    to_x =  Sql_GetFloatData(SqlHandle,0);
+					ShowMessage(CL_YELLOW"TO X %.3f \n"CL_RESET,to_x);
+				    to_y =  Sql_GetFloatData(SqlHandle,1);
+					ShowMessage(CL_YELLOW"TO X %.3f \n"CL_RESET,to_y);
+				    to_z =  Sql_GetFloatData(SqlHandle,2);
+					ShowMessage(CL_YELLOW"TO X %.3f \n"CL_RESET,to_z);
+				    to_rot =  Sql_GetUIntData(SqlHandle,3);
+					ShowMessage(CL_YELLOW"TO ROT %u \n"CL_RESET,to_rot);
+					ShowMessage(CL_YELLOW"PCHAR %s ID %u \n"CL_RESET,PChar->GetName(),PChar->id);
+                   
+				   PChar->loc.p.x = to_x;
+				   PChar->loc.p.y = to_y;
+				   PChar->loc.p.z = to_z;
+				   PChar->loc.p.rotation = to_rot;
+				   
+		           PChar->loc.boundary = 0;
+				   const int8* Query = "UPDATE chars SET returning = '1', pos_zone='%u', pos_prevzone='%u', pos_x='%.3f', pos_y='%.3f', pos_z='%.3f', pos_rot='%u' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,zone,zone,to_x,to_y,to_z,to_rot,PChar->id);
+					   
+					   
+             PChar->is_returning = 1;
+				  
+                    PChar->loc.destination = (uint8)lua_tointeger(L,1);
+				   
+				 
+	                PChar->pushPacket(new CServerIPPacket(PChar,2));
+						return false;
+		
+				    }
+				 else
+				 {
+                   ShowMessage(CL_YELLOW"NO ZONELINE FOUND IN DATABASE BY THE ID %u \n"CL_RESET,(uint8)lua_tointeger(L,1));
+				   
+                   //sprintf(buf,"There is no zone found in the database by the ID: %d", (uint8)lua_tointeger(L,1));
+	               //PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+				   return false;
+				 }
+		
+       
+	
+   
+			
+	return false;
+	}
+	return false;
+}
 //==========================================================//
 
 const int8 CLuaBaseEntity::className[] = "CBaseEntity";
@@ -7799,5 +7889,9 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,setSpawn),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,setRespawnTime),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,unlockAttachment),
+	//////////////////////////////////////////////////////////////
+	//COMMAND SYSTEM
+	//////////////////////////////////////////////////////////////
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,Zone),
 	{NULL,NULL}
 };
