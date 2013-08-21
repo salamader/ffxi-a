@@ -41,8 +41,8 @@ int32 connect_client_lobbydata(int32 listenfd)
 		create_session(fd, recv_to_fifo, send_from_fifo, lobbydata_parse);
 		session[fd]->client_addr = ntohl(client_address.sin_addr.s_addr);
 		session[fd]->client_port= ntohs(client_address.sin_port);
-		ShowMessage(CL_YELLOW"CHECKING CONNECT CLIENT IP %u \n"CL_RESET,session[fd]->client_addr);
-		ShowMessage(CL_YELLOW"CHECKING CONNECT CLIENT PORT %u \n"CL_RESET,session[fd]->client_port);// This line is new for the port system
+		//ShowMessage(CL_YELLOW"CHECKING CONNECT CLIENT IP %u \n"CL_RESET,session[fd]->client_addr);
+		//ShowMessage(CL_YELLOW"CHECKING CONNECT CLIENT PORT %u \n"CL_RESET,session[fd]->client_port);// This line is new for the port system
 		session[fd]->wdata[0] =1;
 		WFIFOSET(fd,5);
 	
@@ -82,16 +82,16 @@ int32 lobbydata_parse(int32 fd)
 		 uint8 online = 0;
          sd->login_lobbydata_fd    = fd;
          session[fd]->session_data = sd;
-		 ShowMessage(CL_YELLOW"GETTING ACCOUNT ID %u CLEAN UP \n"CL_RESET,sd->accid);
+		// ShowMessage(CL_YELLOW"GETTING ACCOUNT ID %u CLEAN UP \n"CL_RESET,sd->accid);
 		const char * Query = "SELECT online FROM accounts WHERE id = '%u';";
 	          int32 ret3 = Sql_Query(SqlHandle,Query,sd->accid);
 			
 
 	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 	                {
-						ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u TO CLEAN UP SHUTING DOWN \n"CL_RESET,sd->accid);
+						//ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u TO CLEAN UP SHUTING DOWN \n"CL_RESET,sd->accid);
 						online =  Sql_GetIntData(SqlHandle,0);
-						ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u CHECKING TO SEE IF THEY ARE ONLINE \n"CL_RESET,sd->accid);
+						//ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u CHECKING TO SEE IF THEY ARE ONLINE \n"CL_RESET,sd->accid);
 						if(online == 0)
 						{
 						  ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u AND THEY ARE NOT ONLINE \n"CL_RESET,sd->accid);
@@ -99,6 +99,21 @@ int32 lobbydata_parse(int32 fd)
                          Sql_Query(SqlHandle,Query,sd->accid);
 						 Query = "UPDATE accounts SET  online = '1' WHERE id = %u";
                          Sql_Query(SqlHandle,Query,sd->accid);
+						 ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u CHECK SESSIONS TABLE \n"CL_RESET,sd->accid);
+						         Query = "SELECT accid FROM accounts_sessions WHERE accid = '%u';";
+	                              int32 ret3 = Sql_Query(SqlHandle,Query,sd->accid);
+			
+
+	                             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                                 {
+										 ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u IN SESSIONS TABLE  DELETE\n"CL_RESET,sd->accid);
+										 Query = "DELETE FROM accounts_sessions WHERE accid = %u;";
+	                                     Sql_Query(SqlHandle, Query, sd->accid);
+				                     }
+								 else
+								 {
+                                    ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u BUT THEY ARE NOT IN SESSIONS TABLE YET\n"CL_RESET,sd->accid);
+								 }
 						}
 						else
 						{
