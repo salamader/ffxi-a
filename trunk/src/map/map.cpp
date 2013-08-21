@@ -213,7 +213,7 @@ int32 do_init(int32 argc, int8** argv)
     CVanaTime::getInstance()->setCustomOffset(map_config.vanadiel_time_offset);
 
 	CTaskMgr::getInstance()->AddTask("time_server", gettick(), NULL, CTaskMgr::TASK_INTERVAL, time_server, 2400);
-	CTaskMgr::getInstance()->AddTask("map_cleanup", gettick(), NULL, CTaskMgr::TASK_INTERVAL, map_cleanup, 2000);
+	CTaskMgr::getInstance()->AddTask("map_cleanup", gettick(), NULL, CTaskMgr::TASK_INTERVAL, map_cleanup, 700);
 	CTaskMgr::getInstance()->AddTask("garbage_collect", gettick(), NULL, CTaskMgr::TASK_INTERVAL, map_garbage_collect, 15 * 60 * 1000);
 
 	CREATE(g_PBuff,   int8, map_config.buffer_size + 20);
