@@ -706,30 +706,13 @@ int32 map_cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 		map_session_data_t* map_session_data = it->second;
 
         CCharEntity* PChar = map_session_data->PChar;
-		if(map_session_data->Leftonmap == false)
-		{
-		//ShowMessage(CL_YELLOW"CHECK MAP CLEAN UP tick %u FOR PCHAR %s\n"CL_RESET,tick,PChar->GetName());
-		if(PChar->is_dead == 1)
-		{
 		
-		if (PChar->m_DeathTimestamp > 0) 
-         {
-		// 60min starts at 0x03A020 (66 min) and ventures down to 0x5460 (6 min)
-			// PChar->m_DeathTimestamp  = (/*237600 -*/ PChar->m_DeathTimestamp - (60*(time(NULL) +tick)));
-		//ShowMessage(CL_YELLOW"UPDATE DEATH TIME STATUS = %u FOR PCHAR %s\n"CL_RESET,PChar->m_DeathTimestamp,PChar->GetName());
-		//const char*	Query = "UPDATE char_stats SET death ='%u' WHERE charid = %u";
-           //      Sql_Query(SqlHandle,Query,PChar->m_DeathTimestamp ,PChar->id);
-		
-	    }
-		
-		}
-		}
         if ((time(NULL) - map_session_data->last_update) > 4)
         {
             if (PChar != NULL && !(PChar->nameflags.flags & FLAG_DC))
             {
 				
-                PChar->nameflags.flags |= FLAG_DC;
+                PChar->nameflags.flags = FLAG_DC;
 				ShowMessage(CL_YELLOW"FLAGS  STATUS = %u FOR PCHAR %s\n"CL_RESET,PChar->nameflags.flags,PChar->GetName());
                 if (PChar->status == STATUS_NORMAL)
                 {
@@ -824,7 +807,7 @@ int32 map_cleanup(uint32 tick, CTaskMgr::CTask* PTask)
         {
 			if (PChar != NULL && (PChar->nameflags.flags & FLAG_DC))
 			{
-            PChar->nameflags.flags &= ~FLAG_DC;
+            PChar->nameflags.flags = FLAG_DC;
 			ShowMessage(CL_YELLOW"ELSE FLAGS  STATUS = %u FOR PCHAR %s\n"CL_RESET,PChar->nameflags.flags,PChar->GetName());
             PChar->pushPacket(new CCharUpdatePacket(PChar));
 
