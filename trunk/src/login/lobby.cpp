@@ -25,6 +25,7 @@
 
 int32 login_lobbydata_fd;
 int32 login_lobbyview_fd;
+int32 accountid;
 
 /************************************************************************
 *																		*
@@ -60,256 +61,154 @@ int32 connect_client_lobbydata(int32 listenfd)
 int32 lobbydata_parse(int32 fd)
 {
    login_session_data_t* sd = (login_session_data_t*)session[fd]->session_data;
-
-   if( sd == NULL )
+   ShowMessage(CL_YELLOW"SD == %u \n"CL_RESET,sd);
+   if( sd == 0)
    {
-      if( RFIFOREST(fd) >= 5 && RBUFB(session[fd]->rdata,0) == 161 )
-      {
-         unsigned char *buff = session[fd]->rdata;
-
-         int32 accid = RBUFL(buff,1);
-
-         sd = find_loginsd_byaccid(accid);
-         if( sd == NULL )
-         {
-			 ShowMessage(CL_YELLOW"CHECKING CLOSE 1 \n"CL_RESET);
+   unsigned char *buff = session[fd]->rdata;
+   ShowMessage(CL_YELLOW"SESSION[FD]->RDATA == %u \n"CL_RESET,session[fd]->rdata);
+   ShowMessage(CL_YELLOW"BUFF == %u \n"CL_RESET,buff);
+   int32 accid = RBUFL(buff,1);
+   accountid = accid;
+   ShowMessage(CL_YELLOW"ACCID == %u \n"CL_RESET,accid);
+   uint32 online = 0;
+   sd = find_loginsd_byaccid(accid);
+   sd->login_lobbydata_fd    = fd;
+   session[fd]->session_data = sd;
+   const char * Query = "SELECT online FROM accounts WHERE id = '%u';";
+   int32 ret3 = Sql_Query(SqlHandle,Query,accid);
+         if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	       {
+			online =  Sql_GetIntData(SqlHandle,0);
+			ShowMessage(CL_YELLOW"ACCID->ONLINE->STATUS == %u \n"CL_RESET,online);
+			if(online == 1)
+			{
+            ShowMessage(CL_YELLOW"ACCID %u IS ONLINE \n"CL_RESET,accid);
+			do_close_lobbydata(sd,fd);
+			do_close_tcp(fd);
+			return 0;
+			}
+			else
+			{
+				ShowMessage(CL_YELLOW"ACCID %u IS OFFLINE \n"CL_RESET,accid);
+				return 0;
+			}
+		   }
+           if( sd == NULL )
+            {
+				ShowMessage(CL_YELLOW"SD == %u \n"CL_RESET,sd);
             do_close_tcp(fd);
-            return -1;
-         }
-
-		 
-
-		 uint8 online = 0;
-         sd->login_lobbydata_fd    = fd;
-         session[fd]->session_data = sd;
-		// ShowMessage(CL_YELLOW"GETTING ACCOUNT ID %u CLEAN UP \n"CL_RESET,sd->accid);
-		const char * Query = "SELECT online FROM accounts WHERE id = '%u';";
-	          int32 ret3 = Sql_Query(SqlHandle,Query,sd->accid);
-			
-
-	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	                {
-						//ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u TO CLEAN UP SHUTING DOWN \n"CL_RESET,sd->accid);
-						online =  Sql_GetIntData(SqlHandle,0);
-						//ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u CHECKING TO SEE IF THEY ARE ONLINE \n"CL_RESET,sd->accid);
-						if(online == 0)
-						{
-						  ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u AND THEY ARE NOT ONLINE \n"CL_RESET,sd->accid);
-		                  const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE accid = %u";
-                         Sql_Query(SqlHandle,Query,sd->accid);
-						 Query = "UPDATE accounts SET  online = '1' WHERE id = %u";
-                         Sql_Query(SqlHandle,Query,sd->accid);
-						 ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u CHECK SESSIONS TABLE \n"CL_RESET,sd->accid);
-						         Query = "SELECT accid FROM accounts_sessions WHERE accid = '%u';";
-	                              int32 ret3 = Sql_Query(SqlHandle,Query,sd->accid);
-			
-
-	                             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	                                 {
-										 ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u IN SESSIONS TABLE  DELETE\n"CL_RESET,sd->accid);
-										 Query = "DELETE FROM accounts_sessions WHERE accid = %u;";
-	                                     Sql_Query(SqlHandle, Query, sd->accid);
-				                     }
-								 else
-								 {
-                                    ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u BUT THEY ARE NOT IN SESSIONS TABLE YET\n"CL_RESET,sd->accid);
-								 }
-						}
-						else
-						{
-							ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u AND THEY ARE ONLINE \n"CL_RESET,sd->accid);
-                            do_close_tcp(sd->login_lobbyview_fd);
-			                erase_loginsd_byaccid(sd->accid);
-							do_close_login(sd,fd);
-			                do_close_tcp(fd);
-                        return -1;
-						}
-
-				    }
-				 else
-				 {
-                   ShowMessage(CL_YELLOW"NO ACCOUNT FOUND IN DATABASE BY THE ID %u \n"CL_RESET,sd->accid);
-				 }
-         return 0;
-      }
-
-	  if( sd == NULL )
-        {
-            do_close_tcp(fd);
-            return -1;
-        }
-
+            return 0;
+            }
+	
    }
+   ShowMessage(CL_YELLOW"SESSION[FD]->FLAG->EOF == %u \n"CL_RESET,session[fd]->flag.eof);
+   if( session[fd]->flag.eof == 1 )
+	{
+		do_close_lobbydata(sd,fd);
+		return 0;
+	}
+   
 
    
 
    
-   if( session[fd]->flag.eof )
-   {
-	   if(sd != NULL)
-	   {
-	  	 do_close_lobbydata(sd,fd);
-	   }
-      return 0;
-   }
+  
 
    if( RFIFOREST(fd) >= 1 )
    {
       unsigned char *buff = session[fd]->rdata;
-
+	  ShowMessage(CL_CYAN"BUFF %u\n"CL_RESET,buff);
+	  int32 accid = accountid;
+	  ShowMessage(CL_CYAN"ACCID %u\n"CL_RESET,accid);
       int32 code = RBUFB(buff,0); 
+	  ShowMessage(CL_CYAN"CODE %u\n"CL_RESET,code);
       switch(code)
       {
          case 161:
          {
-			 
-            if( RFIFOREST(fd) < 9 )
-            {
-              
-               do_close_lobbydata(sd,fd);
-			   ShowMessage(CL_YELLOW"CHECKING CLOSE 3 \n"CL_RESET);
-               return -1;
-            }
-            char uList[300];
+			char uList[300];
             memset(uList,0,sizeof(uList));
-
             sd->servip = RBUFL(buff,5);
             unsigned char CharList[2500];
-				memset(CharList,0,sizeof(CharList));
-				
-				CharList[0] = 0xE0;CharList[1] = 0x08;
-				CharList[4] = 0x49;CharList[5] = 0x58;CharList[6] = 0x46;CharList[7] = 0x46;CharList[8] = 0x20;
-
-            CharList[28] = 32; // количество ячеек, доступных для создания персонажей (0-16)// THE CHARATERS SLOT COUNT OR MAYBE THE CONTENT IDS INCLUED UNKOWNEn
-			/*OK HERE WE ARE GETTING THE CONTENT IDS FROM THE DATABSE WERE THE PLAYERS ACCOUNT ID IS THIS WORKS FINE */
-			int32 Content_ID = 1; //DEFAULT TO SEE IF THEY ARE NEW CREATED CHAR OR A RETURNING CHAR
-                const char * Query = "SELECT content_ids FROM accounts WHERE id = '%u';";
-             int32 ret1 = Sql_Query(SqlHandle,Query,sd->accid);//THIS IS WORKING FIN ITS SELCTEING THE CONTEN IDS FROM ACCOUNTS TABLE 
-
-                if (ret1 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS) //IF TRUE DO THIS ELSE DO THaT
-                   {
-                  Content_ID =  Sql_GetIntData(SqlHandle,0);
-                  ShowMessage(CL_GREEN"GET CONTENT ID AMOUNT %u OF PLAYER %u \n" CL_RESET,Content_ID,sd->accid);
-                }
-             else
+			memset(CharList,0,sizeof(CharList));
+			CharList[0] = 0xE0;CharList[1] = 0x08;
+			CharList[4] = 0x49;CharList[5] = 0x58;CharList[6] = 0x46;CharList[7] = 0x46;CharList[8] = 0x20;
+            CharList[28] = 32; 
+			int32 Content_ID = 1; 
+            const char * Query = "SELECT content_ids FROM accounts WHERE id = '%u';";
+            int32 ret1 = Sql_Query(SqlHandle,Query,accid);
+            if (ret1 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS) //IF TRUE DO THIS ELSE DO THaT
              {
-                   ShowMessage(CL_GREEN"SHOULD NEVER SEE THIS PLAYER IS NOT IN DATABASE \n" CL_RESET);
-				   do_close_lobbydata(sd,fd);//MOST CASES IF NOT CORRECT CLOSE SOMETHING
-				   return -1;
+              Content_ID =  Sql_GetIntData(SqlHandle,0);
+              ShowMessage(CL_GREEN"CONTENT->ID %u ON ACCOUNT->ID %u \n" CL_RESET,Content_ID,accid);
              }
-				/*NOW WE ARE GETTING THE BASIC INFO FOR THAT ACCOUNT ALL THAT IS ASSOICATED LOL */
+            const char *pfmtQuery =  "SELECT charid, charname, pos_zone, mjob,\
+									  race, face, head, body, hands, legs, feet, main, sub,\
+									  war, mnk, whm, blm, rdm, thf, pld, drk, bst, brd, rng,\
+									  sam, nin, drg, smn, blu, cor, pup, dnc, sch, geo, run \
+									  FROM chars \
+									  INNER JOIN char_stats USING(charid)\
+									  INNER JOIN char_look  USING(charid) \
+									  INNER JOIN char_jobs  USING(charid) \
+									  WHERE accid = %u \
+									  ORDER BY  charid ASC \
+									  LIMIT 4;";
+            int32 ret =  Sql_Query(SqlHandle,pfmtQuery,accid);
+            if( ret == SQL_ERROR )
+             {
+			 do_close_lobbydata(sd,fd);
+			 do_close_tcp(fd);
+             return 0;
+             }
+             LOBBY_A1_RESERVEPACKET(ReservePacket);
+             memcpy(ReservePacket+60, "FFXI-A", dsp_cap(strlen("FFXI-A"), 0, 15));
+             for(int j = 0; j<Content_ID; ++j) 
+             {
+			  memcpy(CharList+32+140*j, ReservePacket+32, 140);
+			  char ContentID[3];
+			  memcpy(ContentID, CharList+32, sizeof(ContentID));
+			  ContentID[2] += j;
+              memcpy(CharList+32+140*j, &ContentID, 3);
+			  memcpy(uList+16*(j+1),&ContentID, 3);
+             }
 
-				const char *pfmtQuery =  "SELECT charid, charname, pos_zone, mjob,\
-												 race, face, head, body, hands, legs, feet, main, sub,\
-												 war, mnk, whm, blm, rdm, thf, pld, drk, bst, brd, rng,\
-												 sam, nin, drg, smn, blu, cor, pup, dnc, sch, geo, run \
-										  FROM chars \
-											INNER JOIN char_stats USING(charid)\
-											INNER JOIN char_look  USING(charid) \
-											INNER JOIN char_jobs  USING(charid) \
-										  WHERE accid = %i \
-										  ORDER BY  charid ASC \
-										  LIMIT 16;";// SELECTING ALOT OF INFORMATION TO BUILD THE PLAYERS CHARACTER
+            uList[0] = 0x03;
 
 
-            int32 ret =  Sql_Query(SqlHandle,pfmtQuery,sd->accid);
-            if( ret == SQL_ERROR )// IF WE HAVE A ERRO DO THIS ELSE
+            int i = 0;
+            while(Sql_NextRow(SqlHandle) != SQL_NO_DATA)
             {
-				ShowMessage(CL_YELLOW"CHECKING CLOSE 4 \n"CL_RESET);
-               do_close_lobbydata(sd,fd);
-               return -1;
-            }
-            // RUN TEH CODE AND KEEP GOING
-
-            LOBBY_A1_RESERVEPACKET(ReservePacket);// ALWASY REVERING THE IMFORMATION UNKOWN WHY 
-
-            
-            
-
-                memcpy(ReservePacket+60, "FFXI-A", dsp_cap(strlen("FFXI-A"), 0, 15));//MORE MEMORY HOLDING THE SERVERS NAME 
-
-
-           
-
-				//IF MORE THEN ONE CONTENT ID WE GET DOWNLOADING ERRORS AGAIN~
-            for(int j = 0; j<Content_ID; ++j) 
-           {
-			   
-                
-				memcpy(CharList+32+140*j, ReservePacket+32, 140);
-					char ContentID[3];
-					memcpy(ContentID, CharList+32, sizeof(ContentID));
-					ContentID[2] += j;
-
-					memcpy(CharList+32+140*j, &ContentID, 3);
-					memcpy(uList+16*(j+1),&ContentID, 3);
-              
-			   
-                    
-		   }
-
-            uList[0] = 0x03;// THE HOLDER FOR THE CHARATERS ALLOWED TO HAVE FROM CONTENT IDS
-
-
-            int i = 0;// THIS IS 0 count
-            
-			//NOW WE MATCH IT WITH THE DATABASE SO IF CONTENT ID1 get charid 1 from that account
-            while(Sql_NextRow(SqlHandle) != SQL_NO_DATA)// WHILE IS RUNNIG A COUNT LOOP SAYING IF THERE IS MORE THEN 1 CHARACTER ON THE SERVER RUN AGAIN FIND THEM ALL
-            {
-				
-			  // BUILDING THE CHARACTER
-               char* strCharName = NULL;
-               
-               Sql_GetData(SqlHandle,1,&strCharName,NULL);
-			   ShowMessage(CL_GREEN"GET CHARACTERS NAME: %s  \n"CL_RESET,strCharName );// WE GET THE NAME
-               uint32 CharID    = Sql_GetIntData(SqlHandle,0);
-			   ShowMessage(CL_GREEN"GET CHAR ID: %u  \n"CL_RESET,CharID );// WE GET THE ID AND OTHER CRAP
-               
-               uint8 zone       = (uint8)Sql_GetIntData(SqlHandle,2);
-			  // ShowNotice(CL_GREEN"GET ZONE ID: %u  \n"CL_RESET,zone );
-               
-			   
-
-               uint8 MainJob    = (uint8)Sql_GetIntData(SqlHandle,3);
-			 //  ShowNotice(CL_GREEN"GET MAIN JOB ID: %u  \n"CL_RESET,MainJob );
-               uint8 lvlMainJob = (uint8)Sql_GetIntData(SqlHandle,12+MainJob);
-			 //  ShowNotice(CL_GREEN"GET MAIN JOB LEVEL ID: %u  \n"CL_RESET,lvlMainJob );
-			  
-				   WBUFL(uList,20*(i+1)) = CharID;
-
-               ////////////////////////////////////////////////////
-               WBUFL(CharList,4+32+i*140) = CharID;
-
-               memcpy(CharList+12+32+i*140,strCharName, 15);
-
-               WBUFB(CharList,46+32+i*140) = MainJob;
-               WBUFB(CharList,73+32+i*140) = lvlMainJob; 
-
-               WBUFB(CharList,44+32+i*140) = (uint8) Sql_GetIntData(SqlHandle, 4); // race;
-               WBUFB(CharList,56+32+i*140) = (uint8) Sql_GetIntData(SqlHandle, 5); // face;
-               WBUFW(CharList,58+32+i*140) = (uint16)Sql_GetIntData(SqlHandle, 6); // head;
-               WBUFW(CharList,60+32+i*140) = (uint16)Sql_GetIntData(SqlHandle, 7); // body;
-               WBUFW(CharList,62+32+i*140) = (uint16)Sql_GetIntData(SqlHandle, 8); // hands;
-               WBUFW(CharList,64+32+i*140) = (uint16)Sql_GetIntData(SqlHandle,9); // legs;
-               WBUFW(CharList,66+32+i*140) = (uint16)Sql_GetIntData(SqlHandle,10); // feet;
-               WBUFW(CharList,68+32+i*140) = (uint16)Sql_GetIntData(SqlHandle,11); // main;
-               WBUFW(CharList,70+32+i*140) = (uint16)Sql_GetIntData(SqlHandle,12); // sub;
-
-               WBUFB(CharList,72+32+i*140) = zone;//(zone == 0 ? prevzone : zone);      // если персонаж в MogHouse
-			  
-               
-               ///////////////////////////////////////////////////
-				
-				
-				
-               ++i;// IF MORE CHARS ARE FOUND RUN AGAIN ELSE
+			char* strCharName = NULL;
+            Sql_GetData(SqlHandle,1,&strCharName,NULL);
+			ShowMessage(CL_GREEN"GET CHARACTERS NAME: %s  \n"CL_RESET,strCharName );
+            uint32 CharID    = Sql_GetIntData(SqlHandle,0);
+			ShowMessage(CL_GREEN"GET CHAR ID: %u  \n"CL_RESET,CharID );
+            uint8 zone       = (uint8)Sql_GetIntData(SqlHandle,2);
+			uint8 MainJob    = (uint8)Sql_GetIntData(SqlHandle,3);
+			uint8 lvlMainJob = (uint8)Sql_GetIntData(SqlHandle,12+MainJob);
+			WBUFL(uList,20*(i+1)) = CharID;
+            WBUFL(CharList,4+32+i*140) = CharID;
+            memcpy(CharList+12+32+i*140,strCharName, 15);
+            WBUFB(CharList,46+32+i*140) = MainJob;
+            WBUFB(CharList,73+32+i*140) = lvlMainJob; 
+            WBUFB(CharList,44+32+i*140) = (uint8) Sql_GetIntData(SqlHandle, 4); // race;
+            WBUFB(CharList,56+32+i*140) = (uint8) Sql_GetIntData(SqlHandle, 5); // face;
+            WBUFW(CharList,58+32+i*140) = (uint16)Sql_GetIntData(SqlHandle, 6); // head;
+            WBUFW(CharList,60+32+i*140) = (uint16)Sql_GetIntData(SqlHandle, 7); // body;
+            WBUFW(CharList,62+32+i*140) = (uint16)Sql_GetIntData(SqlHandle, 8); // hands;
+            WBUFW(CharList,64+32+i*140) = (uint16)Sql_GetIntData(SqlHandle,9); // legs;
+            WBUFW(CharList,66+32+i*140) = (uint16)Sql_GetIntData(SqlHandle,10); // feet;
+            WBUFW(CharList,68+32+i*140) = (uint16)Sql_GetIntData(SqlHandle,11); // main;
+            WBUFW(CharList,70+32+i*140) = (uint16)Sql_GetIntData(SqlHandle,12); // sub;
+            WBUFB(CharList,72+32+i*140) = zone;
+			++i;
             }
 
-			//COME HERE
+			
 
             if(session[sd->login_lobbyview_fd]!=NULL)
 			{
-               uList[1] = 0x10;
+                    uList[1] = 0x10;
 					memcpy(session[fd]->wdata,uList,0x110);
 					WFIFOSET(fd,0x110);
 					RFIFOSKIP(fd,session[fd]->rdata_size);
@@ -327,123 +226,95 @@ int32 lobbydata_parse(int32 fd)
 					RFIFOFLUSH(sd->login_lobbyview_fd);
 			   
             }
-            else{ //cleanup
-              
-				ShowMessage(CL_YELLOW"CHECKING CLOSE 5 \n"CL_RESET);
-               do_close_lobbydata(sd,fd);
-               return -1;
-            }
-            /////////////////////////////////////////
-
             break;
          }
       case 0xA2:
          {
-                LOBBY_A2_RESERVEPACKET(ReservePacket);
-				uint8 key3[20];
-				memset(key3,0,sizeof(key3));
-				memcpy(key3,buff+1,sizeof(key3));
-				key3[16] -= 2;
-				uint8 MainReservePacket[0x48];
-				
-				RFIFOSKIP(fd,session[fd]->rdata_size);
-				RFIFOFLUSH(fd);
+           LOBBY_A2_RESERVEPACKET(ReservePacket);
+		   uint8 key3[20];
+		   memset(key3,0,sizeof(key3));
+		   memcpy(key3,buff+1,sizeof(key3));
+		   key3[16] -= 2;
+		   uint8 MainReservePacket[0x48];
+		   RFIFOSKIP(fd,session[fd]->rdata_size);
+		   RFIFOFLUSH(fd);
 
-            if(session[sd->login_lobbyview_fd]==NULL){
+            if(session[sd->login_lobbyview_fd]==NULL)
+			{
               ShowMessage(CL_YELLOW"CHECKING CLOSE 6 \n"CL_RESET);
                do_close_lobbydata(sd,fd);
                return -1;
             }
 
             uint32 charid = RBUFL(session[sd->login_lobbyview_fd]->rdata,32);
-
             in_addr inaddr;
-   inaddr.S_un.S_addr = inet_addr(login_config.DNS_Servers_Address);
-   
-   
-   if( inaddr.S_un.S_addr == INADDR_NONE)
-   {
-      hostent* phostent = gethostbyname(login_config.DNS_Servers_Address);
+            inaddr.S_un.S_addr = inet_addr(login_config.DNS_Servers_Address);
+            if( inaddr.S_un.S_addr == INADDR_NONE)
+               {
+               hostent* phostent = gethostbyname(login_config.DNS_Servers_Address);
       
-      if( phostent == 0)
-      {
-         
-         return 0;
-      }
+                 if( phostent == 0)
+                   {
+                     return 0;
+                   }
 
-      if( sizeof(inaddr) != phostent->h_length)
-      {
-         
-         return 0;; 
-      }
-
-      inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
-      
-
-      
-   }
+                 if( sizeof(inaddr) != phostent->h_length)
+                   {
+                   return 0;; 
+                   }
+                  inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
+                 }
 
             const char *fmtQuery = "SELECT zoneid FROM zone_settings , chars  WHERE zoneid = pos_zone AND charid = %u;";
             uint32 ZoneIP   = inaddr.S_un.S_addr;//sd->servip;
-                uint16 ZonePort = 54230;
+            uint16 ZonePort = 54230;
 
             if( Sql_Query(SqlHandle,fmtQuery,charid) != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 )
             {
-               Sql_NextRow(SqlHandle);
-               
+             Sql_NextRow(SqlHandle);
              if (Sql_GetIntData(SqlHandle,0) == 0)
-				 {
-					 key3[16] += 6;
-			     }
-
-               ZoneIP = inaddr.S_un.S_addr;
-               ZonePort = 54230;
+				{
+				key3[16] += 6;
+			    }
+              
                uint8  ZoneID = (uint8)Sql_GetUIntData(SqlHandle,0);
                WBUFL(ReservePacket,(0x38)) = ZoneIP;
                WBUFW(ReservePacket,(0x3C)) = ZonePort;
               
-            }else{
-              
-               WBUFL(ReservePacket,(0x38)) = ZoneIP;
-                    
             }
+			else
+			{
+               WBUFL(ReservePacket,(0x38)) = ZoneIP;
+            }
+               WBUFL(ReservePacket,(0x40)) = ZoneIP; 
+               memcpy(MainReservePacket,ReservePacket,RBUFB(ReservePacket,0));
 
-            WBUFL(ReservePacket,(0x40)) = ZoneIP; 
-           
+			   int8 session_key[sizeof(key3)*2+1];
+			   bin2hex(session_key,key3,sizeof(key3));
 
-            memcpy(MainReservePacket,ReservePacket,RBUFB(ReservePacket,0));
-
-            //SO IN BASIC the port system to get it wrking i think i have it all set right 
-			uint32 GetCharID = 0;
-			const char * Query = "SELECT charid FROM accounts_sessions WHERE accid = '%u';";
-	          int32 ret3 = Sql_Query(SqlHandle,Query,sd->accid);
+			   const char * Query = "SELECT accid FROM accounts_sessions WHERE accid = '%u';";
+               int32 ret3 = Sql_Query(SqlHandle,Query,accid);
+               if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	            {
 			
-			  
-	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	                {
-						
-						ShowMessage(CL_YELLOW"CHECKING CONNECT CLIENT PORT %u \n"CL_RESET,session[fd]->client_port);
-		 
-						GetCharID =  Sql_GetIntData(SqlHandle,0);
-					
-						int8 session_key[sizeof(key3)*2+1];
-                        bin2hex(session_key,key3,sizeof(key3));
+			     const char *Query = "UPDATE accounts_sessions SET  accid ='%u', charid ='%u', session_key =x'%s', server_addr ='%u',server_port='%u', client_addr ='%u', client_port ='%u' WHERE accid = %u";
+                            Sql_Query(SqlHandle,Query,accid, charid, session_key, ZoneIP, ZonePort, sd->client_addr, sd->client_port);
+			
+		        }
+			   else
+			    {
 
-						Query = "UPDATE accounts_sessions SET accid = %u, charid = %u, session_key = x'%s', server_addr = %u, server_port = %u, client_addr = %u , client_port = %u WHERE charid = %u";
+				fmtQuery = "INSERT INTO accounts_sessions(accid,charid,session_key,server_addr,server_port,client_addr,client_port) VALUES(%u,%u,x'%s',%u,%u,%u,%u)";
 
-		Sql_Query(SqlHandle,Query,
-			sd->accid,
-			charid,
-			session_key,
-			ZoneIP,
-			ZonePort,
-			session[fd]->client_addr,
-			session[fd]->client_port,
-			GetCharID);
-		
-		
+				 if( Sql_Query(SqlHandle, fmtQuery, accid, charid, session_key, ZoneIP, ZonePort, sd->client_addr,sd->client_port) == SQL_ERROR )
+				 {
+					LOBBBY_ERROR_MESSAGE(ReservePacket);
+					WBUFW(ReservePacket,32) = 305; 
+					memcpy(MainReservePacket,ReservePacket,RBUFB(ReservePacket,0));
+				 }
+			    }
 
-		unsigned char Hash[16];
+                unsigned char Hash[16];
 				uint8 SendBuffSize = RBUFB(MainReservePacket,0);
 
 				memset(MainReservePacket+12,0,sizeof(Hash));
@@ -455,7 +326,7 @@ int32 lobbydata_parse(int32 fd)
 
 				RFIFOSKIP(sd->login_lobbyview_fd,session[sd->login_lobbyview_fd]->rdata_size);
 				RFIFOFLUSH(sd->login_lobbyview_fd);
-				ShowMessage(CL_GREEN"WE ARE LOGGING INTO THE MAP SERVER WITH ACCOUNT ID %u \n"CL_RESET,sd->accid);
+				ShowMessage(CL_GREEN"WE ARE LOGGING INTO THE MAP SERVER WITH ACCOUNT ID %u \n"CL_RESET,accid);
 				
             
             if (SendBuffSize == 0x24)
@@ -467,70 +338,7 @@ int32 lobbydata_parse(int32 fd)
             do_close_tcp(sd->login_lobbyview_fd);
 			
 						
-				 }
-				 else
-				 {
-					
-		
-            int8 session_key[sizeof(key3)*2+1];
-            bin2hex(session_key,key3,sizeof(key3));
-			
-
-			const int8* fmtQuery = "SELECT max(targid) FROM accounts_sessions";
-
-	if( Sql_Query(SqlHandle,fmtQuery) == SQL_ERROR )
-	{
-		return -1;
-	}
-
-	uint32 targid = 0;
-
-	if( Sql_NumRows(SqlHandle) != 0 )
-	{
-		Sql_NextRow(SqlHandle);
-		
-		targid = Sql_GetUIntData(SqlHandle,0) + 1;
-		ShowMessage("MAX CHAR COUNT %u \n" CL_RESET,targid);
-		
-		ShowMessage(CL_YELLOW"WE ARE INSERTING OUR SESSION ID ON ACCOUNT %u \n"CL_RESET,sd->accid);
-
-		fmtQuery = "INSERT INTO accounts_sessions(accid,charid,session_key,server_addr,server_port,client_addr,client_port,targid) VALUES(%u,%u,x'%s',%u,%u,%u,%u,%u) ON DUPLICATE KEY UPDATE charid = charid;";
-
-            if( Sql_Query(SqlHandle, fmtQuery, sd->accid, charid, session_key, ZoneIP, ZonePort, sd->client_addr,sd->client_port,targid ) == SQL_ERROR )
-            {
-               ShowMessage(CL_YELLOW"WE HAVE A BAD INSERT OUR SESSION ID ON ACCOUNT %u \n"CL_RESET,sd->accid);
-                   LOBBBY_ERROR_MESSAGE(ReservePacket);
-					
-					WBUFW(ReservePacket,32) = 305; 
-					memcpy(MainReservePacket,ReservePacket,RBUFB(ReservePacket,0));
-            }
-		
-		
-	}
-			
-            
-         
-            unsigned char Hash[16];
-            uint8 SendBuffSize = RBUFB(MainReservePacket,0);
-
-            memset(MainReservePacket+12,0,sizeof(Hash));
-            md5(MainReservePacket, Hash, SendBuffSize);
-
-            memcpy(MainReservePacket+12,Hash,sizeof(Hash));
-            memcpy(session[sd->login_lobbyview_fd]->wdata,MainReservePacket,SendBuffSize);
-            WFIFOSET(sd->login_lobbyview_fd,SendBuffSize);
-
-            RFIFOSKIP(sd->login_lobbyview_fd,session[sd->login_lobbyview_fd]->rdata_size);
-            RFIFOFLUSH(sd->login_lobbyview_fd);
-            
-            if (SendBuffSize == 0x24)
-			{
-               ShowMessage(CL_YELLOW"CHECKING CLOSE 8 \n"CL_RESET);
-               return -1;
-            }
-			
-            do_close_tcp(sd->login_lobbyview_fd);
-			}
+				 
          
             break;
          }
@@ -550,28 +358,22 @@ int32 lobbydata_parse(int32 fd)
 
 int32 do_close_lobbydata(login_session_data_t *loginsd,int32 fd)
 {
-	
-			ShowMessage(CL_YELLOW"CLOSEING LOBBY DATA \n"CL_RESET);
 	if( loginsd != NULL )
 	{ 
 		uint8 online = 0;
-		ShowMessage(CL_GREEN"GETTING ACCOUNT ID %u TO CLOSE \n"CL_RESET,loginsd->accid);
 		const char * Query = "SELECT online FROM accounts WHERE id = '%u';";
-	          int32 ret3 = Sql_Query(SqlHandle,Query,loginsd->accid);
+	    int32 ret3 = Sql_Query(SqlHandle,Query,loginsd->accid);
+		if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	       {
 			
-
-	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	                {
-						ShowMessage(CL_GREEN"FOUND ACCOUNT ID %u TO CLOSE  \n"CL_RESET,loginsd->accid);
-						ShowMessage(CL_GREEN"FOUND ACCOUNT ID %u CHECKING IF PLAYER IS ONLINE \n"CL_RESET,loginsd->accid);
 						online =  Sql_GetIntData(SqlHandle,0);
 						if(online == 1)
 						{
 							ShowMessage(CL_GREEN"FOUND ACCOUNT ID %u PLAYER IS ONLINE \n"CL_RESET,loginsd->accid);
 							const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE accid = %u";
-                        Sql_Query(SqlHandle,Query,loginsd->accid);
+                            Sql_Query(SqlHandle,Query,loginsd->accid);
 							Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
-                        Sql_Query(SqlHandle,Query,loginsd->accid);
+                            Sql_Query(SqlHandle,Query,loginsd->accid);
 							do_close_tcp(loginsd->login_lobbyview_fd);
 			                erase_loginsd_byaccid(loginsd->accid);
 							do_close_login(loginsd,fd);
@@ -580,7 +382,7 @@ int32 do_close_lobbydata(login_session_data_t *loginsd,int32 fd)
 						}
 						else
 						{
-							ShowMessage(CL_GREEN"FOUND ACCOUNT ID %u PLAYER IS NOT ONLINE \n"CL_RESET,loginsd->accid);
+					    ShowMessage(CL_GREEN"FOUND ACCOUNT ID %u PLAYER IS NOT ONLINE \n"CL_RESET,loginsd->accid);
 		                const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE accid = %u";
                         Sql_Query(SqlHandle,Query,loginsd->accid);
 						Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
@@ -635,30 +437,40 @@ int32 connect_client_lobbyview(int32 listenfd)
 int32 lobbyview_parse(int32 fd)
 {
 	login_session_data_t* sd = (login_session_data_t*)session[fd]->session_data;
-
-	if( sd == NULL )
-	{	
-		sd = find_loginsd_by_ip_and_port(session[fd]->client_addr,session[fd]->client_port);
-		if( sd == NULL )
-		{
-			
-			do_close_tcp(fd);
-			return -1;
-		}
-		session[fd]->session_data = sd;
-		sd->login_lobbyview_fd	  = fd;
-	}
-
-	if( session[fd]->flag.eof )
+	
+	
+	if( sd == 0)
+   {
+   unsigned char *buff = session[fd]->rdata;
+   ShowMessage(CL_GREEN"SESSION[FD]->RDATA == %u \n"CL_RESET,session[fd]->rdata);
+   ShowMessage(CL_GREEN"BUFF == %u \n"CL_RESET,buff);
+   int32 accid = accountid;
+   ShowMessage(CL_GREEN"ACCID == %u \n"CL_RESET,accid);
+   uint32 online = 0;
+   sd = find_loginsd_byaccid(accid);
+   sd->login_lobbyview_fd	= fd;
+   session[fd]->session_data = sd;
+    if( sd == NULL )
+      {
+	   ShowMessage(CL_GREEN"SD == %u \n"CL_RESET,sd);
+       do_close_tcp(fd);
+       return 0;
+      }
+	
+   }
+   ShowMessage(CL_GREEN"SESSION[FD]->FLAG->EOF == %u \n"CL_RESET,session[fd]->flag.eof);
+   if( session[fd]->flag.eof == 1 )
 	{
 		do_close_lobbyview(sd,fd);
 		return 0;
 	}
 
+	
+
 	if( RFIFOREST(fd) >= 9)
 	{
 		unsigned char *buff = session[fd]->rdata;
-		
+		int32 accid = accountid;
 		uint8 code = RBUFB(buff,8);
 		
 		switch(code)
@@ -692,22 +504,18 @@ int32 lobbyview_parse(int32 fd)
 				
 				uint32 CharID = RBUFL(session[fd]->rdata,32);
 
-				ShowMessage(CL_YELLOW"GETTING INFORMATION BEFORE DELETE CHARACTER\n"CL_RESET);
-				ShowMessage(CL_YELLOW"GETTING ACCOUNT ID %u\n"CL_RESET,sd->accid);
-				ShowMessage(CL_YELLOW"GETTING CHARS ID %u\n"CL_RESET,CharID);
-				ShowMessage(CL_YELLOW"GETTING IP ADDRESS ID %u\n"CL_RESET,sd->client_addr);
-				ShowMessage(CL_YELLOW"GETTING IP PORT ID %u\n"CL_RESET,sd->client_port);
+				
 
 
                const char *  Query = "SELECT charid FROM chars WHERE accid = '%u';";
-	          int32  ret = Sql_Query(SqlHandle,Query,sd->accid);
+	          int32  ret = Sql_Query(SqlHandle,Query,accid);
 
 	             if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 	                {
 						//ShowNotice(CL_GREEN"DELETEING CHARATER ID: %d FROM IP: %s\n"CL_RESET,CharID,ip2str(sd->client_addr,NULL));
 				
 						CharID =  Sql_GetIntData(SqlHandle,0);
-						ShowMessage(CL_GREEN"CHECKING CHAR ID %u\n"CL_RESET,CharID);
+						
 						Query = "DELETE FROM chars WHERE charid = %u";
 				Sql_Query(SqlHandle,Query,CharID);
 
@@ -759,8 +567,7 @@ int32 lobbyview_parse(int32 fd)
 				    }
 				 else
 				 {
-                   ShowMessage(CL_RED"SO WHAT IS MY CHAR ID IF NOT FOUND %s \n" CL_RESET,session[fd]->rdata);
-				   ShowDebug(CL_RED"WE SHOULD NEVER SEE THIS  \n" CL_RESET);
+                   
 				  do_close_lobbyview(sd,fd);
 				 }
 				
@@ -804,7 +611,7 @@ int32 lobbyview_parse(int32 fd)
 			break;
 		case 36:
 			{
-				 LOBBY_024_RESERVEPACKET(ReservePacket);
+				LOBBY_024_RESERVEPACKET(ReservePacket);
 				uint8 key3[20];
 				memset(key3,0,sizeof(key3));
 				memcpy(key3,buff+1,sizeof(key3));
@@ -822,114 +629,14 @@ int32 lobbyview_parse(int32 fd)
 				RFIFOSKIP(fd,session[fd]->rdata_size);
 				RFIFOFLUSH(fd);
 				WFIFOSET(fd,SendBuffSize);
-				
-
-           uint32 GetCharID = 0;
-			const char * Query = "SELECT charid FROM accounts_sessions WHERE accid = '%u';";
-	          int32 ret3 = Sql_Query(SqlHandle,Query,sd->accid);
-			
-			  ShowMessage(CL_YELLOW"CHECKING CONNECT CLIENT PORT %u \n"CL_RESET,session[fd]->client_port);
-	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	                {
-						ShowMessage(CL_YELLOW"WE ARE UPDATEING OUR SESSION ID FOR ACCOUNT ID %u\n"CL_RESET,sd->accid);
-						GetCharID =  Sql_GetIntData(SqlHandle,0);
-					
-						int8 session_key[sizeof(key3)*2+1];
-                        bin2hex(session_key,key3,sizeof(key3));
-
-						Query = "UPDATE accounts_sessions SET charid = %u, session_key = x'%s' WHERE charid = %u";
-
-		Sql_Query(SqlHandle,Query,
-			GetCharID,
-			session_key,
-			sd->accid);
-		
-		
-
-		
-
-						
-				 }
-				 else
-				 {
-					 ShowMessage(CL_YELLOW"NO ACCOUNT FOUND IN THE DATABSE \n"CL_RESET);
-				 }
-				 
-				
-				 
-        
-				
-
-			
-				
-				
-
-			}
+				int8 session_key[sizeof(key3)*2+1];
+                bin2hex(session_key,key3,sizeof(key3));
+              }
 			break;
 		case 7:
 			{
 				
-				
-				
-	
-				string_t Characters_Name ="";
-				uint32 Char_Id =0;
-				
-				uint32 CharID = RBUFL(session[fd]->rdata,32);
-				const char *Query = "SELECT charid,charname FROM chars WHERE charname= '%s';";
-
-				int32  ret = Sql_Query(SqlHandle,Query,sd->charname);
-
-	             if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	                {
-						//THIS IS ON CHARATER CREATE WE SEE THIS FINE
-						
-				       Char_Id =  Sql_GetIntData(SqlHandle,0);
-						Characters_Name=  Sql_GetData(SqlHandle,1);
-						
-						ShowMessage(CL_RED"CHECKING CREATE CHAR SUCCESS ACCOUNT ID %u  \n"CL_RESET,sd->accid);
-						ShowMessage(CL_RED"CHECKING CREATE CHAR SUCCESS CHAR NAME %s  \n"CL_RESET,Characters_Name.c_str() );
-						ShowMessage(CL_RED"CHECKING CREATE CHAR SUCCESS CHAR ID %u  \n"CL_RESET,Char_Id);
-						
-				 }
-				 else
-				 {
-					 //THIS IS CLIENT RETURNING TO SERVER
-					 Query = "SELECT charid,charname FROM chars WHERE charid= '%u';";
-
-				 ret = Sql_Query(SqlHandle,Query,CharID);
-					 if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	                {
-						//THIS IS ON CHARATER CREATE WE SEE THIS FINE
-				       Char_Id =  Sql_GetIntData(SqlHandle,0);
-						Characters_Name=  Sql_GetData(SqlHandle,1);
-						
-						ShowMessage(CL_RED"CHECKING RETURNING CHAR SUCCESS ACCOUNT ID %u  \n"CL_RESET,sd->accid);
-						ShowMessage(CL_RED"CHECKING RETURNING CHAR SUCCESS CHAR NAME %s  \n"CL_RESET,Characters_Name.c_str() );
-						ShowMessage(CL_RED"CHECKING RETURNING CHAR SUCCESS CHAR ID %u  \n"CL_RESET,Char_Id);
-						//NOW WE SHOULD UPDATE ONLINE ???
-						const char *Query = "UPDATE chars SET  online = '1', shutdown = '0', zoning ='-1', returning = '1' WHERE charid = %u";
-                        Sql_Query(SqlHandle,Query,Char_Id);
-					 }
-					 else
-					 {
-					 
-					    ShowDebug(CL_YELLOW"CHECKING CLOSE 20 \n"CL_RESET);
-						do_close_lobbyview(sd,fd);
-					 return -1;
-					 }
-						
-				  
-				 }
-
-				
-				
-	
-
-				
-				
-				
-				if(session[sd->login_lobbydata_fd]==NULL)
+			if(session[sd->login_lobbydata_fd]==NULL)
 				{
 					
 					uint32 val = 1337;
@@ -938,7 +645,7 @@ int32 lobbyview_parse(int32 fd)
 						val = session[sd->login_lobbydata_fd-1]->client_addr;
 						val = session[sd->login_lobbydata_fd-1]->client_port;
 					}
-					ShowNotice(CL_YELLOW"CHECKING CLOSE 15 \n"CL_RESET);
+					
 					do_close_tcp(fd);
 					return -1;
 				}
