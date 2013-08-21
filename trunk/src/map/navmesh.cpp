@@ -47,7 +47,7 @@ bool CNavMesh::load(char* path)
 
   if (!fp)
   {
-    ShowError("CNavMesh::load Error loading navmesh (%s)\n", path);
+   // ShowError("CNavMesh::load Error loading navmesh (%s)\n", path);
     return false;
   }
 
@@ -75,7 +75,7 @@ bool CNavMesh::load(char* path)
   dtStatus status = m_navMesh->init(&header.params);
   if (dtStatusFailed(status))
   {
-    ShowError("CNavMesh::load Could not initialize detour for (%s)", path);
+   // ShowError("CNavMesh::load Could not initialize detour for (%s)", path);
     outputError(status);
 	fclose(fp);
     return false;
@@ -107,7 +107,7 @@ bool CNavMesh::load(char* path)
 
   if(dtStatusFailed(status))
   {
-    ShowError("CNavMesh::load Error loading navmeshquery (%s)\n", path);
+   // ShowError("CNavMesh::load Error loading navmeshquery (%s)\n", path);
     outputError(status);
     return false;
   }
@@ -186,7 +186,7 @@ int16 CNavMesh::findPath(position_t start, position_t end, position_t* path, uin
 
   if(dtStatusFailed(status))
   {
-    ShowError("CNavMesh::findPath start point invalid (%f, %f, %f)\n", spos[0], spos[1], spos[2]);
+    //ShowError("CNavMesh::findPath start point invalid (%f, %f, %f)\n", spos[0], spos[1], spos[2]);
     outputError(status);
     return ERROR_NEARESTPOLY;
   }
@@ -195,14 +195,14 @@ int16 CNavMesh::findPath(position_t start, position_t end, position_t* path, uin
 
   if(dtStatusFailed(status))
   {
-    ShowError("CNavMesh::findPath end point invalid (%f, %f, %f)\n", epos[0], epos[1], epos[2]);
+   // ShowError("CNavMesh::findPath end point invalid (%f, %f, %f)\n", epos[0], epos[1], epos[2]);
     outputError(status);
     return ERROR_NEARESTPOLY;
   }
 
   if (!m_navMesh->isValidPolyRef(startRef) || !m_navMesh->isValidPolyRef(endRef))
   {
-    ShowError("CNavMesh::findPath Couldn't find path (%f, %f, %f)->(%f, %f, %f) \n", start.x, start.y, start.z, end.x, end.y, end.z);
+   // ShowError("CNavMesh::findPath Couldn't find path (%f, %f, %f)->(%f, %f, %f) \n", start.x, start.y, start.z, end.x, end.y, end.z);
     return ERROR_NEARESTPOLY;
   }
 
@@ -222,7 +222,7 @@ int16 CNavMesh::findPath(position_t start, position_t end, position_t* path, uin
 
   if(dtStatusFailed(status))
   {
-    ShowError("CNavMesh::findPath findPath error\n");
+   // ShowError("CNavMesh::findPath findPath error\n");
     outputError(status);
     return -1;
   }
@@ -236,7 +236,7 @@ int16 CNavMesh::findPath(position_t start, position_t end, position_t* path, uin
 
     if(dtStatusFailed(status))
     {
-      ShowError("CNavMesh::findPath findStraightPath error\n");
+     // ShowError("CNavMesh::findPath findStraightPath error\n");
       outputError(status);
       return -1;
     }
@@ -251,7 +251,7 @@ int16 CNavMesh::findPath(position_t start, position_t end, position_t* path, uin
 
       if(pos == pathSize)
       {
-        ShowError("CNavMesh::findPath Path is too long to hold in array!\n");
+       // ShowError("CNavMesh::findPath Path is too long to hold in array!\n");
         break;
       }
     }
@@ -291,7 +291,7 @@ int16 CNavMesh::findRandomPath(position_t start, float maxRadius, position_t* pa
 
   if(dtStatusFailed(status))
   {
-    ShowError("CNavMesh::findRandomPath start point invalid (%f, %f, %f)\n", spos[0], spos[1], spos[2]);
+   // ShowError("CNavMesh::findRandomPath start point invalid (%f, %f, %f)\n", spos[0], spos[1], spos[2]);
     outputError(status);
     return ERROR_NEARESTPOLY;
   }
@@ -300,7 +300,7 @@ int16 CNavMesh::findRandomPath(position_t start, float maxRadius, position_t* pa
 
   if(dtStatusFailed(status))
   {
-    ShowError("CNavMesh::findRandomPath Error\n");
+   // ShowError("CNavMesh::findRandomPath Error\n");
     outputError(status);
     return ERROR_NEARESTPOLY;
   }
@@ -340,7 +340,7 @@ bool CNavMesh::test(uint16 zoneId)
   }
   else
   {
-    ShowWarning("CNavMesh::test Skipping sanity test for zone (%d)\n", zoneId);
+    //ShowWarning("CNavMesh::test Skipping sanity test for zone (%d)\n", zoneId);
     return true;
   }
 
@@ -355,13 +355,13 @@ bool CNavMesh::test(uint16 zoneId)
   if(totalLength > 1)
   {
     if(end.x != path[totalLength-1].x || end.z != path[totalLength-1].z){
-      ShowError("CNavMesh::test Zone (%d) Failed end points do not match\n", zoneId);
+     // ShowError("CNavMesh::test Zone (%d) Failed end points do not match\n", zoneId);
       return false;
     }
   }
   else
   {
-    ShowError("CNavMesh::test Zone (%d) Failed path could not be created\n", zoneId);
+   // ShowError("CNavMesh::test Zone (%d) Failed path could not be created\n", zoneId);
     return false;
   }
   return true;
