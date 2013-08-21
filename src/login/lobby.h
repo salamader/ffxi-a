@@ -31,7 +31,7 @@
 
 extern int32 login_lobbydata_fd;
 extern int32 login_lobbyview_fd;
-
+extern int32 accountid;
 /*
 *
 *	Parse connections for lobby data
