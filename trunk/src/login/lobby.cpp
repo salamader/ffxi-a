@@ -72,6 +72,8 @@ int32 lobbydata_parse(int32 fd)
    ShowMessage(CL_YELLOW"ACCID == %u \n"CL_RESET,accid);
    uint32 online = 0;
    sd = find_loginsd_byaccid(accid);
+   if(sd != NULL)
+   {
    sd->login_lobbydata_fd    = fd;
    session[fd]->session_data = sd;
    const char * Query = "SELECT online FROM accounts WHERE id = '%u';";
@@ -99,6 +101,7 @@ int32 lobbydata_parse(int32 fd)
             do_close_tcp(fd);
             return 0;
             }
+    }
 	
    }
    ShowMessage(CL_YELLOW"SESSION[FD]->FLAG->EOF == %u \n"CL_RESET,session[fd]->flag.eof);
@@ -360,51 +363,10 @@ int32 do_close_lobbydata(login_session_data_t *loginsd,int32 fd)
 {
 	if( loginsd != NULL )
 	{ 
-		uint8 online = 0;
-		const char * Query = "SELECT online FROM accounts WHERE id = '%u';";
-	    int32 ret3 = Sql_Query(SqlHandle,Query,loginsd->accid);
-		if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	       {
-			
-						online =  Sql_GetIntData(SqlHandle,0);
-						if(online == 1)
-						{
-							ShowMessage(CL_GREEN"FOUND ACCOUNT ID %u PLAYER IS ONLINE \n"CL_RESET,loginsd->accid);
-							const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE accid = %u";
-                            Sql_Query(SqlHandle,Query,loginsd->accid);
-							Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
-                            Sql_Query(SqlHandle,Query,loginsd->accid);
-							do_close_tcp(loginsd->login_lobbyview_fd);
-			                erase_loginsd_byaccid(loginsd->accid);
-							do_close_login(loginsd,fd);
-			                do_close_tcp(fd);
-							return -1;
-						}
-						else
-						{
-					    ShowMessage(CL_GREEN"FOUND ACCOUNT ID %u PLAYER IS NOT ONLINE \n"CL_RESET,loginsd->accid);
-		                const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE accid = %u";
-                        Sql_Query(SqlHandle,Query,loginsd->accid);
-						Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
-                        Sql_Query(SqlHandle,Query,loginsd->accid);
-						do_close_tcp(loginsd->login_lobbyview_fd);
-			            erase_loginsd_byaccid(loginsd->accid);
-			            do_close_tcp(fd);
-						}
-		
-				    }
-				 else
-				 {
-                   ShowMessage(CL_YELLOW"NO ACCOUNT FOUND IN DATABASE BY THE ID %u \n"CL_RESET,loginsd->accid);
-				 }
-
-		
-
-		
-		return 0;
+		do_close_tcp(fd);
 	}
 	
-	return -1;
+	return 0;
 }
 
 /************************************************************************
@@ -448,14 +410,16 @@ int32 lobbyview_parse(int32 fd)
    ShowMessage(CL_GREEN"ACCID == %u \n"CL_RESET,accid);
    uint32 online = 0;
    sd = find_loginsd_byaccid(accid);
-   sd->login_lobbyview_fd	= fd;
-   session[fd]->session_data = sd;
-    if( sd == NULL )
+   if( sd == 0 )
       {
 	   ShowMessage(CL_GREEN"SD == %u \n"CL_RESET,sd);
        do_close_tcp(fd);
        return 0;
       }
+   sd->login_lobbyview_fd	= fd;
+   session[fd]->session_data = sd;
+    
+   
 	
    }
    ShowMessage(CL_GREEN"SESSION[FD]->FLAG->EOF == %u \n"CL_RESET,session[fd]->flag.eof);
@@ -751,45 +715,9 @@ int32 lobbyview_parse(int32 fd)
 
 int32 do_close_lobbyview(login_session_data_t* sd, int32 fd)
 {
-		ShowMessage(CL_YELLOW"CLOSEING LOBBY VIEW \n"CL_RESET);
-	if( sd != NULL )
+   if( sd != NULL )
 	{
-		uint8 online = 0;
-	ShowMessage(CL_YELLOW"GETTING ACCOUNT ID %u TO CLOSE \n"CL_RESET,sd->accid);
-		const char * Query = "SELECT online FROM accounts WHERE id = '%u';";
-	          int32 ret3 = Sql_Query(SqlHandle,Query,sd->accid);
-			
-
-	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	                {
-
-						online = Sql_GetUIntData(SqlHandle,0);
-						if(online == 1)
-						{
-						ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u NOT SURE MIGHT BE BACK WARDS \n"CL_RESET,sd->accid);
-						}
-						else
-						{
-							ShowMessage(CL_YELLOW"FOUND ACCOUNT ID %u TO CLOSE SHUTING DOWN \n"CL_RESET,sd->accid);
-		const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE accid = %u";
-		Sql_Query(SqlHandle,Query,sd->accid);
-		Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
-		Sql_Query(SqlHandle,Query,sd->accid);
-							
-						}
-
-		
-				    }
-				 else
-				 {
-                   ShowMessage(CL_YELLOW"NO ACCOUNT FOUND IN DATABASE BY THE ID %u \n"CL_RESET,sd->accid);
-				 }
-	
 	do_close_tcp(fd);
-	}
-	else
-	{
-     ShowDebug(CL_YELLOW"CHECKING CLOSE UNK 18 \n"CL_RESET);
 	}
 	return 0;
 }
