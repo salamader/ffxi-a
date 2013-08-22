@@ -1,0 +1,13 @@
+-----------------------------------
+--	[Command name]: setexprates
+--	[Author      ]: 
+--	[Description ]: 
+-----------------------------------
+
+-----------------------------------
+-- Action
+-----------------------------------
+
+function onTrigger(player,rates)
+	player:Set_Exp_Rates(rates);
+end;
