@@ -14,6 +14,7 @@
 #include "../common/utils.h"
 #include "../common/md52.h"
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -105,7 +106,7 @@ int32 lobbydata_parse(int32 fd)
 	
    }
    ShowMessage(CL_YELLOW"SESSION[FD]->FLAG->EOF == %u \n"CL_RESET,session[fd]->flag.eof);
-   if( session[fd]->flag.eof == 1 )
+   if( session[fd]->flag.eof )
 	{
 		do_close_lobbydata(sd,fd);
 		return 0;
@@ -299,22 +300,47 @@ int32 lobbydata_parse(int32 fd)
                int32 ret3 = Sql_Query(SqlHandle,Query,accid);
                if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 	            {
-			
+			     ShowMessage(CL_GREEN"UPDATING SESSION KEY %u \n"CL_RESET,session_key);
 			     const char *Query = "UPDATE accounts_sessions SET  accid ='%u', charid ='%u', session_key =x'%s', server_addr ='%u',server_port='%u', client_addr ='%u', client_port ='%u' WHERE accid = %u";
-                            Sql_Query(SqlHandle,Query,accid, charid, session_key, ZoneIP, ZonePort, sd->client_addr, sd->client_port);
+                 Sql_Query(SqlHandle,Query,accid, charid, session_key, ZoneIP, ZonePort, sd->client_addr, sd->client_port);
 			
 		        }
 			   else
 			    {
+					const int8* fmtQuery = "SELECT max(targid) FROM accounts_sessions";
 
-				fmtQuery = "INSERT INTO accounts_sessions(accid,charid,session_key,server_addr,server_port,client_addr,client_port) VALUES(%u,%u,x'%s',%u,%u,%u,%u)";
+	                  if( Sql_Query(SqlHandle,fmtQuery) == SQL_ERROR )
+	                    {
+		                 return -1;
+	                    }
 
-				 if( Sql_Query(SqlHandle, fmtQuery, accid, charid, session_key, ZoneIP, ZonePort, sd->client_addr,sd->client_port) == SQL_ERROR )
-				 {
-					LOBBBY_ERROR_MESSAGE(ReservePacket);
-					WBUFW(ReservePacket,32) = 305; 
-					memcpy(MainReservePacket,ReservePacket,RBUFB(ReservePacket,0));
-				 }
+	                  uint32 targid = 0;
+
+	                  if( Sql_NumRows(SqlHandle) != 0 )
+	                    {
+		                Sql_NextRow(SqlHandle);
+		
+		                targid = Sql_GetUIntData(SqlHandle,0) + 1;
+						ShowMessage("MAX TARGETID COUNT %u \n" CL_RESET,targid);
+						if(targid == 1)
+						{
+							targid = 1024;
+							ShowMessage("MAX TARGETID NEW COUNT %u \n" CL_RESET,targid);
+						}
+		                
+		                ShowMessage(CL_GREEN"INSERTING SESSION KEY %u \n"CL_RESET,session_key);
+				        fmtQuery = "INSERT INTO accounts_sessions(accid,charid,session_key,server_addr,server_port,client_addr,client_port,targid) VALUES(%u,%u,x'%s',%u,%u,%u,%u,%u)";
+
+				           if( Sql_Query(SqlHandle, fmtQuery, accid, charid, session_key, ZoneIP, ZonePort, sd->client_addr,sd->client_port,targid ) == SQL_ERROR )
+				              {
+					           LOBBBY_ERROR_MESSAGE(ReservePacket);
+					           WBUFW(ReservePacket,32) = 305; 
+					           memcpy(MainReservePacket,ReservePacket,RBUFB(ReservePacket,0));
+				              }
+		                }
+					  
+
+					
 			    }
 
                 unsigned char Hash[16];
@@ -423,7 +449,7 @@ int32 lobbyview_parse(int32 fd)
 	
    }
    ShowMessage(CL_GREEN"SESSION[FD]->FLAG->EOF == %u \n"CL_RESET,session[fd]->flag.eof);
-   if( session[fd]->flag.eof == 1 )
+   if( session[fd]->flag.eof  )
 	{
 		do_close_lobbyview(sd,fd);
 		return 0;
