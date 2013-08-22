@@ -71,7 +71,7 @@ const int8* MAP_CONF_FILENAME = NULL;
 int8*  g_PBuff   = NULL;                // глобальный буфер обмена пакетами
 int8*  PTempBuff = NULL;                // временный  буфер обмена пакетами
 Sql_t* SqlHandle = NULL;				// SQL descriptor
-int32 accountid;
+
 int32  map_fd = 0;						// main socket
 uint32 map_amntplayers = 0;				// map amnt unique players
 
@@ -674,8 +674,7 @@ int32 map_close_session(uint32 tick, CTaskMgr::CTask* PTask)
 		Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
         Sql_Query(SqlHandle,Query,map_session_data->PChar->accid);
 		ShowDebug(CL_RED"PLAYERS ACCOUNT ID = %u GET\n"CL_RESET,map_session_data->PChar->accid);
-		accountid= map_session_data->PChar->accid;
-		ShowDebug(CL_RED"PLAYERS ACCOUNT ID = %u SENT\n"CL_RESET,accountid);
+		
 		uint64 port64 = map_session_data->client_port;
 		uint64 ipp	  = map_session_data->client_addr;
 		ipp |= port64<<32;
