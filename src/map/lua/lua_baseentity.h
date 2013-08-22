@@ -472,7 +472,16 @@ public:
 	///////////////////////////////////////////////////
 	//COMMAND SYSTEM
 	///////////////////////////////////////////////////
+	int32 show_Command_Menu(lua_State*);
+	int32 set_speed(lua_State*);
 	int32 Zone(lua_State *L);
+	int32 Set_Exp_Rates(lua_State*); 
+	int32 set_Level(lua_State*);				
+	int32 set_sub_Level(lua_State*);			
+	int32 change_Job(lua_State*);			
+	int32 change_sub_Job(lua_State*);
+	int32 god_mode(lua_State*);
+	int32 Auction_House(lua_State*);
 };
 
 #endif

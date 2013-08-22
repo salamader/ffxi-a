@@ -46,6 +46,7 @@
 #include "../packets/char_sync.h"
 #include "../packets/char_update.h"
 #include "../packets/chat_message.h"
+#include "../packets/chat_message_string.h"
 #include "../packets/send_box.h"
 #include "../packets/entity_update.h"
 #include "../packets/event.h"
@@ -7485,18 +7486,18 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
 	char buf[110];
 	if(PChar !=NULL)
 	{
-     //PChar->PRecastContainer =NULL;
+     
    if(lua_isnil(L,1) || !lua_isnumber(L,1) || !lua_tolstring(L,1,NULL))
 	{
-		//sprintf(buf,"COMMAND Example: .zone ID CS", (uint8)lua_tointeger(L,1));
-	   //            PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		sprintf(buf,"COMMAND Example: .zone ID CS", (uint8)lua_tointeger(L,1));
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		sprintf(buf,"AS COMMAND Example: .zone 240 305", (uint8)lua_tointeger(L,1));
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		sprintf(buf,"OR COMMAND Example: .zone 240", (uint8)lua_tointeger(L,1));
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 		return false;
 	}
-   if(lua_tolstring(L,1,NULL))
-   {
-	   //sprintf(buf,"STRING TEST", (uint8)lua_tointeger(L,1));
-	   //            PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
-   }
+   
   
    if(lua_isnil(L,2) || !lua_isnumber(L,2))
 	{
@@ -7544,7 +7545,10 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
              PChar->is_returning = 1;
 				  
                     PChar->loc.destination = (uint8)lua_tointeger(L,1);
-				   
+				   PChar->status = STATUS_DISAPPEAR;
+			PChar->animation = ANIMATION_NONE;
+
+			PChar->clearPacketList();
 				 
 	                PChar->pushPacket(new CServerIPPacket(PChar,2));
 						return false;
@@ -7554,8 +7558,8 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
 				 {
                    ShowMessage(CL_YELLOW"NO ZONELINE FOUND IN DATABASE BY THE ID %u \n"CL_RESET,(uint8)lua_tointeger(L,1));
 				   
-                   //sprintf(buf,"There is no zone found in the database by the ID: %d", (uint8)lua_tointeger(L,1));
-	               //PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+                   sprintf(buf,"There is no zone found in the database by the ID: %d", (uint8)lua_tointeger(L,1));
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 				   return false;
 				 }
 		
@@ -7565,6 +7569,915 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
 			
 	return false;
 	}
+	return false;
+}
+
+inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
+{
+	
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	if(m_PBaseEntity == NULL)
+	{
+		
+		
+		return true;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		
+		return true;
+	}
+	
+	
+	if(PChar->Account_Level==0)
+	{
+	char buf[110];
+	sprintf(buf,"Player Commands." );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	char buf1[110];
+	sprintf(buf1,"?hello .com .ah .setspeed .setexprates" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+		
+	return true;
+	}
+	if(PChar->Account_Level==1)
+	{
+	char buf[110];
+	sprintf(buf,"Gm Commands." );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	char buf1[110];
+	sprintf(buf1,"?hello #server .com .ah .setspeed .setexprates .setmainjob .setmainlevel" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+	char buf2[110];
+	sprintf(buf2,".setsubjob .setsublevel .zone" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
+	return true;
+	}
+	if(PChar->Account_Level==2)
+	{
+	char buf[110];
+	sprintf(buf,"Sgm Commands." );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	char buf1[110];
+	sprintf(buf1,"?hello #server .com .ah .gm .setspeed .setexprates .setmainjob .setmainlevel" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+	char buf2[110];
+	sprintf(buf2,".setsubjob .setsublevel .zone" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
+	
+	return true;
+	}
+	if(PChar->Account_Level==3)
+	{
+	char buf[110];
+	sprintf(buf,"Lgm Commands." );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	char buf1[110];
+	sprintf(buf1,"?hello #server .com .ah .gm .setspeed .setexprates .setmainjob .setmainlevel" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+	char buf2[110];
+	sprintf(buf2,".setsubjob .setsublevel .zone" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
+	
+	return true;
+	}
+	if(PChar->Account_Level==4)
+	{
+	char buf[110];
+	sprintf(buf,"Server Owner Commands." );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	char buf1[110];
+	sprintf(buf1,"?hello #server .com .ah .gm .setspeed .setexprates .setmainjob .setmainlevel" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+	char buf2[110];
+	sprintf(buf2,".setsubjob .setsublevel .zone" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
+	
+	return true;
+	}
+	
+	
+	
+	
+	
+	
+    
+	return false;
+}
+inline int32 CLuaBaseEntity::Set_Exp_Rates(lua_State *L)
+{
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	
+	if(m_PBaseEntity == NULL)
+	{
+		
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		
+		return false;
+	}
+	 if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
+	{
+		char buf[110];
+     sprintf(buf,"Command Example: .setexprates 1");
+	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	 }
+	 if(PChar->Account_Level==0)
+	 {
+	 if(lua_tointeger(L,1) > 5 || lua_tointeger(L,1) < 1)
+	       {
+		   
+		   char buf[110];
+     sprintf(buf,"Command Example: .setexprates 1-5");
+	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	       }
+	 }
+	 if(PChar->Account_Level==1 || PChar->Account_Level==2)
+	 {
+	 if(lua_tointeger(L,1) > 10 || lua_tointeger(L,1) < 1)
+	       {
+		 
+		   char buf[110];
+     sprintf(buf,"Command Example: .setexprates 1-10");
+	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	       }
+	 }
+	  if(PChar->Account_Level==3 ||PChar->Account_Level==4)
+	 {
+	 if(lua_tointeger(L,1) > 20 || lua_tointeger(L,1) < 1)
+	       {
+		   
+		   char buf[110];
+     sprintf(buf,"Command Example: .setexprates 1-20");
+	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	       }
+	 }
+	  int32 exprates = (uint8)dsp_min(lua_tointeger(L,-1), 20);
+	  PChar->SetExpRates = exprates;
+	   char buf[110];
+     sprintf(buf,"Setting Exp Rates: %u", exprates);
+	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	 const int8* Query = "UPDATE chars SET setexprates = '%u' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,exprates,PChar->id);
+	 return false;
+}
+inline int32 CLuaBaseEntity::set_speed(lua_State *L)
+{
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	
+	if(m_PBaseEntity == NULL)
+	{
+		
+		//ShowNotice(CL_RED"TRACER:COMMAND: setspeed Error\n" CL_RESET);
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		//ShowNotice(CL_RED"TRACER:COMMAND: setspeed Error1\n" CL_RESET);
+		return false;
+	}
+	 if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
+	{
+		char buf[110];
+     sprintf(buf,"Command Example: .setspeed 50");
+	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	 }
+	 if(PChar->Account_Level==0)
+	 {
+
+		  if(lua_tointeger(L,1) > 75 || lua_tointeger(L,1) < 30)
+	       {
+		   
+		   char buf[110];
+     sprintf(buf,"Command Example: .setspeed 30-75");
+	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	       }
+	 }
+	 if(PChar->Account_Level==1 || PChar->Account_Level==2)
+	 {
+
+		  if(lua_tointeger(L,1) > 100 || lua_tointeger(L,1) < 30)
+	       {
+		   
+		   char buf[110];
+     sprintf(buf,"Command Example: .setspeed 30-100");
+	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	       }
+	 }
+	 if(PChar->Account_Level==3 ||PChar->Account_Level==4)
+	 {
+
+		  if(lua_tointeger(L,1) > 125 || lua_tointeger(L,1) < 30)
+	       {
+		   
+		   char buf[110];
+     sprintf(buf,"Command Example: .setspeed 30-125");
+	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	       }
+	 }
+	 uint8 speed = (uint8)dsp_min(lua_tointeger(L,-1), 255);
+	 CBattleEntity* PPet = PChar->PPet;
+	 const int8* Query = "UPDATE chars SET speed = '%u' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,speed,PChar->id);
+	if(PPet == NULL)
+	{
+		PChar->speed = speed;
+     PChar->pushPacket(new CCharUpdatePacket(PChar));
+    
+     char buf[110];
+     sprintf(buf,"Setting Speed: %u", speed);
+	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	return false;
+	}
+	else
+	{
+
+		PChar->speed = speed;
+		PPet->speed = speed;
+		PChar->pushPacket(new CEntityUpdatePacket(PPet, ENTITY_UPDATE));
+		PPet->loc.zone->PushPacket(PPet, CHAR_INRANGE, new CEntityUpdatePacket(PPet, ENTITY_UPDATE));
+		PPet->loc.zone->PushPacket(PPet, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PPet, ENTITY_UPDATE));
+     PChar->pushPacket(new CCharUpdatePacket(PChar));
+    
+     char buf[110];
+     sprintf(buf,"Setting Speed: %u", speed);
+	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	return false;
+	}
+     
+            
+    return false;
+}
+inline int32 CLuaBaseEntity::change_Job(lua_State *L)
+{
+	 CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	 if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .setmainJob 1");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	
+		return false;
+	 }
+	  if(lua_tointeger(L,1) > 20 || lua_tointeger(L,1) < 1)
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .setmainjob 1-20");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	}
+	 if(PChar->GetSJob() == PChar->GetMJob() ||PChar->GetMJob() == PChar->GetSJob())
+	 {
+		 char buf[110];
+        sprintf(buf,"Unable To Change Your Main Job To Sub Job!");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		 return false;
+	 }  
+	      
+
+	
+
+	PChar->resetPetZoningInfo();
+
+	PChar->jobs.unlocked |= (1 << (uint8)lua_tointeger(L,1));
+	PChar->SetMJob((uint8)lua_tointeger(L,1));
+
+    charutils::BuildingCharSkillsTable(PChar);
+	charutils::CalculateStats(PChar);
+    charutils::CheckValidEquipment(PChar);
+    charutils::BuildingCharAbilityTable(PChar);
+    charutils::BuildingCharTraitsTable(PChar);
+    charutils::BuildingCharWeaponSkills(PChar);
+
+	PChar->UpdateHealth();
+    PChar->health.hp = PChar->GetMaxHP();
+    PChar->health.mp = PChar->GetMaxMP();
+
+    //charutils::SaveCharStats(PChar);
+    //charutils::SaveCharJob(PChar, PChar->GetMJob());
+    //charutils::SaveCharExp(PChar, PChar->GetMJob());
+	//charutils::SaveCharPoints(PChar);
+	charutils::UpdateHealth(PChar);
+
+    PChar->pushPacket(new CCharJobsPacket(PChar));
+    PChar->pushPacket(new CCharStatsPacket(PChar));
+    PChar->pushPacket(new CCharSkillsPacket(PChar));
+    PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+    PChar->pushPacket(new CCharUpdatePacket(PChar));
+    PChar->pushPacket(new CMenuMeritPacket(PChar));
+    PChar->pushPacket(new CCharSyncPacket(PChar));
+	
+	int32 n = (uint8)lua_tointeger(L,1);
+	string_t name= "none";
+	if(n==1)
+	{
+		name ="Warrior";
+	}
+	if(n==2)
+	{
+		name ="Monk";
+	}
+	if(n==3)
+	{
+		name ="White Mage";
+	}
+	if(n==4)
+	{
+		name ="Black Mage";
+	}
+	if(n==5)
+	{
+		name ="Red Mage";
+	}
+	if(n==6)
+	{
+		name ="Thief";
+	}
+	if(n==7)
+	{
+		name ="Paladin";
+	}
+	if(n==8)
+	{
+		name ="Dark Knight";
+	}
+	if(n==9)
+	{
+		name ="Beastmaster";
+	}
+	if(n==10)
+	{
+		name ="Bard";
+	}
+	if(n==11)
+	{
+		name ="Ranger";
+	}
+	if(n==12)
+	{
+		name ="Samurai";
+	}
+	if(n==13)
+	{
+		name ="Ninja";
+	}
+	if(n==14)
+	{
+		name ="Dragoon";
+	}
+	if(n==15)
+	{
+		name ="Summoner";
+	}
+	if(n==16)
+	{
+		name ="Blue Mage";
+	}
+	if(n==17)
+	{
+		name ="Corsair";
+	}
+	if(n==18)
+	{
+		name ="Puppetmaster";
+	}
+	if(n==19)
+	{
+		name ="Dancer";
+	}
+	if(n==20)
+	{
+		name ="Scholar";
+	}
+	
+        char buf[110];
+        sprintf(buf,"Changeing Job: ID %u NAME: %s",(int)n,name.c_str());
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	return false;
+}
+
+
+/************************************************************************
+*                                                                       *
+*  GM command @changesJOB !!! FOR DEBUG ONLY !!!                        *
+*                                                                       *
+************************************************************************/
+
+inline int32 CLuaBaseEntity::change_sub_Job(lua_State *L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	 if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .setsubJob 1");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	 }
+	 if(lua_tointeger(L,1) > 20 || lua_tointeger(L,1) < 1)
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .setsubjob 1-20");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	}
+
+	if(PChar->GetSJob() == PChar->GetMJob() ||PChar->GetMJob() == PChar->GetSJob())
+	 {
+		 char buf[110];
+        sprintf(buf,"Unable To Change Your Sub Job To Main Job!");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		 return false;
+	 }
+
+	PChar->jobs.unlocked |= (1 << (uint8)lua_tointeger(L,1));
+	PChar->SetSJob((uint8)lua_tointeger(L,1));
+
+
+    charutils::BuildingCharSkillsTable(PChar);
+	charutils::CalculateStats(PChar);
+    charutils::CheckValidEquipment(PChar);
+    charutils::BuildingCharAbilityTable(PChar);
+    charutils::BuildingCharTraitsTable(PChar);
+    charutils::BuildingCharWeaponSkills(PChar);
+
+	PChar->UpdateHealth();
+    PChar->health.hp = PChar->GetMaxHP();
+    PChar->health.mp = PChar->GetMaxMP();
+
+   //charutils::SaveCharStats(PChar);
+  // charutils::SaveCharJob(PChar, PChar->GetMJob());
+  // charutils::SaveCharExp(PChar, PChar->GetMJob());
+	charutils::UpdateHealth(PChar);
+
+    PChar->pushPacket(new CCharJobsPacket(PChar));
+    PChar->pushPacket(new CCharStatsPacket(PChar));
+    PChar->pushPacket(new CCharSkillsPacket(PChar));
+    PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+    PChar->pushPacket(new CCharUpdatePacket(PChar));
+    PChar->pushPacket(new CMenuMeritPacket(PChar));
+    PChar->pushPacket(new CCharSyncPacket(PChar));
+	
+	
+	int32 n = (uint8)lua_tointeger(L,1);
+	string_t name= "none";
+	if(n==1)
+	{
+		name ="Warrior";
+	}
+	if(n==2)
+	{
+		name ="Monk";
+	}
+	if(n==3)
+	{
+		name ="White Mage";
+	}
+	if(n==4)
+	{
+		name ="Black Mage";
+	}
+	if(n==5)
+	{
+		name ="Red Mage";
+	}
+	if(n==6)
+	{
+		name ="Thief";
+	}
+	if(n==7)
+	{
+		name ="Paladin";
+	}
+	if(n==8)
+	{
+		name ="Dark Knight";
+	}
+	if(n==9)
+	{
+		name ="Beastmaster";
+	}
+	if(n==10)
+	{
+		name ="Bard";
+	}
+	if(n==11)
+	{
+		name ="Ranger";
+	}
+	if(n==12)
+	{
+		name ="Samurai";
+	}
+	if(n==13)
+	{
+		name ="Ninja";
+	}
+	if(n==14)
+	{
+		name ="Dragoon";
+	}
+	if(n==15)
+	{
+		name ="Summoner";
+	}
+	if(n==16)
+	{
+		name ="Blue Mage";
+	}
+	if(n==17)
+	{
+		name ="Corsair";
+	}
+	if(n==18)
+	{
+		name ="Puppetmaster";
+	}
+	if(n==19)
+	{
+		name ="Dancer";
+	}
+	if(n==20)
+	{
+		name ="Scholar";
+	}
+	
+        char buf[110];
+        sprintf(buf,"Changeing Sub Job: ID %u NAME: %s",(int)n,name.c_str());
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	return false;
+}
+
+
+
+/************************************************************************
+*                                                                       *
+*  GM command @setslevel !!! FOR DEBUG ONLY !!!                         *
+*                                                                       *
+************************************************************************/
+
+inline int32 CLuaBaseEntity::set_sub_Level(lua_State *L)
+{
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	 if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .setsublevel 1");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	 }
+	
+	if(PChar->Account_Level == 1)
+	 {
+	if(lua_tointeger(L,1) > 99 || lua_tointeger(L,1) < 1)
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .setsublevel 1-99");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	}
+	
+	 }
+	 if(PChar->Account_Level == 2)
+	 {
+	if(lua_tointeger(L,1) > 101 || lua_tointeger(L,1) < 1)
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .setsublevel 1-101");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	}
+	
+	 }
+	 if(PChar->Account_Level == 3 ||PChar->Account_Level == 4)
+	 {
+	if(lua_tointeger(L,1) > 150 || lua_tointeger(L,1) < 1)
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .setsublevel 1-150");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	}
+	
+	 }
+
+	 if(PChar->GetSJob() == NULL)
+	 {
+		 char buf[110];
+        sprintf(buf,"Unable To Set Your Subjob Level!");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		 return false;
+	 }
+	
+
+	PChar->SetSLevel((uint8)lua_tointeger(L,1));
+	//PChar->jobs.exp[PChar->GetMJob()] = 0;
+	PChar->jobs.job[PChar->GetSJob()] = (uint8)lua_tointeger(L,1);// THIS WAS SET FOR MAIN NOW SET FOR SUB
+	//PChar->SetSLevel(PChar->jobs.job[PChar->GetSJob()]);
+
+	charutils::CalculateStats(PChar);
+    charutils::CheckValidEquipment(PChar);
+   charutils::BuildingCharSkillsTable(PChar);
+  charutils::BuildingCharAbilityTable(PChar);
+  charutils::BuildingCharTraitsTable(PChar);
+  charutils::BuildingCharWeaponSkills(PChar);
+
+	PChar->UpdateHealth();
+    PChar->health.hp = PChar->GetMaxHP();
+    PChar->health.mp = PChar->GetMaxMP();
+
+  // charutils::SaveCharStats(PChar);
+  // charutils::SaveCharJob(PChar, PChar->GetMJob());
+  // charutils::SaveCharExp(PChar, PChar->GetMJob());
+	//charutils::SaveCharPoints(PChar);
+
+    PChar->pushPacket(new CCharJobsPacket(PChar));
+    PChar->pushPacket(new CCharStatsPacket(PChar));
+  PChar->pushPacket(new CCharSkillsPacket(PChar));
+   PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+    PChar->pushPacket(new CCharUpdatePacket(PChar));
+   PChar->pushPacket(new CMenuMeritPacket(PChar));
+   PChar->pushPacket(new CCharSyncPacket(PChar));
+	int32 n = (uint8)lua_tointeger(L,1);
+        char buf[110];
+        sprintf(buf,"Setting Level For Sub: %d", (int)n);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	
+	//ShowNotice(CL_RED"Player: Sets New Level\n" CL_RESET);
+	return false;
+}
+
+
+/************************************************************************
+*                                                                       *
+*  GM command @setlevel !!! FOR DEBUG ONLY !!!                         *
+*                                                                       *
+************************************************************************/
+
+inline int32 CLuaBaseEntity::set_Level(lua_State *L)
+{
+     CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	 if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .setmainlevel 1");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	 }
+	 if(PChar->Account_Level == 1)
+	 {
+	if(lua_tointeger(L,1) > 99 || lua_tointeger(L,1) < 1)
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .setmainlevel 1-99");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	}
+	
+	 }
+	 if(PChar->Account_Level == 2)
+	 {
+	if(lua_tointeger(L,1) > 101 || lua_tointeger(L,1) < 1)
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .setmainlevel 1-101");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	}
+	
+	 }
+	 if(PChar->Account_Level == 3||PChar->Account_Level == 4)
+	 {
+	if(lua_tointeger(L,1) > 150 || lua_tointeger(L,1) < 1)
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .setmainlevel 1-150");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	}
+	
+	 }
+
+    
+	
+
+	
+	PChar->SetMLevel((uint8)lua_tointeger(L,1));
+	//PChar->jobs.exp[PChar->GetMJob()] = 0;
+	PChar->jobs.job[PChar->GetMJob()] = (uint8)lua_tointeger(L,1);
+	PChar->SetSLevel(PChar->jobs.job[PChar->GetSJob()]);
+
+	charutils::CalculateStats(PChar);
+    charutils::CheckValidEquipment(PChar);
+   charutils::BuildingCharSkillsTable(PChar);
+  charutils::BuildingCharAbilityTable(PChar);
+  charutils::BuildingCharTraitsTable(PChar);
+  charutils::BuildingCharWeaponSkills(PChar);
+
+	PChar->UpdateHealth();
+    PChar->health.hp = PChar->GetMaxHP();
+    PChar->health.mp = PChar->GetMaxMP();
+
+   //charutils::SaveCharStats(PChar);
+  // charutils::SaveCharJob(PChar, PChar->GetMJob());
+  // charutils::SaveCharExp(PChar, PChar->GetMJob());
+	//charutils::SaveCharPoints(PChar);
+
+    PChar->pushPacket(new CCharJobsPacket(PChar));
+    PChar->pushPacket(new CCharStatsPacket(PChar));
+  PChar->pushPacket(new CCharSkillsPacket(PChar));
+   PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+    PChar->pushPacket(new CCharUpdatePacket(PChar));
+   PChar->pushPacket(new CMenuMeritPacket(PChar));
+   PChar->pushPacket(new CCharSyncPacket(PChar));
+	int32 n = (uint8)lua_tointeger(L,1);
+        char buf[110];
+        sprintf(buf,"Setting Level For Main: %d", (int)n);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	
+	//ShowNotice(CL_RED"Player: Sets New Level\n" CL_RESET);
+    return 0;
+}
+inline int32 CLuaBaseEntity::god_mode(lua_State *L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+	if(m_PBaseEntity == NULL)
+	{
+		
+		//ShowNotice(CL_RED"TRACER:COMMAND: godmode Error\n" CL_RESET);
+		return true;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		//ShowNotice(CL_RED"TRACER:COMMAND: godmode Error1\n" CL_RESET);
+		return true;
+	}
+	/*
+	FLAG_GM_SUPPORT     = 0x04000000,
+    FLAG_GM_SENIOR      = 0x05000000,
+    FLAG_GM_LEAD        = 0x06000000,
+    FLAG_GM_PRODUCER    = 0x07000000,
+	*/
+	
+	if(PChar->godmode==0)
+	{
+		PChar->godmode=1;
+		if(PChar->Account_Level==1)
+		{
+		PChar->nameflags.flags =FLAG_GM_SUPPORT;
+		
+		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		}
+		if(PChar->Account_Level==2)
+		{
+		PChar->nameflags.flags =FLAG_GM_SENIOR;
+		
+		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		}
+		if(PChar->Account_Level==3)
+		{
+		PChar->nameflags.flags =FLAG_GM_LEAD;
+		
+		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		}
+		if(PChar->Account_Level==4)
+		{
+		PChar->nameflags.flags =FLAG_GM_PRODUCER;
+		
+		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		}
+		
+		char buf[110];
+        sprintf(buf,"Activating God Mode");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		const int8* Query = "UPDATE chars SET godmode = '1' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,PChar->id);
+					   const int8* Query = "UPDATE char_stats SET nameflags = '%u' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,PChar->nameflags.flags,PChar->id);
+					   charutils::BuildingCharWeaponSkills(PChar);
+		return false;
+	}
+	else
+	{
+
+		PChar->nameflags.flags =0;
+		PChar->godmode=0;
+		
+		
+		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		
+		char buf[110];
+        sprintf(buf,"God Mode Is Disabled");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		const int8* Query = "UPDATE chars SET godmode = '0' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,PChar->id);
+					   const int8* Query = "UPDATE char_stats SET nameflags = '0' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,PChar->id);
+					   charutils::BuildingCharWeaponSkills(PChar);
+		return false;
+	}
+	
+	
+	
+	
+    
+	return false;
+}
+inline int32 CLuaBaseEntity::Auction_House(lua_State *L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+				
+
+				
+						
+						
+                        PChar->pushPacket(new CAuctionHousePacket(2));
+       char buf[110];
+        sprintf(buf,"Auction House Counter");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));              
+					
 	return false;
 }
 //==========================================================//
@@ -7892,6 +8805,15 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 	//////////////////////////////////////////////////////////////
 	//COMMAND SYSTEM
 	//////////////////////////////////////////////////////////////
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,show_Command_Menu),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,set_speed),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,Zone),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,Set_Exp_Rates),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,set_Level),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,set_sub_Level),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,change_Job),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,change_sub_Job),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,god_mode),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,Auction_House),
 	{NULL,NULL}
 };
