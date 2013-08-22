@@ -813,7 +813,7 @@ int32 map_cleanup(uint32 tick, CTaskMgr::CTask* PTask)
         {
 			if (PChar != NULL && (PChar->nameflags.flags & FLAG_DC))
 			{
-            PChar->nameflags.flags = FLAG_DC;
+            PChar->nameflags.flags &= ~FLAG_DC;
 			ShowMessage(CL_YELLOW"ELSE FLAGS  STATUS = %u FOR PCHAR %s\n"CL_RESET,PChar->nameflags.flags,PChar->GetName());
             PChar->pushPacket(new CCharUpdatePacket(PChar));
 
