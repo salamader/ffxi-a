@@ -1417,13 +1417,13 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			if(PChar->online_status == 0 )
 			{
 				
-				
-				const int8* Query = "UPDATE chars SET online = '1',shutdown ='0' WHERE charid = %u";
+                const int8* Query = "UPDATE chars SET online = '1',shutdown ='0' WHERE charid = %u";
                 Sql_Query(SqlHandle,Query,PChar->id);
                 PChar->online_status =1;
 				
 					   
 			}
+			
 		}
 		break;
         case 0x15: break; // ballista - quarry
@@ -3817,7 +3817,7 @@ void SmallPacket0x0AD(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	if (RBUFB(data,(0x06)) == '@' && CmdHandler.call(PChar, (const int8*)data+7) == 0)
+	/*if (RBUFB(data,(0x06)) == '@' && CmdHandler.call(PChar, (const int8*)data+7) == 0)
 	{
 		//this makes sure a command isn't sent to chat
 	}
@@ -3953,6 +3953,193 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
         }
 	}
 
+	return;*/
+		ShowNotice("PCHAR CHAT SYSTEM CALLED\n");
+	if(PChar != NULL)
+	{
+	if (RBUFB(data,(0x06)) == '.' )
+	{ 
+		
+		int32 accid=0;
+	    const int8* GetCharAccountID = "SELECT accid FROM chars WHERE charid = '%u';";
+	    int32 ret = Sql_Query(SqlHandle,GetCharAccountID,PChar->id);
+
+		if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	       {
+		    accid= (int32)Sql_GetIntData(SqlHandle,0);
+	       // //ShowNotice(CL_RED"COMMAND TRACER: ACCOUNTID %u  \n" CL_RESET,accid);
+			
+			int32 secuitylevel=0;
+			const int8* GetAccountSecuity = "SELECT security FROM accounts WHERE id = '%u';";
+			int32 ret1 = Sql_Query(SqlHandle,GetAccountSecuity,accid);
+
+	        if (ret1 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	           {
+		        secuitylevel= (int32)Sql_GetIntData(SqlHandle,0);
+				PChar->Account_Level = secuitylevel;
+				
+                    if(PChar->Account_Level==0)
+				     {
+                 ////ShowNotice(CL_RED"COMMAND TRACER: Player called Command \n" CL_RESET);	
+				       CmdHandler.pcall(PChar, (const int8*)data+7);
+				     }
+				     if(PChar->Account_Level==1)
+				     {
+               //  //ShowNotice(CL_RED"COMMAND TRACER: GM called Command \n" CL_RESET);	
+				     CmdHandler.gcall(PChar, (const int8*)data+7);
+				     }
+				    if(PChar->Account_Level==2)
+				     {
+                // //ShowNotice(CL_RED"COMMAND TRACER: Mod GM called Command \n" CL_RESET);	
+				     CmdHandler.mgcall(PChar, (const int8*)data+7);
+				     }
+				     if(PChar->Account_Level==3)
+				     {
+                // //ShowNotice(CL_RED"COMMAND TRACER: Admin GM called Command \n" CL_RESET);
+				     CmdHandler.agcall(PChar, (const int8*)data+7);
+				     }
+					 if(PChar->Account_Level==4)
+				     {
+                // //ShowNotice(CL_RED"COMMAND TRACER: Admin GM called Command \n" CL_RESET);
+				     CmdHandler.procall(PChar, (const int8*)data+7);
+				     }
+				
+				return;
+	            
+	           }
+			else
+			{
+				ShowNotice("SOME OTHER COMAMND WAS CALLED UNKNOWN\n");
+
+            return;
+			}
+			return;
+	        }
+		else
+		{
+        ShowNotice("SOME OTHER COMAMND WAS CALLED UNKNOWN\n");
+        return;
+		}
+		
+		}
+		
+		
+		
+	
+	else if (RBUFB(data,(0x06)) == '#')
+	{
+		if(PChar->Account_Level==1 || PChar->Account_Level==2 || PChar->Account_Level==3 || PChar->Account_Level==4)
+		{
+            for (uint16 zone = 0; zone < 256; ++zone)
+            {
+            zoneutils::GetZone(zone)->PushPacket(
+                PChar,
+                CHAR_INZONE,
+                new CChatMessagePacket(PChar, MESSAGE_SYSTEM_1, data+7));
+            }
+		}
+			
+          
+		
+	}
+	else if (RBUFB(data,(0x06)) == '?')
+	{
+		int32 accid=0;
+	    const int8* GetCharAccountID = "SELECT accid FROM chars WHERE charid = '%u';";
+	    int32 ret = Sql_Query(SqlHandle,GetCharAccountID,PChar->id);
+		string_t message =data+7;
+		if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	       {
+		    accid= (int32)Sql_GetIntData(SqlHandle,0);
+	      const int8* fmtQuery = "INSERT INTO chat SET user_id = %u, message = '%s', count = 1 ;";
+
+		  Sql_Query(SqlHandle,fmtQuery,accid, message.c_str());
+			
+			
+		}
+            for (uint16 zone = 0; zone < 256; ++zone)
+            {
+            zoneutils::GetZone(zone)->PushPacket(
+                PChar,
+                CHAR_INZONE,
+                new CChatMessagePacket(PChar, MESSAGE_SHOUT, data+7));
+            }
+		
+			PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY, data+7));
+          
+		
+	}
+    else
+    {
+        if(jailutils::InPrison(PChar))
+        {
+            if(RBUFB(data,(0x04)) == MESSAGE_SAY)
+            {
+                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY, data+6));
+				PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SAY, data+6));
+            }
+            else
+            {
+                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 316));
+            }
+        }
+        else
+        {
+            switch(RBUFB(data,(0x04)))
+            {
+                case MESSAGE_SAY:
+					{
+						
+						PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY,     data+6)); 
+					}
+					break;
+                case MESSAGE_EMOTION:	PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_EMOTION, data+6)); break;
+                case MESSAGE_SHOUT:	
+					{
+						
+						PChar->loc.zone->PushPacket(PChar, CHAR_INSHOUT, new CChatMessagePacket(PChar, MESSAGE_SHOUT,   data+6)); 
+					}
+					break;
+                case MESSAGE_LINKSHELL:
+                {
+                    if (PChar->PLinkshell != NULL)
+                    {
+						
+                        PChar->PLinkshell->PushPacket(PChar, new CChatMessagePacket(PChar, MESSAGE_LINKSHELL, data+6));
+                    }
+                }
+                break;
+				case MESSAGE_PARTY:
+                {
+                    if (PChar->PParty != NULL)
+                    {
+						if (PChar->PParty->m_PAlliance == NULL)
+						{
+							
+							PChar->PParty->PushPacket(PChar, 0, new CChatMessagePacket(PChar, MESSAGE_PARTY, data+6));
+
+						}else{ //alliance party chat
+								for (uint8 i = 0; i < PChar->PParty->m_PAlliance->partyList.size(); ++i)
+								{
+									PChar->PParty->m_PAlliance->partyList.at(i)->PushPacket(PChar, 0, new CChatMessagePacket(PChar, MESSAGE_PARTY, data+6));
+								}
+								
+								
+							}
+					}
+                }
+                break;
+                case MESSAGE_YELL:
+					{
+						
+						PChar->loc.zone->PushPacket(PChar, CHAR_INSHOUT, new CChatMessagePacket(PChar, MESSAGE_YELL,   data+6)); 
+					}
+					break;
+            }
+        }
+	}
+	}
+
 	return;
 }
 
@@ -3964,69 +4151,81 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0B6(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-    if(jailutils::InPrison(PChar))
+   ShowNotice("PCHAR SEND TELL SYSTEM CALLED\n");
+	string_t RecipientName = data+5;
+	string_t message = data+20;
+	//ShowNotice(CL_RED"SENDING MESSAGE %s TO PLAYER %s FROM PLAYER %s\n" CL_RESET,message.c_str(),RecipientName.c_str(),PChar->GetName());
+	if(jailutils::InPrison(PChar))
     {
+		//ShowNotice(CL_GREEN"SENDING MESSAGE: TO SENDER JAIL\n" CL_RESET);
         PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 316));
         return;
     }
-
-    string_t RecipientName = data+5;
-
-	const int8* Query = "SELECT charid, targid, pos_zone FROM chars INNER JOIN accounts_sessions USING(charid) WHERE charname = '%s' LIMIT 1";
-
-	int32 ret = Sql_Query(SqlHandle, Query, RecipientName.c_str());
-
-	if (ret != SQL_ERROR &&
-		Sql_NumRows(SqlHandle) != 0 &&
-		Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	CCharEntity* PTargetChar = zoneutils::GetCharByName(data+5);
+	if(PTargetChar != NULL )
 	{
-		uint32 CharID = (uint32)Sql_GetUIntData(SqlHandle,0);
-		uint16 TargID = (uint16)Sql_GetUIntData(SqlHandle,1);
-		uint16 ZoneID = (uint16) Sql_GetUIntData(SqlHandle,2);
+		//ShowNotice(CL_GREEN"SENDING MESSAGE IS NOT NULL OK TO SEND\n" CL_RESET);
+		if (PTargetChar->nameflags.flags == FLAG_AWAY)
+			{
+				//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER HAS AWAY FLAG SET TELL SENDER\n" CL_RESET);
+				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 181));
+				return;
+			}
+		if( PTargetChar->status != STATUS_DISAPPEAR)
+		{
+			//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS NOT ZONING SEND MESSAGE OK\n" CL_RESET);
+			if(PTargetChar == PChar)
+			{
+				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
+				return;
+			}
+			
+		PTargetChar->pushPacket(new CChatMessagePacket(PChar, MESSAGE_TELL,data+20 ));
+		return;
+		}
+		else
+		{
+			//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ZONEING TELL SENDER\n" CL_RESET);
+			PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
+			return;
+		}
+		return;
+	}
+	else
+	{
 
-		CCharEntity* PTellRecipient = (CCharEntity*)zoneutils::GetZone(ZoneID)->GetEntity(TargID, TYPE_PC);
-
-		if(PTellRecipient==NULL && ZoneID==0){//in a moghouse, do a full sweep
+		//ShowNotice(CL_GREEN"SENDING MESSAGE: DO A FULL SWEEP\n" CL_RESET);
 			map_session_list_t::iterator it = map_session_list.begin();
 			while(it != map_session_list.end())
 			{
 				map_session_data_t* map_session_data = it->second;
-				CCharEntity* PChar = map_session_data->PChar;
-				if(PChar!=NULL && PChar->id == CharID){
-					PTellRecipient = PChar;
+				CCharEntity* PCharInMog = map_session_data->PChar;
+				if(PCharInMog!=NULL)
+				{
+					//ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS NOT NULL\n" CL_RESET);
+					PTargetChar = PCharInMog;
+					if(PTargetChar == PChar)
+			          {
+				      PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
+				      break;
+			          }
+                    PCharInMog->pushPacket(new CChatMessagePacket(PChar, MESSAGE_TELL,data+20 ));
 					break;
+				}
+				else
+				{
+                //ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS NOT ONLINE TELL SENDER\n" CL_RESET);
+		        PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
+				break;
 				}
 				++it;
 			}
-		}
-
-		if (PTellRecipient != NULL &&
-			PTellRecipient->id == CharID &&
-			PTellRecipient->status != STATUS_DISAPPEAR &&
-            !jailutils::InPrison(PTellRecipient))
-		{
-			if (PTellRecipient->nameflags.flags & FLAG_AWAY)
-			{
-				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 181));
-				return;
-			}
-			if (map_config.audit_chat == 1)
-			{
-				std::string qStr = ("INSERT into audit_chat (speaker,type,recipient,message,datetime) VALUES('");
-				qStr +=PChar->GetName();
-				qStr +="','TELL','";
-				qStr +=PTellRecipient->GetName();
-				qStr +="','";
-				qStr += escape(data+20);
-				qStr +="',current_timestamp());";
-				const char * cC = qStr.c_str();
-				Sql_QueryStr(SqlHandle, cC);
-			}
-			PTellRecipient->pushPacket(new CChatMessagePacket(PChar, MESSAGE_TELL, data+20));
-			return;
-		}
+		
+		
+		return;
 	}
-	PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
+		 
+
 	return;
 }
 
