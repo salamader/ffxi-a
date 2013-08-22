@@ -51,8 +51,7 @@ struct login_config_t
     uint16 expansions;
 
     const char* servername;
-	
-	const char* DNS_Servers_Address;			// mysql addr     -> localhost:3306
+	const char* DNS_Servers_Address;
 	const char* mysql_host;			// mysql addr     -> localhost:3306
 	uint16      mysql_port;			// mysql port     -> 3306
 	const char* mysql_login;        // mysql login    -> default root
@@ -63,10 +62,21 @@ struct login_config_t
 extern login_config_t login_config;
 
 extern Sql_t *SqlHandle;
+//////////////////////////////////////////////////////////
 
-
+/*======================================================
+ * Login-Server Version Screen [venom]
+ *------------------------------------------------------*/
+void login_helpscreen(int32 flag);
+/*======================================================
+ * Login-Server Version Screen [venom]
+ *------------------------------------------------------*/
+void login_versionscreen(int32 flag);
+/*==========================================
+ * Login-Server Config [venom]
+ *------------------------------------------*/
 int32 login_config_read(const char *cfgName);
 
-
+int32 login_config_default();
 
 #endif

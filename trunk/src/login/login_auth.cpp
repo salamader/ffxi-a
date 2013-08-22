@@ -48,13 +48,10 @@ int32 connect_client_login(int32 listenfd)
 	{
 		int32 code = create_session(fd, recv_to_fifo, send_from_fifo, login_parse);
 		session[fd]->client_addr = ntohl(client_address.sin_addr.s_addr);
-		session[fd]->client_port = ntohs(client_address.sin_port);
 		return fd;
 	}
 	return -1;
 }
-
-
 
 int32 login_parse(int32 fd)
 {
@@ -68,16 +65,14 @@ int32 login_parse(int32 fd)
 		sd->serviced = 0;
 		login_sd_list.push_back(sd);
 		sd->client_addr = session[fd]->client_addr;
-		sd->client_port = session[fd]->client_port;
 		sd->login_fd	= fd;
 	}
 
-	if( session[fd]->flag.eof != 0 )
+	if( session[fd]->flag.eof )
 	{
 		do_close_login(sd,fd);
 		return 0;
 	}
-	
 
 	//all auth packets have one structure: 
 	// [login][passwords][code] => summary assign 33 bytes
@@ -98,9 +93,10 @@ int32 login_parse(int32 fd)
 		memcpy(password,buff+16,16);
 
 		//data check
-		if( login_datacheck(login,3,sizeof(login)) == -1 || login_datacheck(password,6,sizeof(password)) == -1 )
+		if( login_datacheck(login,3,sizeof(login)) == -1 ||
+			login_datacheck(password,6,sizeof(password)) == -1 )
 		{
-			
+			ShowWarning(CL_WHITE"login_parse" CL_RESET":" CL_WHITE"%s" CL_RESET" send unreadable data\n",ip2str(sd->client_addr,NULL));
 			WBUFB(session[fd]->wdata,0) = LOGIN_ERROR;
 			WFIFOSET(fd,1);
 			do_close_login(sd,fd);
@@ -124,7 +120,17 @@ int32 login_parse(int32 fd)
 
 				if( status & ACCST_NORMAL )
 				{
-					
+					//fmtQuery = "SELECT * FROM accounts_sessions WHERE accid = %d AND client_port <> 0";
+
+					//int32 ret = Sql_Query(SqlHandle,fmtQuery,sd->accid);
+
+					//if( ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 )
+					//{
+					//	WBUFB(session[fd]->wdata,0) = 0x05; // SESSION has already activated
+					//	WFIFOSET(fd,33);
+					//	do_close_login(sd,fd);
+					//	return 0;
+					//}
 					fmtQuery = "UPDATE accounts SET accounts.timelastmodify = NULL WHERE accounts.id = %d";
 					Sql_Query(SqlHandle,fmtQuery,sd->accid);
 					memset(session[fd]->wdata,0,33);
@@ -133,63 +139,67 @@ int32 login_parse(int32 fd)
 					WFIFOSET(fd,33);
 					flush_fifo(fd);
 					do_close_tcp(fd);
-					return 0;
 				}
 				else if( status & ACCST_BANNED)
 				{
 					memset(session[fd]->wdata,0,33);
-				
+				//	WBUFB(session[fd]->wdata,0) = LOGIN_SUCCESS;
 					WFIFOSET(fd,33);
 					do_close_login(sd,fd);
-					return 0;
 				}
 
-				
+				//////22/03/2012 Fix for when a client crashes before fully logging in:
+				//				Before: When retry to login, would freeze client since login data corrupt.
+				//				After: Removes older login info if a client logs in twice (based on acc id!)
+
+				//check for multiple logins from this account id
 				int numCons = 0;
-				for(login_sd_list_t::iterator i = login_sd_list.begin(); i != login_sd_list.end(); i++ ){
-					if( (*i)->accid == sd->accid )
-					{
+				for(login_sd_list_t::iterator i = login_sd_list.begin(); i != login_sd_list.end(); ++i ){
+					if( (*i)->accid == sd->accid ){
 						numCons++;
 					}
 				}
 
 				if(numCons>1){
-					
+					ShowInfo("login_parse:" CL_WHITE"<%s>" CL_RESET" has logged in %i times! Removing older logins.\n",login,numCons);
 					for(int j=0; j<(numCons-1); j++){
-						for(login_sd_list_t::iterator i = login_sd_list.begin(); i != login_sd_list.end(); i++ ){
-							if( (*i)->accid == sd->accid )
-							{
-								
+						for(login_sd_list_t::iterator i = login_sd_list.begin(); i != login_sd_list.end(); ++i ){
+							if( (*i)->accid == sd->accid ){
+								//ShowInfo("Current login fd=%i Removing fd=%i \n",sd->login_fd,(*i)->login_fd);
 								login_sd_list.erase(i);
 								break;
 							}
 						}
 					} 
 				}
-				
+				//////
+
+				ShowInfo("login_parse:" CL_WHITE"<%s>" CL_RESET" was connected\n",login,status);
 				return 0;
-			}else
-			{
+			}else{
 				WBUFB(session[fd]->wdata,0) = LOGIN_ERROR;
 				WFIFOSET(fd,1);
-				
+				ShowWarning("login_parse: unexisting user" CL_WHITE"<%s>" CL_RESET" tried to connect\n",login);
 				do_close_login(sd,fd);
 			}
 			}
 			break;
 		case LOGIN_CREATE:
-			WBUFB(session[fd]->wdata,0) = LOGIN_ERROR_CREATE ;
-				WFIFOSET(fd,1);
+			//looking for same login
+			{
+					WBUFB(session[fd]->wdata,0) = LOGIN_ERROR_CREATE;
+					WFIFOSET(fd,1);
+					do_close_login(sd,fd);
+					return -1;
 				
-				do_close_login(sd,fd);
-			
+			}
 			break;
 		default:
-			
+			ShowWarning("login_parse: undefined code:[%d], ip sender:<%s>\n",code,ip2str(session[fd]->client_addr,NULL));
 			do_close_login(sd,fd);
 			break;
 		};
-		
+		//RFIFOSKIP(fd,33);
 	}else{
 		do_close_login(sd,fd);
 	}
@@ -199,49 +209,26 @@ int32 login_parse(int32 fd)
 
 int32 do_close_login(login_session_data_t* loginsd,int32 fd)
 {
-	
-	
+	ShowInfo(CL_WHITE"login_parse" CL_RESET":" CL_WHITE"%s" CL_RESET"shutdown socket...\n",ip2str(loginsd->client_addr,NULL));
+	erase_loginsd(fd);
 	if(session[fd]->session_data)
-	{
-		
+		aFree(session[fd]->session_data);
 	do_close_tcp(fd);
-	
-	}
 	return 0;
 }
 
 int8 login_datacheck(const char *buf,size_t MinSize, size_t MaxSize)
 {
-	if(buf !=NULL)
-	{
-	//ShowDebug(CL_BG_RED"LOGIN CHECK DATA BUF %s MINSIZE %u MAXSIZE %u\n"CL_RESET,buf,MinSize,MaxSize);
-	size_t str_size = 0;
-	
-	str_size = strnlen(buf,MaxSize);
+	size_t str_size = strnlen(buf,MaxSize);
 	if( str_size < MinSize )
 	{
-		//ShowDebug(CL_BG_RED"LOGIN CHECK DATA BUF %u MINSIZE %u \n"CL_RESET,str_size,MinSize);
-		return -1;
-	}
-	if( str_size > MaxSize )
-	{
-		//ShowDebug(CL_BG_RED"LOGIN CHECK DATA BUF %u MAXSIZE %u \n"CL_RESET,str_size,MaxSize);
 		return -1;
 	}
 
 	for( size_t i = 0; i < str_size; ++i )
 	{
 		if( !isalpha(buf[i]) && !isdigit(buf[i]) )
-		{
 			return -1;
-		}
 	}
 	return 0;
-	}
-	else
-	{
-    ShowDebug(CL_BG_RED"ELSE LOGIN CHECK DATA BUF %s MINSIZE %u MAXSIZE %u\n"CL_RESET,buf,MinSize,MaxSize);
-	return false;
-	}
-	return false;
 }
