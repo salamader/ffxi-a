@@ -48,7 +48,7 @@ extern int32 login_fd;
 */
 int32 connect_client_login(int32 listenfd);
 
-bool reset(bool);
+
 int32 login_parse(int32 fd);
 
 int8  login_datacheck(const char *,size_t,size_t);

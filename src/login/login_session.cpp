@@ -39,43 +39,7 @@ login_session_data_t *find_loginsd_byaccid(int32 accid)
 	return NULL;
 }
 
-login_session_data_t *find_loginsd_by_ip_and_port(uint32 ip, uint16 port)
-{
-	//////// 19/03/2012 Fix for 1 IP -> Many Accounts
-	// Simply increases "serviced" by 1 every time a login is returned via an IP address.
-	// The result is the illusion of independancy (though really it's not!)
-	unsigned int minserv = 1000; 
-	int multiple_ip_count = 0;
-	for(login_sd_list_t::iterator i = login_sd_list.begin(); i != login_sd_list.end(); ++i )
-	{
-		if( (*i)->client_addr == ip )
-		{
-			multiple_ip_count++;
-			if((*i)->serviced < minserv)
-			{
-				minserv = (*i)->serviced;
-			}
-		}
-		
-	}
 
-	if(multiple_ip_count>1)
-	{
-		//ShowInfo("Detected %i instances from %s. Returning best account match.\n",multiple_ip_count,ip2str(ip,NULL));
-	}
-	////////////////
-	for(login_sd_list_t::iterator i = login_sd_list.begin(); i != login_sd_list.end();++i )
-	{
-		if( (*i)->client_addr == ip && (*i)->serviced == minserv)
-		{
-			(*i)->serviced++;
-			return (*i);
-		}
-		
-	}
-	return NULL;
-	
-}
 
 void erase_loginsd_byaccid(uint32 accid)
 {
@@ -92,17 +56,3 @@ void erase_loginsd_byaccid(uint32 accid)
 	return;
 }
 
-void erase_loginsd(int32 loginfd)
-{
-	for(login_sd_list_t::iterator i = login_sd_list.begin(); 
-		i != login_sd_list.end();
-		++i )
-	{
-		if( (*i)->login_fd == loginfd)
-		{
-			login_sd_list.erase(i);
-			return ;
-		}
-	}
-	return;
-}
