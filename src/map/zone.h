@@ -539,8 +539,8 @@ public:
     CInstanceHandler* m_InstanceHandler;	// BCNM Instances in this zone
 
     CNavMesh*		m_navMesh;				// zones navmesh for finding paths
-
-private:
+	
+//private:
 
 	ZONEID			m_zoneID;				// ID зоны
 	ZONETYPE        m_zoneType;

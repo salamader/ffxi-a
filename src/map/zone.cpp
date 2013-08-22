@@ -826,24 +826,47 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 	DSP_DEBUG_BREAK_IF(PChar->PTreasurePool != NULL);
 
     // ищем свободный targid для входящего в зону персонажа
-    PChar->targid  = 0x400;
-	const char *Query = "SELECT targid FROM accounts_sessions WHERE charid= '%u';";
-    int32  ret = Sql_Query(SqlHandle,Query,PChar->id);
-    if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	{
+    PChar->targid  = 1024;
+	
+	
 	 
-	PChar->targid  =  Sql_GetIntData(SqlHandle,0);
-	ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid);
-    
+	
+	const int8* fmtQuery = "SELECT max(targid) FROM accounts_sessions";
+
+	                  if( Sql_Query(SqlHandle,fmtQuery) == SQL_ERROR )
+	                    {
+		                 return;
+	                    }
+
+	                  uint32 targid = 0;
+
+	                  if( Sql_NumRows(SqlHandle) != 0 )
+	                    {
+		                Sql_NextRow(SqlHandle);
+		
+		                targid = Sql_GetUIntData(SqlHandle,0) + 1;
+						ShowMessage("MAX TARGETID COUNT %u \n" CL_RESET,targid);
+						if(targid == 1)
+						{
+							targid = 1024;
+							ShowMessage("MAX TARGETID NEW COUNT %u \n" CL_RESET,targid);
+						}
+    PChar->targid = targid;
 
     for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 	{
         if (PChar->targid != it->first)
         {
-			//PChar->targid++;
+			PChar->targid++;
+			ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid);
+			const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
+            Sql_Query(SqlHandle,fmtQuery,PChar->targid,PChar->id);
             break;
         }
         PChar->targid++;
+		ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid++);
+		const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
+        Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
     }
     if (PChar->targid >= 0x700)
     {
@@ -902,6 +925,7 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 	PChar->PLatentEffectContainer->CheckLatentsZone();
 	PChar->status = STATUS_NORMAL;
 	}
+	
 }
 
 /************************************************************************
