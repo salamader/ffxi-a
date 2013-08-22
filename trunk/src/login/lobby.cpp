@@ -43,6 +43,7 @@ int32 connect_client_lobbydata(int32 listenfd)
 		create_session(fd, recv_to_fifo, send_from_fifo, lobbydata_parse);
 		session[fd]->client_addr = ntohl(client_address.sin_addr.s_addr);
 		session[fd]->client_port= ntohs(client_address.sin_port);
+		
 		//ShowMessage(CL_YELLOW"CHECKING CONNECT CLIENT IP %u \n"CL_RESET,session[fd]->client_addr);
 		//ShowMessage(CL_YELLOW"CHECKING CONNECT CLIENT PORT %u \n"CL_RESET,session[fd]->client_port);// This line is new for the port system
 		session[fd]->wdata[0] =1;
@@ -68,6 +69,8 @@ int32 lobbydata_parse(int32 fd)
    unsigned char *buff = session[fd]->rdata;
    ShowMessage(CL_YELLOW"SESSION[FD]->RDATA == %u \n"CL_RESET,session[fd]->rdata);
    ShowMessage(CL_YELLOW"BUFF == %u \n"CL_RESET,buff);
+   if(accountid ==NULL)
+   {
    int32 accid = RBUFL(buff,1);
    accountid = accid;
    ShowMessage(CL_YELLOW"ACCID == %u \n"CL_RESET,accid);
@@ -103,6 +106,48 @@ int32 lobbydata_parse(int32 fd)
             return 0;
             }
     }
+   }
+   else
+   {
+	   int32 accid = accountid;//RBUFL(buff,1);
+    
+   ShowMessage(CL_YELLOW"ACCID == %u \n"CL_RESET,accid);
+   uint32 online = 0;
+   sd = find_loginsd_byaccid(accid);
+   if(sd != NULL)
+   {
+   sd->login_lobbydata_fd    = fd;
+   session[fd]->session_data = sd;
+   const char * Query = "SELECT online FROM accounts WHERE id = '%u';";
+   int32 ret3 = Sql_Query(SqlHandle,Query,accid);
+         if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	       {
+			online =  Sql_GetIntData(SqlHandle,0);
+			ShowMessage(CL_YELLOW"ACCID->ONLINE->STATUS == %u \n"CL_RESET,online);
+			if(online == 1)
+			{
+            ShowMessage(CL_YELLOW"ACCID %u IS ONLINE \n"CL_RESET,accid);
+			do_close_lobbydata(sd,fd);
+			do_close_tcp(fd);
+			return 0;
+			}
+			else
+			{
+				ShowMessage(CL_YELLOW"ACCID %u IS OFFLINE \n"CL_RESET,accid);
+				return 0;
+			}
+		   }
+           if( sd == NULL )
+            {
+				ShowMessage(CL_YELLOW"SD == %u \n"CL_RESET,sd);
+            do_close_tcp(fd);
+            return 0;
+            }
+    }
+   ShowMessage(CL_YELLOW"ELSE ACCID == %u \n"CL_RESET,accountid);
+   }
+   
+   
 	
    }
    ShowMessage(CL_YELLOW"SESSION[FD]->FLAG->EOF == %u \n"CL_RESET,session[fd]->flag.eof);
@@ -234,6 +279,7 @@ int32 lobbydata_parse(int32 fd)
          }
       case 0xA2:
          {
+		   ShowMessage(CL_BLUE"CALLING CASE 0xA2\n"CL_RESET);
            LOBBY_A2_RESERVEPACKET(ReservePacket);
 		   uint8 key3[20];
 		   memset(key3,0,sizeof(key3));
@@ -245,7 +291,7 @@ int32 lobbydata_parse(int32 fd)
 
             if(session[sd->login_lobbyview_fd]==NULL)
 			{
-              ShowMessage(CL_YELLOW"CHECKING CLOSE 6 \n"CL_RESET);
+              
                do_close_lobbydata(sd,fd);
                return -1;
             }
@@ -297,12 +343,12 @@ int32 lobbydata_parse(int32 fd)
 			   bin2hex(session_key,key3,sizeof(key3));
 
 			   const char * Query = "SELECT accid FROM accounts_sessions WHERE accid = '%u';";
-               int32 ret3 = Sql_Query(SqlHandle,Query,accid);
+               int32 ret3 = Sql_Query(SqlHandle,Query,sd->accid);
                if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 	            {
 			     ShowMessage(CL_GREEN"UPDATING SESSION KEY %u \n"CL_RESET,session_key);
 			     const char *Query = "UPDATE accounts_sessions SET  accid ='%u', charid ='%u', session_key =x'%s', server_addr ='%u',server_port='%u', client_addr ='%u', client_port ='%u' WHERE accid = %u";
-                 Sql_Query(SqlHandle,Query,accid, charid, session_key, ZoneIP, ZonePort, sd->client_addr, sd->client_port);
+                 Sql_Query(SqlHandle,Query,sd->accid, charid, session_key, ZoneIP, ZonePort, sd->client_addr, sd->client_port,sd->accid);
 			
 		        }
 			   else
@@ -323,7 +369,7 @@ int32 lobbydata_parse(int32 fd)
 		                targid = Sql_GetUIntData(SqlHandle,0) + 1;
 						ShowMessage("MAX TARGETID COUNT %u \n" CL_RESET,targid);
 						if(targid == 1)
-						{
+						{     
 							targid = 1024;
 							ShowMessage("MAX TARGETID NEW COUNT %u \n" CL_RESET,targid);
 						}
@@ -331,7 +377,7 @@ int32 lobbydata_parse(int32 fd)
 		                ShowMessage(CL_GREEN"INSERTING SESSION KEY %u \n"CL_RESET,session_key);
 				        fmtQuery = "INSERT INTO accounts_sessions(accid,charid,session_key,server_addr,server_port,client_addr,client_port,targid) VALUES(%u,%u,x'%s',%u,%u,%u,%u,%u)";
 
-				           if( Sql_Query(SqlHandle, fmtQuery, accid, charid, session_key, ZoneIP, ZonePort, sd->client_addr,sd->client_port,targid ) == SQL_ERROR )
+				           if( Sql_Query(SqlHandle, fmtQuery, sd->accid, charid, session_key, ZoneIP, ZonePort, sd->client_addr,sd->client_port,targid ) == SQL_ERROR )
 				              {
 					           LOBBBY_ERROR_MESSAGE(ReservePacket);
 					           WBUFW(ReservePacket,32) = 305; 
@@ -356,6 +402,7 @@ int32 lobbydata_parse(int32 fd)
 				RFIFOSKIP(sd->login_lobbyview_fd,session[sd->login_lobbyview_fd]->rdata_size);
 				RFIFOFLUSH(sd->login_lobbyview_fd);
 				ShowMessage(CL_GREEN"WE ARE LOGGING INTO THE MAP SERVER WITH ACCOUNT ID %u \n"CL_RESET,accid);
+				accountid = 0;
 				
             
             if (SendBuffSize == 0x24)
@@ -387,12 +434,29 @@ int32 lobbydata_parse(int32 fd)
 
 int32 do_close_lobbydata(login_session_data_t *loginsd,int32 fd)
 {
+	ShowMessage(CL_GREEN"CLOSED LOBBY DATA: SD %u FD\n"CL_RESET,loginsd,fd );
 	if( loginsd != NULL )
-	{ 
+	{
+		
+		if( session_isActive(loginsd->login_lobbyview_fd) )
+		{
+			do_close_tcp(loginsd->login_lobbyview_fd);
+		}
+		Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE accid = %u",loginsd->accid);
+		erase_loginsd_byaccid(loginsd->accid);
+		ShowMessage(CL_GREEN"CLOSED LOBBY DATA:\n"CL_RESET );
+		if( session[fd]->session_data )
+		aFree(session[fd]->session_data);
 		do_close_tcp(fd);
+		return 0;
 	}
-	
-	return 0;
+	else
+	{
+		
+		do_close_tcp(fd);
+		return 0;
+	}
+	return -1;
 }
 
 /************************************************************************
@@ -410,7 +474,8 @@ int32 connect_client_lobbyview(int32 listenfd)
 		create_session(fd, recv_to_fifo, send_from_fifo, lobbyview_parse);
 		session[fd]->client_addr = ntohl(client_address.sin_addr.s_addr);
 		session[fd]->client_port = ntohs(client_address.sin_port);
-		
+		ShowMessage(CL_YELLOW"CHECKING CONNECT CLIENT IP %u \n"CL_RESET,session[fd]->client_addr);
+		ShowMessage(CL_YELLOW"CHECKING CONNECT CLIENT PORT %u \n"CL_RESET,session[fd]->client_port);// This line is new for the port system
 		return fd;
 	}
 	return -1;
@@ -602,10 +667,6 @@ int32 lobbyview_parse(int32 fd)
 		case 36:
 			{
 				LOBBY_024_RESERVEPACKET(ReservePacket);
-				uint8 key3[20];
-				memset(key3,0,sizeof(key3));
-				memcpy(key3,buff+1,sizeof(key3));
-				key3[16] -= 2;
 				
 				memcpy(ReservePacket+36, "FFXI_A", dsp_cap(strlen("FFXI-A"), 0, 15));
 
@@ -619,8 +680,6 @@ int32 lobbyview_parse(int32 fd)
 				RFIFOSKIP(fd,session[fd]->rdata_size);
 				RFIFOFLUSH(fd);
 				WFIFOSET(fd,SendBuffSize);
-				int8 session_key[sizeof(key3)*2+1];
-                bin2hex(session_key,key3,sizeof(key3));
               }
 			break;
 		case 7:
@@ -743,6 +802,7 @@ int32 do_close_lobbyview(login_session_data_t* sd, int32 fd)
 {
    if( sd != NULL )
 	{
+	ShowMessage(CL_GREEN"CLOSED LOBBY VIEW:\n"CL_RESET );
 	do_close_tcp(fd);
 	}
 	return 0;

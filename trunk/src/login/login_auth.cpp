@@ -54,10 +54,7 @@ int32 connect_client_login(int32 listenfd)
 	return -1;
 }
 
-bool reset(bool)
-{
-return false;
-}
+
 
 int32 login_parse(int32 fd)
 {
@@ -208,7 +205,7 @@ int32 do_close_login(login_session_data_t* loginsd,int32 fd)
 	{
 		
 	do_close_tcp(fd);
-	erase_loginsd(fd);
+	
 	}
 	return 0;
 }
