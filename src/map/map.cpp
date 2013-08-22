@@ -31,6 +31,7 @@
 #include "../common/version.h"
 #include "../common/zlib.h"
 #include "../common/mmo.h"
+#include "../login/lobby.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,7 +71,7 @@ const int8* MAP_CONF_FILENAME = NULL;
 int8*  g_PBuff   = NULL;                // глобальный буфер обмена пакетами
 int8*  PTempBuff = NULL;                // временный  буфер обмена пакетами
 Sql_t* SqlHandle = NULL;				// SQL descriptor
-
+int32 accountid;
 int32  map_fd = 0;						// main socket
 uint32 map_amntplayers = 0;				// map amnt unique players
 
@@ -667,15 +668,18 @@ int32 map_close_session(uint32 tick, CTaskMgr::CTask* PTask)
 		map_session_data->server_packet_data != NULL &&		// bad pointer crashed here, might need dia to look at this one
 		map_session_data->PChar != NULL)					// crash occured when both server_packet_data & PChar were NULL
 	{
-		Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE charid = %u",map_session_data->PChar->id);
+		//Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE charid = %u",map_session_data->PChar->id);
         const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE charid = %u";
         Sql_Query(SqlHandle,Query,map_session_data->PChar->id);
 		Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
         Sql_Query(SqlHandle,Query,map_session_data->PChar->accid);
+		ShowDebug(CL_RED"PLAYERS ACCOUNT ID = %u GET\n"CL_RESET,map_session_data->PChar->accid);
+		accountid= map_session_data->PChar->accid;
+		ShowDebug(CL_RED"PLAYERS ACCOUNT ID = %u SENT\n"CL_RESET,accountid);
 		uint64 port64 = map_session_data->client_port;
 		uint64 ipp	  = map_session_data->client_addr;
 		ipp |= port64<<32;
-		
+		 
 		map_session_data->PChar->StatusEffectContainer->SaveStatusEffects();
 
 		aFree(map_session_data->server_packet_data);
