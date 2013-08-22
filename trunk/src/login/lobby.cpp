@@ -72,8 +72,7 @@ int32 lobbydata_parse(int32 fd)
 
 	if( sd == NULL )
 	{
-		if( RFIFOREST(fd) >= 5 &&
-			RBUFB(session[fd]->rdata,0) == 0xA1 )
+		if( RFIFOREST(fd) >= 5 && RBUFB(session[fd]->rdata,0) == 0xA1 )
 		{
 			unsigned char *buff = session[fd]->rdata;
 
@@ -85,9 +84,28 @@ int32 lobbydata_parse(int32 fd)
 				do_close_tcp(fd);
 				return -1;
 			}
-
+			uint32 online = 0;
 			sd->login_lobbydata_fd    = fd;
 			session[fd]->session_data = sd;
+			const char * Query = "SELECT online FROM accounts WHERE id = '%u';";
+          int32 ret3 = Sql_Query(SqlHandle,Query,accid);
+         if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	       {
+			online =  Sql_GetIntData(SqlHandle,0);
+			ShowMessage(CL_YELLOW"ACCID->ONLINE->STATUS == %u \n"CL_RESET,online);
+			if(online == 1)
+			{
+            ShowMessage(CL_YELLOW"ACCID %u IS ONLINE \n"CL_RESET,accid);
+			do_close_lobbydata(sd,fd);
+			do_close_tcp(fd);
+			return 0;
+			}
+			else
+			{
+				ShowMessage(CL_YELLOW"ACCID %u IS OFFLINE \n"CL_RESET,accid);
+				return 0;
+			}
+		   }
 			return 0;
 		}
 
@@ -399,26 +417,30 @@ int32 lobbydata_parse(int32 fd)
 
 int32 do_close_lobbydata(login_session_data_t *loginsd,int32 fd)
 {
+	ShowMessage(CL_GREEN"CLOSED LOBBY DATA: SD %u FD\n"CL_RESET,loginsd,fd );
 	if( loginsd != NULL )
 	{
-		ShowInfo("lobbydata_parse: " CL_WHITE"%s" CL_RESET" shutdown the socket\n",loginsd->login);
+		
 		if( session_isActive(loginsd->login_lobbyview_fd) )
 		{
 			do_close_tcp(loginsd->login_lobbyview_fd);
 		}
+		Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE accid = %u",loginsd->accid);
 		erase_loginsd_byaccid(loginsd->accid);
-		ShowInfo("lobbydata_parse: " CL_WHITE"%s" CL_RESET"'s login_session_data is deleted\n",loginsd->login);
+		ShowMessage(CL_GREEN"CLOSED LOBBY DATA:\n"CL_RESET );
 		if( session[fd]->session_data )
-			aFree(session[fd]->session_data);
+		aFree(session[fd]->session_data);
 		do_close_tcp(fd);
 		return 0;
-	}else
+	}
+	else
 	{
-		ShowInfo("lobbydata_parse: " CL_WHITE"%s" CL_RESET" shutdown the socket\n",ip2str(session[fd]->client_addr,NULL));
+		
 		do_close_tcp(fd);
 		return 0;
 	}
 	return -1;
+
 }
 
 /************************************************************************
@@ -521,9 +543,66 @@ int32 lobbyview_parse(int32 fd)
 
 				//Выполнение удаления персонажа из основных таблиц
 				//Достаточно удалить значение из таблицы chars, все остальное сделает mysql-сервер
+				const char *  Query = "SELECT charid FROM chars WHERE accid = '%u';";
+	          int32  ret = Sql_Query(SqlHandle,Query,sd->accid);
 
-				const char *pfmtQuery = "DELETE FROM chars WHERE charid = %i";
-				Sql_Query(SqlHandle,pfmtQuery,CharID);
+	             if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						//ShowNotice(CL_GREEN"DELETEING CHARATER ID: %d FROM IP: %s\n"CL_RESET,CharID,ip2str(sd->client_addr,NULL));
+				
+						CharID =  Sql_GetIntData(SqlHandle,0);
+				Query = "DELETE FROM chars WHERE charid = %u";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM char_weapon_skill_points WHERE charid = '%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM char_vars WHERE charid ='%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM char_storage WHERE charid = '%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM char_stats WHERE charid = '%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM char_skills WHERE charid = '%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM char_profile WHERE charid = '%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM char_points WHERE charid = '%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM char_pet_name WHERE charid = '%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM char_look WHERE charid = '%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM char_jobs WHERE charid = '%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM char_inventory WHERE charid = '%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM char_exp WHERE charid = '%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM char_equip WHERE charid ='%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM char_effects WHERE charid ='%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+
+				Query = "DELETE FROM delivery_box WHERE charid ='%u'";
+				Sql_Query(SqlHandle,Query,CharID);
+				 }
+				 else
+				 {
+                  do_close_lobbyview(sd,fd);
+				 }
 
 				break;
 			}
@@ -690,13 +769,14 @@ int32 do_close_lobbyview(login_session_data_t* sd, int32 fd)
 
 int32 lobby_createchar(login_session_data_t *loginsd, char *buf)
 {
-	// инициализируем генератор случайных чисел
+	ShowMessage(CL_GREEN"CHECKING CHARACTERS NAME: %s  \n"CL_RESET,loginsd->charname );
 	srand(clock());
 	char_mini createchar;
 
 	memcpy(createchar.m_name,loginsd->charname,16);
 	memset(&createchar.m_look,0,sizeof(look_t));
 
+	
 	createchar.m_look.race = RBUFB(buf,48);
 	createchar.m_look.size = RBUFB(buf,57);
 	createchar.m_look.face = RBUFB(buf,60);
@@ -705,18 +785,24 @@ int32 lobby_createchar(login_session_data_t *loginsd, char *buf)
 
 	switch(createchar.m_nation) 
 	{
-		case 0x02: // windy start
-			//do not allow windy walls as startzone.
-			do {createchar.m_zone = (0xEE)+rand()%4;}
-			while(createchar.m_zone == 0xEF);
+		case 0x02: 
+			{ //windy start
+			createchar.m_zone = 240;
 			break;
-		case 0x01: // bastok start
-			createchar.m_zone = 0xEA+rand()%3;
+			}
+		case 0x01:
+			{// bastok start
+			createchar.m_zone = 234;
 			break;
-		case 0x00: // sandy start
-			createchar.m_zone = 0xE6+rand()%3;
+			}
+		case 0x00:
+			{// sandy start
+			createchar.m_zone = 230;
 			break;
+			}
 	}
+
+	
 
 	const int8* fmtQuery = "SELECT max(charid) FROM chars";
 
@@ -731,15 +817,11 @@ int32 lobby_createchar(login_session_data_t *loginsd, char *buf)
 	{
 		Sql_NextRow(SqlHandle);
 		
-		CharID = (uint32)Sql_GetUIntData(SqlHandle,0) + 1;
-	}
-
-	CharID = (CharID < 21828 ? 21828 : CharID);
+		CharID = Sql_GetUIntData(SqlHandle,0) + 1;
+		ShowMessage("MAX CHAR COUNT %u \n" CL_RESET,CharID);
+		lobby_createchar_save(loginsd->accid, CharID, &createchar);
 		
-	if( lobby_createchar_save(loginsd->accid, CharID, &createchar) == -1 )
-		return -1;
-
-	ShowDebug(CL_WHITE"lobby_createchar" CL_RESET": char<" CL_WHITE"%s" CL_RESET"> successfully saved\n",createchar.m_name);
+	}
 	return 0;
 };
 
@@ -751,29 +833,99 @@ int32 lobby_createchar(login_session_data_t *loginsd, char *buf)
 
 int32 lobby_createchar_save(uint32 accid, uint32 charid, char_mini* createchar)
 {
-	const int8* Query = "INSERT INTO chars(charid,accid,charname,pos_zone,nation) VALUES(%u,%u,'%s',%u,%u);";
+	
+	ShowDebug("PRINT CHARACTERS CHARID %u \n" CL_RESET,charid);
+	uint32 pos_zone = createchar->m_zone;
+	ShowDebug("PRINT CHARACTERS ZONE %u \n" CL_RESET,pos_zone );
+	string_t charname = createchar->m_name;
+	ShowDebug("PRINT CHARACTERS NAME %s \n" CL_RESET,charname );
+	uint32 nation = createchar->m_nation;
+	ShowDebug("PRINT CHARACTERS NATION %u \n" CL_RESET,nation );
+	uint8 face = createchar->m_look.face;
+	ShowDebug("PRINT CHARACTERS FACE %u \n" CL_RESET,face );
+	uint8 race = createchar->m_look.race;
+	ShowDebug("PRINT CHARACTERS RACE %u \n" CL_RESET,race );
+	uint16 size = createchar->m_look.size;
+	ShowDebug("PRINT CHARACTERS SIZE %u \n" CL_RESET,size );
+	uint8 mjob = createchar->m_mjob;
+	ShowDebug("PRINT CHARACTERS MJOB %u \n" CL_RESET,mjob );
+
+	
+
+
+				 const char* Query = "INSERT INTO chars(charid,accid,charname,pos_zone,nation) VALUES(%u,%u,'%s',%u,%u)ON DUPLICATE KEY UPDATE charid = charid;";
 
 	if( Sql_Query(SqlHandle,Query,charid,accid,createchar->m_name,createchar->m_zone,createchar->m_nation) == SQL_ERROR )
 	{
-		ShowDebug(CL_WHITE"lobby_ccsave" CL_RESET": char<" CL_WHITE"%s" CL_RESET">, accid: %u, charid: %u\n",createchar->m_name, accid, charid);
+		ShowDebug("ERROR 1 PRINT CHARACTERS NAME %s \n" CL_RESET,createchar);
 		return -1;
 	}
 
-	Query = "INSERT INTO char_look(charid,face,race,size) VALUES(%u,%u,%u,%u);";
+	 if(createchar->m_nation==0)
+					  {
+                      ShowNotice(CL_RED"TRACER: SANDY %u\n" CL_RESET,createchar->m_nation);
+					  ShowNotice(CL_RED"TRACER: SANDY GETZONE %u\n" CL_RESET,createchar->m_zone);
+					   if(createchar->m_zone==230 )
+					  {
+						  //SANDY
+						  
+
+						 Query = "UPDATE chars \
+                            SET home_zone = '230', home_rot = '224', pos_rot = '224', home_x = '-96', pos_x = '-96', home_y = '-1', pos_y = '-1', home_z = '-40'  ,pos_z = '-40'  , pos_prevzone = '234',pos_zone ='0',first_login ='0',returning ='1',inevent='1',eventid='503' \
+							WHERE charid = %u;";
+                         Sql_Query(SqlHandle, Query, charid);
+						//return;
+					  }
+                      // return;
+			           
+					  }
+					  if(createchar->m_nation==1)
+					  {
+					  ShowNotice(CL_RED"TRACER: BASTOCK %u\n" CL_RESET,createchar->m_nation);
+					  ShowNotice(CL_RED"TRACER: BASTOCK GETZONE %u\n" CL_RESET,createchar->m_zone);
+					  if(createchar->m_zone==234)
+					  {
+						  //BASTOK
+						
+						 Query = "UPDATE chars \
+                            SET home_zone = '234', home_rot = '213', pos_rot = '213', home_x = '-45', pos_x = '-45', home_y = '-0', pos_y = '-0', home_z = '26' ,pos_z = '26' ,pos_prevzone = '234',pos_zone = '0',first_login ='0',returning ='1',inevent='1',eventid='1' \
+							WHERE charid = %u;";
+                       Sql_Query(SqlHandle, Query,charid);
+					// return;
+					  }
+					 // return;
+					  
+					  }
+					  if(createchar->m_nation==2)
+					  {//2
+					  ShowNotice(CL_RED"TRACER: WINDY %u\n" CL_RESET,createchar->m_nation);
+					  ShowNotice(CL_RED"TRACER: WINDY GETZONE %u\n" CL_RESET,createchar->m_zone);
+					 if(createchar->m_zone==240)
+					  {//1
+						  //WINDY
+						  
+						Query = "UPDATE chars \
+                            SET home_zone = '240', home_rot = '48', pos_rot = '48', home_x = '-120', pos_x = '-120', home_y = '-6', pos_y = '-6', home_z = '175'  , pos_z = '175'  ,pos_prevzone = '240',pos_zone = '0',first_login ='0',returning ='1',inevent='1',eventid='305'\
+							WHERE charid = %u;";
+                        Sql_Query(SqlHandle, Query, charid);
+						//return;
+					  }//1
+					 // return;
+					  }
+
+	Query = "INSERT INTO char_look(charid,face,race,size) VALUES(%u,%u,%u,%u)ON DUPLICATE KEY UPDATE charid = charid;";
 
 	if( Sql_Query(SqlHandle,Query,charid,createchar->m_look.face,createchar->m_look.race,createchar->m_look.size) == SQL_ERROR )
 	{
-		ShowDebug(CL_WHITE"lobby_cLook" CL_RESET": char<" CL_WHITE"%s" CL_RESET">, charid: %u\n",createchar->m_name, charid);
-		
+		ShowDebug("ERROR 2 PRINT CHARACTERS NAME %s \n" CL_RESET,createchar);
 		return -1;
 	}
 
-	Query = "INSERT INTO char_stats(charid,mjob) VALUES(%u,%u);";
+	Query = "INSERT INTO char_stats(charid,mjob) VALUES(%u,%u) ON DUPLICATE KEY UPDATE charid = charid;";
 	
 	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR )
 	{
-		ShowDebug(CL_WHITE"lobby_cStats" CL_RESET": charid: %u\n",charid);
-		
+		ShowDebug("ERROR 3 PRINT CHARACTERS NAME %s \n" CL_RESET,createchar);
 		return -1;
 	}
 
@@ -782,38 +934,58 @@ int32 lobby_createchar_save(uint32 accid, uint32 charid, char_mini* createchar)
 	
 	// people reported char creation errors, here is a fix.
 
-	Query = "INSERT INTO char_equip(charid) VALUES(%u) \
-			ON DUPLICATE KEY UPDATE charid = charid;";
-	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR ) return -1;
+	Query = "INSERT INTO char_equip(charid) VALUES(%u) ON DUPLICATE KEY UPDATE charid = charid;";
+	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR )
+		{
+			ShowDebug("ERROR 4 PRINT CHARACTERS NAME %s \n" CL_RESET,createchar);
+			return -1;
+	}
 
-	Query = "INSERT INTO char_exp(charid) VALUES(%u) \
-			ON DUPLICATE KEY UPDATE charid = charid;";
-	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR ) return -1;
+	Query = "INSERT INTO char_exp(charid) VALUES(%u) ON DUPLICATE KEY UPDATE charid = charid;";
+	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR )
+		{
+			ShowDebug("ERROR 5 PRINT CHARACTERS NAME %s \n" CL_RESET,createchar);
+			return -1;
+	}
 
-	Query = "INSERT INTO char_jobs(charid) VALUES(%u) \
-			ON DUPLICATE KEY UPDATE charid = charid;";
-	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR ) return -1;
+	Query = "INSERT INTO char_jobs(charid) VALUES(%u) ON DUPLICATE KEY UPDATE charid = charid;";
+	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR )
+		{
+			ShowDebug("ERROR 6 PRINT CHARACTERS NAME %s \n" CL_RESET,createchar);
+			return -1;
+	}
 
-	Query = "INSERT INTO char_points(charid) VALUES(%u) \
-			ON DUPLICATE KEY UPDATE charid = charid;";
-	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR ) return -1;
+	Query = "INSERT INTO char_points(charid) VALUES(%u) ON DUPLICATE KEY UPDATE charid = charid;";
+	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR )
+		{
+			ShowDebug("ERROR 7 PRINT CHARACTERS NAME %s \n" CL_RESET,createchar);
+			return -1;
+	}
 
-	Query = "INSERT INTO char_profile(charid) VALUES(%u) \
-			ON DUPLICATE KEY UPDATE charid = charid;";
-	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR ) return -1;
+	Query = "INSERT INTO char_profile(charid) VALUES(%u) ON DUPLICATE KEY UPDATE charid = charid;";
+	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR )
+		{ShowDebug("ERROR 8 PRINT CHARACTERS NAME %s \n" CL_RESET,createchar);
+			return -1;
+	}
 
-	Query = "INSERT INTO char_storage(charid) VALUES(%u) \
-			ON DUPLICATE KEY UPDATE charid = charid;";
-	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR ) return -1;
+	Query = "INSERT INTO char_storage(charid) VALUES(%u) ON DUPLICATE KEY UPDATE charid = charid;";
+	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR )
+		{
+			ShowDebug("ERROR 9 PRINT CHARACTERS NAME %s \n" CL_RESET,createchar);
+			return -1;
+	}
 
 
+	Query = "INSERT INTO char_inventory(charid) VALUES(%u) ON DUPLICATE KEY UPDATE charid = charid;";
+	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR ) 
+		{
+			ShowDebug("ERROR 10 PRINT CHARACTERS NAME %s \n" CL_RESET,createchar);
+			return -1;
+	}
 
-	//hot fix 
-	Query = "DELETE FROM char_inventory WHERE charid = %u";
-	if( Sql_Query(SqlHandle, Query, charid) == SQL_ERROR ) return -1;
-
-	Query = "INSERT INTO char_inventory(charid) VALUES(%u);"; 
-	if( Sql_Query(SqlHandle, Query, charid, createchar->m_mjob) == SQL_ERROR ) return -1;
+	ShowDebug("WE ARE A NEW CHARACTER SO LETS INSERT \n" CL_RESET);
+				
+	
 
 
 
