@@ -30,7 +30,7 @@
 #include "../common/utils.h"
 #include "../common/version.h"
 #include "../common/zlib.h"
-
+#include "../common/mmo.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -406,7 +406,7 @@ int32 map_decipher_packet(int8* buff, size_t size, sockaddr_in* from, map_sessio
 
 	int8 ip_str[16];
 	map_session_data->Leftonmap =true;
-	ShowError("map_encipher_packet: bad packet from <%s>\n",ip2str(ip,ip_str));
+	//ShowError("map_encipher_packet: bad packet from <%s>\n",ip2str(ip,ip_str));
 	return -1;
 }
 
@@ -475,6 +475,8 @@ int32 recv_parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_da
 			Query = "UPDATE chars SET sessions ='%u' WHERE charid = %u";
         Sql_Query(SqlHandle,Query,map_session_data,PChar->id);
 		Query = "UPDATE accounts SET sessions ='%u' WHERE id = %u";
+        Sql_Query(SqlHandle,Query,map_session_data,PChar->accid);
+		Query = "UPDATE accounts_sessions SET sessions ='%u' WHERE accid = %u";
         Sql_Query(SqlHandle,Query,map_session_data,PChar->accid);
 		Query = "UPDATE accounts SET online ='1' WHERE id = %u";
         Sql_Query(SqlHandle,Query,PChar->accid);
@@ -665,7 +667,7 @@ int32 map_close_session(uint32 tick, CTaskMgr::CTask* PTask)
 		map_session_data->server_packet_data != NULL &&		// bad pointer crashed here, might need dia to look at this one
 		map_session_data->PChar != NULL)					// crash occured when both server_packet_data & PChar were NULL
 	{
-		//Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE charid = %u",map_session_data->PChar->id);
+		Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE charid = %u",map_session_data->PChar->id);
         const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE charid = %u";
         Sql_Query(SqlHandle,Query,map_session_data->PChar->id);
 		Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
@@ -673,7 +675,7 @@ int32 map_close_session(uint32 tick, CTaskMgr::CTask* PTask)
 		uint64 port64 = map_session_data->client_port;
 		uint64 ipp	  = map_session_data->client_addr;
 		ipp |= port64<<32;
-
+		
 		map_session_data->PChar->StatusEffectContainer->SaveStatusEffects();
 
 		aFree(map_session_data->server_packet_data);
@@ -794,6 +796,7 @@ int32 map_cleanup(uint32 tick, CTaskMgr::CTask* PTask)
         Sql_Query(SqlHandle,Query,map_session_data);
 		Query = "UPDATE accounts SET  online = '0' WHERE sessions = %u";
         Sql_Query(SqlHandle,Query,map_session_data);
+		Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE sessions = %u",map_session_data);
 
 				        aFree(map_session_data->server_packet_data);
 				         map_session_list.erase(it++);
