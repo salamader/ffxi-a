@@ -18,15 +18,15 @@ require("scripts/globals/common");
 --See chocoprice.lua to adjust chocobo stables.
 --require("scripts/globals/chocoprice");
 -- Enable Extension (1= yes 0= no)
-ENABLE_COP  = 0;
-ENABLE_TOAU = 0;
-ENABLE_WOTG = 0;
+ENABLE_COP  = 1;
+ENABLE_TOAU = 1;
+ENABLE_WOTG = 1;
 
 -- CHARACTER CONFIG
 INITIAL_LEVEL_CAP = 50; --The initial level cap for new players.  There seems to be a hardcap of 255.
-MAX_LEVEL = 75; -- Level max of the server, works by disabling Maat quests.
-START_GIL = 10; --Amount of gil given to newly created characters.
-START_INVENTORY = 30; --Starting inventory and satchel size.  Ignores values < 30.  Do not set above 80!
+MAX_LEVEL = 99; -- Level max of the server, works by disabling Maat quests.
+START_GIL = 1000; --Amount of gil given to newly created characters.
+START_INVENTORY = 80; --Starting inventory and satchel size.  Ignores values < 30.  Do not set above 80!
 OPENING_CUTSCENE_ENABLE = 0; --Set to 1 to enable opening cutscenes, 0 to disable.
 SUBJOB_QUEST_LEVEL = 18; --Minimum level to accept either subjob quest.  Set to 0 to start the game with subjobs unlocked.
 ADVANCED_JOB_LEVEL = 30; --Minimum level to accept advanced job quests.  Set to 0 to start the game with advanced jobs.
