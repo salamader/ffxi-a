@@ -157,7 +157,7 @@ int32 do_init(int32 argc, int8** argv)
     Sql_Keepalive(SqlHandle);
 
     // отчищаем таблицу сессий при старте сервера (временное решение, т.к. в кластере это не будет работать)
-    //Sql_Query(SqlHandle, "TRUNCATE TABLE accounts_sessions");
+    Sql_Query(SqlHandle, "TRUNCATE TABLE accounts_sessions");
 	const char *Query = "UPDATE accounts SET online ='0' WHERE online = '1'";
         Sql_Query(SqlHandle,Query);
 		Query = "UPDATE chars SET online ='0' WHERE online = '1'";
