@@ -1086,7 +1086,7 @@ void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, int8* dat
     PChar->PRecastContainer->Del(RECAST_MAGIC);
 
     charutils::SaveCharStats(PChar);
-	charutils::SaveCharPosition(PChar);
+	//charutils::SaveCharPosition(PChar);
 	charutils::SaveCharExp(PChar, PChar->GetMJob());
 	charutils::SaveCharPoints(PChar);
 
@@ -1217,10 +1217,10 @@ void SmallPacket0x015(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	if (PChar->status != STATUS_SHUTDOWN &&
         PChar->status != STATUS_DISAPPEAR)
 	{
-		bool isUpdate = ( (PChar->status == STATUS_UPDATE) ||
-						  (PChar->loc.p.x  != RBUFF(data,(0x04))) ||
-						  (PChar->loc.p.z  != RBUFF(data,(0x0C))) ||
-						  (PChar->m_TargID != RBUFW(data,(0x16))) );
+		//bool isUpdate = ( (PChar->status == STATUS_UPDATE) ||
+						//  (PChar->loc.p.x  != RBUFF(data,(0x04))) ||
+						 // (PChar->loc.p.z  != RBUFF(data,(0x0C))) ||
+						//  (PChar->m_TargID != RBUFW(data,(0x16))) );
 
 		PChar->loc.p.x = RBUFF(data,(0x04));
 		PChar->loc.p.y = RBUFF(data,(0x08));
@@ -1231,12 +1231,12 @@ void SmallPacket0x015(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 		PChar->m_TargID = RBUFW(data,(0x16));
 
-		if (isUpdate)
-		{
+		//if (isUpdate)
+		//{
 			PChar->status = STATUS_NORMAL;
             PChar->loc.zone->SpawnPCs(PChar);
 			PChar->loc.zone->SpawnNPCs(PChar);
-		}
+		//}
 
 		PChar->loc.zone->SpawnMOBs(PChar);
 		PChar->loc.zone->SpawnPETs(PChar);
