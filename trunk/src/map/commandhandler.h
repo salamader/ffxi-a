@@ -89,8 +89,11 @@ public:
 	bool	init(const int8* InitCmdInIPath, lua_State* InitLState);	// Инициализация списка команд.
 	bool	free();														// Освобождение занятых заранее ресурсов 
 
-	int32	call(CCharEntity* PChar, const int8* commandline);			// Вызов сценария.
-
+	int32	pcall(CCharEntity* PChar, const int8* commandline);			// Вызов сценария.
+	int32	gcall(CCharEntity* PChar, const int8* commandline);			// Вызов сценария.
+	int32	mgcall(CCharEntity* PChar, const int8* commandline);			// Вызов сценария.
+	int32	agcall(CCharEntity* PChar, const int8* commandline);			// Вызов сценария.
+	int32	procall(CCharEntity* PChar, const int8* commandline);			// Вызов сценария.
 	~CCommandHandler() {}
 };
 #endif
