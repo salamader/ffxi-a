@@ -20,7 +20,6 @@
 
 ===========================================================================
 */
-
 #include <sstream>
 
 #include "commandhandler.h"
@@ -91,15 +90,6 @@ bool CCommandHandler::init(const int8* InitCmdInIPath, lua_State* InitLState)
 		}else{
 			SomthCmds.CmdPath = m_CmdInIPath;
 		};
-		/*getting cmd permission level*/
-		lua_pushstring(m_LState,"permission");
-		lua_gettable(m_LState,-2);
-		if( lua_tostring(m_LState,-1) != NULL )
-		{
-			SomthCmds.CmdPermissionLvl = lua_tointeger(m_LState,-1);
-			/*pop key and value*/
-			lua_pop(m_LState,1);
-		}
 		/*getting cmd parameters*/
 		lua_pushstring(m_LState,"parameters");
 		lua_gettable(m_LState,-2);
@@ -115,7 +105,7 @@ bool CCommandHandler::init(const int8* InitCmdInIPath, lua_State* InitLState)
 	}
 	/*pop commands_ini table*/
 	lua_pop(m_LState,1);
-	ShowStatus("cmdhandler::init: initializing...\t\t - " CL_GREEN"[OK]" CL_RESET"\n");
+	ShowMessage(CL_GREEN"OK!\n"CL_RESET);
 	return true;
 }
 
@@ -137,8 +127,10 @@ bool CCommandHandler::free()
 *																		*
 ************************************************************************/
 
-int32 CCommandHandler::call(CCharEntity* PChar, const int8* commandline)
+int32 CCommandHandler::pcall(CCharEntity* PChar, const int8* commandline)
 {
+	if(PChar != NULL)
+	{
 	std::istringstream clstream(commandline);
 	std::string cmdname;
 	clstream >> cmdname;
@@ -160,18 +152,13 @@ int32 CCommandHandler::call(CCharEntity* PChar, const int8* commandline)
 	}
 	if (CmdHandler == 0) 
 	{
-		//PChar->pushPacket(new CMessageDebugPacket(PChar,PChar,0,0,27));
-		//ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
-		return -1;
-	}
-	if(CmdHandler->CmdPermissionLvl > PChar->m_GMlevel)
-	{
-		ShowWarning("cmdhandler::call: Character %s attempting to use higher permission command %s\n",PChar->name.c_str(),CmdHandler->CmdName.c_str());
+		PChar->pushPacket(new CMessageDebugPacket(PChar,PChar,0,0,27));
+		ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
 		return -1;
 	}
 
 	//Загрузка файла команды.
-	if( luaL_loadfile(m_LState,std::string(CmdHandler->CmdPath+"/"+CmdHandler->CmdName+".lua").c_str()) ||
+	if( luaL_loadfile(m_LState,std::string(CmdHandler->CmdPath+"/"+CmdHandler->CmdName+".0").c_str()) ||
 		lua_pcall(m_LState,0,0,0) )
 	{
 		ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
@@ -244,5 +231,435 @@ int32 CCommandHandler::call(CCharEntity* PChar, const int8* commandline)
 		return -1;
 	}
 	return 0;
+	}
+	return false;
+}
+int32 CCommandHandler::gcall(CCharEntity* PChar, const int8* commandline)
+{
+	if(PChar != NULL)
+	{
+	std::istringstream clstream(commandline);
+	std::string cmdname;
+	clstream >> cmdname;
+
+	if( cmdname.empty()) 
+	{
+		ShowError("cmdhandler::call: function name is empty\n"); 
+		return -1;
+	}
+
+	const cmd_t* CmdHandler = 0;
+	for( ListCmds_t::iterator cmd_iter = m_ListCmds.begin(); cmd_iter != m_ListCmds.end(); ++cmd_iter)
+	{
+		if( (*cmd_iter).CmdName == cmdname )
+		{
+			CmdHandler = &(*cmd_iter);
+			break;
+		}
+	}
+	if (CmdHandler == 0) 
+	{
+		PChar->pushPacket(new CMessageDebugPacket(PChar,PChar,0,0,27));
+		ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
+		return -1;
+	}
+
+	//Загрузка файла команды.
+	if( luaL_loadfile(m_LState,std::string(CmdHandler->CmdPath+"/"+CmdHandler->CmdName+".1").c_str()) ||
+		lua_pcall(m_LState,0,0,0) )
+	{
+		ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
+		lua_pop(m_LState,1);
+		return -1;
+	}
+
+	//Загрузка адреса функции в стек.
+	lua_pushstring(m_LState, "onTrigger");
+	lua_gettable(m_LState,LUA_GLOBALSINDEX);
+
+	if( lua_isnil(m_LState,-1) || !lua_isfunction(m_LState,-1) )
+	{
+		ShowError("cmdhandler::call: can't load the function: onTrigger\n");
+		lua_pop(m_LState,-1);
+		return -1;
+	}
+
+	//Добавление самого первого параметра
+	CLuaBaseEntity LuaCmdCaller(PChar);
+	int32 cntparam = 0;
+	if( PChar != NULL )
+	{
+		Lunar<CLuaBaseEntity>::push(m_LState,&LuaCmdCaller);
+		cntparam += 1;
+	}
+
+	/* цикл просмотра строки передаваемых значений*/
+	std::string::const_iterator param_iter = CmdHandler->CmdParameters.begin();
+	
+	std::string param;
+	while( param_iter != CmdHandler->CmdParameters.end() &&
+		   !clstream.eof() )
+	{
+		clstream >> param;
+		switch( *param_iter )
+		{
+			case 's':
+			{
+				++cntparam;
+				lua_pushstring(m_LState,param.c_str());
+			}
+				break;
+			case 'i':
+			{
+				int32 buff_val = atoi(param.c_str());
+				lua_pushnumber(m_LState,buff_val);
+				++cntparam;	
+			}
+				break;
+			case 'd':
+			{
+				double buff_val = atof(param.c_str());
+				lua_pushnumber(m_LState,buff_val);
+				++cntparam;	
+			}
+				break;
+			default:
+				ShowError("cmdhandler::call: undefined type symbol:%s\n",*param_iter);
+		};
+		++param_iter;
+	}
+
+	//Вызов функции.
+	int32 status = lua_pcall(m_LState,cntparam,0,0);
+	if( status )
+	{
+		ShowError("cmdhandler::call: %s\n", lua_tostring(m_LState,-1));
+		lua_pop(m_LState,1);
+		return -1;
+	}
+	return 0;
+	}
+	return false;
+}
+int32 CCommandHandler::mgcall(CCharEntity* PChar, const int8* commandline)
+{
+	if(PChar != NULL)
+	{
+	std::istringstream clstream(commandline);
+	std::string cmdname;
+	clstream >> cmdname;
+
+	if( cmdname.empty()) 
+	{
+		ShowError("cmdhandler::call: function name is empty\n"); 
+		return -1;
+	}
+
+	const cmd_t* CmdHandler = 0;
+	for( ListCmds_t::iterator cmd_iter = m_ListCmds.begin(); cmd_iter != m_ListCmds.end(); ++cmd_iter)
+	{
+		if( (*cmd_iter).CmdName == cmdname )
+		{
+			CmdHandler = &(*cmd_iter);
+			break;
+		}
+	}
+	if (CmdHandler == 0) 
+	{
+		PChar->pushPacket(new CMessageDebugPacket(PChar,PChar,0,0,27));
+		ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
+		return -1;
+	}
+
+	//Загрузка файла команды.
+	if( luaL_loadfile(m_LState,std::string(CmdHandler->CmdPath+"/"+CmdHandler->CmdName+".2").c_str()) ||
+		lua_pcall(m_LState,0,0,0) )
+	{
+		ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
+		lua_pop(m_LState,1);
+		return -1;
+	}
+
+	//Загрузка адреса функции в стек.
+	lua_pushstring(m_LState, "onTrigger");
+	lua_gettable(m_LState,LUA_GLOBALSINDEX);
+
+	if( lua_isnil(m_LState,-1) || !lua_isfunction(m_LState,-1) )
+	{
+		ShowError("cmdhandler::call: can't load the function: onTrigger\n");
+		lua_pop(m_LState,-1);
+		return -1;
+	}
+
+	//Добавление самого первого параметра
+	CLuaBaseEntity LuaCmdCaller(PChar);
+	int32 cntparam = 0;
+	if( PChar != NULL )
+	{
+		Lunar<CLuaBaseEntity>::push(m_LState,&LuaCmdCaller);
+		cntparam += 1;
+	}
+
+	/* цикл просмотра строки передаваемых значений*/
+	std::string::const_iterator param_iter = CmdHandler->CmdParameters.begin();
+	
+	std::string param;
+	while( param_iter != CmdHandler->CmdParameters.end() &&
+		   !clstream.eof() )
+	{
+		clstream >> param;
+		switch( *param_iter )
+		{
+			case 's':
+			{
+				++cntparam;
+				lua_pushstring(m_LState,param.c_str());
+			}
+				break;
+			case 'i':
+			{
+				int32 buff_val = atoi(param.c_str());
+				lua_pushnumber(m_LState,buff_val);
+				++cntparam;	
+			}
+				break;
+			case 'd':
+			{
+				double buff_val = atof(param.c_str());
+				lua_pushnumber(m_LState,buff_val);
+				++cntparam;	
+			}
+				break;
+			default:
+				ShowError("cmdhandler::call: undefined type symbol:%s\n",*param_iter);
+		};
+		++param_iter;
+	}
+
+	//Вызов функции.
+	int32 status = lua_pcall(m_LState,cntparam,0,0);
+	if( status )
+	{
+		ShowError("cmdhandler::call: %s\n", lua_tostring(m_LState,-1));
+		lua_pop(m_LState,1);
+		return -1;
+	}
+	return 0;
+	}
+	return false;
+}
+int32 CCommandHandler::agcall(CCharEntity* PChar, const int8* commandline)
+{
+	if(PChar != NULL)
+	{
+	std::istringstream clstream(commandline);
+	std::string cmdname;
+	clstream >> cmdname;
+
+	if( cmdname.empty()) 
+	{
+		ShowError("cmdhandler::call: function name is empty\n"); 
+		return -1;
+	}
+
+	const cmd_t* CmdHandler = 0;
+	for( ListCmds_t::iterator cmd_iter = m_ListCmds.begin(); cmd_iter != m_ListCmds.end(); ++cmd_iter)
+	{
+		if( (*cmd_iter).CmdName == cmdname )
+		{
+			CmdHandler = &(*cmd_iter);
+			break;
+		}
+	}
+	if (CmdHandler == 0) 
+	{
+		PChar->pushPacket(new CMessageDebugPacket(PChar,PChar,0,0,27));
+		ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
+		return -1;
+	}
+
+	//Загрузка файла команды.
+	if( luaL_loadfile(m_LState,std::string(CmdHandler->CmdPath+"/"+CmdHandler->CmdName+".3").c_str()) ||
+		lua_pcall(m_LState,0,0,0) )
+	{
+		ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
+		lua_pop(m_LState,1);
+		return -1;
+	}
+
+	//Загрузка адреса функции в стек.
+	lua_pushstring(m_LState, "onTrigger");
+	lua_gettable(m_LState,LUA_GLOBALSINDEX);
+
+	if( lua_isnil(m_LState,-1) || !lua_isfunction(m_LState,-1) )
+	{
+		ShowError("cmdhandler::call: can't load the function: onTrigger\n");
+		lua_pop(m_LState,-1);
+		return -1;
+	}
+
+	//Добавление самого первого параметра
+	CLuaBaseEntity LuaCmdCaller(PChar);
+	int32 cntparam = 0;
+	if( PChar != NULL )
+	{
+		Lunar<CLuaBaseEntity>::push(m_LState,&LuaCmdCaller);
+		cntparam += 1;
+	}
+
+	/* цикл просмотра строки передаваемых значений*/
+	std::string::const_iterator param_iter = CmdHandler->CmdParameters.begin();
+	
+	std::string param;
+	while( param_iter != CmdHandler->CmdParameters.end() &&
+		   !clstream.eof() )
+	{
+		clstream >> param;
+		switch( *param_iter )
+		{
+			case 's':
+			{
+				++cntparam;
+				lua_pushstring(m_LState,param.c_str());
+			}
+				break;
+			case 'i':
+			{
+				int32 buff_val = atoi(param.c_str());
+				lua_pushnumber(m_LState,buff_val);
+				++cntparam;	
+			}
+				break;
+			case 'd':
+			{
+				double buff_val = atof(param.c_str());
+				lua_pushnumber(m_LState,buff_val);
+				++cntparam;	
+			}
+				break;
+			default:
+				ShowError("cmdhandler::call: undefined type symbol:%s\n",*param_iter);
+		};
+		++param_iter;
+	}
+
+	//Вызов функции.
+	int32 status = lua_pcall(m_LState,cntparam,0,0);
+	if( status )
+	{
+		ShowError("cmdhandler::call: %s\n", lua_tostring(m_LState,-1));
+		lua_pop(m_LState,1);
+		return -1;
+	}
+	return 0;
+	}
+	return false;
+}
+int32 CCommandHandler::procall(CCharEntity* PChar, const int8* commandline)
+{
+	if(PChar != NULL)
+	{
+	std::istringstream clstream(commandline);
+	std::string cmdname;
+	clstream >> cmdname;
+
+	if( cmdname.empty()) 
+	{
+		ShowError("cmdhandler::call: function name is empty\n"); 
+		return -1;
+	}
+
+	const cmd_t* CmdHandler = 0;
+	for( ListCmds_t::iterator cmd_iter = m_ListCmds.begin(); cmd_iter != m_ListCmds.end(); ++cmd_iter)
+	{
+		if( (*cmd_iter).CmdName == cmdname )
+		{
+			CmdHandler = &(*cmd_iter);
+			break;
+		}
+	}
+	if (CmdHandler == 0) 
+	{
+		PChar->pushPacket(new CMessageDebugPacket(PChar,PChar,0,0,27));
+		ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
+		return -1;
+	}
+
+	//Загрузка файла команды.
+	if( luaL_loadfile(m_LState,std::string(CmdHandler->CmdPath+"/"+CmdHandler->CmdName+".4").c_str()) ||
+		lua_pcall(m_LState,0,0,0) )
+	{
+		ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
+		lua_pop(m_LState,1);
+		return -1;
+	}
+
+	//Загрузка адреса функции в стек.
+	lua_pushstring(m_LState, "onTrigger");
+	lua_gettable(m_LState,LUA_GLOBALSINDEX);
+
+	if( lua_isnil(m_LState,-1) || !lua_isfunction(m_LState,-1) )
+	{
+		ShowError("cmdhandler::call: can't load the function: onTrigger\n");
+		lua_pop(m_LState,-1);
+		return -1;
+	}
+
+	//Добавление самого первого параметра
+	CLuaBaseEntity LuaCmdCaller(PChar);
+	int32 cntparam = 0;
+	if( PChar != NULL )
+	{
+		Lunar<CLuaBaseEntity>::push(m_LState,&LuaCmdCaller);
+		cntparam += 1;
+	}
+
+	/* цикл просмотра строки передаваемых значений*/
+	std::string::const_iterator param_iter = CmdHandler->CmdParameters.begin();
+	
+	std::string param;
+	while( param_iter != CmdHandler->CmdParameters.end() &&
+		   !clstream.eof() )
+	{
+		clstream >> param;
+		switch( *param_iter )
+		{
+			case 's':
+			{
+				++cntparam;
+				lua_pushstring(m_LState,param.c_str());
+			}
+				break;
+			case 'i':
+			{
+				int32 buff_val = atoi(param.c_str());
+				lua_pushnumber(m_LState,buff_val);
+				++cntparam;	
+			}
+				break;
+			case 'd':
+			{
+				double buff_val = atof(param.c_str());
+				lua_pushnumber(m_LState,buff_val);
+				++cntparam;	
+			}
+				break;
+			default:
+				ShowError("cmdhandler::call: undefined type symbol:%s\n",*param_iter);
+		};
+		++param_iter;
+	}
+
+	//Вызов функции.
+	int32 status = lua_pcall(m_LState,cntparam,0,0);
+	if( status )
+	{
+		ShowError("cmdhandler::call: %s\n", lua_tostring(m_LState,-1));
+		lua_pop(m_LState,1);
+		return -1;
+	}
+	return 0;
+	}
+	return false;
 }
 
