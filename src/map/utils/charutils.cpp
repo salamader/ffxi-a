@@ -1842,7 +1842,7 @@ void CheckEquipLogic(CCharEntity* PChar, SCRIPTTYPE ScriptType, uint32 param)
 
 void BuildingCharWeaponSkills(CCharEntity* PChar)
 {
-	memset(& PChar->m_WeaponSkills, 0, sizeof(PChar->m_WeaponSkills));
+	/*memset(& PChar->m_WeaponSkills, 0, sizeof(PChar->m_WeaponSkills));
 
 	JOBTYPE curMainJob = PChar->GetMJob();
 	JOBTYPE curSubJob  = PChar->GetSJob();
@@ -1907,6 +1907,398 @@ void BuildingCharWeaponSkills(CCharEntity* PChar)
 		}
 	}
 	PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+	*/
+	if(PChar->Account_Level == 0 || PChar->Account_Level == 1 && PChar->godmode== false || PChar->Account_Level == 2 && PChar->godmode== false || PChar->Account_Level == 3 && PChar->godmode== false)
+	{
+	memset(& PChar->m_WeaponSkills, 0, sizeof(PChar->m_WeaponSkills));
+
+	JOBTYPE curMainJob = PChar->GetMJob();
+	JOBTYPE curSubJob  = PChar->GetSJob();
+
+	CItemWeapon* PItem;
+	int16 wsIDs[3] = { 0 };
+	int16 wsDynIDs[3] = { 0 };
+
+	bool isInDynamis = PChar->isInDynamis();
+
+	for (int i = 0; i < 3; ++i)
+	{
+		if (PChar->equip[i])
+		{
+			PItem = (CItemWeapon*)PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->equip[i]);
+
+			for(std::vector<CModifier*>::iterator it = PItem->modList.begin(); it !=  PItem->modList.end(); ++it)
+			{
+				if((*it)->getModID() == MOD_ADDS_WEAPONSKILL)
+				{
+					wsIDs[i] = (*it)->getModAmount();
+					break;
+				}
+				if((*it)->getModID() == MOD_ADDS_WEAPONSKILL_DYN)
+				{
+					wsDynIDs[i] = (*it)->getModAmount();
+					break;
+				}
+			}
+		}
+	}
+
+	//add in melee ws
+	uint8 skill = PChar->m_Weapons[SLOT_MAIN]->getSkillType();
+	std::list<CWeaponSkill*>&& WeaponSkillList = battleutils::GetWeaponSkills(skill);
+	for (std::list<CWeaponSkill*>::iterator it = WeaponSkillList.begin(); it != WeaponSkillList.end(); ++it)
+	{
+		CWeaponSkill* PSkill = *it;
+
+		if (PChar->GetSkill(skill) >=  PSkill->getSkillLevel() && (PSkill->getJob(curMainJob) > 0 || PSkill->getJob(curSubJob) > 0)
+			|| PSkill->getID() == wsIDs[SLOT_MAIN] || PSkill->getID() == wsIDs[SLOT_SUB]
+			|| isInDynamis && (PSkill->getID() == wsDynIDs[SLOT_MAIN] || PSkill->getID() == wsDynIDs[SLOT_SUB]))
+		{
+			addWeaponSkill(PChar, PSkill->getID());
+		}
+	}
+
+	//add in ranged ws
+	PItem = (CItemWeapon*)PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->equip[SLOT_RANGED]);
+	if(PItem != NULL && PItem->isType(ITEM_WEAPON) && PItem->getSkillType()!=SKILL_THR)
+	{
+		skill = PChar->m_Weapons[SLOT_RANGED]->getSkillType();
+		std::list<CWeaponSkill*>&& WeaponSkillList = battleutils::GetWeaponSkills(skill);
+		for (std::list<CWeaponSkill*>::iterator it = WeaponSkillList.begin(); it != WeaponSkillList.end(); ++it)
+		{
+			CWeaponSkill* PSkill = *it;
+			if (PChar->GetSkill(skill) >=  PSkill->getSkillLevel() && (PSkill->getJob(curMainJob) > 0 || PSkill->getJob (curSubJob) > 0)
+				|| PSkill->getID() == wsIDs[SLOT_RANGED]
+				|| isInDynamis && (PSkill->getID() == wsDynIDs[SLOT_RANGED]))
+			{
+				addWeaponSkill(PChar, PSkill->getID());
+			}
+		}
+	}
+	PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+	}
+	if(PChar->Account_Level == 1 && PChar->godmode== 1 || PChar->Account_Level == 2 && PChar->godmode== 1 || PChar->Account_Level == 3 && PChar->godmode== 1 || PChar->Account_Level == 4 && PChar->godmode== 1)
+	{
+	//ShowNotice(CL_RED"TRACER:COMMAND: BUILDING WEAPON SKILLS TABLE FOR CHARACTER\n" CL_RESET);
+	//ShowNotice(CL_RED"TRACER:COMMAND: GETMAINJOB ID %u\n" CL_RESET,PChar->GetMJob());
+	//ShowNotice(CL_RED"TRACER:COMMAND: GETSUBJOB ID %u\n" CL_RESET,PChar->GetSJob());
+	//ShowNotice(CL_RED"TRACER:COMMAND: GETMAINLEVEL ID %u\n" CL_RESET,PChar->GetMLevel());
+	//ShowNotice(CL_RED"TRACER:COMMAND: GETSUBLEVEL ID %u\n" CL_RESET,PChar->GetSLevel());
+	uint8 skill = PChar->m_Weapons[SLOT_MAIN]->getSkillType();
+	std::list<CWeaponSkill*>&& WeaponSkillList = battleutils::GetWeaponSkills(skill);
+	for (std::list<CWeaponSkill*>::iterator it = WeaponSkillList.begin(); it != WeaponSkillList.end(); ++it)
+	{
+		CWeaponSkill* PSkill = *it;
+
+		
+		//ShowNotice(CL_RED"TRACER:COMMAND: GETSKILLTYPELEVEL ID %u\n" CL_RESET,PSkill->getSkillLevel());
+		
+	}
+	
+	
+	//ShowNotice(CL_RED"TRACER:COMMAND: GETSKILL ID %u\n" CL_RESET,PChar->GetSkill(skill));
+	//ShowNotice(CL_RED"TRACER:COMMAND: GETSKILLTYPE ID %u\n" CL_RESET,skill);
+	if(skill==0)
+	{
+		
+		return;
+	}
+	if(skill==1)
+	{
+		/*
+		HAND 2 HAND
+1=Combo
+2=Shoulder Tackle
+3=One Inch Punch
+4=Backhand Blow
+5=Raging Fists
+6=Spinning Attack
+7=Howling Fist
+8=Dragon Kick
+9=Asuran Fists
+10=Final Heaven
+11=Ascetic's Fury
+12=Stringing Pummel
+13=Tornado Kick
+14=Victory Smite
+15=Shijin Spiral
+		*/
+     //NO WEAPON IS EQUIPT ???
+		for (uint8 i = 1; i < 16; ++i)
+		{
+        addWeaponSkill(PChar, i);
+		//ShowNotice(CL_RED"TRACER:COMMAND: SKILLTYPE HAND TWO HAND %u\n" CL_RESET,i);
+		}
+		PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+		return;
+	}
+	if(skill == 2)
+	{
+		/*
+	DAGGER
+16=Wasp Sting
+17=Viper Bite
+18=Shadowstitch
+19=Gust Slash
+20=Cyclone
+21=Energy Steal
+22=Energy Drian
+23=Dancing Edge
+24=Shark Bite
+25=Evisceration
+26=Mercy Stroke
+27=Mandalic Stab
+28=Mordant Rime
+29=Pyrrhic Kleos
+30=Aeolian Edge
+31=Rudra's Storm
+	*/
+		for (uint8 i = 16; i < 32; ++i)
+		{
+	 addWeaponSkill(PChar, i);
+	// ShowNotice(CL_RED"TRACER:COMMAND: SKILLTYPE DAGGER %u\n" CL_RESET,i);
+		}
+
+     PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+	 return;
+	}
+	
+	
+	if(skill == 3)
+	{
+		/*
+	SWORD
+32=Fast Blade
+33=Burning Blade
+34=Red Lotus Blade
+35=Fast Blade
+36=Shining Blade
+37=Seraph Blade
+38=Circle Blade
+39=Spirits Within
+40=Vorpal Blade
+41=Swift Blade
+42=Savage Blade
+43=Knights of Round
+44=Death Blossom
+45=Atonement
+46=Expiacion
+47=Sanguine Blade
+	*/
+		for (uint8 i = 32; i < 48; ++i)
+		{
+	 addWeaponSkill(PChar, i);
+	// ShowNotice(CL_RED"TRACER:COMMAND: SKILLTYPE SWORD %u\n" CL_RESET,i);
+		}
+
+     PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+	 return;
+	}
+	if(skill == 4)
+	{
+		/*
+	GREAT SWORD
+48=Hard Slash
+49=Power Slash
+50=Frostbite
+51=Freezebite
+52=ShockWave
+53=Crescent Moon
+54=Slickle Moon
+55=Spinning Slash
+56=Ground Strike
+57=Scourge
+58=Herculean Slash
+59=Torcleaver
+60=Resolution
+	*/
+		for (uint8 i = 48; i < 61; ++i)
+		{
+	 addWeaponSkill(PChar, i);
+	// ShowNotice(CL_RED"TRACER:COMMAND: SKILLTYPE GRATE SWORD %u\n" CL_RESET,i);
+		}
+
+     PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+	 return;
+	}
+
+	if(skill == 5)
+	{
+		/*
+	AXE
+64=Raging Axe
+65=Smash Axe
+66=Gale Axe
+67=Avalanche Axe
+68=Spinning Axe
+69=Rampage
+70=Calamity
+71=Mistral Axe
+72=Decimation
+73=Onslaught
+74=Primal Rend
+75=Bora Axe
+76=Cloudsplitter
+77=Ruinator
+
+	*/
+		for (uint8 i = 64; i < 78; ++i)
+		{
+	 addWeaponSkill(PChar, i);
+	// ShowNotice(CL_RED"TRACER:COMMAND: SKILLTYPE AXE %u\n" CL_RESET,i);
+		}
+
+     PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+	 return;
+	}
+	if(skill == 6)
+	{
+		/*
+	GRATE AXE
+80=Shield Brake
+81=Iron Tempest
+82=Sturmwind
+83=Armor Break
+84=Keen Edge
+85=Weapon Brake
+86=Raging Rush
+87=Full Rush
+88=Steel Cyclone
+89=Metatron Torment
+90=King's Justice 
+91=Fell Cleave
+92=Ukko's Fury
+93=Upheaval
+
+	*/
+		for (uint8 i = 80; i < 94; ++i)
+		{
+	 addWeaponSkill(PChar, i);
+	// ShowNotice(CL_RED"TRACER:COMMAND: SKILLTYPE GRATE AXE %u\n" CL_RESET,i);
+		}
+
+     PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+	 return;
+	}
+	if(skill == 7)
+	{
+		/*
+	SCYTHE
+96=Slice
+97=Dark Harvest
+98=Shodow of Death
+99=Nightmare Scythe
+100=Spinning Scythe
+101=Vorpal Scythe
+102=Guillotine
+103=Cross Reaper
+104=Spiral Hell
+105=Catastrophe
+106=Insurgency
+107=Infernal Scythe
+108=Quietus
+109=Entropy
+
+	*/
+		for (uint8 i = 96; i < 110; ++i)
+		{
+	 addWeaponSkill(PChar, i);
+	// ShowNotice(CL_RED"TRACER:COMMAND: SKILLTYPE SWORD %u\n" CL_RESET,i);
+		}
+
+     PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+	 return;
+	}
+	if(skill == 8)
+	{
+		/*
+	POLEARMS
+
+	*/
+		/*for (uint8 i = 48; i < 61; ++i)
+		{
+	 addWeaponSkill(PChar, i);
+	 ShowNotice(CL_RED"TRACER:COMMAND: SKILLTYPE SWORD %u\n" CL_RESET,i);
+		}
+
+     PChar->pushPacket(new CCharAbilitiesPacket(PChar));*/
+	 return;
+	}
+	if(skill == 11)
+	{
+		/*
+	CLUB
+
+	*/
+		/*for (uint8 i = 48; i < 61; ++i)
+		{
+	 addWeaponSkill(PChar, i);
+	 ShowNotice(CL_RED"TRACER:COMMAND: SKILLTYPE SWORD %u\n" CL_RESET,i);
+		}
+
+     PChar->pushPacket(new CCharAbilitiesPacket(PChar));*/
+	 return;
+	}
+	if(skill == 12)
+	{
+		/*
+	STAVES
+
+	*/
+		/*for (uint8 i = 48; i < 61; ++i)
+		{
+	 addWeaponSkill(PChar, i);
+	 ShowNotice(CL_RED"TRACER:COMMAND: SKILLTYPE SWORD %u\n" CL_RESET,i);
+		}
+
+     PChar->pushPacket(new CCharAbilitiesPacket(PChar));*/
+	 return;
+	}
+	if(skill == 10)
+	{
+		/*
+	GRATE KATANA
+
+	*/
+		/*for (uint8 i = 48; i < 61; ++i)
+		{
+	 addWeaponSkill(PChar, i);
+	 ShowNotice(CL_RED"TRACER:COMMAND: SKILLTYPE SWORD %u\n" CL_RESET,i);
+		}
+
+     PChar->pushPacket(new CCharAbilitiesPacket(PChar));*/
+	 return;
+	}
+	if(skill == 9)
+	{
+		/*
+	KATANA
+128=Blade: Rin
+129=Blade: Retsu
+130=Blade: Teki
+131=Blade: To
+132=Blade: Chi
+133=Blade: Ei
+134:Blade: Jin
+135=Blade: Ten
+136=Blade: Ku
+137=Blade: Metsu
+138=Blade: Kamu
+139=Blade: Yu
+140=Blade: Hi
+141=Blade: Shun
+
+	*/
+		for (uint8 i = 128; i < 142; ++i)
+		{
+	 addWeaponSkill(PChar, i);
+	// ShowNotice(CL_RED"TRACER:COMMAND: SKILLTYPE SWORD %u\n" CL_RESET,i);
+		}
+
+     PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+	 return;
+	}
+	}
 }
 
 void BuildingCharPetAbilityTable(CCharEntity* PChar, CPetEntity* PPet, uint32 PetID){
@@ -3174,7 +3566,15 @@ void AddExperiencePoints(bool expFromRaise, CCharEntity* PChar, CBaseEntity* PMo
 {
 	if (PChar->isDead()) return;
 	if (!expFromRaise) {
-		exp = exp * map_config.exp_rate;
+		if(PChar->SetExpRates !=NULL)
+		{
+		exp = exp * PChar->SetExpRates;
+		}
+		else
+		{
+        exp = exp * map_config.exp_rate;
+		}
+		
 	}
 	uint16 currentExp = PChar->jobs.exp[PChar->GetMJob()];
 	bool onLimitMode = false;
