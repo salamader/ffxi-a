@@ -570,14 +570,20 @@ uint8 CBattleEntity::GetSLevel()
 
 void CBattleEntity::SetMJob(uint8 mjob)
 {
-	DSP_DEBUG_BREAK_IF(mjob == 0 || mjob >= MAX_JOBTYPE);	// выход за пределы доступных профессий
+	if(mjob == 0 || mjob >= MAX_JOBTYPE)
+		{
+			return;
+	}// выход за пределы доступных профессий
 
 	m_mjob = (JOBTYPE)mjob;
 }
 
 void CBattleEntity::SetSJob(uint8 sjob)
 {
-	DSP_DEBUG_BREAK_IF(sjob >= MAX_JOBTYPE);				// выход за пределы доступных профессий
+	if(sjob >= MAX_JOBTYPE)
+		{
+			return;
+	}// выход за пределы доступных профессий
 
 	m_sjob = (JOBTYPE)sjob;
 }

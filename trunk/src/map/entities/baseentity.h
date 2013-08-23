@@ -117,6 +117,7 @@ public:
 	STATUSTYPE		status;				// статус сущности (разные сущности - разные статусы)
 	uint16			m_TargID;			// targid объекта, на который смотрит сущность
 	string_t		name;				// имя сущности
+	char            charname[17];
 	look_t			look;				// внешний вид всех сущностей
 	look_t			mainlook;			// only used if mob use changeSkin()
 	location_t		loc;				// местоположение сущности
