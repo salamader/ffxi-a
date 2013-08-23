@@ -83,6 +83,17 @@ CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar)
 
     WBUFL(data,(0x40)-4) = CVanaTime::getInstance()->getVanaTime();
     WBUFW(data,(0x44)-4) = PChar->m_Costum;
+	 
+	// WBUFB(data,(0x44)-4) = PChar->look.face;
+			//WBUFB(data,(0x45)-4) = PChar->look.race;
+			//WBUFW(data,(0x46)-4) = PChar->look.head   + 0x1000;
+			//WBUFW(data,(0x48)-4) = PChar->look.body   + 0x2000;
+			//WBUFW(data,(0x4A)-4) = PChar->look.hands  + 0x3000;
+			//WBUFW(data,(0x4C)-4) = PChar->look.legs   + 0x4000; 
+			//WBUFW(data,(0x4E)-4) = PChar->look.feet   + 0x5000;
+			//WBUFW(data,(0x50)-4) = PChar->look.main   + 0x6000;
+			//WBUFW(data,(0x52)-4) = PChar->look.sub    + 0x7000;
+			//WBUFW(data,(0x54)-4) = PChar->look.ranged + 0x8000;
 
 	if (PChar->animation == ANIMATION_FISHING_START)
 	{
