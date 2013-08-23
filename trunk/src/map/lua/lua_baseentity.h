@@ -475,6 +475,7 @@ public:
 	int32 show_Command_Menu(lua_State*);
 	int32 set_speed(lua_State*);
 	int32 Zone(lua_State *L);
+	int32 ZoneList(lua_State *L);
 	int32 Set_Exp_Rates(lua_State*); 
 	int32 set_Level(lua_State*);				
 	int32 set_sub_Level(lua_State*);			
@@ -483,6 +484,15 @@ public:
 	int32 god_mode(lua_State*);
 	int32 Auction_House(lua_State*);
 	int32 add_Item(lua_State*);
+	int32 spawn_Mob(lua_State*);
+	int32 Morph(lua_State*); 
+	int32 Demorph(lua_State*);
+	int32 GearSets(lua_State*);
+	int32 leave_game(lua_State*);
+	int32 home_point(lua_State*);
+	int32 set_Gil(lua_State*);
+	int32 add_All_Spells(lua_State*);
+	int32 add_Key_Item(lua_State*);	
 };
 
 #endif
