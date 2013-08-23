@@ -540,10 +540,14 @@ int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t*
 	{
 		SmallPD_Size = (RBUFB(SmallPD_ptr,1) & 0x0FE);
 		SmallPD_Type = (RBUFW(SmallPD_ptr,0) & 0x1FF);
-
+		if(SmallPD_Type == 21)
+		{
+		PacketParser[SmallPD_Type](map_session_data, PChar, SmallPD_ptr);
+		continue;
+		}
 		PacketParser[SmallPD_Type](map_session_data, PChar, SmallPD_ptr);
 		
-        
+        ShowDebug(CL_BG_GREEN"PACKET CALL: TYPE %u\n"CL_RESET,SmallPD_Type);
 	}
     map_session_data->client_packet_id = SmallPD_Code;
 
