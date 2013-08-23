@@ -668,7 +668,7 @@ int32 map_close_session(uint32 tick, CTaskMgr::CTask* PTask)
 		map_session_data->server_packet_data != NULL &&		// bad pointer crashed here, might need dia to look at this one
 		map_session_data->PChar != NULL)					// crash occured when both server_packet_data & PChar were NULL
 	{
-		//Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE charid = %u",map_session_data->PChar->id);
+		Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE charid = %u",map_session_data->PChar->id);
         const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE charid = %u";
         Sql_Query(SqlHandle,Query,map_session_data->PChar->id);
 		Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
