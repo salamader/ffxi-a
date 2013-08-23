@@ -7607,10 +7607,10 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf,"Gm Commands." );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	char buf1[110];
-	sprintf(buf1,"?hello #server .com .ah .setspeed .setexprates .setmainjob .setmainlevel" );
+	sprintf(buf1,"?hello #server .com .ah .additem .setspeed .setexprates " );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 	char buf2[110];
-	sprintf(buf2,".setsubjob .setsublevel .zone" );
+	sprintf(buf2,".setmainjob .setmainlevel .setsubjob .setsublevel .zone" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	return true;
 	}
@@ -7620,10 +7620,10 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf,"Sgm Commands." );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	char buf1[110];
-	sprintf(buf1,"?hello #server .com .ah .gm .setspeed .setexprates .setmainjob .setmainlevel" );
+	sprintf(buf1,"?hello #server .com .ah .additem .setspeed .setexprates " );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 	char buf2[110];
-	sprintf(buf2,".setsubjob .setsublevel .zone" );
+	sprintf(buf2,".setmainjob .setmainlevel .setsubjob .setsublevel .zone" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	
 	return true;
@@ -7634,10 +7634,10 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf,"Lgm Commands." );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	char buf1[110];
-	sprintf(buf1,"?hello #server .com .ah .gm .setspeed .setexprates .setmainjob .setmainlevel" );
+	sprintf(buf1,"?hello #server .com .ah .additem .setspeed .setexprates " );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 	char buf2[110];
-	sprintf(buf2,".setsubjob .setsublevel .zone" );
+	sprintf(buf2,".setmainjob .setmainlevel .setsubjob .setsublevel .zone" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	
 	return true;
@@ -7648,10 +7648,10 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf,"Server Owner Commands." );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	char buf1[110];
-	sprintf(buf1,"?hello #server .com .ah .gm .setspeed .setexprates .setmainjob .setmainlevel" );
+	sprintf(buf1,"?hello #server .com .ah .additem .setspeed .setexprates " );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 	char buf2[110];
-	sprintf(buf2,".setsubjob .setsublevel .zone" );
+	sprintf(buf2,".setmainjob .setmainlevel .setsubjob .setsublevel .zone" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	
 	return true;
@@ -8423,7 +8423,7 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 		const int8* Query = "UPDATE chars SET godmode = '1' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,PChar->id);
-					   const int8* Query = "UPDATE char_stats SET nameflags = '%u' WHERE charid = %u";
+					    Query = "UPDATE char_stats SET nameflags = '%u' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,PChar->nameflags.flags,PChar->id);
 					   charutils::BuildingCharWeaponSkills(PChar);
 		return false;
@@ -8442,7 +8442,7 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 		const int8* Query = "UPDATE chars SET godmode = '0' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,PChar->id);
-					   const int8* Query = "UPDATE char_stats SET nameflags = '0' WHERE charid = %u";
+					   Query = "UPDATE char_stats SET nameflags = '0' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,PChar->id);
 					   charutils::BuildingCharWeaponSkills(PChar);
 		return false;
@@ -8479,6 +8479,62 @@ inline int32 CLuaBaseEntity::Auction_House(lua_State *L)
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));              
 					
 	return false;
+}
+inline int32 CLuaBaseEntity::add_Item(lua_State *L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+
+   
+    
+     if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .additem 12317 1");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	 }
+	 
+	//MAYBE TO DO IS TO CHECK DATABSE TO MAKE SURE THE ITEM IS EXISTING TO PREVENT CRASH
+	uint16 itemID = (uint16)lua_tointeger(L,1);
+	uint32 quantity = (uint32)lua_tointeger(L,2);
+	if(lua_tointeger(L,1) > 21342 || lua_tointeger(L,1) < 1)
+	{
+		char buf[110];
+        sprintf(buf,"Command Example: .additem 12317 1");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	}
+	
+	if(lua_tointeger(L,2) > 12 || lua_tointeger(L,2) < 1)
+	{
+		char buf[110];
+        sprintf(buf,"Command Example: .additem 12317 1-12");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+	}
+
+	uint8 SlotID = charutils::AddItem(PChar, LOC_INVENTORY, itemID, quantity);
+
+	lua_pushboolean( L, (SlotID != 0xFF) );
+
+	
+        char buf[110];
+        sprintf(buf,"Added A New Item Id: %d Quantity %d To Invotory", itemID ,quantity);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	return true;
+	
 }
 //==========================================================//
 
@@ -8815,5 +8871,6 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,change_sub_Job),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,god_mode),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,Auction_House),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,add_Item),
 	{NULL,NULL}
 };

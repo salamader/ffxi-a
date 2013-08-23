@@ -482,6 +482,7 @@ public:
 	int32 change_sub_Job(lua_State*);
 	int32 god_mode(lua_State*);
 	int32 Auction_House(lua_State*);
+	int32 add_Item(lua_State*);
 };
 
 #endif
