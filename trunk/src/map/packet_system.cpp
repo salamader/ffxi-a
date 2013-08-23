@@ -203,8 +203,8 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				 uint8 Online_status = 1; 
 				 uint8 Shutdown_status = 1; 
 				 uint8 Account_Id = 0; 
-				 uint8 zone = 0; 
-				 uint8 lastzone = 0; 
+				 int zone = 0; 
+				 int lastzone = 0; 
 				 uint8 inevent=0;
 				 int16 eventid=0;
 				 float pos_x=0;
@@ -231,8 +231,8 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				   ragemode_status =  Sql_GetUIntData(SqlHandle,3);
 				   Online_status =  Sql_GetUIntData(SqlHandle,4);
 				   Account_Id =  Sql_GetUIntData(SqlHandle,5);
-				   zone =  Sql_GetUIntData(SqlHandle,6);
-				   lastzone =  Sql_GetUIntData(SqlHandle,7);
+				   zone =  Sql_GetIntData(SqlHandle,6);
+				   lastzone =  Sql_GetIntData(SqlHandle,7);
 				   inevent =  Sql_GetUIntData(SqlHandle,8);
 				   eventid =  Sql_GetUIntData(SqlHandle,9);
 				   pos_x =  Sql_GetFloatData(SqlHandle,10);
@@ -1058,6 +1058,19 @@ void SmallPacket0x015(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		
 		int32 god=1500;
 		PChar->addHP(god);
+		
+		PChar->m_Weapons[SLOT_MAIN]->setDelay(0);
+		PChar->m_Weapons[SLOT_MAIN]->setMaxHit(5);
+		PChar->m_Weapons[SLOT_MAIN]->setSkillType(5);
+		PChar->m_Weapons[SLOT_MAIN]->setBaseDelay(0);
+		PChar->stats.STR  = 999;
+            PChar->stats.DEX = 999;
+            PChar->stats.VIT = 999;
+            PChar->stats.AGI = 999;
+            PChar->stats.INT = 999;
+            PChar->stats.MND = 999;
+            PChar->stats.CHR= 999;
+			
 		PChar->addTP(god);
 		PChar->addMP(god);
 		PChar->PRecastContainer->Del(RECAST_MAGIC);
@@ -1173,7 +1186,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	{
 		case 0x00: // trigger
 		{
-			if (PChar->m_Costum != 0 || PChar->animation == ANIMATION_SYNTH)
+			if (PChar->animation == ANIMATION_SYNTH)
             {
                 PChar->pushPacket(new CReleasePacket(PChar, RELEASE_STANDARD));
                 return;
@@ -1269,7 +1282,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
             PChar->health.mp = PChar->GetMaxMP();
 
 			PChar->setMijinGakure(false);
-			uint8 zone = 0;
+			int zone = 0;
 			float pos_x = 0.0;
 			float pos_y = 0.0;
 			float pos_z = 0.0;
@@ -1279,7 +1292,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 	          if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 	             {
-				   zone =  Sql_GetUIntData(SqlHandle,0);
+				   zone =  Sql_GetIntData(SqlHandle,0);
 				   ShowDebug(CL_RED"PLAYER %s HOME ZONE %u\n"CL_RESET,PChar->GetName(),zone);
 				   pos_x =  Sql_GetFloatData(SqlHandle,1);
 				    ShowDebug(CL_RED"PLAYER %s HOME x %.3f\n"CL_RESET,PChar->GetName(),pos_x);
