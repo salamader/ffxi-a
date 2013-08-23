@@ -1053,6 +1053,51 @@ void SmallPacket0x015(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 		PChar->loc.zone->SpawnMOBs(PChar);
 		PChar->loc.zone->SpawnPETs(PChar);
+			if(PChar->godmode==1)
+	{
+		
+		int32 god=1500;
+		PChar->addHP(god);
+		PChar->addTP(god);
+		PChar->addMP(god);
+		PChar->PRecastContainer->Del(RECAST_MAGIC);
+    PChar->PRecastContainer->Del(RECAST_ABILITY);
+	PChar->PRecastContainer->Del(RECAST_ITEM);
+	CBattleEntity* PPet = PChar->PPet;
+	if(PPet ==NULL)
+	{
+
+		PChar->addHP(god);
+		PChar->addTP(god);
+		PChar->addMP(god);
+		PChar->PRecastContainer->Del(RECAST_MAGIC);
+    PChar->PRecastContainer->Del(RECAST_ABILITY);
+	PChar->PRecastContainer->Del(RECAST_ITEM);
+	}
+	else
+	{
+
+		PChar->addHP(god);
+		PChar->addTP(god);
+		PChar->addMP(god);
+		PPet->addHP(god);
+		PPet->addTP(god);
+		PPet->addMP(god);
+		
+	}
+	}
+	else
+	{
+		
+		if(PChar->nameflags.flags < 1)
+		{
+		PChar->nameflags.flags =0;
+		
+		}
+		PChar->godmode=0;
+		
+		PChar->pushPacket(new CCharUpdatePacket(PChar));
+	}
 
 		if (PChar->PWideScanTarget != NULL)
 		{
@@ -1063,6 +1108,7 @@ void SmallPacket0x015(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				PChar->PWideScanTarget = NULL;
 			}
 		}
+		
 	}
 	return;
 }
