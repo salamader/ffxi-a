@@ -316,7 +316,35 @@ void LoadChar(CCharEntity* PChar)
 
 	LoadCharUnlockedWeapons(PChar);
 
-	const int8* fmtQuery =
+	PChar->targid  = 1024;
+	
+	
+	 
+	
+	const int8* fmtQuery = "SELECT max(targid) FROM accounts_sessions";
+
+	                  if( Sql_Query(SqlHandle,fmtQuery) == SQL_ERROR )
+	                    {
+		                 return;
+	                    }
+
+	                  uint32 targid = 0;
+
+	                  if( Sql_NumRows(SqlHandle) != 0 )
+	                    {
+		                Sql_NextRow(SqlHandle);
+		
+		                targid = Sql_GetUIntData(SqlHandle,0) + 1;
+						ShowMessage("MAX TARGETID COUNT %u \n" CL_RESET,targid);
+						if(targid == 1)
+						{
+							targid = 1024;
+							ShowMessage("MAX TARGETID NEW COUNT %u \n" CL_RESET,targid);
+						}
+                         PChar->targid = targid;
+					  }
+
+	 fmtQuery =
         "SELECT "
           "charname,"				//  0
           "pos_zone,"				//  1
@@ -345,12 +373,11 @@ void LoadChar(CCharEntity* PChar)
 
 	int32 ret = Sql_Query(SqlHandle,fmtQuery,PChar->id);
 
-	if (ret != SQL_ERROR &&
-		Sql_NumRows(SqlHandle) != 0 &&
-		Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 	{
-        PChar->targid = 0x400;
-		PChar->SetName(Sql_GetData(SqlHandle,0));
+       // PChar->targid  = 1024;
+	
+	    PChar->SetName(Sql_GetData(SqlHandle,0));
 
         PChar->loc.destination = (uint16)Sql_GetIntData(SqlHandle,1);
 		PChar->loc.prevzone    = (uint16)Sql_GetIntData(SqlHandle,2);
