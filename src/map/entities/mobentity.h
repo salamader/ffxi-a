@@ -217,7 +217,7 @@ public:
   CMobEntity();
   ~CMobEntity();
 
-private:
+//private:
 
   bool        m_RageMode;             // Mode rage
   bool		m_NewSkin;				// True if skin has changed
