@@ -902,11 +902,11 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
       PChar->animation = ANIMATION_NONE;
       PChar->StatusEffectContainer->DelStatusEffectSilent(EFFECT_CHOCOBO);
   }
-  if (PChar->m_Costum != 0)
-  {
-      PChar->m_Costum = 0;
-      PChar->StatusEffectContainer->DelStatusEffect(EFFECT_COSTUME);
-  }
+  //if (PChar->m_Costum != 0)
+  //{
+  //    PChar->m_Costum = 0;
+   //   PChar->StatusEffectContainer->DelStatusEffect(EFFECT_COSTUME);
+  //}
 
 	if (m_TreasurePool != NULL)
 	{
