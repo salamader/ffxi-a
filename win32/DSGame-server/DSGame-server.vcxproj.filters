@@ -758,6 +758,9 @@
     <ClInclude Include="..\..\src\map\packets\event_string.h">
       <Filter>Header Files\packets</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\map\packets\chat_message_string.h">
+      <Filter>Header Files\packets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\map\ability.cpp">
@@ -1379,6 +1382,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\map\packets\event_string.cpp">
+      <Filter>Source Files\packets</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\map\packets\chat_message_string.cpp">
       <Filter>Source Files\packets</Filter>
     </ClCompile>
   </ItemGroup>
