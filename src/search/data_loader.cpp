@@ -245,7 +245,13 @@ std::list<SearchEntity*> CDataLoader::GetPlayersList(search_req sr,int* count)
 			//PPlayer->zone = (PPlayer->zone == 0 ? PPlayer->prevzone : PPlayer->zone);
 
             
-           
+           /*
+		   FLAG_GM_SUPPORT     = 0x04000000,
+    FLAG_GM_SENIOR      = 0x05000000,
+    FLAG_GM_LEAD        = 0x06000000,
+    FLAG_GM_PRODUCER    = 0x07000000,
+		   
+		   */
 
            // if (partyid == PPlayer->id) PPlayer->flags1 |= 0x0008;
             if (nameflag & FLAG_AWAY)   PPlayer->flags1 |= 0x0100;
@@ -253,7 +259,10 @@ std::list<SearchEntity*> CDataLoader::GetPlayersList(search_req sr,int* count)
           //  if (partyid != 0)           PPlayer->flags1 |= 0x2000;
             if (nameflag & FLAG_ANON)   PPlayer->flags1 |= 0x4000;
             if (nameflag & FLAG_INVITE) PPlayer->flags1 |= 0x8000;
-
+			if (nameflag & FLAG_GM_SUPPORT) PPlayer->flags1 |= 0x4000;
+			if (nameflag & FLAG_GM_SENIOR) PPlayer->flags1 |= 0x4000;
+			if (nameflag & FLAG_GM_LEAD) PPlayer->flags1 |= 0x4000;
+			if (nameflag & FLAG_GM_PRODUCER) PPlayer->flags1 |= 0x4000;
             PPlayer->flags2 = PPlayer->flags1;
 
 			if(sr.minlvl >0 && sr.maxlvl >= sr.minlvl){ //filter by level
