@@ -956,7 +956,7 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 				PChar->pushPacket(new CEntityUpdatePacket(PCurrentMob, ENTITY_SPAWN));
 			}
 
-			if (PChar->isDead() || PChar->nameflags.flags & FLAG_GM || PCurrentMob->PMaster != NULL)
+			if (PChar->isDead() || PChar->nameflags.flags & FLAG_GM_SUPPORT ||PChar->nameflags.flags & FLAG_GM_SENIOR ||PChar->nameflags.flags & FLAG_GM_LEAD  ||PChar->nameflags.flags & FLAG_GM_PRODUCER|| PCurrentMob->PMaster != NULL)
 				continue;
 
         // проверка ночного/дневного сна монстров уже учтена в проверке CurrentAction, т.к. во сне монстры не ходят ^^
