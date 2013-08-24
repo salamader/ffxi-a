@@ -1060,17 +1060,7 @@ void SmallPacket0x015(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		int32 god=1500;
 		PChar->addHP(god);
 		
-		PChar->m_Weapons[SLOT_MAIN]->setDelay(0);
-		PChar->m_Weapons[SLOT_MAIN]->setMaxHit(5);
-		PChar->m_Weapons[SLOT_MAIN]->setSkillType(5);
-		PChar->m_Weapons[SLOT_MAIN]->setBaseDelay(0);
-		PChar->stats.STR  = 999;
-            PChar->stats.DEX = 999;
-            PChar->stats.VIT = 999;
-            PChar->stats.AGI = 999;
-            PChar->stats.INT = 999;
-            PChar->stats.MND = 999;
-            PChar->stats.CHR= 999;
+		
 			
 		PChar->addTP(god);
 		PChar->addMP(god);

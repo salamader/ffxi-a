@@ -591,7 +591,7 @@ void LoadChar(CCharEntity* PChar)
 
 
 
-	fmtQuery = "SELECT nameflags, mjob, sjob, hp, mp, mhflag, title, bazaar_message, 2h \
+	fmtQuery = "SELECT nameflags, mjob, sjob, hp, mp, mhflag, title, bazaar_message, 2h, dex, vit, agi, ini, mnd, chr,str \
 				FROM char_stats \
 				WHERE charid = %u;";
 
@@ -627,6 +627,13 @@ void LoadChar(CCharEntity* PChar)
         {
             PChar->PRecastContainer->Add(RECAST_ABILITY, PAbility->getRecastId(), RecastTime - gettick());
         }
+		PChar->stats.DEX = Sql_GetIntData(SqlHandle,9);
+		PChar->stats.VIT = Sql_GetIntData(SqlHandle,10);
+		PChar->stats.AGI = Sql_GetIntData(SqlHandle,11);
+		PChar->stats.INT = Sql_GetIntData(SqlHandle,12);
+		PChar->stats.MND  = Sql_GetIntData(SqlHandle,13);
+		PChar->stats.CHR  = Sql_GetIntData(SqlHandle,14);
+		PChar->stats.STR  = Sql_GetIntData(SqlHandle,15);
 	}
 
 	fmtQuery = "SELECT skillid, value, rank \
@@ -1869,73 +1876,8 @@ void CheckEquipLogic(CCharEntity* PChar, SCRIPTTYPE ScriptType, uint32 param)
 
 void BuildingCharWeaponSkills(CCharEntity* PChar)
 {
-	/*memset(& PChar->m_WeaponSkills, 0, sizeof(PChar->m_WeaponSkills));
-
-	JOBTYPE curMainJob = PChar->GetMJob();
-	JOBTYPE curSubJob  = PChar->GetSJob();
-
-	CItemWeapon* PItem;
-	int16 wsIDs[3] = { 0 };
-	int16 wsDynIDs[3] = { 0 };
-
-	bool isInDynamis = PChar->isInDynamis();
-
-	for (int i = 0; i < 3; ++i)
-	{
-		if (PChar->equip[i])
-		{
-			PItem = (CItemWeapon*)PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->equip[i]);
-
-			for(std::vector<CModifier*>::iterator it = PItem->modList.begin(); it !=  PItem->modList.end(); ++it)
-			{
-				if((*it)->getModID() == MOD_ADDS_WEAPONSKILL)
-				{
-					wsIDs[i] = (*it)->getModAmount();
-					break;
-				}
-				if((*it)->getModID() == MOD_ADDS_WEAPONSKILL_DYN)
-				{
-					wsDynIDs[i] = (*it)->getModAmount();
-					break;
-				}
-			}
-		}
-	}
-
-	//add in melee ws
-	uint8 skill = PChar->m_Weapons[SLOT_MAIN]->getSkillType();
-	std::list<CWeaponSkill*>&& WeaponSkillList = battleutils::GetWeaponSkills(skill);
-	for (std::list<CWeaponSkill*>::iterator it = WeaponSkillList.begin(); it != WeaponSkillList.end(); ++it)
-	{
-		CWeaponSkill* PSkill = *it;
-		if (PChar->GetSkill(skill) >=  PSkill->getSkillLevel() && (PSkill->getJob(curMainJob) > 0 || PSkill->getJob(curSubJob) > 0 && !PSkill->mainOnly())
-			|| PSkill->getID() == wsIDs[SLOT_MAIN] || PSkill->getID() == wsIDs[SLOT_SUB]
-			|| isInDynamis && (PSkill->getID() == wsDynIDs[SLOT_MAIN] || PSkill->getID() == wsDynIDs[SLOT_SUB]))
-		{
-			addWeaponSkill(PChar, PSkill->getID());
-		}
-	}
-
-	//add in ranged ws
-	PItem = (CItemWeapon*)PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->equip[SLOT_RANGED]);
-	if(PItem != NULL && PItem->isType(ITEM_WEAPON) && PItem->getSkillType()!=SKILL_THR)
-	{
-		skill = PChar->m_Weapons[SLOT_RANGED]->getSkillType();
-		std::list<CWeaponSkill*>&& WeaponSkillList = battleutils::GetWeaponSkills(skill);
-		for (std::list<CWeaponSkill*>::iterator it = WeaponSkillList.begin(); it != WeaponSkillList.end(); ++it)
-		{
-			CWeaponSkill* PSkill = *it;
-			if (PChar->GetSkill(skill) >=  PSkill->getSkillLevel() && (PSkill->getJob(curMainJob) > 0 || PSkill->getJob (curSubJob) > 0 && !PSkill->mainOnly())
-				|| PSkill->getID() == wsIDs[SLOT_RANGED]
-				|| isInDynamis && (PSkill->getID() == wsDynIDs[SLOT_RANGED]))
-			{
-				addWeaponSkill(PChar, PSkill->getID());
-			}
-		}
-	}
-	PChar->pushPacket(new CCharAbilitiesPacket(PChar));
-	*/
-	if(PChar->Account_Level == 0 || PChar->Account_Level == 1 && PChar->godmode== false || PChar->Account_Level == 2 && PChar->godmode== false || PChar->Account_Level == 3 && PChar->godmode== false)
+	
+	if(PChar->Account_Level == 0 || PChar->Account_Level == 1 && PChar->godmode== 0 || PChar->Account_Level == 2 && PChar->godmode== 0 || PChar->Account_Level == 3 && PChar->godmode== 0 || PChar->Account_Level == 4 && PChar->godmode== 0)
 	{
 	memset(& PChar->m_WeaponSkills, 0, sizeof(PChar->m_WeaponSkills));
 
