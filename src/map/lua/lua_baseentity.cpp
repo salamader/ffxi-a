@@ -8365,34 +8365,43 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 		{
 		PChar->nameflags.flags =FLAG_GM_SUPPORT;
 		
-		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		
 		}
 		if(PChar->Account_Level==2)
 		{
 		PChar->nameflags.flags =FLAG_GM_SENIOR;
 		
-		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		
 		}
 		if(PChar->Account_Level==3)
 		{
 		PChar->nameflags.flags =FLAG_GM_LEAD;
 		
-		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		
 		}
 		if(PChar->Account_Level==4)
 		{
 		PChar->nameflags.flags =FLAG_GM_PRODUCER;
 		
-		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		
 		}
 		
+		PChar->stats.STR  = 999;
+            PChar->stats.DEX = 999;
+            PChar->stats.VIT = 999;
+            PChar->stats.AGI = 999;
+            PChar->stats.INT = 999;
+            PChar->stats.MND = 999;
+            PChar->stats.CHR= 999;
+			PChar->pushPacket(new CCharUpdatePacket(PChar));
 		char buf[110];
         sprintf(buf,"Activating God Mode");
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 		const int8* Query = "UPDATE chars SET godmode = '1' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,PChar->id);
-					    Query = "UPDATE char_stats SET nameflags = '%u' WHERE charid = %u";
+					    Query = "UPDATE char_stats SET nameflags = '%u',dex = '999', vit= '999', agi= '999', ini= '999', mnd= '999', chr= '999', str= '999' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,PChar->nameflags.flags,PChar->id);
+					  
 					   charutils::BuildingCharWeaponSkills(PChar);
 		return false;
 	}
@@ -8403,6 +8412,7 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 		PChar->godmode=0;
 		
 		
+		charutils::UnequipItem(PChar, SLOT_MAIN);
 		PChar->pushPacket(new CCharUpdatePacket(PChar));
 		
 		char buf[110];
@@ -8410,8 +8420,8 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 		const int8* Query = "UPDATE chars SET godmode = '0' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,PChar->id);
-					   Query = "UPDATE char_stats SET nameflags = '0' WHERE charid = %u";
-                       Sql_Query(SqlHandle,Query,PChar->id);
+					   Query = "UPDATE char_stats SET nameflags = '0',dex = '%u', vit= '%u', agi= '%u', ini= '%u', mnd= '%u', chr= '%u',str ='%u' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,PChar->stats.DEX,PChar->stats.VIT,PChar->stats.AGI,PChar->stats.INT,PChar->stats.MND,PChar->stats.CHR,PChar->stats.STR,PChar->id);
 					   charutils::BuildingCharWeaponSkills(PChar);
 		return false;
 	}

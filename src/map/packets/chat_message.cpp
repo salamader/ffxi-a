@@ -35,7 +35,7 @@ CChatMessagePacket::CChatMessagePacket(CCharEntity* PChar, CHAT_MESSAGE_TYPE Mes
 	this->type = 0x17;
 	this->size = 32 + strlen(buff) + strlen(buff)%2;
 
-	if (PChar->nameflags.flags & FLAG_GM)
+	if (PChar->nameflags.flags & FLAG_GM_SUPPORT ||PChar->nameflags.flags & FLAG_GM_SENIOR ||PChar->nameflags.flags & FLAG_GM_LEAD  ||PChar->nameflags.flags & FLAG_GM_PRODUCER)
 	{
 		WBUFB(data,(0x05)-4) = 0x01;
 	}
