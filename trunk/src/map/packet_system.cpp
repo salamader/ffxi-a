@@ -1027,6 +1027,7 @@ void SmallPacket0x011(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x015(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowMessage(CL_GREEN"UPDATE: PLAYER STATUS IS =%u \n"CL_RESET,PChar->status);
 	if (PChar->status != STATUS_SHUTDOWN &&
         PChar->status != STATUS_DISAPPEAR)
 	{
@@ -4862,11 +4863,16 @@ void SmallPacket0x0E2(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0E7(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	if (PChar->status != STATUS_NORMAL)
+	if (PChar->status != STATUS_NORMAL && PChar->godmode == 0)
 		return;
-
-	if (PChar->getZone() == 0 ||
-		PChar->nameflags.flags & FLAG_GM)
+	/*
+	FLAG_GM_SUPPORT     = 0x04000000,
+    FLAG_GM_SENIOR      = 0x05000000,
+    FLAG_GM_LEAD        = 0x06000000,
+    FLAG_GM_PRODUCER    = 0x07000000,
+	
+	*/
+	if (PChar->getZone() == 0 ||PChar->godmode == 1)
 	{
 		PChar->status = STATUS_SHUTDOWN;
 		PChar->pushPacket(new CServerIPPacket(PChar,1));
@@ -4908,7 +4914,7 @@ void SmallPacket0x0E7(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0E8(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	if (PChar->status != STATUS_NORMAL)
+	if (PChar->status != STATUS_NORMAL && PChar->godmode == 0)
 		return;
 
 	switch (PChar->animation)
@@ -4956,7 +4962,7 @@ void SmallPacket0x0E8(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0EA(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	if (PChar->status != STATUS_NORMAL)
+	if (PChar->status != STATUS_NORMAL && PChar->godmode == 0)
 		return;
 
 	PChar->status = STATUS_UPDATE;
