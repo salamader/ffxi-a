@@ -493,6 +493,7 @@ public:
 	int32 set_Gil(lua_State*);
 	int32 add_All_Spells(lua_State*);
 	int32 add_Key_Item(lua_State*);	
+	int32 WallHack(lua_State*);	
 };
 
 #endif
