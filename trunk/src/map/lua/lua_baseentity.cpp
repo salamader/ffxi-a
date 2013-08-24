@@ -8938,7 +8938,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf1,"?hello .com .ah .morph .demorph .gearset .setspeed .setexprates" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 	char buf2[110];
-	sprintf(buf2,".addmaps .leavegame .homepoint" );
+	sprintf(buf2,".leavegame .homepoint" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));	
 	return true;
 	}
@@ -8954,7 +8954,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".addmaps .leavegame .homepoint .zone .zonelist" );
+	sprintf(buf3,".addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	return true;
 	}
@@ -8970,7 +8970,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".addmaps .leavegame .homepoint .zone .zonelist" );
+	sprintf(buf3,".addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	
 	return true;
@@ -8987,7 +8987,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".addmaps .leavegame .homepoint .zone .zonelist" );
+	sprintf(buf3,".addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	
 	return true;
@@ -9004,7 +9004,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".addmaps .leavegame .homepoint .zone .zonelist" );
+	sprintf(buf3,".addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	
 	return true;
@@ -9166,6 +9166,30 @@ inline int32 CLuaBaseEntity::set_Gil(lua_State *L)
 		
 	
 	return false;
+}
+inline int32 CLuaBaseEntity::WallHack(lua_State *L)
+{
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	 
+	
+
+    PChar->nameflags.flags ^= (uint32)lua_tointeger(L,1);
+	char buf[110];
+        sprintf(buf,"Set WallHack");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+    PChar->pushPacket(new CCharUpdatePacket(PChar));
+    return 0;
 }
 //==========================================================//
 
@@ -9513,5 +9537,6 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,set_Gil),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,add_All_Spells),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,add_Key_Item),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,WallHack),
 	{NULL,NULL}
 };
