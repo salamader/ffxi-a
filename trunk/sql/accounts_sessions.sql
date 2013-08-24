@@ -11,6 +11,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for accounts_sessions
 -- ----------------------------
+DROP TABLE IF EXISTS `accounts_sessions`;
 CREATE TABLE `accounts_sessions` (
   `accid` int(10) NOT NULL DEFAULT '0',
   `charid` int(10) NOT NULL DEFAULT '0',
@@ -31,4 +32,3 @@ CREATE TABLE `accounts_sessions` (
 -- ----------------------------
 -- Records 
 -- ----------------------------
-INSERT INTO `accounts_sessions` VALUES ('2', '1', '1024', '0', '0', '0', '', '2147483647', '32767', '847358806', '32767', '439905880');

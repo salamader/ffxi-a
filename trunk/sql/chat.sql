@@ -11,6 +11,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for chat
 -- ----------------------------
+DROP TABLE IF EXISTS `chat`;
 CREATE TABLE `chat` (
   `message_id` int(255) NOT NULL AUTO_INCREMENT,
   `user_id` int(255) NOT NULL,
