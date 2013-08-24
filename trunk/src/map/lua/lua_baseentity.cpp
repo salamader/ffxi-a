@@ -8948,7 +8948,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf,"Gm Commands." );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	char buf1[110];
-	sprintf(buf1,"?hello #server .com .ah .morph .demorph .additem .gearset .setspeed" );
+	sprintf(buf1,"?hello #server .com .ah .gm .morph .demorph .additem .gearset .setspeed" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 	char buf2[110];
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
@@ -8964,7 +8964,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf,"Sgm Commands." );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	char buf1[110];
-	sprintf(buf1,"?hello #server .com .ah .morph .demorph .additem .gearset .setspeed" );
+	sprintf(buf1,"?hello #server .com .ah .gm .morph .demorph .additem .gearset .setspeed" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 	char buf2[110];
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
@@ -8981,7 +8981,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf,"Lgm Commands." );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	char buf1[110];
-	sprintf(buf1,"?hello #server .com .ah .morph .demorph .additem .gearset .setspeed" );
+	sprintf(buf1,"?hello #server .com .ah .gm .morph .demorph .additem .gearset .setspeed" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 	char buf2[110];
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
@@ -8998,7 +8998,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf,"Server Owner Commands." );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	char buf1[110];
-	sprintf(buf1,"?hello #server .com .ah .morph .demorph .additem .gearset .setspeed" );
+	sprintf(buf1,"?hello #server .com .ah .gm .morph .demorph .additem .gearset .setspeed" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 	char buf2[110];
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
