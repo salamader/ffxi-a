@@ -8724,16 +8724,18 @@ if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) ==
 		PZone->m_mobList[mobid] = PMob;
 	
 			//PZone->InsertMOB(PMob);
-		
-		  Query = "INSERT INTO mob_list_spawn_points(mob_id,pos_x,pos_y,pos_z,pos_rot,pos_zone) VALUES(%u,%.3f,%.3f,%.3f,%u,%u);";
+		const int8* Query = "SELECT id FROM mob_list WHERE id = %u";
 
-	if( Sql_Query(SqlHandle,Query, mobid,PChar->loc.p.x,PChar->loc.p.y,PChar->loc.p.z,PChar->loc.p.rotation,PChar->loc.destination) == SQL_ERROR )
+	int32 ret = Sql_Query(SqlHandle, Query, mobid);
+
+	if(ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 	{
-		sprintf(buf,"We Had A Bad Insert In To Datbase With Mob ID %u.",mobid );
-	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
-		return -1;
+		 
+	
 	}
-	Query = "INSERT INTO mob_list(mobid,look) VALUES(%u,%u);";
+	else
+	{
+		Query = "INSERT INTO mob_list(id,look) VALUES(%u,%u);";
 
 	if( Sql_Query(SqlHandle,Query, mobid,mobid) == SQL_ERROR )
 	{
@@ -8741,8 +8743,17 @@ if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) ==
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 		return -1;
 	}
+	 Query = "INSERT INTO mob_list_spawn_points(mob_id,pos_x,pos_y,pos_z,pos_rot,pos_zone) VALUES(%u,%.3f,%.3f,%.3f,%u,%u);";
+
+	if( Sql_Query(SqlHandle,Query, mobid,PChar->loc.p.x,PChar->loc.p.y,PChar->loc.p.z,PChar->loc.p.rotation,PChar->loc.destination) == SQL_ERROR )
+	{
+		sprintf(buf,"We Had A Bad Insert In To Datbase With Mob ID %u.",mobid );
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return -1;
+	}
 	sprintf(buf,"Mob Is Saved At x: %.3f y: %.3f z: %.3f rot: %u zone: %u",PMob->m_SpawnPoint.x,PMob->m_SpawnPoint.y,PMob->m_SpawnPoint.z,PMob->m_SpawnPoint.rotation,PChar->loc.destination);
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	}
 		
 	
 						
