@@ -1,10 +1,10 @@
 /*
 MySQL Data Transfer
-Source Host: ffxi-a.com
+Source Host: localhost
 Source Database: database
-Target Host: ffxi-a.com
+Target Host: localhost
 Target Database: database
-Date: 8/23/2013 7:54:28 PM
+Date: 8/27/2013 4:16:01 PM
 */
 
 SET FOREIGN_KEY_CHECKS=0;
