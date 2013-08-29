@@ -101,7 +101,7 @@ int32 init()
 	lua_register(LuaHandle,"VanadielMoonDirection", luautils::VanadielMoonDirection);
     lua_register(LuaHandle,"SetVanadielTimeOffset",luautils::SetVanadielTimeOffset);
 	lua_register(LuaHandle,"IsMoonFull",luautils::IsMoonFull);
-	lua_register(LuaHandle,"RunElevator",luautils::StartElevator);
+	
 	lua_register(LuaHandle,"GetServerVariable",luautils::GetServerVariable);
 	lua_register(LuaHandle,"SetServerVariable",luautils::SetServerVariable);
 	lua_register(LuaHandle,"clearVarFromAll",luautils::clearVarFromAll);
@@ -3393,14 +3393,7 @@ int32 OnUseAbilityRoll(CCharEntity* PChar, CBattleEntity* PTarget, CAbility* PAb
 *                                                                       *
 ************************************************************************/
 
-int32 StartElevator(lua_State* L)
-{
-    DSP_DEBUG_BREAK_IF(lua_isnil(L,-1) || !lua_isnumber(L,-1));
 
-	uint32 ElevatorID = (uint32)lua_tointeger(L, -1);
-    CTransportHandler::getInstance()->startElevator(ElevatorID);
-	return 0;
-}
 
 /************************************************************************
 *                                                                       *

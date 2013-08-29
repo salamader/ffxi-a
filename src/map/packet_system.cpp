@@ -56,7 +56,7 @@
 #include "items/item_shop.h"
 
 #include "lua/luautils.h"
-
+#include "packets/chat_message_string.h"
 #include "packets/auction_house.h"
 #include "packets/bazaar_check.h"
 #include "packets/bazaar_close.h"
@@ -1027,7 +1027,7 @@ void SmallPacket0x011(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x015(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	ShowMessage(CL_GREEN"UPDATE: PLAYER STATUS IS =%u \n"CL_RESET,PChar->status);
+	//ShowMessage(CL_GREEN"UPDATE: PLAYER STATUS IS =%u \n"CL_RESET,PChar->status);
 	if (PChar->status != STATUS_SHUTDOWN &&
         PChar->status != STATUS_DISAPPEAR)
 	{
@@ -1186,9 +1186,9 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 			if (PNpc != NULL)
 			{
-				if (luautils::OnTrigger(PChar, PNpc) == -1 && PNpc->animation == ANIMATION_CLOSE_DOOR)
+				if (luautils::OnTrigger(PChar, PNpc) == -1 && PNpc->animation == ANIMATION_OPEN_DOOR)
 				{
-					PNpc->animation = ANIMATION_OPEN_DOOR;
+					PNpc->animation = ANIMATION_CLOSE_DOOR;
 					PChar->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CEntityUpdatePacket(PNpc,ENTITY_UPDATE));
 					CTaskMgr::getInstance()->AddTask(new CTaskMgr::CTask("close_door", gettick()+7000, PNpc, CTaskMgr::TASK_ONCE, close_door));
 				}
@@ -4115,7 +4115,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
                 new CChatMessagePacket(PChar, MESSAGE_SHOUT, data+7));
             }
 		
-			PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY, data+7));
+			//PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY, data+7));
           
 		
 	}
@@ -4126,7 +4126,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
             if(RBUFB(data,(0x04)) == MESSAGE_SAY)
             {
                 PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY, data+6));
-				PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SAY, data+6));
+				
             }
             else
             {
@@ -4143,7 +4143,11 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 						PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY,     data+6)); 
 					}
 					break;
-                case MESSAGE_EMOTION:	PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_EMOTION, data+6)); break;
+                case MESSAGE_EMOTION:
+					{
+						PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_EMOTION, data+6));
+					}
+					break;
                 case MESSAGE_SHOUT:	
 					{
 						
@@ -4168,14 +4172,16 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 							
 							PChar->PParty->PushPacket(PChar, 0, new CChatMessagePacket(PChar, MESSAGE_PARTY, data+6));
 
-						}else{ //alliance party chat
+						}
+						else
+						{ //alliance party chat
 								for (uint8 i = 0; i < PChar->PParty->m_PAlliance->partyList.size(); ++i)
 								{
 									PChar->PParty->m_PAlliance->partyList.at(i)->PushPacket(PChar, 0, new CChatMessagePacket(PChar, MESSAGE_PARTY, data+6));
 								}
 								
 								
-							}
+						}
 					}
                 }
                 break;
@@ -4218,7 +4224,17 @@ void SmallPacket0x0B6(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		if (PTargetChar->nameflags.flags == FLAG_AWAY)
 			{
 				//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER HAS AWAY FLAG SET TELL SENDER\n" CL_RESET);
+				if(PTargetChar == PChar)
+			    {
+				char buf1[110];
+	sprintf(buf1,"DEBUG: SEND MESSAGE CHAT 0 ");
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+				return;
+			    }
+				else
+				{
 				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 181));
+				}
 				return;
 			}
 		if( PTargetChar->status != STATUS_DISAPPEAR)
@@ -4229,14 +4245,28 @@ void SmallPacket0x0B6(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
 				return;
 			}
-			
-		PTargetChar->pushPacket(new CChatMessagePacket(PChar, MESSAGE_TELL,data+20 ));
+			else
+			{
+			PTargetChar->pushPacket(new CChatMessagePacket(PChar, MESSAGE_TELL,data+20 ));
+			}
 		return;
 		}
 		else
 		{
 			//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ZONEING TELL SENDER\n" CL_RESET);
-			PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
+			if(PTargetChar == PChar)
+			{
+				char buf1[110];
+	sprintf(buf1,"DEBUG: SEND MESSAGE CHAT 1");
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+				return;
+			}
+			else
+			{
+				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
+			
+			}
+			
 			return;
 		}
 		return;
@@ -4253,13 +4283,22 @@ void SmallPacket0x0B6(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				if(PCharInMog!=NULL)
 				{
 					//ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS NOT NULL\n" CL_RESET);
-					PTargetChar = PCharInMog;
-					if(PTargetChar == PChar)
+					
+					if(PTargetChar == PChar) // IF WE ARe TALKING TO OUR SELF SHOULD DO NOTHING
 			          {
 				      PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
-				      break;
-			          }
-                    PCharInMog->pushPacket(new CChatMessagePacket(PChar, MESSAGE_TELL,data+20 ));
+				      }
+					else //ELSE WE ARE TAKING TO SOME ONE ELSE
+					{
+						if(PTargetChar == PCharInMog) // IF THE PERSON WE ARE TALKING TO == THE PERSON IN THE MOG HOUSE SEND MESSAGE
+						{
+                        PCharInMog->pushPacket(new CChatMessagePacket(PChar, MESSAGE_TELL,data+20 ));
+						}
+						else// ELSE WE SHOUD DO NOTHING OTHER THEN SAY THE PLAYERS NOT ONLINE
+						{
+							PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
+						}
+					}
 					break;
 				}
 				else
@@ -4690,7 +4729,7 @@ void SmallPacket0x0DD(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 			PChar->pushPacket(new CBazaarMessagePacket(PTarget));
             PChar->pushPacket(new CCheckPacket(PChar, PTarget));
-		}
+		} 
 		break;
 	}
 	return;

@@ -83,7 +83,6 @@ namespace luautils
 	int32 VanadielMoonDirection(lua_State* L);									// Gets the current Vanadiel Moon Phasing direction (waxing, waning, neither)
     int32 SetVanadielTimeOffset(lua_State* L);
 	int32 IsMoonFull(lua_State* L);												// Returns true if the moon is full
-	int32 StartElevator(lua_State*);
 	int32 GetServerVariable(lua_State*);
 	int32 SetServerVariable(lua_State *);
 	int32 clearVarFromAll(lua_State *);											// Deletes a specific player variable from all players

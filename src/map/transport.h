@@ -29,6 +29,7 @@
 #include <vector>
 
 #include "entities/npcentity.h"
+#include "entities/charentity.h"
 
 enum ELEVATOR
 {
@@ -92,6 +93,7 @@ struct Elevator_t
 	CNpcEntity * Elevator;
 	CNpcEntity * LowerDoor;
 	CNpcEntity * UpperDoor;
+	
 
 	bool isMoving;
 	bool isStarted;
@@ -104,14 +106,25 @@ struct Elevator_t
 *                                                                       *
 ************************************************************************/
 
+
+class CBaseEntity;
 class CTransportHandler
 {
+	CBaseEntity* m_PBaseEntity;
 public:
+	CTransportHandler(CBaseEntity*);
 
+	CBaseEntity* GetBaseEntity()const
+	{
+		return m_PBaseEntity;
+	}
 	static	CTransportHandler * getInstance();
-	void startElevator(int32 elevatorID);
+	
 	void TransportTimer();
-
+	void ElevatorUp(int32 elevatorID, CBaseEntity* m_PBaseEntity);
+    void ElevatorUp(Elevator_t *, CBaseEntity* m_PBaseEntity);
+	void ElevatorDown(int32 elevatorID, CBaseEntity* m_PBaseEntity);
+    void ElevatorDown(Elevator_t *, CBaseEntity* m_PBaseEntity);
 private:
 
 	static CTransportHandler * _instance;
@@ -121,8 +134,8 @@ private:
     void InitializeTransport();
 	void InitializeElevators();
 
-	void startElevator(Elevator_t *);
-	void arriveElevator(Elevator_t *);
+	
+	
 
 	std::vector<Elevator_t> ElevatorList;
     std::vector<Transport_t*> TransportList;
