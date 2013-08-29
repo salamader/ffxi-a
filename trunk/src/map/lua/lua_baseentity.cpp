@@ -49,6 +49,7 @@
 #include "../packets/chat_message_string.h"
 #include "../packets/send_box.h"
 #include "../packets/entity_update.h"
+
 #include "../packets/event.h"
 #include "../packets/event_string.h"
 #include "../packets/event_update.h"
@@ -74,7 +75,7 @@
 #include "../packets/shop_menu.h"
 #include "../packets/conquest_map.h"
 #include "../packets/weather.h"
-
+#include "../transport.h"
 #include "../ability.h"
 #include "../ai/ai_mob_dummy.h"
 #include "../utils/battleutils.h"
@@ -6260,11 +6261,11 @@ inline int32 CLuaBaseEntity::openDoor(lua_State *L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_NPC);
 
-    if (m_PBaseEntity->animation == ANIMATION_CLOSE_DOOR)
+    if (m_PBaseEntity->animation == ANIMATION_OPEN_DOOR)
     {
         uint32 OpenTime = (!lua_isnil(L,1) && lua_isnumber(L,1)) ? (uint32)lua_tointeger(L,1) * 1000 : 7000;
 
-        m_PBaseEntity->animation = ANIMATION_OPEN_DOOR;
+        m_PBaseEntity->animation = ANIMATION_CLOSE_DOOR;
         m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE));
 
         CTaskMgr::getInstance()->AddTask(new CTaskMgr::CTask("close_door", gettick()+OpenTime, m_PBaseEntity, CTaskMgr::TASK_ONCE, close_door));
@@ -8975,7 +8976,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
+	sprintf(buf3,".getpos .addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	return true;
 	}
@@ -8991,7 +8992,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
+	sprintf(buf3,".getpos .addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	
 	return true;
@@ -9008,7 +9009,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
+	sprintf(buf3,".getpos .addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	
 	return true;
@@ -9025,7 +9026,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
+	sprintf(buf3,".getpos .addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	
 	return true;
@@ -9088,6 +9089,100 @@ inline int32 CLuaBaseEntity::add_Key_Item(lua_State *L)
 	   
 		return false;
 	
+}
+inline int32 CLuaBaseEntity::ElevatorUp(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(lua_isnil(L,-1) || !lua_isnumber(L,-1));
+	DSP_DEBUG_BREAK_IF(lua_isnil(L,2) || !lua_isnumber(L,2));
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+
+	uint32 ElevatorID = (uint32)lua_tointeger(L, -1);
+    CTransportHandler::getInstance()->ElevatorUp(ElevatorID,PChar);
+	char buf1[110];
+	sprintf(buf1,"DEBUG ELEVATOR: PCHAR = %s ELEVATOR ID = %u UP",PChar->GetName(),ElevatorID );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+	return 0;
+}
+inline int32 CLuaBaseEntity::ElevatorDown(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(lua_isnil(L,-1) || !lua_isnumber(L,-1));
+	DSP_DEBUG_BREAK_IF(lua_isnil(L,2) || !lua_isnumber(L,2));
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+
+	uint32 ElevatorID = (uint32)lua_tointeger(L, -1);
+    CTransportHandler::getInstance()->ElevatorDown(ElevatorID,PChar);
+	char buf1[110];
+	sprintf(buf1,"DEBUG ELEVATOR: PCHAR = %s ELEVATOR ID = %u DOWN",PChar->GetName(),ElevatorID );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+	return 0;
+}
+inline int32 CLuaBaseEntity::Get_Target(lua_State *L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	
+
+	
+	
+	char buf1[110];
+	sprintf(buf1,"X = %0.3f Y = %0.3f Z = %0.3f R = %u Zone = %u ",PChar->loc.p.x,PChar->loc.p.y,PChar->loc.p.z,PChar->loc.p.rotation,PChar->loc.destination );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+	return false;
+}
+inline int32 CLuaBaseEntity::Get_Pos(lua_State *L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	
+
+	
+	
+	char buf1[110];
+	sprintf(buf1,"X = %0.3f Y = %0.3f Z = %0.3f R = %u Zone = %u ",PChar->loc.p.x,PChar->loc.p.y,PChar->loc.p.z,PChar->loc.p.rotation,PChar->loc.destination );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+	return false;
 }
 inline int32 CLuaBaseEntity::home_point(lua_State *L)
 {
@@ -9559,5 +9654,9 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,add_All_Spells),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,add_Key_Item),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,WallHack),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,Get_Pos),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,Get_Target),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,ElevatorUp),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,ElevatorDown),
 	{NULL,NULL}
 };

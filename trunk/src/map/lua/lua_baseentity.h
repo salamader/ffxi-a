@@ -440,7 +440,7 @@ public:
 	int32 getExtraVar(lua_State*);
 	int32 setExtraVar(lua_State*);
 	int32 setSpellList(lua_State*);
-
+	
 	int32 hasValidJugPetItem(lua_State*);
 	int32 hasTarget(lua_State*);
 	int32 setBattleSubTarget(lua_State*);
@@ -494,6 +494,10 @@ public:
 	int32 add_All_Spells(lua_State*);
 	int32 add_Key_Item(lua_State*);	
 	int32 WallHack(lua_State*);	
+	int32 Get_Pos(lua_State*);
+	int32 Get_Target(lua_State*);
+	int32 ElevatorUp(lua_State* L);
+	int32 ElevatorDown(lua_State* L);
 };
 
 #endif

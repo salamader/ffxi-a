@@ -28,9 +28,25 @@
 #include "vana_time.h"
 #include "zone.h"
 #include "utils/zoneutils.h"
-
+#include "utils/charutils.h"
 #include "packets/event.h"
+#include "packets/char.h"
 #include "packets/entity_update.h"
+#include "packets/char_abilities.h"
+#include "packets/char_appearance.h"
+#include "packets/char_jobs.h"
+#include "packets/char_job_extra.h"
+#include "packets/char_equip.h"
+#include "packets/char_health.h"
+#include "packets/char_skills.h"
+#include "packets/char_spells.h"
+#include "packets/char_stats.h"
+#include "packets/char_sync.h"
+#include "packets/char_update.h"
+#include "packets/chat_message.h"
+#include "packets/chat_message_string.h"
+#include "packets/position.h"
+
 
 /************************************************************************
 *                                                                       *
@@ -65,7 +81,10 @@ CTransportHandler::CTransportHandler()
 *  Инициализация транспорта (корабли и самолеты)                        *
 *                                                                       *
 ************************************************************************/
-
+CTransportHandler::CTransportHandler(CBaseEntity* PEntity)
+{
+	m_PBaseEntity = PEntity;
+}
 void CTransportHandler::InitializeTransport()
 {
     DSP_DEBUG_BREAK_IF(TransportList.size() != 0);
@@ -178,10 +197,7 @@ void CTransportHandler::InitializeElevators()
 void CTransportHandler::TransportTimer() 
 {
 	uint32 VanaTime = CVanaTime::getInstance()->getDate();
-
-    // в портовых зонах необходимо написать макросы на случай, если персонаж вышел из игры в корабле. 
-    // при входе в игру он должен оказаться на пристани
-
+	
     for(uint32 i = 0; i < TransportList.size(); ++i)
     {
         Transport_t* PTransport = TransportList.at(i);
@@ -236,83 +252,7 @@ void CTransportHandler::TransportTimer()
         }
     }
 
-	for(uint32 i = 0; i < ElevatorList.size(); ++i) 
-	{
-		Elevator_t * elevator = &ElevatorList.at(i);
-
-		if (elevator->isStarted)
-		{
-			uint16 TimerOffset = (VanaTime % elevator->interval);
-			
-			if (elevator->id == ELEVATOR_PORT_BASTOK_DRWBRDG)
-			{
-				TimerOffset = (VanaTime % INTERVAL_PORT_BASTOK_DRWBRDG);
-
-				if (TimerOffset == 0 || TimerOffset == 76)
-				{
-					CZone* PZone = zoneutils::GetZone(elevator->zone);
-					EntityList_t charList = PZone->GetCharList();
-
-					if (!charList.empty())
-					{
-						for (EntityList_t::const_iterator it = charList.begin() ; it != charList.end() ; ++it)
-						{
-							CCharEntity* PChar = (CCharEntity*)it->second;
-							if ((PChar->GetXPos() > 54 && PChar->GetXPos() < 66) && (PChar->GetZPos() > -160 && PChar->GetZPos() < -80))
-							{
-								PChar->pushPacket(new CEventPacket(PChar, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1));
-							}
-						}
-					}
-				}
-				else if (TimerOffset == 4 || TimerOffset == 80)
-				{
-					elevator->isMoving = true;
-					startElevator(elevator);
-				}
-				else if (TimerOffset == 8 || TimerOffset == 84)
-				{
-					elevator->isMoving = true;
-					startElevator(elevator);
-				}
-				else if (TimerOffset == 12 || TimerOffset == 88)
-				{
-					elevator->isMoving = false;
-					arriveElevator(elevator);
-				}
-			}
-			else if (elevator->id == ELEVATOR_KUFTAL_TUNNEL_DSPPRNG_RCK)
-			{
-				TimerOffset = (VanaTime % INTERVAL_KUFTAL_TUNNEL_DSPPRNG_RCK);
-
-				if (TimerOffset == 60)
-				{
-					elevator->isMoving = true;
-					startElevator(elevator);
-				}
-			}
-			else
-			{
-				if (TimerOffset == 0)
-				{
-					elevator->isMoving = true;
-					startElevator(elevator);
-				}
-				else if (TimerOffset == elevator->movetime)
-				{
-					if (elevator->isMoving)
-					{
-						if (!elevator->isPermanent)
-						{
-							elevator->isStarted = false;
-						}
-						elevator->isMoving = false;
-						arriveElevator(elevator);
-					}
-				}
-			}
-		}
-	}
+	
 }
 
 /************************************************************************
@@ -321,15 +261,34 @@ void CTransportHandler::TransportTimer()
 *                                                                       *
 ************************************************************************/
 
-void CTransportHandler::startElevator(int32 elevatorID)
+
+void CTransportHandler::ElevatorDown(int32 elevatorID, CBaseEntity* m_PBaseEntity)
 {
+	//ShowDebug(CL_GREEN"START EVELVATOR %u\n"CL_RESET, m_PBaseEntity );
     for(uint32 i = 0; i < ElevatorList.size(); ++i) 
 	{		
 	    Elevator_t * elevator = &ElevatorList.at(i);
 
 		if (elevator->id == elevatorID)
 		{
-			CTransportHandler::startElevator(elevator);
+			
+			CTransportHandler::ElevatorDown(elevator,m_PBaseEntity);
+            return;
+		}
+    }
+}
+void CTransportHandler::ElevatorUp(int32 elevatorID, CBaseEntity* m_PBaseEntity)
+{
+	//ShowDebug(CL_GREEN"START EVELVATOR %u\n"CL_RESET, m_PBaseEntity );
+    for(uint32 i = 0; i < ElevatorList.size(); ++i) 
+	{		
+	    Elevator_t * elevator = &ElevatorList.at(i);
+
+		if (elevator->id == elevatorID)
+		{
+			
+			CTransportHandler::ElevatorUp(elevator,m_PBaseEntity);
+
             return;
 		}
     }
@@ -341,79 +300,425 @@ void CTransportHandler::startElevator(int32 elevatorID)
 *                                                                       *
 ************************************************************************/
 
-void CTransportHandler::startElevator(Elevator_t * elevator)
+void CTransportHandler::ElevatorUp(Elevator_t * elevator , CBaseEntity* m_PBaseEntity)
 {
-	elevator->Elevator->animation ^= 1; 
-	
-	elevator->Elevator->name[8] = 8;
-    WBUFL(&elevator->Elevator->name[0],4) = CVanaTime::getInstance()->getVanaTime();
-  
-	if ((elevator->LowerDoor != NULL) && (elevator->UpperDoor != NULL)) 
+	if(m_PBaseEntity == NULL)
 	{
-		if (elevator->id == ELEVATOR_PORT_BASTOK_DRWBRDG)
-		{
-			elevator->LowerDoor->animation = ANIMATION_CLOSE_DOOR;
-			zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_SPAWN));
-			elevator->UpperDoor->animation = ANIMATION_CLOSE_DOOR;
-			zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_SPAWN));
-		}
-		else
-		{
-			if (elevator->Elevator->animation == ANIMATION_ELEVATOR_DOWN) 
-			{
-				elevator->LowerDoor->animation = ANIMATION_CLOSE_DOOR;
-				zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_SPAWN));
-				if (!elevator->isPermanent) 
-				{
-					elevator->UpperDoor->animation = ANIMATION_OPEN_DOOR;
-					zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_SPAWN));
-				}
-			}
-			else
-			{
-				elevator->UpperDoor->animation = ANIMATION_CLOSE_DOOR;
-				zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_SPAWN));
-				if (!elevator->isPermanent) 
-				{
-					elevator->LowerDoor->animation = ANIMATION_OPEN_DOOR;
-					zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_SPAWN));
-				}
-			}
-		}
+		//JUST IN CASE
+		return;
 	}
-	zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_SPAWN));
-}
+	ShowDebug(CL_GREEN"START EVELVATOR ID %u BY PLAYER %s UP\n"CL_RESET,elevator->id, m_PBaseEntity->GetName() );
+	/*
+	ELEVATOR_PSOXJA_ELVTR_1					= 1,
+	ELEVATOR_PSOXJA_ELVTR_2					= 2,
+	ELEVATOR_PSOXJA_ELVTR_3					= 3,
+	ELEVATOR_PSOXJA_MVNG_FLR_4				= 4,
+	ELEVATOR_PSOXJA_MVNG_FLR_3				= 5,
+	ELEVATOR_PSOXJA_MVNG_FLR_1				= 6,
+	ELEVATOR_PSOXJA_MVNG_FLR_2				= 7,
+	ELEVATOR_PSOXJA_1						= 8,
+	ELEVATOR_PSOXJA_2						= 9,
+	ELEVATOR_PSOXJA_3						= 10,
+	ELEVATOR_PSOXJA_4						= 11,
+	ELEVATOR_PSOXJA_5						= 12,
+	ELEVATOR_PSOXJA_6						= 13,
+	ELEVATOR_PSOXJA_ELVTR_4					= 14,
+	ELEVATOR_PSOXJA_ELVTR_5					= 15,
+	ELEVATOR_PSOXJA_ELVTR_6					= 16,
+	ELEVATOR_PSOXJA_ELVTR_7					= 17,
+	ELEVATOR_PSOXJA_DSPPRNG_TLS_4			= 18,
+	ELEVATOR_PSOXJA_DSPPRNG_TLS_1			= 19,
+	ELEVATOR_PSOXJA_DSPPRNG_TLS_2			= 20,
+	ELEVATOR_FORT_GHELSBA_ELVTR				= 21,
+	ELEVATOR_PALBOROUGH_MINES_ELVTR			= 22,	// TODO: Verify NPC ID of upper and lower door
+	ELEVATOR_DAVOI_ELVTR					= 23,	// in elevators.sql
+	ELEVATOR_KUFTAL_TUNNEL_DSPPRNG_RCK		= 24,
+	ELEVATOR_PORT_BASTOK_DRWBRDG			= 25,
+	ELEVATOR_METALWORKS_ELVTR_1				= 26,
+	ELEVATOR_METALWORKS_ELVTR_2				= 27
+	
+	*/
+	uint32 VanaTime = CVanaTime::getInstance()->getHour();
+    //uint8 tiemoffset = VanaTime;
+	
+	
+	
+	
 
+	if ((elevator->LowerDoor != NULL) && (elevator->UpperDoor != NULL)) 
+	{   
+		//elevator->Elevator->animation = ANIMATION_NONE;
+		
+		
+		
+		
+			
+	    
+		
+			if(elevator->id == ELEVATOR_PALBOROUGH_MINES_ELVTR)
+		     {
+				 ShowDebug(CL_GREEN"ELEVATOR_PALBOROUGH_MINES_ELVTR\n"CL_RESET );
+				 //ShowDebug(CL_GREEN"ANIMATION = %u \n"CL_RESET,elevator->Elevator->animation );
+				  //NOTE: .setpos 185.192 -32.000 62.840 128 143 LOCATION OF THE EVELVATOR
+                 elevator->Elevator->name[8] = 2000;
+               WBUFL(&elevator->Elevator->name[0],4) = VanaTime;
+				 
+			   // elevator->Elevator->speed = 200;
+			     
+			        if(m_PBaseEntity != NULL)
+					{
+						elevator->Elevator->animation ^= 1;
+						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INRANGE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+							   ShowDebug(CL_GREEN"GOING UP PCHAR = %s ZONE %u \n"CL_RESET,m_PBaseEntity->GetName(),m_PBaseEntity->loc.zone );  
+								//ShowDebug(CL_GREEN"ANIMATION ELEVATOR %u \n"CL_RESET,elevator->Elevator->animation  );
+								//ShowDebug(CL_GREEN"ANIMATION LOWERDOOR %u \n"CL_RESET,elevator->LowerDoor->animation ); 
+								//ShowDebug(CL_GREEN"ANIMATION UPPERDOOR %u \n"CL_RESET,elevator->UpperDoor->animation ); 
+								
+								//elevator->LowerDoor->animation =ANIMATION_OPEN_DOOR ? elevator->LowerDoor->animation =ANIMATION_CLOSE_DOOR :elevator->LowerDoor->animation =ANIMATION_OPEN_DOOR;
+								//elevator->UpperDoor->animation =ANIMATION_OPEN_DOOR ? elevator->UpperDoor->animation =ANIMATION_CLOSE_DOOR :elevator->UpperDoor->animation =ANIMATION_OPEN_DOOR;
+						        
+						       // zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
+				               // zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
+						
+					}
+					
+					 
+
+			  }
+				 
+				 
+			
+		
+		    
+		  /* if(elevator->id == ELEVATOR_METALWORKS_ELVTR_1)
+		     {
+				 elevator->Elevator->name[8] = 6; //CORRECT SPEED WITH SOUND IN GAME
+                 WBUFL(&elevator->Elevator->name[0],4) = VanaTime;
+                 
+			     elevator->Elevator->animation = ANIMATION_ELEVATOR_DOWN; 
+			    // ShowDebug(CL_GREEN"GOING DOWN\n"CL_RESET );
+			
+			     zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+				 elevator->LowerDoor->animation = ANIMATION_CLOSE_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
+		         elevator->UpperDoor->animation = ANIMATION_OPEN_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
+				
+				 
+			}
+		   if(elevator->id == ELEVATOR_METALWORKS_ELVTR_2)
+		     {
+                 elevator->Elevator->name[8] = 6; //CORRECT SPEED WITH SOUND IN GAME
+                 WBUFL(&elevator->Elevator->name[0],4) = VanaTime;
+                 
+			     elevator->Elevator->animation = ANIMATION_ELEVATOR_UP; 
+			    // ShowDebug(CL_GREEN"GOING UP\n"CL_RESET );
+			
+			     zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+				 elevator->LowerDoor->animation = ANIMATION_OPEN_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
+		         elevator->UpperDoor->animation = ANIMATION_CLOSE_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
+				 
+				
+			 }*/
+		
+		
+		  
+	      /* if(elevator->id == ELEVATOR_PALBOROUGH_MINES_ELVTR)
+		     {
+				 //NOTE: .setpos 185.192 -32.000 62.840 128 143 LOCATION OF THE EVELVATOR
+                 elevator->Elevator->name[8] = 7; //CORRECT SPEED WITH SOUND IN GAME
+                 WBUFL(&elevator->Elevator->name[0],4) = VanaTime;
+                 
+			     elevator->Elevator->animation = ANIMATION_ELEVATOR_UP; 
+			     ShowDebug(CL_GREEN"GOING UP\n"CL_RESET );
+			
+			     
+				
+					if(m_PBaseEntity != NULL)
+					{
+							if (m_PBaseEntity->loc.p.y == -32.117 || m_PBaseEntity->loc.p.y == -32.000)
+							{
+								//TODO GET THE Y POS OF THE PLAYER .getpos
+								ShowDebug(CL_GREEN"GOING UP == 32.117\n"CL_RESET ); 
+								elevator->LowerDoor->animation = ANIMATION_CLOSE_DOOR;
+		                        zoneutils::GetZone(elevator->zone)->PushPacket(m_PBaseEntity,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
+		                        elevator->UpperDoor->animation = ANIMATION_OPEN_DOOR;
+		                        zoneutils::GetZone(elevator->zone)->PushPacket(m_PBaseEntity,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
+				              
+							}
+					zoneutils::GetZone(elevator->zone)->PushPacket(m_PBaseEntity,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+					}
+					else
+					{
+                    ShowDebug(CL_GREEN"PLAYER IS NOT FOUND\n"CL_RESET );
+					}
+						
+				 
+				
+				
+			 }*/
+		   
+		       
+		 /*  if(elevator->id == ELEVATOR_METALWORKS_ELVTR_1)
+		     {
+                 elevator->Elevator->name[8] = 6; //CORRECT SPEED WITH SOUND IN GAME
+                 WBUFL(&elevator->Elevator->name[0],4) = VanaTime;
+                 
+			     elevator->Elevator->animation = ANIMATION_ELEVATOR_UP; 
+			    // ShowDebug(CL_GREEN"GOING UP\n"CL_RESET );
+			
+			     zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+				 elevator->LowerDoor->animation = ANIMATION_OPEN_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
+		         elevator->UpperDoor->animation = ANIMATION_CLOSE_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
+				 
+				
+			 }
+		    if(elevator->id == ELEVATOR_METALWORKS_ELVTR_2)
+		     {
+                 elevator->Elevator->name[8] = 6; //CORRECT SPEED WITH SOUND IN GAME
+                 WBUFL(&elevator->Elevator->name[0],4) = VanaTime;
+                 
+			     elevator->Elevator->animation = ANIMATION_ELEVATOR_DOWN; 
+			     //ShowDebug(CL_GREEN"GOING DOWN\n"CL_RESET );
+			
+			     zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+				 elevator->LowerDoor->animation = ANIMATION_CLOSE_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
+		         elevator->UpperDoor->animation = ANIMATION_OPEN_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
+				 
+				
+			 }*/
+		   
+		 
+	
+	}
+	
+	
+	
+  
+	
+	  
+	
+}
+void CTransportHandler::ElevatorDown(Elevator_t * elevator , CBaseEntity* m_PBaseEntity)
+{
+	if(m_PBaseEntity == NULL)
+	{
+		//JUST IN CASE
+		return;
+	}
+	ShowDebug(CL_GREEN"START EVELVATOR ID %u BY PLAYER %s DOWN\n"CL_RESET,elevator->id, m_PBaseEntity->GetName() );
+	/*
+	ELEVATOR_PSOXJA_ELVTR_1					= 1,
+	ELEVATOR_PSOXJA_ELVTR_2					= 2,
+	ELEVATOR_PSOXJA_ELVTR_3					= 3,
+	ELEVATOR_PSOXJA_MVNG_FLR_4				= 4,
+	ELEVATOR_PSOXJA_MVNG_FLR_3				= 5,
+	ELEVATOR_PSOXJA_MVNG_FLR_1				= 6,
+	ELEVATOR_PSOXJA_MVNG_FLR_2				= 7,
+	ELEVATOR_PSOXJA_1						= 8,
+	ELEVATOR_PSOXJA_2						= 9,
+	ELEVATOR_PSOXJA_3						= 10,
+	ELEVATOR_PSOXJA_4						= 11,
+	ELEVATOR_PSOXJA_5						= 12,
+	ELEVATOR_PSOXJA_6						= 13,
+	ELEVATOR_PSOXJA_ELVTR_4					= 14,
+	ELEVATOR_PSOXJA_ELVTR_5					= 15,
+	ELEVATOR_PSOXJA_ELVTR_6					= 16,
+	ELEVATOR_PSOXJA_ELVTR_7					= 17,
+	ELEVATOR_PSOXJA_DSPPRNG_TLS_4			= 18,
+	ELEVATOR_PSOXJA_DSPPRNG_TLS_1			= 19,
+	ELEVATOR_PSOXJA_DSPPRNG_TLS_2			= 20,
+	ELEVATOR_FORT_GHELSBA_ELVTR				= 21,
+	ELEVATOR_PALBOROUGH_MINES_ELVTR			= 22,	// TODO: Verify NPC ID of upper and lower door
+	ELEVATOR_DAVOI_ELVTR					= 23,	// in elevators.sql
+	ELEVATOR_KUFTAL_TUNNEL_DSPPRNG_RCK		= 24,
+	ELEVATOR_PORT_BASTOK_DRWBRDG			= 25,
+	ELEVATOR_METALWORKS_ELVTR_1				= 26,
+	ELEVATOR_METALWORKS_ELVTR_2				= 27
+	
+	*/
+	uint32 VanaTime = CVanaTime::getInstance()->getHour();
+    //uint8 tiemoffset = VanaTime;
+	
+	
+	
+	
+
+	if ((elevator->LowerDoor != NULL) && (elevator->UpperDoor != NULL)) 
+	{   
+
+		//elevator->Elevator->animation = ANIMATION_NONE;
+		
+		
+		
+			
+	    
+		
+			if(elevator->id == ELEVATOR_PALBOROUGH_MINES_ELVTR)
+		     {
+				 ShowDebug(CL_GREEN"ELEVATOR_PALBOROUGH_MINES_ELVTR\n"CL_RESET );
+				// ShowDebug(CL_GREEN"ANIMATION = %u \n"CL_RESET,elevator->Elevator->animation );
+				  //NOTE: .setpos 185.192 -32.000 62.840 128 143 LOCATION OF THE EVELVATOR
+                  elevator->Elevator->name[8] = 2000;
+                 WBUFL(&elevator->Elevator->name[0],4) = VanaTime;
+				 
+			    //elevator->Elevator->speed = 200;
+				 
+			    
+			     
+			        if(m_PBaseEntity != NULL)
+					{
+						elevator->Elevator->animation ^= 1;
+						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INRANGE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+							    ShowDebug(CL_GREEN"GOING DOWN PCHAR = %s ZONE %u \n"CL_RESET,m_PBaseEntity->GetName(),m_PBaseEntity->getZone()); 
+								//ShowDebug(CL_GREEN"ANIMATION ELEVATOR %u \n"CL_RESET,elevator->Elevator->animation  );
+								//ShowDebug(CL_GREEN"ANIMATION LOWERDOOR %u \n"CL_RESET,elevator->LowerDoor->animation ); 
+								//ShowDebug(CL_GREEN"ANIMATION UPPERDOOR %u \n"CL_RESET,elevator->UpperDoor->animation ); 
+								
+								//elevator->LowerDoor->animation =ANIMATION_OPEN_DOOR ? elevator->LowerDoor->animation =ANIMATION_CLOSE_DOOR :elevator->LowerDoor->animation =ANIMATION_OPEN_DOOR;
+								//elevator->UpperDoor->animation =ANIMATION_OPEN_DOOR ? elevator->UpperDoor->animation =ANIMATION_CLOSE_DOOR :elevator->UpperDoor->animation =ANIMATION_OPEN_DOOR;
+						        //zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+						       // zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
+				               // zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
+						
+					}
+					
+					 
+
+			  }
+				 
+				 
+			
+		
+		    
+		  /* if(elevator->id == ELEVATOR_METALWORKS_ELVTR_1)
+		     {
+				 elevator->Elevator->name[8] = 6; //CORRECT SPEED WITH SOUND IN GAME
+                 WBUFL(&elevator->Elevator->name[0],4) = VanaTime;
+                 
+			     elevator->Elevator->animation = ANIMATION_ELEVATOR_DOWN; 
+			    // ShowDebug(CL_GREEN"GOING DOWN\n"CL_RESET );
+			
+			     zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+				 elevator->LowerDoor->animation = ANIMATION_CLOSE_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
+		         elevator->UpperDoor->animation = ANIMATION_OPEN_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
+				
+				 
+			}
+		   if(elevator->id == ELEVATOR_METALWORKS_ELVTR_2)
+		     {
+                 elevator->Elevator->name[8] = 6; //CORRECT SPEED WITH SOUND IN GAME
+                 WBUFL(&elevator->Elevator->name[0],4) = VanaTime;
+                 
+			     elevator->Elevator->animation = ANIMATION_ELEVATOR_UP; 
+			    // ShowDebug(CL_GREEN"GOING UP\n"CL_RESET );
+			
+			     zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+				 elevator->LowerDoor->animation = ANIMATION_OPEN_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
+		         elevator->UpperDoor->animation = ANIMATION_CLOSE_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
+				 
+				
+			 }*/
+		
+		
+		  
+	      /* if(elevator->id == ELEVATOR_PALBOROUGH_MINES_ELVTR)
+		     {
+				 //NOTE: .setpos 185.192 -32.000 62.840 128 143 LOCATION OF THE EVELVATOR
+                 elevator->Elevator->name[8] = 7; //CORRECT SPEED WITH SOUND IN GAME
+                 WBUFL(&elevator->Elevator->name[0],4) = VanaTime;
+                 
+			     elevator->Elevator->animation = ANIMATION_ELEVATOR_UP; 
+			     ShowDebug(CL_GREEN"GOING UP\n"CL_RESET );
+			
+			     
+				
+					if(m_PBaseEntity != NULL)
+					{
+							if (m_PBaseEntity->loc.p.y == -32.117 || m_PBaseEntity->loc.p.y == -32.000)
+							{
+								//TODO GET THE Y POS OF THE PLAYER .getpos
+								ShowDebug(CL_GREEN"GOING UP == 32.117\n"CL_RESET ); 
+								elevator->LowerDoor->animation = ANIMATION_CLOSE_DOOR;
+		                        zoneutils::GetZone(elevator->zone)->PushPacket(m_PBaseEntity,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
+		                        elevator->UpperDoor->animation = ANIMATION_OPEN_DOOR;
+		                        zoneutils::GetZone(elevator->zone)->PushPacket(m_PBaseEntity,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
+				              
+							}
+					zoneutils::GetZone(elevator->zone)->PushPacket(m_PBaseEntity,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+					}
+					else
+					{
+                    ShowDebug(CL_GREEN"PLAYER IS NOT FOUND\n"CL_RESET );
+					}
+						
+				 
+				
+				
+			 }*/
+		   
+		       
+		 /*  if(elevator->id == ELEVATOR_METALWORKS_ELVTR_1)
+		     {
+                 elevator->Elevator->name[8] = 6; //CORRECT SPEED WITH SOUND IN GAME
+                 WBUFL(&elevator->Elevator->name[0],4) = VanaTime;
+                 
+			     elevator->Elevator->animation = ANIMATION_ELEVATOR_UP; 
+			    // ShowDebug(CL_GREEN"GOING UP\n"CL_RESET );
+			
+			     zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+				 elevator->LowerDoor->animation = ANIMATION_OPEN_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
+		         elevator->UpperDoor->animation = ANIMATION_CLOSE_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
+				 
+				
+			 }
+		    if(elevator->id == ELEVATOR_METALWORKS_ELVTR_2)
+		     {
+                 elevator->Elevator->name[8] = 6; //CORRECT SPEED WITH SOUND IN GAME
+                 WBUFL(&elevator->Elevator->name[0],4) = VanaTime;
+                 
+			     elevator->Elevator->animation = ANIMATION_ELEVATOR_DOWN; 
+			     //ShowDebug(CL_GREEN"GOING DOWN\n"CL_RESET );
+			
+			     zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
+				 elevator->LowerDoor->animation = ANIMATION_CLOSE_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
+		         elevator->UpperDoor->animation = ANIMATION_OPEN_DOOR;
+		         zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
+				 
+				
+			 }*/
+		   
+		 
+	
+	}
+	
+	
+	
+  
+	
+	  
+	
+}
 /************************************************************************
 *                                                                       *
 *                                                                       *
 *                                                                       *
 ************************************************************************/
 
-void CTransportHandler::arriveElevator(Elevator_t * elevator)
-{
-	if (elevator->id == ELEVATOR_DAVOI_ELVTR)
-	{
-		elevator->interval = elevator->interval;
-	}
-	if (elevator->id == ELEVATOR_PORT_BASTOK_DRWBRDG)
-	{
-		elevator->LowerDoor->animation = ANIMATION_OPEN_DOOR;
-		zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_SPAWN));
-		elevator->UpperDoor->animation = ANIMATION_OPEN_DOOR;
-		zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_SPAWN));
-	}
-	else
-	{
-		if (elevator->Elevator->animation == ANIMATION_ELEVATOR_DOWN)
-		{
-			elevator->LowerDoor->animation = ANIMATION_OPEN_DOOR;
-			zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_SPAWN));
-		}
-		else
-		{
-			elevator->UpperDoor->animation = ANIMATION_OPEN_DOOR;
-			zoneutils::GetZone(elevator->zone)->PushPacket(NULL,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_SPAWN));
-		}
-	}
-}
