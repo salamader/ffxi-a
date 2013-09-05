@@ -578,6 +578,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				  PChar->pushPacket(new CDownloadingDataPacket());
 				  if(inevent != 0)
 				  {
+					  
 				  if(PChar->eventid == -1)
 				  {
 					  int16 EventID = luautils::OnZoneIn(PChar);
@@ -585,6 +586,8 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				  }
 				  else
 				  {
+					  ShowNotice(CL_RED"IN EVENT NUMBER == %u\n"CL_RESET,inevent);
+					  ShowNotice(CL_RED"EVENT NUMBER == %u\n"CL_RESET,PChar->eventid);
 					  PChar->pushPacket(new CZoneInPacket(PChar,PChar->eventid));
 					  PChar->eventid = -1;
 				  }
@@ -931,10 +934,10 @@ void SmallPacket0x011(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	ShowMessage(CL_GREEN"UPDATE: PLAYER SHUTDOWN STATUS =%u \n"CL_RESET,PChar->shutdown_status);
+	//ShowMessage(CL_GREEN"UPDATE: PLAYER SHUTDOWN STATUS =%u \n"CL_RESET,PChar->shutdown_status);
 	if (PChar->shutdown_status == 0)
 	{
-		ShowMessage(CL_GREEN"UPDATE: IN =%u \n"CL_RESET,PChar->shutdown_status);
+		//ShowMessage(CL_GREEN"UPDATE: IN =%u \n"CL_RESET,PChar->shutdown_status);
 		
 
 		PChar->loc.p.x = RBUFF(data,(0x04));
