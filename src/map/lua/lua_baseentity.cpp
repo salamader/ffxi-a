@@ -2120,7 +2120,11 @@ inline int32 CLuaBaseEntity::startEvent(lua_State *L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-	DSP_DEBUG_BREAK_IF(lua_isnil(L,1) || !lua_isnumber(L,1));
+	if(lua_isnil(L,1) || !lua_isnumber(L,1))
+	{
+		ShowError("CLuaBaseEntity::startEvent: Could not start event, Lack of arguments.\n");
+		return false;
+	}
 
     int32 n = lua_gettop(L);
 
