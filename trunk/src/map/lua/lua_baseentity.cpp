@@ -122,8 +122,8 @@ inline int32 CLuaBaseEntity::leavegame(lua_State *L)
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-	((CCharEntity*)m_PBaseEntity)->status = STATUS_SHUTDOWN;
-	((CCharEntity*)m_PBaseEntity)->pushPacket(new CServerIPPacket((CCharEntity*)m_PBaseEntity,1));
+	//((CCharEntity*)m_PBaseEntity)->status = STATUS_SHUTDOWN;
+	//((CCharEntity*)m_PBaseEntity)->pushPacket(new CServerIPPacket((CCharEntity*)m_PBaseEntity,1));
 
 	return 0;
 }
@@ -685,7 +685,7 @@ inline int32 CLuaBaseEntity::addItem(lua_State *L)
 	    }
 	    else
 	    {
-		    ShowWarning(CL_YELLOW"charplugin::AddItem: Item <%i> is not found in a database\n" CL_RESET, itemID);
+		    //ShowWarning(CL_YELLOW"charplugin::AddItem: Item <%i> is not found in a database\n" CL_RESET, itemID);
 	    }
     }
 	lua_pushboolean( L, (SlotID != ERROR_SLOTID) );
@@ -1298,7 +1298,7 @@ inline int32 CLuaBaseEntity::addMission(lua_State *L)
 
         if (PChar->m_missionLog[LogID].current != LogID > 2 ? 0 : -1)
         {
-            ShowWarning(CL_YELLOW"Lua::addMission: player has a current mission\n" CL_RESET, LogID);
+            //ShowWarning(CL_YELLOW"Lua::addMission: player has a current mission\n" CL_RESET, LogID);
         }
         PChar->m_missionLog[LogID].current = MissionID;
 		PChar->pushPacket(new CQuestMissionLogPacket(PChar, LogID+11, 1));
@@ -1437,7 +1437,7 @@ inline int32 CLuaBaseEntity::completeMission(lua_State *L)
 
         if (PChar->m_missionLog[LogID].current != MissionID)
         {
-            ShowWarning(CL_YELLOW"Lua::completeMission: completion of not current mission\n" CL_RESET, LogID);
+            //ShowWarning(CL_YELLOW"Lua::completeMission: completion of not current mission\n" CL_RESET, LogID);
         }
 	    PChar->m_missionLog[LogID].current = LogID > 2 ? 0 : -1;
 	    PChar->m_missionLog[LogID].complete[MissionID] = true;
@@ -2136,7 +2136,7 @@ inline int32 CLuaBaseEntity::startEvent(lua_State *L)
     }
 
     uint16 EventID = (uint16)lua_tointeger(L,1);
-
+	((CCharEntity*)m_PBaseEntity)->eventid = (uint16)lua_tointeger(L,1);
     uint32 param0 = 0;
     uint32 param1 = 0;
     uint32 param2 = 0;
@@ -2337,7 +2337,7 @@ inline int32 CLuaBaseEntity::getEventTarget(lua_State *L)
 
     if (((CCharEntity*)m_PBaseEntity)->m_event.Target == NULL)
     {
-        ShowWarning(CL_YELLOW"EventTarget is empty: %s\n" CL_RESET, m_PBaseEntity->GetName());
+        //ShowWarning(CL_YELLOW"EventTarget is empty: %s\n" CL_RESET, m_PBaseEntity->GetName());
     }
     lua_pushstring(L,CLuaBaseEntity::className);
     lua_gettable(L,LUA_GLOBALSINDEX);
@@ -3578,7 +3578,7 @@ inline int32 CLuaBaseEntity::costume(lua_State *L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+   /* CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
     if( !lua_isnil(L,-1) && lua_isnumber(L,-1) )
     {
@@ -3594,7 +3594,7 @@ inline int32 CLuaBaseEntity::costume(lua_State *L)
         }
         return 0;
 	}
-    lua_pushinteger(L, PChar->m_Costum);
+    lua_pushinteger(L, PChar->m_Costum);*/
     return 1;
 }
 
@@ -6108,7 +6108,7 @@ inline int32 CLuaBaseEntity::setRespawnTime(lua_State* L)
 	}
 	else
 	{
-		ShowWarning("CLuaBaseEntity::setRespawnTime (%d) Tried to set respawn without a time\n", PMob->id);
+		//ShowWarning("CLuaBaseEntity::setRespawnTime (%d) Tried to set respawn without a time\n", PMob->id);
 	}
 
 	PMob->m_AllowRespawn = true;
@@ -6895,7 +6895,7 @@ inline int32 CLuaBaseEntity::useMobAbility(lua_State* L)
 			}
 			else
 			{
-				ShowWarning("lua_baseentity::useMobAbility NULL mobskill used %d", mobskillId);
+				//ShowWarning("lua_baseentity::useMobAbility NULL mobskill used %d", mobskillId);
 			}
 		}
 	} else {
@@ -7510,8 +7510,8 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
 	if( !lua_isnil(L,2) && lua_isnumber(L,2) )
 	{
 			
-		uint8 eventid = (uint8)lua_tointeger(L,2);
-		PChar->eventid =eventid;
+		uint16 eventid = lua_tointeger(L,2);
+		PChar->eventid =lua_tointeger(L,2);
 	}
 		float to_x = 0;
 		float to_y = 0;
@@ -8895,9 +8895,9 @@ inline int32 CLuaBaseEntity::leave_game(lua_State *L)
 	}
 	
 
-	PChar->status = STATUS_SHUTDOWN;
-	PChar->clearPacketList();
-	PChar->pushPacket(new CServerIPPacket(PChar,1));
+	//PChar->status = STATUS_SHUTDOWN;
+	//PChar->clearPacketList();
+	//PChar->pushPacket(new CServerIPPacket(PChar,1));
 	
 	char buf1[110];
 	sprintf(buf1,"Leaving Game" );

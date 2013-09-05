@@ -137,16 +137,16 @@ int32 recv_parse(int8 *buff,size_t* buffsize,sockaddr_in *from,map_session_data_
 int32 parse(int8 *buff,size_t* buffsize,sockaddr_in *from,map_session_data_t*);			// main function parsing the packets
 int32 send_parse(int8 *buff,size_t* buffsize, sockaddr_in *from,map_session_data_t*);	// main function is building big packet
 
-void  map_helpscreen(int32 flag);														// Map-Server Version Screen [venom]
-void  map_versionscreen(int32 flag);													// Map-Server Version Screen [venom]
+														// Map-Server Version Screen [venom]
+													// Map-Server Version Screen [venom]
 
 int32 map_config_read(const int8 *cfgName);												// Map-Server Config [venom]
-int32 map_config_default();
 
-int32 map_cleanup(uint32 tick,CTaskMgr::CTask *PTask);									// Clean up timed out players
-int32 map_close_session(uint32 tick,CTaskMgr::CTask *PTask);							// завершение сессии
 
-int32 map_garbage_collect(uint32 tick, CTaskMgr::CTask* PTask);
+int32 Check_Map_For_Player_Cleanup(uint32 tick,CTaskMgr::CTask *PTask);									// Clean up timed out players
+int32 Close_Session_Clean_Map(uint32 tick,CTaskMgr::CTask *PTask);							// завершение сессии
+
+
 
 #endif //_MAP_H
 

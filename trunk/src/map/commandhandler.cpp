@@ -42,7 +42,7 @@ bool CCommandHandler::init(const int8* InitCmdInIPath, lua_State* InitLState)
 	m_LState = InitLState;
 	if( luaL_loadfile(m_LState,m_CmdInIPath.c_str()) || lua_pcall(m_LState,0,0,0) )
 	{
-		ShowError("cmdhandler::init: Error - %s",lua_tostring(m_LState,-1));
+		//ShowError("cmdhandler::init: Error - %s",lua_tostring(m_LState,-1));
 		lua_pop(m_LState,1);
 		return false;
 	}
@@ -52,7 +52,7 @@ bool CCommandHandler::init(const int8* InitCmdInIPath, lua_State* InitLState)
 
 	if( lua_isnil(m_LState,-1) || !lua_istable(m_LState,-1) )
 	{
-		ShowError("cmdhandler::init: Error - Can't load main table commands_ini\n");
+		//ShowError("cmdhandler::init: Error - Can't load main table commands_ini\n");
 		return false;
 	}
 
@@ -61,7 +61,7 @@ bool CCommandHandler::init(const int8* InitCmdInIPath, lua_State* InitLState)
 	{
 		if( !lua_istable(m_LState,-1) )
 		{
-			ShowWarning("cmdhandler::init: Error can't load command table at line %d\n",lua_tonumber(m_LState,-2));
+			//ShowWarning("cmdhandler::init: Error can't load command table at line %d\n",lua_tonumber(m_LState,-2));
 			lua_pop(m_LState,-1);
 			continue;
 		}
@@ -75,7 +75,7 @@ bool CCommandHandler::init(const int8* InitCmdInIPath, lua_State* InitLState)
 			SomthCmds.CmdName = lua_tostring(m_LState,-1);
 			lua_pop(m_LState,1);
 		}else{
-			ShowWarning("cmdhandler::init:can't load cmd's name, line %d",m_ListCmds.size()+1);
+			//ShowWarning("cmdhandler::init:can't load cmd's name, line %d",m_ListCmds.size()+1);
 			lua_pop(m_LState,1);
 			continue;
 		};
@@ -137,7 +137,7 @@ int32 CCommandHandler::pcall(CCharEntity* PChar, const int8* commandline)
 
 	if( cmdname.empty()) 
 	{
-		ShowError("cmdhandler::call: function name is empty\n"); 
+		//ShowError("cmdhandler::call: function name is empty\n"); 
 		return -1;
 	}
 
@@ -153,7 +153,7 @@ int32 CCommandHandler::pcall(CCharEntity* PChar, const int8* commandline)
 	if (CmdHandler == 0) 
 	{
 		PChar->pushPacket(new CMessageDebugPacket(PChar,PChar,0,0,27));
-		ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
+		//ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
 		return -1;
 	}
 
@@ -161,7 +161,7 @@ int32 CCommandHandler::pcall(CCharEntity* PChar, const int8* commandline)
 	if( luaL_loadfile(m_LState,std::string(CmdHandler->CmdPath+"/"+CmdHandler->CmdName+".0").c_str()) ||
 		lua_pcall(m_LState,0,0,0) )
 	{
-		ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
+		//ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
 		lua_pop(m_LState,1);
 		return -1;
 	}
@@ -172,7 +172,7 @@ int32 CCommandHandler::pcall(CCharEntity* PChar, const int8* commandline)
 
 	if( lua_isnil(m_LState,-1) || !lua_isfunction(m_LState,-1) )
 	{
-		ShowError("cmdhandler::call: can't load the function: onTrigger\n");
+		//ShowError("cmdhandler::call: can't load the function: onTrigger\n");
 		lua_pop(m_LState,-1);
 		return -1;
 	}
@@ -217,8 +217,9 @@ int32 CCommandHandler::pcall(CCharEntity* PChar, const int8* commandline)
 			}
 				break;
 			default:
-				ShowError("cmdhandler::call: undefined type symbol:%s\n",*param_iter);
-		};
+				//ShowError("cmdhandler::call: undefined type symbol:%s\n",*param_iter);
+				break;
+		}
 		++param_iter;
 	}
 
@@ -226,7 +227,7 @@ int32 CCommandHandler::pcall(CCharEntity* PChar, const int8* commandline)
 	int32 status = lua_pcall(m_LState,cntparam,0,0);
 	if( status )
 	{
-		ShowError("cmdhandler::call: %s\n", lua_tostring(m_LState,-1));
+		//ShowError("cmdhandler::call: %s\n", lua_tostring(m_LState,-1));
 		lua_pop(m_LState,1);
 		return -1;
 	}
@@ -244,7 +245,7 @@ int32 CCommandHandler::gcall(CCharEntity* PChar, const int8* commandline)
 
 	if( cmdname.empty()) 
 	{
-		ShowError("cmdhandler::call: function name is empty\n"); 
+		//ShowError("cmdhandler::call: function name is empty\n"); 
 		return -1;
 	}
 
@@ -260,7 +261,7 @@ int32 CCommandHandler::gcall(CCharEntity* PChar, const int8* commandline)
 	if (CmdHandler == 0) 
 	{
 		PChar->pushPacket(new CMessageDebugPacket(PChar,PChar,0,0,27));
-		ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
+		//ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
 		return -1;
 	}
 
@@ -268,7 +269,7 @@ int32 CCommandHandler::gcall(CCharEntity* PChar, const int8* commandline)
 	if( luaL_loadfile(m_LState,std::string(CmdHandler->CmdPath+"/"+CmdHandler->CmdName+".1").c_str()) ||
 		lua_pcall(m_LState,0,0,0) )
 	{
-		ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
+		//ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
 		lua_pop(m_LState,1);
 		return -1;
 	}
@@ -279,7 +280,7 @@ int32 CCommandHandler::gcall(CCharEntity* PChar, const int8* commandline)
 
 	if( lua_isnil(m_LState,-1) || !lua_isfunction(m_LState,-1) )
 	{
-		ShowError("cmdhandler::call: can't load the function: onTrigger\n");
+		//ShowError("cmdhandler::call: can't load the function: onTrigger\n");
 		lua_pop(m_LState,-1);
 		return -1;
 	}
@@ -324,8 +325,9 @@ int32 CCommandHandler::gcall(CCharEntity* PChar, const int8* commandline)
 			}
 				break;
 			default:
-				ShowError("cmdhandler::call: undefined type symbol:%s\n",*param_iter);
-		};
+				//ShowError("cmdhandler::call: undefined type symbol:%s\n",*param_iter);
+				break;
+		}
 		++param_iter;
 	}
 
@@ -333,7 +335,7 @@ int32 CCommandHandler::gcall(CCharEntity* PChar, const int8* commandline)
 	int32 status = lua_pcall(m_LState,cntparam,0,0);
 	if( status )
 	{
-		ShowError("cmdhandler::call: %s\n", lua_tostring(m_LState,-1));
+		//ShowError("cmdhandler::call: %s\n", lua_tostring(m_LState,-1));
 		lua_pop(m_LState,1);
 		return -1;
 	}
@@ -351,7 +353,7 @@ int32 CCommandHandler::mgcall(CCharEntity* PChar, const int8* commandline)
 
 	if( cmdname.empty()) 
 	{
-		ShowError("cmdhandler::call: function name is empty\n"); 
+		//ShowError("cmdhandler::call: function name is empty\n"); 
 		return -1;
 	}
 
@@ -367,7 +369,7 @@ int32 CCommandHandler::mgcall(CCharEntity* PChar, const int8* commandline)
 	if (CmdHandler == 0) 
 	{
 		PChar->pushPacket(new CMessageDebugPacket(PChar,PChar,0,0,27));
-		ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
+		//ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
 		return -1;
 	}
 
@@ -375,7 +377,7 @@ int32 CCommandHandler::mgcall(CCharEntity* PChar, const int8* commandline)
 	if( luaL_loadfile(m_LState,std::string(CmdHandler->CmdPath+"/"+CmdHandler->CmdName+".2").c_str()) ||
 		lua_pcall(m_LState,0,0,0) )
 	{
-		ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
+		//ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
 		lua_pop(m_LState,1);
 		return -1;
 	}
@@ -386,7 +388,7 @@ int32 CCommandHandler::mgcall(CCharEntity* PChar, const int8* commandline)
 
 	if( lua_isnil(m_LState,-1) || !lua_isfunction(m_LState,-1) )
 	{
-		ShowError("cmdhandler::call: can't load the function: onTrigger\n");
+		//ShowError("cmdhandler::call: can't load the function: onTrigger\n");
 		lua_pop(m_LState,-1);
 		return -1;
 	}
@@ -431,8 +433,9 @@ int32 CCommandHandler::mgcall(CCharEntity* PChar, const int8* commandline)
 			}
 				break;
 			default:
-				ShowError("cmdhandler::call: undefined type symbol:%s\n",*param_iter);
-		};
+				//ShowError("cmdhandler::call: undefined type symbol:%s\n",*param_iter);
+				break;
+		}
 		++param_iter;
 	}
 
@@ -440,7 +443,7 @@ int32 CCommandHandler::mgcall(CCharEntity* PChar, const int8* commandline)
 	int32 status = lua_pcall(m_LState,cntparam,0,0);
 	if( status )
 	{
-		ShowError("cmdhandler::call: %s\n", lua_tostring(m_LState,-1));
+		//ShowError("cmdhandler::call: %s\n", lua_tostring(m_LState,-1));
 		lua_pop(m_LState,1);
 		return -1;
 	}
@@ -458,7 +461,7 @@ int32 CCommandHandler::agcall(CCharEntity* PChar, const int8* commandline)
 
 	if( cmdname.empty()) 
 	{
-		ShowError("cmdhandler::call: function name is empty\n"); 
+		//ShowError("cmdhandler::call: function name is empty\n"); 
 		return -1;
 	}
 
@@ -474,7 +477,7 @@ int32 CCommandHandler::agcall(CCharEntity* PChar, const int8* commandline)
 	if (CmdHandler == 0) 
 	{
 		PChar->pushPacket(new CMessageDebugPacket(PChar,PChar,0,0,27));
-		ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
+		//ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
 		return -1;
 	}
 
@@ -482,7 +485,7 @@ int32 CCommandHandler::agcall(CCharEntity* PChar, const int8* commandline)
 	if( luaL_loadfile(m_LState,std::string(CmdHandler->CmdPath+"/"+CmdHandler->CmdName+".3").c_str()) ||
 		lua_pcall(m_LState,0,0,0) )
 	{
-		ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
+		//ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
 		lua_pop(m_LState,1);
 		return -1;
 	}
@@ -493,7 +496,7 @@ int32 CCommandHandler::agcall(CCharEntity* PChar, const int8* commandline)
 
 	if( lua_isnil(m_LState,-1) || !lua_isfunction(m_LState,-1) )
 	{
-		ShowError("cmdhandler::call: can't load the function: onTrigger\n");
+		//ShowError("cmdhandler::call: can't load the function: onTrigger\n");
 		lua_pop(m_LState,-1);
 		return -1;
 	}
@@ -538,8 +541,9 @@ int32 CCommandHandler::agcall(CCharEntity* PChar, const int8* commandline)
 			}
 				break;
 			default:
-				ShowError("cmdhandler::call: undefined type symbol:%s\n",*param_iter);
-		};
+				//ShowError("cmdhandler::call: undefined type symbol:%s\n",*param_iter);
+				break;
+		}
 		++param_iter;
 	}
 
@@ -547,7 +551,7 @@ int32 CCommandHandler::agcall(CCharEntity* PChar, const int8* commandline)
 	int32 status = lua_pcall(m_LState,cntparam,0,0);
 	if( status )
 	{
-		ShowError("cmdhandler::call: %s\n", lua_tostring(m_LState,-1));
+		//ShowError("cmdhandler::call: %s\n", lua_tostring(m_LState,-1));
 		lua_pop(m_LState,1);
 		return -1;
 	}
@@ -565,7 +569,7 @@ int32 CCommandHandler::procall(CCharEntity* PChar, const int8* commandline)
 
 	if( cmdname.empty()) 
 	{
-		ShowError("cmdhandler::call: function name is empty\n"); 
+		//ShowError("cmdhandler::call: function name is empty\n"); 
 		return -1;
 	}
 
@@ -581,7 +585,7 @@ int32 CCommandHandler::procall(CCharEntity* PChar, const int8* commandline)
 	if (CmdHandler == 0) 
 	{
 		PChar->pushPacket(new CMessageDebugPacket(PChar,PChar,0,0,27));
-		ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
+		//ShowDebug("cmdhandler::call: function <%s> not found\n", cmdname.c_str());
 		return -1;
 	}
 
@@ -589,7 +593,7 @@ int32 CCommandHandler::procall(CCharEntity* PChar, const int8* commandline)
 	if( luaL_loadfile(m_LState,std::string(CmdHandler->CmdPath+"/"+CmdHandler->CmdName+".4").c_str()) ||
 		lua_pcall(m_LState,0,0,0) )
 	{
-		ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
+		//ShowError("cmdhandler::call: %s\n",lua_tostring(m_LState,-1));
 		lua_pop(m_LState,1);
 		return -1;
 	}
@@ -600,7 +604,7 @@ int32 CCommandHandler::procall(CCharEntity* PChar, const int8* commandline)
 
 	if( lua_isnil(m_LState,-1) || !lua_isfunction(m_LState,-1) )
 	{
-		ShowError("cmdhandler::call: can't load the function: onTrigger\n");
+		//ShowError("cmdhandler::call: can't load the function: onTrigger\n");
 		lua_pop(m_LState,-1);
 		return -1;
 	}
@@ -645,8 +649,9 @@ int32 CCommandHandler::procall(CCharEntity* PChar, const int8* commandline)
 			}
 				break;
 			default:
-				ShowError("cmdhandler::call: undefined type symbol:%s\n",*param_iter);
-		};
+				//ShowError("cmdhandler::call: undefined type symbol:%s\n",*param_iter);
+				break;
+		}
 		++param_iter;
 	}
 
@@ -654,7 +659,7 @@ int32 CCommandHandler::procall(CCharEntity* PChar, const int8* commandline)
 	int32 status = lua_pcall(m_LState,cntparam,0,0);
 	if( status )
 	{
-		ShowError("cmdhandler::call: %s\n", lua_tostring(m_LState,-1));
+		//ShowError("cmdhandler::call: %s\n", lua_tostring(m_LState,-1));
 		lua_pop(m_LState,1);
 		return -1;
 	}

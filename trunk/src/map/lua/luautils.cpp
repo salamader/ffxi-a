@@ -144,16 +144,7 @@ int32 free()
 	return 0;
 }
 
-int32 garbageCollect()
-{
 
-    int32 top = lua_gettop( LuaHandle );
-    ShowDebug(CL_CYAN"[Lua] Garbage Collected. Current State Top: %d\n" CL_RESET, top);
-
-    lua_gc(LuaHandle, LUA_GCSTEP, 10);
-
-    return 0;
-}
 
 /************************************************************************
 *																		*
@@ -178,7 +169,7 @@ int32 print(lua_State* LuaHandle)
 
 int32 SendUncnown0x39Packet(lua_State* L)
 {
-    if((!lua_isnil(L,1) && lua_isnumber(L,1)) &&
+    /*if((!lua_isnil(L,1) && lua_isnumber(L,1)) &&
        (!lua_isnil(L,2) && lua_isnumber(L,2)) )
 	{
 		uint32 npcid = (uint32)lua_tointeger(L,1);
@@ -192,7 +183,8 @@ int32 SendUncnown0x39Packet(lua_State* L)
         }
 		return 0;
 	}
-	lua_pushnil(L);
+	lua_pushnil(L);*/
+	ShowDebug("UNKOWN WAS CALLED \n");
 	return 1;
 }
 
@@ -204,6 +196,7 @@ int32 SendUncnown0x39Packet(lua_State* L)
 
 int32 GetNPCByID(lua_State* L)
 {
+	ShowWarning("1\n");
 	if( !lua_isnil(L,-1) && lua_isnumber(L,-1) )
 	{
 		uint32 npcid = (uint32)lua_tointeger(L, -1);
@@ -237,6 +230,7 @@ int32 GetNPCByID(lua_State* L)
 
 int32 GetMobByID(lua_State* L)
 {
+	ShowWarning("2\n");
 	if( !lua_isnil(L,-1) && lua_isnumber(L,-1) )
 	{
 		uint32 mobid = (uint32)lua_tointeger(L, -1);
@@ -270,6 +264,7 @@ int32 GetMobByID(lua_State* L)
 
 int32 GetMobIDByJob(lua_State *L)
 {
+	ShowWarning("3\n");
 	DSP_DEBUG_BREAK_IF(lua_isnil(L,1) || !lua_isnumber(L,1) || lua_isnil(L,2) || !lua_isnumber(L,2) || lua_isnil(L,3) || !lua_isnumber(L,3));
 
 	uint32 id_min = (uint32)lua_tointeger(L,1);
@@ -302,6 +297,7 @@ int32 GetMobIDByJob(lua_State *L)
 
 int32 WeekUpdateConquest(lua_State* L)
 {
+	ShowWarning("4\n");
     conquest::UpdateConquestGM();
 
     return 0;
@@ -315,6 +311,7 @@ int32 WeekUpdateConquest(lua_State* L)
 
 int32 GetRegionOwner(lua_State* L)
 {
+	ShowWarning("5\n");
     DSP_DEBUG_BREAK_IF(lua_isnil(L,1) || !lua_isnumber(L,1));
 
     lua_pushinteger(L, conquest::GetRegionOwner((REGIONTYPE)lua_tointeger(L,1)));
@@ -329,6 +326,7 @@ int32 GetRegionOwner(lua_State* L)
 
 int32 SetRegionalConquestOverseers()
 {
+	ShowWarning("6\n");
 	int8 File[255];
 	memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
@@ -376,6 +374,7 @@ int32 SetRegionalConquestOverseers()
 
 int32 VanadielTOTD(lua_State* L)
 {
+	ShowWarning("7\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->GetCurrentTOTD());
 	return 1;
 }
@@ -388,6 +387,7 @@ int32 VanadielTOTD(lua_State* L)
 
 int32 VanadielYear(lua_State* L)
 {
+	ShowWarning("8\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getYear());
 	return 1;
 }
@@ -401,6 +401,7 @@ int32 VanadielYear(lua_State* L)
 
 int32 VanadielMonth(lua_State* L)
 {
+	ShowWarning("9\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getMonth());
 	return 1;
 }
@@ -413,6 +414,7 @@ int32 VanadielMonth(lua_State* L)
 
 int32 VanadielDayOfTheYear(lua_State* L)
 {
+	ShowWarning("10\n");
 	int32 day;
 	int32 month;
 
@@ -431,6 +433,7 @@ int32 VanadielDayOfTheYear(lua_State* L)
 
 int32 VanadielDayOfTheMonth(lua_State* L)
 {
+	ShowWarning("11\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getDayOfTheMonth());
 	return 1;
 }
@@ -443,6 +446,7 @@ int32 VanadielDayOfTheMonth(lua_State* L)
 
 int32 VanadielHour(lua_State* L)
 {
+	ShowWarning("12\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getHour());
 	return 1;
 }
@@ -455,6 +459,7 @@ int32 VanadielHour(lua_State* L)
 
 int32 VanadielMinute(lua_State* L)
 {
+	ShowWarning("13\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getMinute());
 	return 1;
 }
@@ -467,6 +472,7 @@ int32 VanadielMinute(lua_State* L)
 
 int32 VanadielDayElement(lua_State* L)
 {
+	ShowWarning("14\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getWeekday());
 	return 1;
 }
@@ -479,6 +485,7 @@ int32 VanadielDayElement(lua_State* L)
 
 int32 VanadielMoonPhase(lua_State* L)
 {
+	ShowWarning("15\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getMoonPhase());
 	return 1;
 }
@@ -486,6 +493,7 @@ int32 VanadielMoonPhase(lua_State* L)
 
 int32 SetVanadielTimeOffset(lua_State* L)
 {
+	ShowWarning("16\n");
     if( !lua_isnil(L,1) && lua_isnumber(L,1) )
     {
         int32 offset = (int32)lua_tointeger(L,1);
@@ -507,6 +515,7 @@ int32 SetVanadielTimeOffset(lua_State* L)
 
 int32 VanadielMoonDirection(lua_State* L)
 {
+	ShowWarning("17\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getMoonDirection());
 	return 1;
 }
@@ -520,6 +529,7 @@ int32 VanadielMoonDirection(lua_State* L)
 
 int32 IsMoonFull(lua_State* L)
 {
+	ShowWarning("18\n");
 	// Full moon occurs when:
 	// Waxing (increasing) from 90% to 100%,
 	// Waning (decending) from 100% to 95%.
@@ -556,6 +566,7 @@ int32 IsMoonFull(lua_State* L)
 ************************************************************************/
 int32 SpawnMob(lua_State* L)
 {
+	ShowWarning("19\n");
 	if( !lua_isnil(L,1) && lua_isnumber(L,1) )
 	{
 		uint32 mobid = (uint32)lua_tointeger(L,1);
@@ -614,6 +625,7 @@ int32 SpawnMob(lua_State* L)
 
 int32 DespawnMob(lua_State* L)
 {
+	ShowWarning("20\n");
 	if( !lua_isnil(L,1) && lua_isnumber(L,1) )
 	{
 		uint32 mobid = (uint32)lua_tointeger(L, 1);
@@ -646,6 +658,7 @@ int32 DespawnMob(lua_State* L)
 
 int32 setMobPos(lua_State *L)
 {
+	ShowWarning("21\n");
 	if( !lua_isnil(L,1) && lua_isnumber(L,1) )
 	{
 		uint32 mobid = (uint32)lua_tointeger(L,1);
@@ -690,6 +703,7 @@ int32 setMobPos(lua_State *L)
 
 int32 GetPlayerByName(lua_State* L)
 {
+	ShowWarning("22\n");
 	if( !lua_isnil(L,-1) && lua_isstring(L,-1))
 	{
 		int8* name = (int8*)lua_tolstring(L,-1,NULL);
@@ -721,6 +735,7 @@ int32 GetPlayerByName(lua_State* L)
 
 int32 GetMobAction(lua_State* L)
 {
+	ShowWarning("23\n");
     DSP_DEBUG_BREAK_IF(lua_isnil(L,-1) || !lua_isnumber(L,-1));
 
     uint32 mobid = (uint32)lua_tointeger(L,-1);
@@ -745,6 +760,7 @@ int32 GetMobAction(lua_State* L)
 
 int32 GetTextIDVariable(uint16 ZoneID, const char* variable)
 {
+	ShowWarning("24\n");
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, variable);
 
@@ -780,6 +796,7 @@ int32 GetTextIDVariable(uint16 ZoneID, const char* variable)
 
 int32 OnServerStart()
 {
+	ShowWarning("25\n");
 	int8 File[255];
 	memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
@@ -829,6 +846,7 @@ int32 OnServerStart()
 
 int32 OnZoneInitialise(uint16 ZoneID)
 {
+	ShowWarning("26\n");
 	CZone* PZone = zoneutils::GetZone(ZoneID);
 
 	int8 File[255];
@@ -881,11 +899,13 @@ int32 OnZoneInitialise(uint16 ZoneID)
 
 int32 OnGameIn(CCharEntity* PChar)
 {
+	ShowWarning("27\n");
 	uint8 fristlogin = 0;
+	uint8 shutdown_status = 0;
 	uint8 inevent = 0;
 	uint8 eventid = 0;
 	int deathtime = 0;
-	const char * Query = "SELECT first_login, inevent, eventid FROM chars WHERE charid = '%u';";
+	const char * Query = "SELECT first_login, inevent, eventid,shutdown FROM chars WHERE charid = '%u';";
 	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->id);
 			
 
@@ -895,9 +915,16 @@ int32 OnGameIn(CCharEntity* PChar)
 				   fristlogin =  Sql_GetUIntData(SqlHandle,0);
 				   inevent =  Sql_GetUIntData(SqlHandle,1);
 				   eventid =  Sql_GetUIntData(SqlHandle,2);
+				   shutdown_status = Sql_GetUIntData(SqlHandle,3);
 				   PChar->first_login = fristlogin;
 				   PChar->is_inevent =inevent;
 				   PChar->eventid =eventid;
+				   PChar->shutdown_status = shutdown_status;
+				   if(shutdown_status == 1)
+				   {
+                   PChar->shutdown_status = 0;
+				   PChar->status = STATUS_NORMAL;
+				   }
 				   Query = "SELECT death FROM char_stats WHERE charid = '%u';";
 	               ret3 = Sql_Query(SqlHandle,Query,PChar->id);
 			       if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
@@ -907,6 +934,8 @@ int32 OnGameIn(CCharEntity* PChar)
 				    }
 				   //ShowMessage(CL_YELLOW"FOUND ZONE BY NAME %s \n"CL_RESET,zonename.c_str());
 	             ShowError("luautils::OnGameIn: PChar Frist Login Status = %u\n",PChar->first_login);
+				 ShowError("luautils::OnGameIn: PChar Shutdown Status = %u\n",PChar->shutdown_status);
+				 
 				 ShowError("luautils::OnGameIn: PChar In Event Status = %u\n",PChar->is_inevent);
 				 ShowError("luautils::OnGameIn: PChar Event ID Status = %u\n",PChar->eventid);
 				 ShowError("luautils::OnGameIn: PChar DEATH TIME Status = %u\n",PChar->m_DeathTimestamp);
@@ -964,6 +993,7 @@ int32 OnGameIn(CCharEntity* PChar)
 
 int32 OnZoneIn(CCharEntity* PChar)
 {
+	ShowWarning("28\n");
 	int8 File[255];
 	memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
@@ -1026,6 +1056,7 @@ int32 OnZoneIn(CCharEntity* PChar)
 
 int32 OnRegionEnter(CCharEntity* PChar, CRegion* PRegion)
 {
+	ShowWarning("29\n");
 	int8 File[255];
 	memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
@@ -1081,6 +1112,7 @@ int32 OnRegionEnter(CCharEntity* PChar, CRegion* PRegion)
 
 int32 OnRegionLeave(CCharEntity* PChar, CRegion* PRegion)
 {
+	ShowWarning("30\n");
 	int8 File[255];
 	memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
@@ -1137,6 +1169,7 @@ int32 OnRegionLeave(CCharEntity* PChar, CRegion* PRegion)
 
 int32 OnTrigger(CCharEntity* PChar, CBaseEntity* PNpc)
 {
+	ShowWarning("31\n");
 	int8 File[255];
 	memset(File,0,sizeof(File));
 
@@ -1213,6 +1246,7 @@ int32 OnTrigger(CCharEntity* PChar, CBaseEntity* PNpc)
 
 int32 OnEventUpdate(CCharEntity* PChar, uint16 eventID, uint32 result)
 {
+	ShowWarning("32\n");
     int32 oldtop = lua_gettop(LuaHandle);
 
     lua_pushnil(LuaHandle);
@@ -1270,6 +1304,7 @@ int32 OnEventUpdate(CCharEntity* PChar, uint16 eventID, uint32 result)
 
 int32 OnEventFinish(CCharEntity* PChar, uint16 eventID, uint32 result)
 {
+	ShowWarning("33\n");
     int32 oldtop = lua_gettop(LuaHandle);
 
     lua_pushnil(LuaHandle);
@@ -1818,6 +1853,10 @@ int32 CheckForGearSet(CBaseEntity* PTarget)
 
 int32 OnSpellCast(CBattleEntity* PCaster, CBattleEntity* PTarget, CSpell* PSpell)
 {
+	if(PCaster == NULL || PTarget == NULL)
+	{
+		return false;
+	}
 	if(PSpell->getSpellGroup() == SPELLGROUP_SONG){
 		EFFECT effectId = (EFFECT)battleutils::SingSong(PCaster,PTarget,PCaster->PBattleAI->GetCurrentSpell());
         if(effectId != EFFECT_NONE){

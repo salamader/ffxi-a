@@ -269,7 +269,7 @@ void CPathFind::StepTo(position_t* pos, bool run)
 
   if(speed == 0)
   {
-    ShowWarning("CPathFind::StepTo Mob (%d) speed is zero and its trying to move\n", m_PTarget->id);
+    //ShowWarning("CPathFind::StepTo Mob (%d) speed is zero and its trying to move\n", m_PTarget->id);
   }
 
   int8 mode = 1;
@@ -437,7 +437,7 @@ void CPathFind::AddPoints(position_t* points, uint8 totalPoints, bool reverse)
 
   if(totalPoints > MAX_PATH_POINTS)
   {
-    ShowWarning("CPathFind::AddPoints Given too many points (%d). Limiting to max (%d)\n", totalPoints, MAX_PATH_POINTS);
+    //ShowWarning("CPathFind::AddPoints Given too many points (%d). Limiting to max (%d)\n", totalPoints, MAX_PATH_POINTS);
     m_pathLength = MAX_PATH_POINTS;
   }
 

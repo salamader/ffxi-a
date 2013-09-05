@@ -64,6 +64,7 @@
 #include "lua/luautils.h"
 
 #include "packets/basic.h"
+#include "packets/server_ip.h"
 #include "packets/char_update.h"
 
 const int8* MAP_CONF_FILENAME = NULL;
@@ -134,7 +135,7 @@ int32 do_init(int32 argc, int8** argv)
 
 	srand((uint32)time(NULL));
 
-	map_config_default();
+	
 	map_config_read(MAP_CONF_FILENAME);
 	ShowMessage("\t\t\t - " CL_GREEN"[OK]" CL_RESET"\n");
  	ShowStatus("do_init: map_config is reading");
@@ -214,8 +215,8 @@ int32 do_init(int32 argc, int8** argv)
     CVanaTime::getInstance()->setCustomOffset(map_config.vanadiel_time_offset);
 
 	CTaskMgr::getInstance()->AddTask("time_server", gettick(), NULL, CTaskMgr::TASK_INTERVAL, time_server, 2400);
-	CTaskMgr::getInstance()->AddTask("map_cleanup", gettick(), NULL, CTaskMgr::TASK_INTERVAL, map_cleanup, 700);
-	CTaskMgr::getInstance()->AddTask("garbage_collect", gettick(), NULL, CTaskMgr::TASK_INTERVAL, map_garbage_collect, 15 * 60 * 1000);
+	CTaskMgr::getInstance()->AddTask("Check_Map_For_Player_Cleanup", gettick(), NULL, CTaskMgr::TASK_INTERVAL, Check_Map_For_Player_Cleanup, 700);
+	
 
 	CREATE(g_PBuff,   int8, map_config.buffer_size + 20);
     CREATE(PTempBuff, int8, map_config.buffer_size + 20);
@@ -540,16 +541,15 @@ int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t*
 	{
 		SmallPD_Size = (RBUFB(SmallPD_ptr,1) & 0x0FE);
 		SmallPD_Type = (RBUFW(SmallPD_ptr,0) & 0x1FF);
-		if(SmallPD_Type == 21)
-		{
-		PacketParser[SmallPD_Type](map_session_data, PChar, SmallPD_ptr);
-		continue;
-		}
+		
 		PacketParser[SmallPD_Type](map_session_data, PChar, SmallPD_ptr);
 		
-        ShowDebug(CL_BG_GREEN"PACKET CALL: TYPE %u\n"CL_RESET,SmallPD_Type);
+      //  
+		
 	}
     map_session_data->client_packet_id = SmallPD_Code;
+	
+//ShowDebug(CL_GREEN"PACKET CALL: CLIENT CODE %u\n"CL_RESET,map_session_data->client_packet_id);
 
 	// здесь мы проверяем, получил ли клиент предыдущий пакет
 	// если не получил, то мы не создаем новый, а отправляем предыдущий
@@ -569,6 +569,7 @@ int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t*
 	// увеличиваем номер отправленного пакета только в случае отправки новых данных
 
 	map_session_data->server_packet_id += 1;
+	//ShowDebug(CL_GREEN"PACKET CALL: SERVER CODE %u\n"CL_RESET,map_session_data->server_packet_id);
 
 	// собираем большой пакет, состоящий из нескольких маленьких
 
@@ -598,17 +599,21 @@ int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t*
 
 int32 send_parse(int8 *buff, size_t* buffsize, sockaddr_in* from, map_session_data_t* map_session_data)
 {
+
+	
+		//ShowWarning(CL_YELLOW"send_parse: packet is  <%u>\n" CL_RESET,*buffsize);
+	
 	// Модификация заголовка исходящего пакета
 	// Суть преобразований:
 	//  - отправить клиенту номер последнего полученного от него пакета
 	//  - присвоить исходящему пакету номер последнего отправленного клиенту пакета +1
 	//  - записать текущее время отправки пакета
-
+    WBUFL(buff,8) = (uint32)time(NULL);
 	WBUFW(buff,0) = map_session_data->server_packet_id;
-	WBUFW(buff,2) = map_session_data->client_packet_id;
+	WBUFW(buff,2) = map_session_data->client_packet_id; 
 
 	// сохранение текущего времени (32 BIT!)
-	WBUFL(buff,8) = (uint32)time(NULL);
+	
 
 	//Сжимаем данные без учета заголовка
 	//Возвращаемый размер в 8 раз больше реальных данных
@@ -652,7 +657,52 @@ int32 send_parse(int8 *buff, size_t* buffsize, sockaddr_in* from, map_session_da
 
 	if (*buffsize > 1350)
 	{
+		//I NOTICED WHEN A PLAYER IS IN A ACTION OF ANY KIND WHEN THIS LARGE BUFF IS CALLED IT LOOPS AND LOOPS
+		//THE ACTION UNTILL THE PLAYER LAGGS ALL THE WAY OUT OF THE SERVER FROM CONNECTION 100% 
+		//TO DC HOW EVER LONG THAT TAKES SO I THOUGHT MAYBE KILL THE SESSION FROM THE MAP SERVER 
+		// TO STOP THE LOOP JUST INCASE THIS IS WHAT CAUSES OTHER PLAYERS TO DC ALONG WITH THIS USER
 		ShowWarning(CL_YELLOW"send_parse: packet is very big <%u>\n" CL_RESET,*buffsize);
+		ShowWarning(CL_YELLOW"GET SESSION<%u>\n" CL_RESET,map_session_data);
+		WBUFL(buff,8) = (uint32)time(NULL);
+	WBUFW(buff,0) = map_session_data->server_packet_id;
+	WBUFW(buff,2) = map_session_data->client_packet_id; 
+
+	// сохранение текущего времени (32 BIT!)
+	
+
+	//Сжимаем данные без учета заголовка
+	//Возвращаемый размер в 8 раз больше реальных данных
+	uint32 PacketSize = zlib_compress(buff+FFXI_HEADER_SIZE, *buffsize-FFXI_HEADER_SIZE, PTempBuff, *buffsize, zlib_compress_table);
+
+	//Запись размера данных без учета заголовка
+	WBUFL(PTempBuff,(PacketSize+7)/8) = PacketSize;
+
+	//Расчет hash'a также без учета заголовка, но с учетом записанного выше размера данных
+	PacketSize = (PacketSize+7)/8+4;
+	uint8 hash[16];
+	md5((uint8*)PTempBuff, hash, PacketSize);
+	memcpy(PTempBuff+PacketSize, hash, 16);
+	PacketSize += 16;
+
+    if (PacketSize > 1800 )
+    {
+        ShowFatalError(CL_RED"%Memory manager: PTempBuff is overflowed (%u)\n" CL_RESET, PacketSize);
+    }
+
+	//making total packet
+	memcpy(buff+FFXI_HEADER_SIZE, PTempBuff, PacketSize);
+
+	uint32 CypherSize = (PacketSize/4)&-2;
+
+	blowfish_t* pbfkey = &map_session_data->blowfish;
+
+	for(uint32 j = 0; j < CypherSize; j += 2)
+	{
+		blowfish_encipher((uint32*)(buff)+j+7, (uint32*)(buff)+j+8, pbfkey->P, pbfkey->S[0]);
+	}
+		
+		 *buffsize = PacketSize+FFXI_HEADER_SIZE;
+		 
 	}
 	return 0;
 }
@@ -664,7 +714,7 @@ int32 send_parse(int8 *buff, size_t* buffsize, sockaddr_in* from, map_session_da
 *																		*
 ************************************************************************/
 
-int32 map_close_session(uint32 tick, CTaskMgr::CTask* PTask)
+int32 Close_Session_Clean_Map(uint32 tick, CTaskMgr::CTask* PTask)
 {
 	map_session_data_t* map_session_data = (map_session_data_t*)PTask->m_data;
 
@@ -706,7 +756,7 @@ int32 map_close_session(uint32 tick, CTaskMgr::CTask* PTask)
 *																		*
 ************************************************************************/
 
-int32 map_cleanup(uint32 tick, CTaskMgr::CTask* PTask)
+int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 {
 	map_session_list_t::iterator it = map_session_list.begin();
 
@@ -786,9 +836,22 @@ int32 map_cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 
 
 				                     ShowDebug(CL_CYAN"map_cleanup: %s timed out, closing session\n" CL_RESET, PChar->GetName());
+									 PChar->shutdown_status =1;
+									
+	
 
-				                     PChar->status = STATUS_SHUTDOWN;
-                                     PacketParser[0x00D](map_session_data, PChar, 0);
+		
+
+         const int8* Query = "UPDATE chars SET shutdown = '1' WHERE charid = %u";
+                      Sql_Query(SqlHandle,Query,PChar->id);
+					   charutils::SaveCharPosition(PChar);
+           map_session_data->shuttingDown = true;
+    		CTaskMgr::getInstance()->AddTask(new CTaskMgr::CTask("close_session", gettick()+10, map_session_data, CTaskMgr::TASK_ONCE, Close_Session_Clean_Map));
+      
+
+	
+				                     //PChar->status = STATUS_SHUTDOWN;
+                                     //PacketParser[0x00D](map_session_data, PChar, 0);
 			                       } 
 			                }
 				     }
@@ -834,79 +897,7 @@ int32 map_cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 	return 0;
 }
 
-/************************************************************************
-*																		*
-*  Map-Server Version Screen [venom] 									*
-*																		*
-************************************************************************/
 
-void map_helpscreen(int32 flag)
-{
-	ShowMessage("Usage: map-server [options]\n");
-	ShowMessage("Options:\n");
-	ShowMessage(CL_WHITE"  Commands\t\t\tDescription\n" CL_RESET);
-	ShowMessage("-----------------------------------------------------------------------------\n");
-	ShowMessage("  --help, --h, --?, /?		Displays this help screen\n");
-	ShowMessage("  --map-config <file>		Load map-server configuration from <file>\n");
-	ShowMessage("  --version, --v, -v, /v	Displays the server's version\n");
-	ShowMessage("\n");
-	if (flag) exit(EXIT_FAILURE);
-}
-
-/************************************************************************
-*																		*
-*  Map-Server Version Screen [venom] 									*
-*																		*
-************************************************************************/
-
-void map_versionscreen(int32 flag)
-{
-	ShowInfo(CL_WHITE "Darkstar version %d.%02d.%02d" CL_RESET"\n",
-		DARKSTAR_MAJOR_VERSION, DARKSTAR_MINOR_VERSION, DARKSTAR_REVISION);
-	if (flag) exit(EXIT_FAILURE);
-}
-
-/************************************************************************
-*																		*
-*  map_config_default													*
-*																		*
-************************************************************************/
-
-int32 map_config_default()
-{
-	map_config.uiMapIp        = INADDR_ANY;
-	map_config.usMapPort      = 54230;
-	map_config.mysql_host     = "127.0.0.1";
-	map_config.mysql_login    = "root";
-	map_config.mysql_password = "root";
-	map_config.mysql_database = "dspdb";
-	map_config.mysql_port     = 3306;
-    map_config.server_message = "";
-	map_config.fr_server_message = "";
-	map_config.buffer_size    = 1800;
-    map_config.exp_rate       = 1.0f;
-	map_config.exp_loss_rate  = 1.0f;
-	map_config.exp_retain     = 0.0f;
-	map_config.exp_loss_level = 4;
-	map_config.speed_mod      = 0;
-	map_config.skillup_multiplier   = 2.5f;
-	map_config.craft_multiplier     = 2.6f;
-	map_config.mob_tp_multiplier	= 1.0f;
-	map_config.player_tp_multiplier	= 1.0f;
-    map_config.vanadiel_time_offset = 0;
-    map_config.lightluggage_block   = 4;
-	map_config.max_time_lastupdate  = 60000;
-    map_config.newstyle_skillups    = 7;
-    map_config.max_merit_points    = 30;
-	map_config.audit_chat = 0;
-	return 0;
-}
-
-/************************************************************************
-*																		*
-*  Map-Server Config [venom] 											*
-*																		*
-************************************************************************/
 
 int32 map_config_read(const int8* cfgName)
 {
@@ -1102,8 +1093,4 @@ int32 map_config_read(const int8* cfgName)
 	return 0;
 }
 
-int32 map_garbage_collect(uint32 tick, CTaskMgr::CTask* PTask)
-{
-	luautils::garbageCollect();
-	return 0;
-}
+
