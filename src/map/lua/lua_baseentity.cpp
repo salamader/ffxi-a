@@ -7670,6 +7670,40 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
 		float to_z = 0;
 		uint8 to_rot = 0;
 		uint16 zone =lua_tointeger(L,1);
+		if(zone == 0 || zone == 49 || zone == 133 || zone == 199 || zone == 210 || zone == 219 )
+		{
+			sprintf(buf,"This zone ID %d is unkowned area:", zone);
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			
+		}
+		if(zone == 229)
+		{
+			sprintf(buf,"This zone ID %d cause a blackout skipping to 230:", zone);
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+				   zone = 230;
+			
+		}
+		if(zone == 267)
+		{
+			sprintf(buf,"This zone ID %d cause a blackout skipping to 268:", zone);
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+				   zone = 268;
+			
+		}
+		if(zone == 273 ||zone == 274||zone == 275||zone == 276||zone == 277||zone == 278 ||zone == 279)
+		{
+			sprintf(buf,"This zone ID %d cause a blackout skipping to 280:", zone);
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+				   zone = 280;
+			
+		}
+		if(zone == 281 ||zone == 282||zone == 283)
+		{
+			sprintf(buf,"This zone ID %d cause a build 100 error skipping to 284:", zone);
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+				   zone = 284;
+			
+		}
 		const char * Query = "SELECT x,y,z,r FROM zonesystem WHERE zone= '%u';";
 	          int32 ret3 = Sql_Query(SqlHandle,Query,zone);
 			
