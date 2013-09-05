@@ -109,7 +109,7 @@ static void sig_proc(int sn)
 #ifndef _WIN32
 		case SIGXFSZ:
 			// ignore and allow it to set errno to EFBIG
-			ShowWarning ("Max file size reached!\n");
+			//ShowWarning ("Max file size reached!\n");
 			//run_flag = 0;	// should we quit?
 			break;
 		case SIGPIPE:

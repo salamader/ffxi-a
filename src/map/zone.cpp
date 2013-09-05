@@ -1322,7 +1322,11 @@ void CZone::TOTDChange(TIMETYPE TOTD)
 	{
 		for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
 		{
-			charutils::CheckEquipLogic((CCharEntity*)it->second, ScriptType, TOTD);
+			CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+			if(PCurrentChar != NULL)
+			{
+			charutils::CheckEquipLogic(PCurrentChar, ScriptType, TOTD);
+			}
 		}
 	}
     luautils::OnTOTDChange(m_zoneID, TOTD);
@@ -1358,6 +1362,8 @@ CCharEntity* CZone::GetCharByName(int8* name)
 
 void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, CBasicPacket* packet)
 {
+	if(PEntity != NULL)
+	{
 	if (!m_charList.empty())
 	{
 		switch(message_type)
@@ -1404,6 +1410,7 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 				for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 				{
 					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+
 					if (PEntity != PCurrentChar)
 					{
 						PCurrentChar->pushPacket(new CBasicPacket(*packet));
@@ -1414,6 +1421,11 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 		}
 	}
 	delete packet;
+	}
+	else
+	{
+       ShowDebug(CL_CYAN"A NULL PENTITY CALLED A FUNCTION ??? WTF %u\n" CL_RESET,packet);
+	}
 }
 
 /************************************************************************
@@ -1502,7 +1514,7 @@ void CZone::ZoneServer(uint32 tick)
     {
         CCharEntity* PChar = (CCharEntity*)it->second;
 
-        if (PChar->status != STATUS_SHUTDOWN)
+        if (PChar->shutdown_status == 0)
         {
             PChar->PRecastContainer->Check(tick);
             PChar->StatusEffectContainer->CheckEffects(tick);
@@ -1544,7 +1556,7 @@ void CZone::ZoneServerRegion(uint32 tick)
     {
         CCharEntity* PChar = (CCharEntity*)it->second;
 
-        if (PChar->status != STATUS_SHUTDOWN)
+        if (PChar->shutdown_status == 0)
         {
             PChar->PRecastContainer->Check(tick);
             PChar->StatusEffectContainer->CheckEffects(tick);

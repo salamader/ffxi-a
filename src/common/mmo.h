@@ -31,7 +31,7 @@
 
 #define FIFOSIZE_SERVERLINK	256*1024
 
-#define FFXI_HEADER_SIZE 0x1C		// common packet header size
+#define FFXI_HEADER_SIZE 28		// common packet header size
 #define FFXI_CHANGE_ZONE 0x0A		// change zone cmd
 
 // флаги перед именем персонажа

@@ -79,6 +79,7 @@ uint32 CVanaTime::getHour()
 
 uint32 CVanaTime::getMinute()
 {
+	
 	return m_vMin;
 }
 
@@ -132,7 +133,14 @@ uint32 CVanaTime::getSysYearDay()
 	return ltm->tm_yday;
 }
 
-
+uint32 CVanaTime::getVanaMinute()
+{
+    time_t now = time(0);
+	tm *ltm = localtime(&now);
+	ShowDebug(CL_GREEN"TIME %u\n"CL_RESET,(uint32)(time(NULL) +ltm->tm_min * 2.4f) - 1009810800);
+	return  (uint32)(time(NULL) + ltm->tm_min * 2.4f) - 1009810800 ;
+	                                                          
+}
 
 uint32 CVanaTime::getVanaTime()
 {

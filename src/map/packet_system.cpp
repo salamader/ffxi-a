@@ -136,27 +136,7 @@ void (*PacketParser[512])(map_session_data_t*, CCharEntity*, int8*);
 *																		*
 ************************************************************************/
 
-void PrintPacket(int8* data)
-{
-	int8 message[50];
-	memset(&message,0,50);
 
-	for(int y = 0; y < data[1]*2; y++)
-	{
-		sprintf(message,"%s %02hx",message,(uint8)data[y]);
-		if(((y+1)%16) == 0)
-		{
-			message[48] = '\n';
-			ShowDebug(message);
-			memset(&message,0,50);
-		}
-	}
-	if (strlen(message) > 0)
-	{
-		message[strlen(message)] = '\n';
-		ShowDebug(message);
-	}
-}
 
 /************************************************************************
 *                                                                       *
@@ -166,7 +146,7 @@ void PrintPacket(int8* data)
 
 void SmallPacket0x000(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-    ShowWarning(CL_YELLOW"parse: Unhandled game packet %03hX from user: %s\n" CL_RESET, (RBUFW(data,0) & 0x1FF), PChar->GetName());
+    ////ShowWarning(CL_YELLOW"parse: Unhandled game packet %03hX from user: %s\n" CL_RESET, (RBUFW(data,0) & 0x1FF), PChar->GetName());
     return;
 }
 
@@ -178,7 +158,7 @@ void SmallPacket0x000(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0xFFF(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-    ShowDebug(CL_CYAN"parse: SmallPacket is not implemented Type<%03hX>\n" CL_RESET, (RBUFW(data,0) & 0x1FF));
+    //ShowDebug(CL_CYAN"parse: SmallPacket is not implemented Type<%03hX>\n" CL_RESET, (RBUFW(data,0) & 0x1FF));
     return;
 }
 
@@ -201,7 +181,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				 uint8 setexprates_status = 1; 
 				 uint8 ragemode_status = 0; 
 				 uint8 Online_status = 1; 
-				 uint8 Shutdown_status = 1; 
+				
 				 uint8 Account_Id = 0; 
 				 int zone = 0; 
 				 int lastzone = 0; 
@@ -219,7 +199,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				 uint8 nation=0;
 				 uint8 returning=0;
 				 uint8 deathstate =0;
-                 const int8* Query = "SELECT first_login,godmode,setexprates,ragemode,online,accid,pos_zone,pos_prevzone,inevent,eventid,pos_x,pos_y,pos_z,pos_rot,shutdown,nation,returning,deathstate,death_x,death_y,death_z,death_rot,death_zone FROM chars WHERE charid = '%u';";
+                 const int8* Query = "SELECT first_login,godmode,setexprates,ragemode,online,accid,pos_zone,pos_prevzone,inevent,eventid,pos_x,pos_y,pos_z,pos_rot,nation,returning,deathstate,death_x,death_y,death_z,death_rot,death_zone FROM chars WHERE charid = '%u';";
 	             int32 ret = Sql_Query(SqlHandle,Query,PChar->id);
 
 	             if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
@@ -239,15 +219,15 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				   pos_y =  Sql_GetFloatData(SqlHandle,11);
 				   pos_z =  Sql_GetFloatData(SqlHandle,12);
 				   pos_rot =  Sql_GetUIntData(SqlHandle,13);
-					Shutdown_status =  Sql_GetUIntData(SqlHandle,14);
-					nation =  Sql_GetUIntData(SqlHandle,15);
-					returning =  Sql_GetUIntData(SqlHandle,16);
-					deathstate =Sql_GetUIntData(SqlHandle,17);
-					death_pos_x =  Sql_GetFloatData(SqlHandle,18);
-				   death_pos_y =  Sql_GetFloatData(SqlHandle,19);
-				   death_pos_z =  Sql_GetFloatData(SqlHandle,20);
-				   death_pos_rot =  Sql_GetUIntData(SqlHandle,21);
-				   death_pos_zone =  Sql_GetUIntData(SqlHandle,22);
+					
+					nation =  Sql_GetUIntData(SqlHandle,14);
+					returning =  Sql_GetUIntData(SqlHandle,15);
+					deathstate =Sql_GetUIntData(SqlHandle,16);
+					death_pos_x =  Sql_GetFloatData(SqlHandle,17);
+				   death_pos_y =  Sql_GetFloatData(SqlHandle,18);
+				   death_pos_z =  Sql_GetFloatData(SqlHandle,19);
+				   death_pos_rot =  Sql_GetUIntData(SqlHandle,20);
+				   death_pos_zone =  Sql_GetUIntData(SqlHandle,21);
 					
 				   PChar->eventid = eventid;
 				   PChar->first_login = login_status;
@@ -256,35 +236,12 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				   PChar->SetExpRates = setexprates_status;
 				   PChar->Rage_Mode = ragemode_status;
 				   PChar->online_status = Online_status;
-				   PChar->shutdown_status = Shutdown_status;
+				  
 				   PChar->accid = Account_Id;
 				  PChar->profile.nation = nation;
 				  PChar->is_inevent = inevent;
 				  PChar->is_dead = deathstate;
-				  if(PChar->first_login == 0)
-				  {
-					  ShowNotice(CL_RED"MY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION\n"CL_RESET);
-				  }
-				  if(PChar->first_login == 1)
-				  {
-					  ShowNotice(CL_RED"MY FIRST LOGIN SYAS I AM A NEW PLAYER ON CREATION\n AND I AM AT FRIST LOGIN IN A EVENT\n"CL_RESET);
-				  }
-				  if(PChar->first_login == 2)
-				  {
-					  
-					  if(PChar->is_returning == 1)
-					  {
-                      ShowNotice(CL_RED"MY FIRST LOGIN SYAS I AM A RETURNING PLAYER\n"CL_RESET);
-					  }
-					  else
-					  {
-						  ShowNotice(CL_RED"MY FIRST ZONING SYAS I AM AT ZONELINE\n"CL_RESET);
-					  }
-				  }
-				  if(PChar->first_login == 3)
-				  {
-					  ShowNotice(CL_RED"MY ZONING SYAS I AM IN EXITING MOGHOUSE\n"CL_RESET);
-				  }
+				 
 				 
 
 			if(	 data != NULL)
@@ -309,7 +266,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
         if (PChar->loc.zone != NULL)
  
         {
- ShowNotice(CL_RED"MY ZONE IS NOT NULL %u\n"CL_RESET,PChar->loc.zone);
+ //ShowNotice(CL_RED"MY ZONE IS NOT NULL %u\n"CL_RESET,PChar->loc.zone);
             PacketParser[0x00D](session, PChar, NULL);
  
         }
@@ -358,7 +315,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
  
         if(destination >= MAX_ZONEID){
  
-            ShowWarning("packet_system::SmallPacket0x00A player tried to enter zone out of range: %d\n", destination);
+            //ShowWarning("packet_system::SmallPacket0x00A player tried to enter zone out of range: %d\n", destination);
  
             // holy crap out of range, lets go to the safe place
  
@@ -370,32 +327,32 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
  
         if (destination != ZONE_RESIDENTIAL_AREA && destination != ZONE_214)
          {
-              ShowNotice(CL_RED"MY DESTINATION %u\n"CL_RESET,destination);
+             // ShowNotice(CL_RED"MY DESTINATION %u\n"CL_RESET,destination);
 			  if(deathstate == 1)
 			  {
-				  ShowNotice(CL_RED"MY DESTINATION IS DEATH ZONE %u\n"CL_RESET,destination);
+				 // ShowNotice(CL_RED"MY DESTINATION IS DEATH ZONE %u\n"CL_RESET,destination);
                zoneutils::GetZone(death_pos_zone)->IncreaseZoneCounter(PChar);
 			  }
 			  else
 			  {
-				   ShowNotice(CL_RED"MY DESTINATION IS NORM ZONE %u\n"CL_RESET,destination);
+				   //ShowNotice(CL_RED"MY DESTINATION IS NORM ZONE %u\n"CL_RESET,destination);
               zoneutils::GetZone(destination)->IncreaseZoneCounter(PChar);
 			  }
  
 		} else {
  
-			ShowNotice(CL_RED"ELSE MY DESTINATION %u\n"CL_RESET,destination);
+			//ShowNotice(CL_RED"ELSE MY DESTINATION %u\n"CL_RESET,destination);
 
 			 if(login_status==0)
 				   {
 					   //bool firstlogin = true;
-					  ShowNotice(CL_RED"TRACER: WE ARE NEW CHARATER FIRST TIME LOGIN CharId %u Status=%u\n" CL_RESET ,PChar->id,login_status);
+					  //ShowNotice(CL_RED"TRACER: WE ARE NEW CHARATER FIRST TIME LOGIN CharId %u Status=%u\n" CL_RESET ,PChar->id,login_status);
 					  PChar->PMeritPoints->SaveMeritPoints(PChar->id, true);
-					  ShowNotice(CL_RED"TRACER: getNation %u\n" CL_RESET,PChar->profile.nation);
+					 // ShowNotice(CL_RED"TRACER: getNation %u\n" CL_RESET,PChar->profile.nation);
 					  if(PChar->profile.nation==0)
 					  {
-                      ShowNotice(CL_RED"TRACER: SANDY %u\n" CL_RESET,PChar->profile.nation);
-					  ShowNotice(CL_RED"TRACER: SANDY GETZONE %u\n" CL_RESET,PChar->getZone());
+                     // ShowNotice(CL_RED"TRACER: SANDY %u\n" CL_RESET,PChar->profile.nation);
+					//  ShowNotice(CL_RED"TRACER: SANDY GETZONE %u\n" CL_RESET,PChar->getZone());
 					   
 						  //SANDY
 						  PChar->loc.p.x = -96;
@@ -419,8 +376,8 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					  }
 					  if(PChar->profile.nation==1)
 					  {
-					  ShowNotice(CL_RED"TRACER: BASTOCK %u\n" CL_RESET,PChar->profile.nation);
-					  ShowNotice(CL_RED"TRACER: BASTOCK GETZONE %u\n" CL_RESET,PChar->getZone());
+					 // ShowNotice(CL_RED"TRACER: BASTOCK %u\n" CL_RESET,PChar->profile.nation);
+					 // ShowNotice(CL_RED"TRACER: BASTOCK GETZONE %u\n" CL_RESET,PChar->getZone());
 					  
 						  //BASTOK
 						PChar->loc.p.x = -45;
@@ -443,8 +400,8 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					  }
 					  if(PChar->profile.nation==2)
 					  {//2
-					  ShowNotice(CL_RED"TRACER: WINDY %u\n" CL_RESET,PChar->profile.nation);
-					  ShowNotice(CL_RED"TRACER: WINDY GETZONE %u\n" CL_RESET,PChar->getZone());
+					 // ShowNotice(CL_RED"TRACER: WINDY %u\n" CL_RESET,PChar->profile.nation);
+					 // ShowNotice(CL_RED"TRACER: WINDY GETZONE %u\n" CL_RESET,PChar->getZone());
 					 
 						  //WINDY
 						  PChar->loc.p.x = -120;
@@ -465,10 +422,10 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					 // return;
 					  }//2
 		             // return;
-					   ShowNotice(CL_RED"WE ARE AT FIRST LOGIN IN EVENT %u\n"CL_RESET,inevent);
+					  // ShowNotice(CL_RED"WE ARE AT FIRST LOGIN IN EVENT %u\n"CL_RESET,inevent);
 					  
-				      ShowNotice(CL_RED"EVENT == %u\n"CL_RESET,inevent);
-					  ShowNotice(CL_RED"EVENT NUMBER == %u\n"CL_RESET,eventid);
+				     // ShowNotice(CL_RED"EVENT == %u\n"CL_RESET,inevent);
+					 // ShowNotice(CL_RED"EVENT NUMBER == %u\n"CL_RESET,eventid);
 					  //PChar->pushPacket(new CDownloadingDataPacket());
                       //PChar->pushPacket(new CZoneInPacket(PChar,eventid)); 
 					  //PChar->pushPacket(new CZoneVisitedPacket(PChar));
@@ -554,10 +511,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
         if (PChar->loc.zone != NULL)
  
         {
-			//PChar->status = STATUS_SHUTDOWN;
-            // session->shuttingDown = true;
-    		//CTaskMgr::getInstance()->AddTask(new CTaskMgr::CTask("clean_session", gettick()+1, session, CTaskMgr::TASK_ONCE, map_clean_session));
-            ShowWarning(CL_YELLOW"Client cannot receive packet or key is invalid: %s\n" CL_RESET, PChar->GetName());
+			ShowWarning(CL_YELLOW"Client cannot receive packet or key is invalid: %s\n" CL_RESET, PChar->GetName());
  
         }
  
@@ -565,7 +519,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
  
     if (PChar->loc.prevzone == 0 && !firstlogin)
      {
- ShowNotice(CL_RED"ELSE MY PREVZONE %u\n"CL_RESET,PChar->loc.prevzone);
+ //ShowNotice(CL_RED"ELSE MY PREVZONE %u\n"CL_RESET,PChar->loc.prevzone);
 		PChar->loc.prevzone = PChar->getZone();
  
 	}
@@ -589,35 +543,35 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	              {
 	              
 				 
-	              ShowNotice(CL_RED"WE ARE A RETURNING PLAYER IN STATUS %u\n"CL_RESET,login_status);
+	             // ShowNotice(CL_RED"WE ARE A RETURNING PLAYER IN STATUS %u\n"CL_RESET,login_status);
 				  if(returning == 1 && deathstate == 0)
 				  {
 					  PChar->loc.p.x = pos_x;
-					  ShowNotice(CL_RED"RETURNING TO X %.3f\n"CL_RESET,pos_x);
+					 // ShowNotice(CL_RED"RETURNING TO X %.3f\n"CL_RESET,pos_x);
 					  PChar->loc.p.y = pos_y;
-					  ShowNotice(CL_RED"RETURNING TO Y %.3f\n"CL_RESET,pos_y);
+					 // ShowNotice(CL_RED"RETURNING TO Y %.3f\n"CL_RESET,pos_y);
 					  PChar->loc.p.z = pos_z;
-					  ShowNotice(CL_RED"RETURNING TO Z %.3f\n"CL_RESET,pos_z);
+					//  ShowNotice(CL_RED"RETURNING TO Z %.3f\n"CL_RESET,pos_z);
 		              PChar->loc.p.rotation = pos_rot;
-				      ShowNotice(CL_RED"RETURNING TO R %u\n"CL_RESET,pos_rot);
+				     // ShowNotice(CL_RED"RETURNING TO R %u\n"CL_RESET,pos_rot);
 					  
 				  }
 				  if( deathstate == 1)
 				  {
 					  PChar->loc.p.x = death_pos_x;
-					  ShowNotice(CL_RED"RETURNING TO HOME POINT FROM DEATH POS X %.3f\n"CL_RESET,pos_x);
+					 // ShowNotice(CL_RED"RETURNING TO HOME POINT FROM DEATH POS X %.3f\n"CL_RESET,pos_x);
 					  PChar->loc.p.y = death_pos_y;
-					  ShowNotice(CL_RED"RETURNING TO HOME POINT FROM DEATH POS Y %.3f\n"CL_RESET,pos_y);
+					//  ShowNotice(CL_RED"RETURNING TO HOME POINT FROM DEATH POS Y %.3f\n"CL_RESET,pos_y);
 					  PChar->loc.p.z = death_pos_z;
-					  ShowNotice(CL_RED"RETURNING TO HOME POINT FROM DEATH POS Z %.3f\n"CL_RESET,pos_z);
+					//  ShowNotice(CL_RED"RETURNING TO HOME POINT FROM DEATH POS Z %.3f\n"CL_RESET,pos_z);
 		              PChar->loc.p.rotation = death_pos_rot;
-				      ShowNotice(CL_RED"RETURNING TO HOME POINT FROM DEATH POS R %u\n"CL_RESET,pos_rot);
+				    //  ShowNotice(CL_RED"RETURNING TO HOME POINT FROM DEATH POS R %u\n"CL_RESET,pos_rot);
 					  PChar->loc.destination =death_pos_zone;
 				  }
 				  
 				  if(PChar->loc.destination == 0)
 				  {
-					  ShowNotice(CL_RED"WE ARE IN MOG HOUSE LETS SET LAST POSTION \n"CL_RESET);
+					 // ShowNotice(CL_RED"WE ARE IN MOG HOUSE LETS SET LAST POSTION \n"CL_RESET);
 					      const int8* Query = "UPDATE chars SET first_login = '3' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,PChar->id);
 				  }
@@ -652,81 +606,81 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	              {
 	             
 
-	              ShowNotice(CL_RED"WE ARE IN MOG HOUSE PLAYER IN STATUS %u\n"CL_RESET,login_status);
+	             // ShowNotice(CL_RED"WE ARE IN MOG HOUSE PLAYER IN STATUS %u\n"CL_RESET,login_status);
 				  if(PChar->loc.destination == 0)
 				  {
-					  ShowNotice(CL_RED"WE ARE IN MOG HOUSE LETS SET LAST POSTION \n"CL_RESET);
+					//  ShowNotice(CL_RED"WE ARE IN MOG HOUSE LETS SET LAST POSTION \n"CL_RESET);
 				  }
 				  else
 				  {
-					   ShowNotice(CL_RED"WE ARE IN EXITING MOG HOUSE LETS GET LAST POSTION \n"CL_RESET);
+					  // ShowNotice(CL_RED"WE ARE IN EXITING MOG HOUSE LETS GET LAST POSTION \n"CL_RESET);
 					 
 					      PChar->loc.p.x = pos_x;
 						  PChar->loc.p.y = pos_y;
 						  PChar->loc.p.z = pos_z;
 						  if(zone == 48)
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 48\n"CL_RESET);
+		                  // ShowMessage(CL_GREEN"EXITING MOG HOUSE 48\n"CL_RESET);
 		                   PChar->loc.p.rotation = 189;
 		                   }
 						  if(zone == 50)
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 48\n"CL_RESET);
+		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 48\n"CL_RESET);
 		                   PChar->loc.p.rotation = 255;
 		                   }
 						 if(zone == 230)
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 230\n"CL_RESET);
+		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 230\n"CL_RESET);
 		                   PChar->loc.p.rotation = 89;
 		                   }
 	                     if(zone == 231)
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 231\n"CL_RESET);
+		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 231\n"CL_RESET);
 		                   PChar->loc.p.rotation = 152;
 		                   }
 	                     if(zone == 232)
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 232\n"CL_RESET);
+		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 232\n"CL_RESET);
 		                   PChar->loc.p.rotation = 159;
 		                   }
 						  if(zone == 234)//BASTOK MINE CS 0x7534
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 234\n"CL_RESET);
+		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 234\n"CL_RESET);
 		                   PChar->loc.p.rotation = 132;
 		                   }
 						  if(zone == 235)//BASTOK MARKETS CS 0x7534
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 235\n"CL_RESET);
+		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 235\n"CL_RESET);
 		                   PChar->loc.p.rotation = 129;
 		                   }
 						   if(zone == 236)//BASTOK PORT CS 0x7534
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 236\n"CL_RESET);
+		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 236\n"CL_RESET);
 		                   PChar->loc.p.rotation = 188;
 		                   }
 						   if(zone == 238)
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 238\n"CL_RESET);
+		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 238\n"CL_RESET);
 		                   PChar->loc.p.rotation = 192;
 		                   }
 						   if(zone == 239)
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 239\n"CL_RESET);
+		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 239\n"CL_RESET);
 		                   PChar->loc.p.rotation = 253;
 		                   }
 						   if(zone == 240)
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 240\n"CL_RESET);
+		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 240\n"CL_RESET);
 		                   PChar->loc.p.rotation = 64;
 		                   }
 						   if(zone == 241)
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 241\n"CL_RESET);
+		                //   ShowMessage(CL_GREEN"EXITING MOG HOUSE 241\n"CL_RESET);
 		                   PChar->loc.p.rotation = 3;
 		                   }
 						   if(zone == 243)
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 243\n"CL_RESET);
+		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 243\n"CL_RESET);
 						   PChar->loc.p.x = 51;
 						   PChar->loc.p.y = 9;
 						   PChar->loc.p.z = -73;
@@ -734,17 +688,17 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		                   }
 						   if(zone == 244)
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 244\n"CL_RESET);
+		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 244\n"CL_RESET);
 		                   PChar->loc.p.rotation = 174;
 		                   }
 						   if(zone == 245)
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 245\n"CL_RESET);
+		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 245\n"CL_RESET);
 		                   PChar->loc.p.rotation = 88;
 		                   }
 						   if(zone == 246)
 	                       {
-		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 246\n"CL_RESET);
+		                //   ShowMessage(CL_GREEN"EXITING MOG HOUSE 246\n"CL_RESET);
 		                   PChar->loc.p.rotation = 2;
 		                   }
 						 
@@ -760,7 +714,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					  || nation == 0 && zone == 235 || nation == 0 && zone == 236 || nation == 0 && zone == 238 || nation == 0 && zone == 239 || nation == 0 && zone == 240 
 					  || nation == 0 && zone == 241 || nation == 0 && zone == 243 || nation == 0 && zone == 244 || nation == 0 && zone == 245 || nation == 0 && zone == 246)
 				  {
-					  ShowMessage(CL_GREEN"PROFILE NATION SANDY\n"CL_RESET);
+					 // ShowMessage(CL_GREEN"PROFILE NATION SANDY\n"CL_RESET);
 					  //AND IF THEY CHANGE JOBS 0x7534
 	              PChar->pushPacket(new CZoneInPacket(PChar,-1));
 				  }
@@ -769,7 +723,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					  || nation == 1 && zone == 231 || nation == 1 && zone == 232 || nation == 1 && zone == 238 || nation == 1 && zone == 239 || nation == 1 && zone == 240 
 					  || nation == 1 && zone == 241 || nation == 1 && zone == 243 || nation == 1 && zone == 244 || nation == 1 && zone == 245 || nation == 1 && zone == 246)
 				  {
-					  ShowMessage(CL_GREEN"PROFILE NATION BASTOK\n"CL_RESET);
+					 // ShowMessage(CL_GREEN"PROFILE NATION BASTOK\n"CL_RESET);
 					  //AND IF THEY CHANGE JOBS 0x7534
 	              PChar->pushPacket(new CZoneInPacket(PChar,-1));
 				  }
@@ -778,7 +732,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					  || nation == 2 && zone == 231 || nation == 2 && zone == 232 || nation == 2 && zone == 234 || nation == 2 && zone == 235 || nation == 2 && zone == 246 
 					  || nation == 2 && zone == 243 || nation == 2 && zone == 244 || nation == 2 && zone == 245 || nation == 2 && zone == 246)
 				  {
-					  ShowMessage(CL_GREEN"PROFILE NATION WINDY\n"CL_RESET);
+					 // ShowMessage(CL_GREEN"PROFILE NATION WINDY\n"CL_RESET);
 					  //AND IF THEY CHANGE JOBS ??? NEED TO DO 0x7534
 	              PChar->pushPacket(new CZoneInPacket(PChar,-1));
 				  }
@@ -884,7 +838,8 @@ void SmallPacket0x00C(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-
+	if(PChar != NULL)
+	{
     session->blowfish.status = BLOWFISH_WAITING;
 
     PChar->TradePending.clean();
@@ -899,68 +854,11 @@ void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, int8* dat
     PChar->PRecastContainer->Del(RECAST_MAGIC);
 
     charutils::SaveCharStats(PChar);
-	//charutils::SaveCharPosition(PChar);
+	
 	charutils::SaveCharExp(PChar, PChar->GetMJob());
 	charutils::SaveCharPoints(PChar);
-
-	if (PChar->status == STATUS_SHUTDOWN)
-	{
-
-		if (PChar->PParty != NULL)
-		{
-			if(PChar->PParty->m_PAlliance != NULL)
-			{
-				if(PChar->PParty->GetLeader() == PChar)
-				{
-					if(PChar->PParty->members.size() == 1)
-					{
-						if(PChar->PParty->m_PAlliance->partyList.size() == 2)
-						{
-							PChar->PParty->m_PAlliance->dissolveAlliance();
-						}
-						else if(PChar->PParty->m_PAlliance->partyList.size() == 3)
-						{
-							PChar->PParty->m_PAlliance->removeParty(PChar->PParty);
-						}
-					}
-					else
-					{	//party leader logged off - will pass party lead
-						PChar->PParty->RemoveMember(PChar);
-					}
-				}
-				else
-				{	//not party leader - just drop from party
-					PChar->PParty->RemoveMember(PChar);
-				}
-			}
-			else
-			{
-            //normal party - just drop group
-			PChar->PParty->RemoveMember(PChar);
-			}
-		}
-        if (PChar->PLinkshell != NULL)
-        {
-            // удаляем персонажа из linkshell
-            PChar->PLinkshell->DelMember(PChar);
-        }
-
-        if (!session->shuttingDown)
-        {
-            const int8* Query = "UPDATE chars SET shutdown = '1' WHERE charid = %u";
-                       Sql_Query(SqlHandle,Query,PChar->id);
-					   charutils::SaveCharPosition(PChar);
-            session->shuttingDown = true;
-    		CTaskMgr::getInstance()->AddTask(new CTaskMgr::CTask("close_session", gettick()+10, session, CTaskMgr::TASK_ONCE, map_close_session));
-        }
-
-	}
-	else  // проверка именно при покидании зоны, чтобы не делать двойную проверку при входе в игру
-	{
-        charutils::CheckEquipLogic(PChar, SCRIPT_CHANGEZONE, PChar->getZone());
-	}
-    // персонаж может отвалиться во время перехода между зонами,
-    // map_cleanup вызовет этот метод и zone персонажа будет NULL
+    charutils::CheckEquipLogic(PChar, SCRIPT_CHANGEZONE, PChar->getZone());
+	
     if (PChar->loc.zone != NULL)
     {
         PChar->loc.zone->DecreaseZoneCounter(PChar);
@@ -968,6 +866,12 @@ void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 	PChar->status = STATUS_DISAPPEAR;
     PChar->PBattleAI->Reset();
+	return;
+	}
+	else
+	{
+		ShowNotice("NO PLAYER BUT FUCTION WAS CALLED SmallPacket0x00D\n");
+	}
 	return;
 }
 
@@ -1025,16 +929,13 @@ void SmallPacket0x011(map_session_data_t* session, CCharEntity* PChar, int8* dat
 *																		*
 ************************************************************************/
 
-void SmallPacket0x015(map_session_data_t* session, CCharEntity* PChar, int8* data)
+void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	//ShowMessage(CL_GREEN"UPDATE: PLAYER STATUS IS =%u \n"CL_RESET,PChar->status);
-	if (PChar->status != STATUS_SHUTDOWN &&
-        PChar->status != STATUS_DISAPPEAR)
+	ShowMessage(CL_GREEN"UPDATE: PLAYER SHUTDOWN STATUS =%u \n"CL_RESET,PChar->shutdown_status);
+	if (PChar->shutdown_status == 0)
 	{
-		//bool isUpdate = ( (PChar->status == STATUS_UPDATE) ||
-						//  (PChar->loc.p.x  != RBUFF(data,(0x04))) ||
-						 // (PChar->loc.p.z  != RBUFF(data,(0x0C))) ||
-						//  (PChar->m_TargID != RBUFW(data,(0x16))) );
+		ShowMessage(CL_GREEN"UPDATE: IN =%u \n"CL_RESET,PChar->shutdown_status);
+		
 
 		PChar->loc.p.x = RBUFF(data,(0x04));
 		PChar->loc.p.y = RBUFF(data,(0x08));
@@ -1044,17 +945,17 @@ void SmallPacket0x015(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		PChar->loc.p.rotation = RBUFB(data,(0x14));
 
 		PChar->m_TargID = RBUFW(data,(0x16));
-
-		//if (isUpdate)
-		//{
+		 const int8* Query = "UPDATE chars SET shutdown = '0' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,PChar->id);
+		
 			PChar->status = STATUS_NORMAL;
             PChar->loc.zone->SpawnPCs(PChar);
 			PChar->loc.zone->SpawnNPCs(PChar);
-		//}
+		
 
 		PChar->loc.zone->SpawnMOBs(PChar);
 		PChar->loc.zone->SpawnPETs(PChar);
-			if(PChar->godmode==1)
+	if(PChar->godmode==1)
 	{
 		
 		int32 god=1500;
@@ -1090,18 +991,7 @@ void SmallPacket0x015(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		
 	}
 	}
-	else
-	{
-		
-		if(PChar->nameflags.flags < 1)
-		{
-		PChar->nameflags.flags =0;
-		
-		}
-		PChar->godmode=0;
-		
-		PChar->pushPacket(new CCharUpdatePacket(PChar));
-	}
+	
 
 		if (PChar->PWideScanTarget != NULL)
 		{
@@ -1155,7 +1045,7 @@ void SmallPacket0x017(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	uint32 npcid  = RBUFL(data,(0x08));
 	uint8  type   = RBUFB(data,(0x12));
 
-	ShowError(CL_RED"SmallPacket0x17: Incorrect NPC(%u,%u) type(%u)\n" CL_RESET, targid, npcid, type);
+	//ShowError(CL_RED"SmallPacket0x17: Incorrect NPC(%u,%u) type(%u)\n" CL_RESET, targid, npcid, type);
 	return;
 }
 
@@ -1186,6 +1076,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 			if (PNpc != NULL)
 			{
+				ShowWarning("31 TEST PACKET\n");
 				if (luautils::OnTrigger(PChar, PNpc) == -1 && PNpc->animation == ANIMATION_OPEN_DOOR)
 				{
 					PNpc->animation = ANIMATION_CLOSE_DOOR;
@@ -1265,7 +1156,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		case 0x0B: // homepoint
 		{
             // remove weakness on homepoint
-             ShowDebug(CL_RED"PLAYER %s HOME POINT %u\n"CL_RESET,PChar->GetName(),PChar->getZone());
+          //   ShowDebug(CL_RED"PLAYER %s HOME POINT %u\n"CL_RESET,PChar->GetName(),PChar->getZone());
             // remove weakness on homepoint
             PChar->StatusEffectContainer->DelStatusEffectSilent(EFFECT_WEAKNESS);
 
@@ -1284,15 +1175,15 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	          if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 	             {
 				   zone =  Sql_GetIntData(SqlHandle,0);
-				   ShowDebug(CL_RED"PLAYER %s HOME ZONE %u\n"CL_RESET,PChar->GetName(),zone);
+				  // ShowDebug(CL_RED"PLAYER %s HOME ZONE %u\n"CL_RESET,PChar->GetName(),zone);
 				   pos_x =  Sql_GetFloatData(SqlHandle,1);
-				    ShowDebug(CL_RED"PLAYER %s HOME x %.3f\n"CL_RESET,PChar->GetName(),pos_x);
+				  //  ShowDebug(CL_RED"PLAYER %s HOME x %.3f\n"CL_RESET,PChar->GetName(),pos_x);
 				   pos_y =  Sql_GetFloatData(SqlHandle,2);
-				    ShowDebug(CL_RED"PLAYER %s HOME y %.3f\n"CL_RESET,PChar->GetName(),pos_y);
+				  //  ShowDebug(CL_RED"PLAYER %s HOME y %.3f\n"CL_RESET,PChar->GetName(),pos_y);
 				   pos_z =  Sql_GetFloatData(SqlHandle,3);
-				    ShowDebug(CL_RED"PLAYER %s HOME z %.3f\n"CL_RESET,PChar->GetName(),pos_z);
+				 //   ShowDebug(CL_RED"PLAYER %s HOME z %.3f\n"CL_RESET,PChar->GetName(),pos_z);
 				   pos_rot =  Sql_GetUIntData(SqlHandle,4);
-				    ShowDebug(CL_RED"PLAYER %s HOME r %u\n"CL_RESET,PChar->GetName(),pos_rot);
+				 //   ShowDebug(CL_RED"PLAYER %s HOME r %u\n"CL_RESET,PChar->GetName(),pos_rot);
 				   PChar->loc.p.x = pos_x;
 			       PChar->loc.p.y = pos_y;
 			       PChar->loc.p.z = pos_z;
@@ -1402,7 +1293,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		{
 			if (PChar->loc.destination == 0)
 			{
-				ShowDebug(CL_RED"PLAYER %s Spawn MOG %u\n"CL_RESET,PChar->GetName(),PChar->getZone());
+				//ShowDebug(CL_RED"PLAYER %s Spawn MOG %u\n"CL_RESET,PChar->GetName(),PChar->getZone());
 				zoneutils::GetZone(PChar->loc.prevzone)->SpawnMoogle(PChar);
 			}else{
 				PChar->loc.zone->SpawnPCs(PChar);
@@ -1486,12 +1377,12 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		break;
 		default:
 		{
-			ShowWarning(CL_YELLOW"CLIENT PERFORMING UNHANDLED ACTION %02hX\n" CL_RESET, action);
+			//ShowWarning(CL_YELLOW"CLIENT PERFORMING UNHANDLED ACTION %02hX\n" CL_RESET, action);
 			return;
 		}
 		break;
 	}
-	ShowDebug(CL_CYAN"CLIENT %s PERFORMING ACTION %02hX\n" CL_RESET, PChar->GetName(),action);
+	//ShowDebug(CL_CYAN"CLIENT %s PERFORMING ACTION %02hX\n" CL_RESET, PChar->GetName(),action);
 	return;
 }
 
@@ -1519,7 +1410,7 @@ void SmallPacket0x01B(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x01C(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	PrintPacket(data);
+	
 	return;
 }
 
@@ -1549,7 +1440,7 @@ void SmallPacket0x028(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	    }
         return;
     }
-    ShowWarning(CL_YELLOW"SmallPacket0x028: Attempt of removal NULL or LOCKED item from slot %u\n" CL_RESET, slotID);
+    //ShowWarning(CL_YELLOW"SmallPacket0x028: Attempt of removal NULL or LOCKED item from slot %u\n" CL_RESET, slotID);
 	return;
 }
 
@@ -1576,10 +1467,10 @@ void SmallPacket0x029(map_session_data_t* session, CCharEntity* PChar, int8* dat
     if(PItem == NULL || PItem->isSubType(ITEM_LOCKED))
 	{
 		if(PItem==NULL){
-			ShowWarning(CL_YELLOW"SmallPacket0x29: Trying to move NULL item from location %u slot %u to location %u slot %u of quan %u \n" CL_RESET, FromLocationID, FromSlotID, ToLocationID, ToSlotID,quantity);
+			//ShowWarning(CL_YELLOW"SmallPacket0x29: Trying to move NULL item from location %u slot %u to location %u slot %u of quan %u \n" CL_RESET, FromLocationID, FromSlotID, ToLocationID, ToSlotID,quantity);
 		}
 		else{
-			ShowWarning(CL_YELLOW"SmallPacket0x29: Trying to move LOCKED item %i from location %u slot %u to location %u slot %u of quan %u \n" CL_RESET, PItem->getID(),FromLocationID, FromSlotID, ToLocationID, ToSlotID,quantity);
+			//ShowWarning(CL_YELLOW"SmallPacket0x29: Trying to move LOCKED item %i from location %u slot %u to location %u slot %u of quan %u \n" CL_RESET, PItem->getID(),FromLocationID, FromSlotID, ToLocationID, ToSlotID,quantity);
 		}
 
 		uint8 size = PChar->getStorage(FromLocationID)->GetSize();
@@ -1597,7 +1488,7 @@ void SmallPacket0x029(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	}
 	if(PItem->getQuantity() < quantity)
 	{
-		ShowWarning(CL_YELLOW"SmallPacket0x29: Trying to move too much quantity from location %u slot %u\n" CL_RESET, FromLocationID, FromSlotID);
+		//ShowWarning(CL_YELLOW"SmallPacket0x29: Trying to move too much quantity from location %u slot %u\n" CL_RESET, FromLocationID, FromSlotID);
 		return;
 	}
 
@@ -1615,7 +1506,7 @@ void SmallPacket0x029(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		if (ToSlotID < 82) // 80 + 1
 		{
 			// объединение еще не реализовано
-			ShowDebug("SmallPacket0x29: Trying to unite items\n", FromLocationID, FromSlotID);
+			//ShowDebug("SmallPacket0x29: Trying to unite items\n", FromLocationID, FromSlotID);
 			return;
 		}
 
@@ -1657,7 +1548,7 @@ void SmallPacket0x029(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			}
 			PChar->pushPacket(new CInventoryFinishPacket());
 
-			ShowError(CL_RED"SmallPacket0x29: Location %u Slot %u is full\n" CL_RESET, ToLocationID,ToSlotID);
+		//	ShowError(CL_RED"SmallPacket0x29: Location %u Slot %u is full\n" CL_RESET, ToLocationID,ToSlotID);
 			return;
 		}
 	}
@@ -1689,12 +1580,12 @@ void SmallPacket0x032(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
         if (PTarget->TradePending.id == PChar->id)
         {
-            ShowDebug(CL_CYAN"You have already sent a trade request to %s\n" CL_RESET, PTarget->GetName());
+          //  ShowDebug(CL_CYAN"You have already sent a trade request to %s\n" CL_RESET, PTarget->GetName());
             return;
         }
         if (!PTarget->UContainer->IsContainerEmpty())
         {
-            ShowDebug(CL_CYAN"You cannot trade with %s at this time\n" CL_RESET, PTarget->GetName());
+          //  ShowDebug(CL_CYAN"You cannot trade with %s at this time\n" CL_RESET, PTarget->GetName());
             return;
         }
         PChar->TradePending.id     = charid;
@@ -1745,7 +1636,7 @@ void SmallPacket0x033(map_session_data_t* session, CCharEntity* PChar, int8* dat
                     PChar->TradePending.clean();
                     PTarget->TradePending.clean();
 
-                    ShowDebug(CL_CYAN"Trade: UContainer is not empty\n" CL_RESET);
+                  //  ShowDebug(CL_CYAN"Trade: UContainer is not empty\n" CL_RESET);
                 }
             }
             break;
@@ -1952,22 +1843,22 @@ void SmallPacket0x03A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 	uint8 size = PItemContainer->GetSize();
 
-    if (gettick() - PItemContainer->LastSortingTime < 1000)
-    {
-        if (map_config.lightluggage_block == ++PItemContainer->SortingPacket)
-        {
-            ShowWarning(CL_YELLOW"lightluggage detected: <%s> will be removed from server\n" CL_RESET, PChar->GetName());
+   // if (gettick() - PItemContainer->LastSortingTime < 1000)
+   /// {
+       // if (map_config.lightluggage_block == ++PItemContainer->SortingPacket)
+        //{
+            //ShowWarning(CL_YELLOW"lightluggage detected: <%s> will be removed from server\n" CL_RESET, PChar->GetName());
 
-            PChar->status = STATUS_SHUTDOWN;
-            PChar->pushPacket(new CServerIPPacket(PChar,1));
-        }
-        return;
-    }
-    else
-    {
+           // PChar->status = STATUS_SHUTDOWN;
+           // PChar->pushPacket(new CServerIPPacket(PChar,1));
+       // }
+    //    return;
+   // }
+   // else
+   // {
         PItemContainer->SortingPacket = 0;
         PItemContainer->LastSortingTime = gettick();
-    }
+   // }
     for (uint8 slotID = 1; slotID <= size; ++slotID)
     {
         CItem* PItem = PItemContainer->GetItem(slotID);
@@ -2015,7 +1906,7 @@ void SmallPacket0x03A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x03C(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	ShowWarning(CL_YELLOW"SmallPacket0x03C\n" CL_RESET);
+	//ShowWarning(CL_YELLOW"SmallPacket0x03C\n" CL_RESET);
 	return;
 }
 
@@ -2027,7 +1918,7 @@ void SmallPacket0x03C(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x041(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	PrintPacket(data);
+	
 
     uint8 SlotID  = RBUFB(data,(0x04));
 
@@ -2043,7 +1934,7 @@ void SmallPacket0x041(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x042(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	PrintPacket(data);
+	
 
 	uint8 SlotID  = RBUFB(data,(0x04));
 
@@ -2082,8 +1973,8 @@ void SmallPacket0x04D(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	uint8 boxtype = RBUFB(data,(0x05));
 	uint8 slotID  = RBUFB(data,(0x06));
 
-    ShowDebug(CL_CYAN"DeliveryBox Action (%02hx)\n" CL_RESET, RBUFB(data,(0x04)));
-    PrintPacket(data);
+   // ShowDebug(CL_CYAN"DeliveryBox Action (%02hx)\n" CL_RESET, RBUFB(data,(0x04)));
+    
 
 	// 0x01 - отправка клиенту старых предметов
 	// 0x02 - добавление предметов в список отправляемых (подготовка к отправке)
@@ -2492,7 +2383,7 @@ void SmallPacket0x04D(map_session_data_t* session, CCharEntity* PChar, int8* dat
                     if(!commit || !Sql_TransactionCommit(SqlHandle))
                     {
                         Sql_TransactionRollback(SqlHandle);
-                        ShowError("Could not finalize delivery return transaction. PlayerID: %d SenderID :%d ItemID: %d Quantity: %d", PChar->id, senderID, PItem->getID(), PItem->getQuantity());
+                      //  ShowError("Could not finalize delivery return transaction. PlayerID: %d SenderID :%d ItemID: %d Quantity: %d", PChar->id, senderID, PItem->getID(), PItem->getQuantity());
                         PChar->pushPacket(new CDeliveryBoxPacket(action, PItem, PChar->UContainer->GetItemsCount(), 0xEB));
                     }
 
@@ -2562,7 +2453,7 @@ void SmallPacket0x04D(map_session_data_t* session, CCharEntity* PChar, int8* dat
                 if(!commit || !Sql_TransactionCommit(SqlHandle))
                 {
                     Sql_TransactionRollback(SqlHandle);
-                    ShowError("Could not finalize receive transaction. PlayerID: %d ItemID: %d Quantity: %d", PChar->id, PItem->getID(), PItem->getQuantity());
+                   // ShowError("Could not finalize receive transaction. PlayerID: %d ItemID: %d Quantity: %d", PChar->id, PItem->getID(), PItem->getQuantity());
                 }
 
                 Sql_SetAutoCommit(SqlHandle, isAutoCommitOn);
@@ -2700,7 +2591,7 @@ void SmallPacket0x04E(map_session_data_t* session, CCharEntity* PChar, int8* dat
     uint16 itemid   = RBUFW(data,(0x0E));
     uint8  quantity = RBUFB(data,(0x10));
 
-    ShowDebug(CL_CYAN"AH Action (%02hx)\n" CL_RESET, RBUFB(data,(0x04)));
+    //ShowDebug(CL_CYAN"AH Action (%02hx)\n" CL_RESET, RBUFB(data,(0x04)));
 
     // 0x04 - продажа предмета
     // 0x05 - похоже, что в ответ на этот пакет мы можем открыть список продаж или предложить персонажу подождать немного
@@ -2753,7 +2644,7 @@ void SmallPacket0x04E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 						PChar->m_ah_history.push_back(ah);
 					}
 				}
-				ShowDebug("%s has %i items up on the AH. \n",PChar->GetName(),PChar->m_ah_history.size());
+				//ShowDebug("%s has %i items up on the AH. \n",PChar->GetName(),PChar->m_ah_history.size());
 			}
 			else
             {
@@ -2783,13 +2674,13 @@ void SmallPacket0x04E(map_session_data_t* session, CCharEntity* PChar, int8* dat
                    (PItem->getStackSize() == 1 ||
                     PItem->getStackSize() != PItem->getQuantity()))
                 {
-                    ShowError(CL_RED"SmallPacket0x04E::AuctionHouse: Incorrect quantity of item\n" CL_RESET);
+                   // ShowError(CL_RED"SmallPacket0x04E::AuctionHouse: Incorrect quantity of item\n" CL_RESET);
 					PChar->pushPacket(new CAuctionHousePacket(action, 197, 0, 0)); //failed to place up
                     return;
                 }
 				if (PChar->m_ah_history.size() >= 7)
                 {
-					ShowError(CL_RED"SmallPacket0x04E::AuctionHouse: Unable to put up more than 7 items\n" CL_RESET);
+					///ShowError(CL_RED"SmallPacket0x04E::AuctionHouse: Unable to put up more than 7 items\n" CL_RESET);
 					PChar->pushPacket(new CAuctionHousePacket(action, 197, 0, 0)); //failed to place up
 				    return;
 				}
@@ -2806,7 +2697,7 @@ void SmallPacket0x04E(map_session_data_t* session, CCharEntity* PChar, int8* dat
                               CVanaTime::getInstance()->getSysTime(),
                               price) == SQL_ERROR)
 			    {
-				    ShowError(CL_RED"SmallPacket0x04E::AuctionHouse: Cannot insert item to database\n" CL_RESET);
+				   // ShowError(CL_RED"SmallPacket0x04E::AuctionHouse: Cannot insert item to database\n" CL_RESET);
 					PChar->pushPacket(new CAuctionHousePacket(action, 197, 0, 0)); //failed to place up
 				    return;
 			    }
@@ -2918,7 +2809,7 @@ void SmallPacket0x04E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 						                PChar->pushPacket(new CInventoryFinishPacket());
 			                        }
 									else {
-										ShowError("Failed to return item id %u stack %u to char... \n",delitemid,delitemstack);
+										//ShowError("Failed to return item id %u stack %u to char... \n",delitemid,delitemstack);
 									}
 				                    return;
 								}
@@ -3129,7 +3020,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 		if (PZoneLine == NULL) // разворачиваем персонажа на 180° и отправляем туда, откуда пришел
 		{
-            ShowError(CL_RED"SmallPacket0x5E: Zone line %u not found\n" CL_RESET, zoneLineID); // в идеале нужно добавить зону и координаты
+           // ShowError(CL_RED"SmallPacket0x5E: Zone line %u not found\n" CL_RESET, zoneLineID); // в идеале нужно добавить зону и координаты
 
 			PChar->loc.p.rotation += 128;
 
@@ -3141,7 +3032,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		}else{
 			if (zoneutils::GetZone(PZoneLine->m_toZone)->GetIP() == 0) 	// разворачиваем персонажа на 180° и отправляем туда, откуда пришел
 			{
-				ShowDebug(CL_CYAN"SmallPacket0x5E: Zone %u closed to chars\n" CL_RESET, PZoneLine->m_toZone);
+				//ShowDebug(CL_CYAN"SmallPacket0x5E: Zone %u closed to chars\n" CL_RESET, PZoneLine->m_toZone);
 
 				PChar->loc.p.rotation += 128;
 
@@ -3174,7 +3065,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				PChar->loc.p = PZoneLine->m_toPos;
 			}
 		}
-        ShowInfo(CL_WHITE"Zoning from zone %u to zone %u: %s\n" CL_RESET, PChar->getZone(), PChar->loc.destination, PChar->GetName());
+       // ShowInfo(CL_WHITE"Zoning from zone %u to zone %u: %s\n" CL_RESET, PChar->getZone(), PChar->loc.destination, PChar->GetName());
 	}
 	PChar->clearPacketList();
 	PChar->pushPacket(new CServerIPPacket(PChar,2));
@@ -3191,7 +3082,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x060(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	PrintPacket(data);
+	
 
   //luautils::OnEventUpdate(PChar, 0, 0);
   //PChar->pushPacket(new CReleasePacket(PChar,RELEASE_EVENT));
@@ -3251,7 +3142,7 @@ void SmallPacket0x064(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x066(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	PrintPacket(data);
+	
 
 	uint16 stamina = RBUFW(data,(0x08));
 	uint8  action  = RBUFB(data,(0x0E));
@@ -3450,7 +3341,7 @@ void SmallPacket0x071(map_session_data_t* session, CCharEntity* PChar, int8* dat
         break;
 		default:
 		{
-			ShowError(CL_RED"SmallPacket0x071 : unknown byte <%.2X>\n" CL_RESET, RBUFB(data,(0x0A)));
+			//ShowError(CL_RED"SmallPacket0x071 : unknown byte <%.2X>\n" CL_RESET, RBUFB(data,(0x0A)));
 		}
 	}
 	return;
@@ -3602,7 +3493,7 @@ void SmallPacket0x077(map_session_data_t* session, CCharEntity* PChar, int8* dat
         break;
 		default:
 		{
-			ShowError(CL_RED"SmallPacket0x077 : changing role packet with unknown byte <%.2X>\n" CL_RESET, RBUFB(data,(0x14)));
+			//ShowError(CL_RED"SmallPacket0x077 : changing role packet with unknown byte <%.2X>\n" CL_RESET, RBUFB(data,(0x14)));
 		}
 	}
 	return;
@@ -3867,143 +3758,7 @@ void SmallPacket0x0AD(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	/*if (RBUFB(data,(0x06)) == '@' && CmdHandler.call(PChar, (const int8*)data+7) == 0)
-	{
-		//this makes sure a command isn't sent to chat
-	}
-    else if (RBUFB(data,(0x06)) == '#' && PChar->nameflags.flags & FLAG_GM)
-    {
-        for (uint16 zone = 0; zone < MAX_ZONEID; ++zone)
-        {
-            zoneutils::GetZone(zone)->PushPacket(
-                NULL,
-                CHAR_INZONE,
-                new CChatMessagePacket(PChar, MESSAGE_SYSTEM_1, data+7));
-        }
-    }
-    else
-    {
-        if(jailutils::InPrison(PChar))
-        {
-            if(RBUFB(data,(0x04)) == MESSAGE_SAY)
-            {
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY, data+6));
-            }
-            else
-            {
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 316));
-            }
-        }
-        else
-        {
-            switch(RBUFB(data,(0x04)))
-            {
-                case MESSAGE_SAY:
-					{
-						if (map_config.audit_chat == 1)
-						{
-							std::string qStr = ("INSERT into audit_chat (speaker,type,message,datetime) VALUES('");
-							qStr +=PChar->GetName();
-							qStr +="','SAY','";
-							qStr += escape(data+6);
-							qStr +="',current_timestamp());";
-							const char * cC = qStr.c_str();
-							Sql_QueryStr(SqlHandle, cC);
-						}
-						PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY,     data+6));
-					}
-					break;
-                case MESSAGE_EMOTION:	PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_EMOTION, data+6)); break;
-                case MESSAGE_SHOUT:
-					{
-						if (map_config.audit_chat == 1)
-						{
-							std::string qStr = ("INSERT into audit_chat (speaker,type,message,datetime) VALUES('");
-							qStr +=PChar->GetName();
-							qStr +="','SHOUT','";
-							qStr += escape(data+6);
-							qStr +="',current_timestamp());";
-							const char * cC = qStr.c_str();
-							Sql_QueryStr(SqlHandle, cC);
-						}
-						PChar->loc.zone->PushPacket(PChar, CHAR_INSHOUT, new CChatMessagePacket(PChar, MESSAGE_SHOUT,   data+6));
-
-					}
-					break;
-                case MESSAGE_LINKSHELL:
-                {
-                    if (PChar->PLinkshell != NULL)
-                    {
-						if (map_config.audit_chat == 1)
-						{
-							std::string qStr = ("INSERT into audit_chat (speaker,type,message,datetime) VALUES('");
-							qStr +=PChar->GetName();
-							qStr +="','LINKSHELL','";
-							qStr += escape(data+6);
-							qStr +="',current_timestamp());";
-							const char * cC = qStr.c_str();
-							Sql_QueryStr(SqlHandle, cC);
-						}
-                        PChar->PLinkshell->PushPacket(PChar, new CChatMessagePacket(PChar, MESSAGE_LINKSHELL, data+6));
-                    }
-                }
-                break;
-				case MESSAGE_PARTY:
-                {
-                    if (PChar->PParty != NULL)
-                    {
-						if (PChar->PParty->m_PAlliance == NULL)
-						{
-							if (map_config.audit_chat == 1)
-							{
-								std::string qStr = ("INSERT into audit_chat (speaker,type,message,datetime) VALUES('");
-								qStr +=PChar->GetName();
-								qStr +="','PARTY','";
-								qStr += escape(data+6);
-								qStr +="',current_timestamp());";
-								const char * cC = qStr.c_str();
-								Sql_QueryStr(SqlHandle, cC);
-							}
-							PChar->PParty->PushPacket(PChar, 0, new CChatMessagePacket(PChar, MESSAGE_PARTY, data+6));
-
-						}else{ //alliance party chat
-								for (uint8 i = 0; i < PChar->PParty->m_PAlliance->partyList.size(); ++i)
-								{
-									PChar->PParty->m_PAlliance->partyList.at(i)->PushPacket(PChar, 0, new CChatMessagePacket(PChar, MESSAGE_PARTY, data+6));
-								}
-								if (map_config.audit_chat == 1)
-								{
-									std::string qStr = ("INSERT into audit_chat (speaker,type,message,datetime) VALUES('");
-									qStr +=PChar->GetName();
-									qStr +="','ALLIANCE','";
-									qStr += escape(data+6);
-									qStr +="',current_timestamp());";
-									const char * cC = qStr.c_str();
-									Sql_QueryStr(SqlHandle, cC);
-								}
-							}
-					}
-                }
-                break;
-                case MESSAGE_YELL:
-					{
-						if (map_config.audit_chat == 1)
-						{
-							std::string qStr = ("INSERT into audit_chat (speaker,type,message,datetime) VALUES('");
-							qStr +=PChar->GetName();
-							qStr +="','YELL','";
-							qStr += escape(data+6);
-							qStr +="',current_timestamp());";
-							const char * cC = qStr.c_str();
-							Sql_QueryStr(SqlHandle, cC);
-						}
-						PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 256));
-					}break;
-            }
-        }
-	}
-
-	return;*/
+	
 		ShowNotice("PCHAR CHAT SYSTEM CALLED\n");
 	if(PChar != NULL)
 	{
@@ -4059,7 +3814,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	           }
 			else
 			{
-				ShowNotice("SOME OTHER COMAMND WAS CALLED UNKNOWN\n");
+				//ShowNotice("SOME OTHER COMAMND WAS CALLED UNKNOWN\n");
 
             return;
 			}
@@ -4067,7 +3822,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	        }
 		else
 		{
-        ShowNotice("SOME OTHER COMAMND WAS CALLED UNKNOWN\n");
+       // ShowNotice("SOME OTHER COMAMND WAS CALLED UNKNOWN\n");
         return;
 		}
 		
@@ -4207,7 +3962,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0B6(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-   ShowNotice("PCHAR SEND TELL SYSTEM CALLED\n");
+  // ShowNotice("PCHAR SEND TELL SYSTEM CALLED\n");
 	string_t RecipientName = data+5;
 	string_t message = data+20;
 	//ShowNotice(CL_RED"SENDING MESSAGE %s TO PLAYER %s FROM PLAYER %s\n" CL_RESET,message.c_str(),RecipientName.c_str(),PChar->GetName());
@@ -4901,12 +4656,13 @@ void SmallPacket0x0E7(map_session_data_t* session, CCharEntity* PChar, int8* dat
     FLAG_GM_PRODUCER    = 0x07000000,
 	
 	*/
-	if (PChar->getZone() == 0 ||PChar->godmode == 1)
-	{
-		PChar->status = STATUS_SHUTDOWN;
-		PChar->pushPacket(new CServerIPPacket(PChar,1));
-	}
-	else if (PChar->animation == ANIMATION_NONE)
+	//if (PChar->getZone() == 0 ||PChar->godmode == 1)
+	//{
+	//	PChar->status = STATUS_SHUTDOWN;
+	//	PChar->pushPacket(new CServerIPPacket(PChar,1));
+	//}
+	//else
+	if (PChar->animation == ANIMATION_NONE)
 	{
 		uint8 ExitType = (RBUFB(data,(0x06)) == 1 ? 7 : 35);
 
@@ -5359,16 +5115,16 @@ void SmallPacket0x102(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			            PChar->pushPacket(new CCharHealthPacket(PChar));
 					}
 					else {
-						ShowDebug("Cannot resolve spell id \n");
+						//ShowDebug("Cannot resolve spell id \n");
 					}
 				}
 				else {
-					ShowDebug("No match found. \n");
+					//ShowDebug("No match found. \n");
 				}
 			}
 		}
 		else {
-			ShowDebug("Got 0x102 but it's not for JOB_BLU.");
+			//ShowDebug("Got 0x102 but it's not for JOB_BLU.");
 		}
 	}
 
@@ -5643,7 +5399,7 @@ void PacketParserInitialize()
     PacketSize[0x00D] = 0x04; PacketParser[0x00D] = &SmallPacket0x00D;
     PacketSize[0x00F] = 0x00; PacketParser[0x00F] = &SmallPacket0x00F;
     PacketSize[0x011] = 0x00; PacketParser[0x011] = &SmallPacket0x011;
-    PacketSize[0x015] = 0x10; PacketParser[0x015] = &SmallPacket0x015;
+    PacketSize[0x015] = 0x10; PacketParser[0x015] = &Player_Update;
     PacketSize[0x016] = 0x04; PacketParser[0x016] = &SmallPacket0x016;
     PacketSize[0x017] = 0x00; PacketParser[0x017] = &SmallPacket0x017;
     PacketSize[0x01A] = 0x08; PacketParser[0x01A] = &SmallPacket0x01A;

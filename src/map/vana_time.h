@@ -75,7 +75,7 @@ public:
 	uint32	 getSysSecond();
 	uint32	 getSysWeekDay();						// Number of day since sunday
 	uint32	 getSysYearDay();						// Number of day since 1st january
-
+	uint32   getVanaMinute();
     uint32   getVanaTime();
 	int32	 getCustomOffset();
 

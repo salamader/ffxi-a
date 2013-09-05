@@ -132,7 +132,7 @@ void CInstance::setLootId(uint16 id){
 
 void CInstance::enableSubJob(){
 	if(m_PlayerList.size()==0){
-		ShowWarning("instance:enableSubjob - No players in battlefield!\n");
+		//ShowWarning("instance:enableSubjob - No players in battlefield!\n");
 		return;
 	}
 	for(int i=0; i<m_PlayerList.size(); i++){
@@ -142,7 +142,7 @@ void CInstance::enableSubJob(){
 
 void CInstance::disableSubJob(){
 	if(m_PlayerList.size()==0){
-		ShowWarning("instance:disableSubjob - No players in battlefield!\n");
+		//ShowWarning("instance:disableSubjob - No players in battlefield!\n");
 		return;
 	}
 	for(int i=0; i<m_PlayerList.size(); i++){
@@ -152,7 +152,7 @@ void CInstance::disableSubJob(){
 
 uint8 CInstance::getPlayerMainJob(){
 	if(m_PlayerList.size()==0){
-		ShowWarning("instance:getPlayerMainJob - No players in battlefield!\n");
+		//ShowWarning("instance:getPlayerMainJob - No players in battlefield!\n");
 		return 1;
 	}
 	return m_PlayerList.at(0)->GetMJob();
@@ -160,7 +160,7 @@ uint8 CInstance::getPlayerMainJob(){
 
 uint8 CInstance::getPlayerMainLevel(){
 	if(m_PlayerList.size()==0){
-		ShowWarning("instance:getPlayerMainLevel - No players in battlefield!\n");
+		//ShowWarning("instance:getPlayerMainLevel - No players in battlefield!\n");
 		return 1;
 	}
 	return m_PlayerList.at(0)->GetMLevel();
@@ -168,7 +168,7 @@ uint8 CInstance::getPlayerMainLevel(){
 
 void CInstance::capPlayerToBCNM(){ //adjust player's level to the appropriate cap and remove buffs
 	if(m_PlayerList.size()==0){
-		ShowWarning("instance:getPlayerMainLevel - No players in battlefield!\n");
+		///ShowWarning("instance:getPlayerMainLevel - No players in battlefield!\n");
 		return;
 	}
 	uint8 cap = getLevelCap();
@@ -206,13 +206,16 @@ void CInstance::pushMessageToAllInBcnm(uint16 msg, uint16 param){
 bool CInstance::addPlayerToBcnm(CCharEntity* PChar){
 	//split to get the reason for debugging
 	if(m_PlayerList.size() >= m_MaxParticipants){
-		ShowDebug("Cannot add %s to BCNM list, max size reached.\n",PChar->GetName());return false;
+		//ShowDebug("Cannot add %s to BCNM list, max size reached.\n",PChar->GetName());
+		return false;
 	}
 	if(PChar->StatusEffectContainer->HasStatusEffect(EFFECT_BATTLEFIELD)){
-		ShowDebug("Cannot add %s to BCNM list, they have BC effect.\n",PChar->GetName());return false;
+		//ShowDebug("Cannot add %s to BCNM list, they have BC effect.\n",PChar->GetName());
+		return false;
 	}
 	if(PChar->getZone() != m_ZoneID){
-		ShowDebug("Cannot add %s to BCNM list, not in right zone.\n",PChar->GetName());return false;
+		//ShowDebug("Cannot add %s to BCNM list, not in right zone.\n",PChar->GetName());
+		return false;
 	}
 
 	m_PlayerList.push_back(PChar);
@@ -240,9 +243,11 @@ bool CInstance::delPlayerFromBcnm(CCharEntity* PChar){
 bool CInstance::enterBcnm(CCharEntity* PChar){
 	for(int i=0; i<m_PlayerList.size(); i++){
 		if(m_PlayerList.at(i)->id == PChar->id){
-			if(PChar->m_insideBCNM){ShowWarning("%s is already inside a BCNM!\n",PChar->GetName());}
+			if(PChar->m_insideBCNM){
+				//ShowWarning("%s is already inside a BCNM!\n",PChar->GetName());
+			}
 			PChar->m_insideBCNM = true;
-			ShowDebug("Entered ID %i Instance %i \n",this->m_BcnmID,this->m_InstanceNumber);
+			//ShowDebug("Entered ID %i Instance %i \n",this->m_BcnmID,this->m_InstanceNumber);
 			//callback to lua
 			luautils::OnBcnmEnter(PChar,this);
 			return true;
@@ -261,7 +266,10 @@ bool CInstance::isValidPlayerForBcnm(CCharEntity* PChar){
 }
 
 bool CInstance::allPlayersDead(){
-	if(m_PlayerList.size()==0){ShowWarning("instance:allPlayersDead : No players in list!\n");}
+	if(m_PlayerList.size()==0){
+		
+		//ShowWarning("instance:allPlayersDead : No players in list!\n");
+	}
 
 	for(int i=0; i<m_PlayerList.size();i++){
 		if(!m_PlayerList.at(i)->isDead()){
@@ -276,8 +284,7 @@ bool CInstance::allPlayersDead(){
 void CInstance::lockBcnm(){
 	for(int i=0; i<m_PlayerList.size(); i++){
 		if(!m_PlayerList.at(i)->m_insideBCNM){
-			ShowDebug("Removing %s from the valid players list for BCNMID %i Instance %i \n",m_PlayerList.at(i)->GetName(),
-				this->m_BcnmID,this->m_InstanceNumber);
+			//ShowDebug("Removing %s from the valid players list for BCNMID %i Instance %i \n",m_PlayerList.at(i)->GetName(),this->m_BcnmID,this->m_InstanceNumber);
 			if(this->delPlayerFromBcnm(m_PlayerList.at(i))){i--;}
 		}
 	}
@@ -331,7 +338,7 @@ bool CInstance::isReserved(){
 }
 
 void CInstance::cleanup(){
-	ShowDebug("bcnm cleanup id:%i inst:%i \n",this->getID(),this->getInstanceNumber());
+	//ShowDebug("bcnm cleanup id:%i inst:%i \n",this->getID(),this->getInstanceNumber());
 	//wipe enmity from all mobs in list if needed
 	for(int i=0; i<m_EnemyList.size(); i++){
 		m_EnemyList.at(i)->PBattleAI->SetCurrentAction(ACTION_DESPAWN);
@@ -352,7 +359,7 @@ void CInstance::cleanup(){
 	locked = false;
 	//delete instance
 	if(m_Handler==NULL){
-		ShowError("Instance handler is NULL from Instance BCNM %i Inst %i \n",m_BcnmID,m_InstanceNumber);
+		//ShowError("Instance handler is NULL from Instance BCNM %i Inst %i \n",m_BcnmID,m_InstanceNumber);
 	}
 
 	m_Handler->wipeInstance(this);
@@ -426,13 +433,16 @@ uint16 CInstance::getDynaUniqueID(){
 bool CInstance::addPlayerToDynamis(CCharEntity* PChar){
 	//split to get the reason for debugging
 	if(m_PlayerList.size() >= m_MaxParticipants){
-		ShowDebug("Cannot add %s to Dynamis list, max size reached.\n",PChar->GetName());return false;
+		//ShowDebug("Cannot add %s to Dynamis list, max size reached.\n",PChar->GetName());
+		return false;
 	}
 	if(PChar->StatusEffectContainer->HasStatusEffect(EFFECT_DYNAMIS, 0) || PChar->StatusEffectContainer->HasStatusEffect(EFFECT_BATTLEFIELD)){
-		ShowDebug("Cannot add %s to Dynamis list, they have BC effect.\n",PChar->GetName());return false;
+		//ShowDebug("Cannot add %s to Dynamis list, they have BC effect.\n",PChar->GetName());
+		return false;
 	}
 	if(PChar->getZone() != m_ZoneID){
-		ShowDebug("Cannot add %s to Dynamis list, not in right zone.\n",PChar->GetName());return false;
+		//ShowDebug("Cannot add %s to Dynamis list, not in right zone.\n",PChar->GetName());
+		return false;
 	}
 
 	m_PlayerList.push_back(PChar);
@@ -467,7 +477,7 @@ void CInstance::cleanupDynamis(){
 	int32 ret = Sql_Query(SqlHandle, fmtQuery, this->getZoneId());
 
 	if (ret == SQL_ERROR || Sql_NumRows(SqlHandle) == 0) {
-		ShowError("Dynamis cleanup : SQL error - Cannot find any ID for Dyna %i \n",this->getID());
+		//ShowError("Dynamis cleanup : SQL error - Cannot find any ID for Dyna %i \n",this->getID());
 	}else{
 		while(Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 		{
@@ -485,7 +495,7 @@ void CInstance::cleanupDynamis(){
 
 	//delete instance
 	if(m_Handler==NULL){
-		ShowError("Instance handler is NULL from Dynamis Instance %i \n",m_BcnmID);
+		//ShowError("Instance handler is NULL from Dynamis Instance %i \n",m_BcnmID);
 	}
 	m_Handler->wipeInstance(this);
 	delete this;

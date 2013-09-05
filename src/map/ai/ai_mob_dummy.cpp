@@ -678,7 +678,7 @@ void CAIMobDummy::ActionAbilityStart()
 	// We don't have any skills we can use, so let's go back to attacking
     if (MobSkills.size() == 0)
     {
-    	ShowWarning("CAIMobDummy::ActionAbilityStart No TP moves found for family (%d)\n", m_PMob->m_Family);
+    	//ShowWarning("CAIMobDummy::ActionAbilityStart No TP moves found for family (%d)\n", m_PMob->m_Family);
         m_PMob->health.tp = 0;
         TransitionBack(true);
 		return;
@@ -1771,7 +1771,7 @@ void CAIMobDummy::CastSpell(uint16 spellId, CBattleEntity* PTarget)
 	m_PSpell = spell::GetSpell(spellId);
 
 	if(m_PSpell == NULL){
-		ShowWarning(CL_YELLOW"ai_mob_dummy::CastSpell: SpellId <%i> is not found\n" CL_RESET, spellId);
+		//ShowWarning(CL_YELLOW"ai_mob_dummy::CastSpell: SpellId <%i> is not found\n" CL_RESET, spellId);
 	} else {
 
 		if(PTarget == NULL)

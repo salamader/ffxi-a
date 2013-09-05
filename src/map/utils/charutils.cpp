@@ -1021,7 +1021,7 @@ uint8 AddItem(CCharEntity* PChar, uint8 LocationID, uint16 ItemID, uint32 quanti
 		PItem->setQuantity(quantity);
         return AddItem(PChar, LocationID, PItem);
 	}
-	ShowWarning(CL_YELLOW"charplugin::AddItem: Item <%i> is not found in a database\n" CL_RESET, ItemID);
+	//ShowWarning(CL_YELLOW"charplugin::AddItem: Item <%i> is not found in a database\n" CL_RESET, ItemID);
 	return ERROR_SLOTID;
 }
 
@@ -1676,7 +1676,7 @@ bool EquipArmor(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID)
 	}
     else
     {
-		ShowWarning(CL_YELLOW"Item %i is not equipable in equip slot %i\n" CL_RESET, PItem->getID(), equipSlotID);
+		//ShowWarning(CL_YELLOW"Item %i is not equipable in equip slot %i\n" CL_RESET, PItem->getID(), equipSlotID);
 		return false;
 	}
 	return true;
@@ -1851,6 +1851,8 @@ void RemoveAllEquipment(CCharEntity* PChar)
 
 void CheckEquipLogic(CCharEntity* PChar, SCRIPTTYPE ScriptType, uint32 param)
 {
+	if(PChar != NULL)
+	{
 	if (!(PChar->m_EquipFlag & ScriptType))
 		return;
 
@@ -1865,6 +1867,7 @@ void CheckEquipLogic(CCharEntity* PChar, SCRIPTTYPE ScriptType, uint32 param)
 				luautils::OnItemCheck(PChar, PItem, param);
 			}
 		}
+	}
 	}
 }
 
@@ -4395,7 +4398,7 @@ void loadCharWsPoints(CCharEntity* PChar)
         if(index < MAX_UNLOCKABLE_WEAPONS && index >= 0){
     		PChar->unlockedWeapons[index].points = (uint16)Sql_GetUIntData(SqlHandle,1);
         } else {
-            ShowWarning("charutils::loadCharWsPoints Warning bad index from database. Index = %d", index);
+           // ShowWarning("charutils::loadCharWsPoints Warning bad index from database. Index = %d", index);
         }
 	}
 

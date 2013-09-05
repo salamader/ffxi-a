@@ -318,9 +318,9 @@ void LoadNPCList(CZone* PZone)
 
 			PNpc->namevis = (uint8)Sql_GetIntData(SqlHandle,11);
 			PNpc->status  = (STATUSTYPE)Sql_GetIntData(SqlHandle,12);
-			PNpc->unknown = (uint32)Sql_GetUIntData(SqlHandle,13);
+			//PNpc->unknown = (uint32)Sql_GetUIntData(SqlHandle,13);
 
-			PNpc->name_prefix = (uint8)Sql_GetIntData(SqlHandle,15);
+			//PNpc->name_prefix = (uint8)Sql_GetIntData(SqlHandle,15);
 
 			memcpy(&PNpc->look,Sql_GetData(SqlHandle,14),20);
 

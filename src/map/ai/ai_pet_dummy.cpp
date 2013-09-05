@@ -299,7 +299,7 @@ void CAIPetDummy::preparePetAbility(CBattleEntity* PTarg){
 		m_ActionType = ACTION_MOBABILITY_USING;
 	}
 	else{
-		ShowWarning("ai_pet_dummy::ActionAbilityFinish Pet skill is null \n");
+		//ShowWarning("ai_pet_dummy::ActionAbilityFinish Pet skill is null \n");
 		TransitionBack(true);
 	}
 }

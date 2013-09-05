@@ -214,7 +214,7 @@ int16 CMagicState::CalculateMPCost(CSpell* PSpell)
 {
     if(PSpell == NULL)
     {
-        ShowWarning("CMagicState::CalculateMPCost Spell is NULL\n");
+        //ShowWarning("CMagicState::CalculateMPCost Spell is NULL\n");
         return 0;
     }
 
@@ -417,7 +417,7 @@ bool CMagicState::ValidCast(CSpell* PSpell, CBattleEntity* PTarget)
     {
         if(m_PEntity->objtype == TYPE_MOB && m_PEntity->health.maxmp == 0)
         {
-            ShowWarning("CMagicState::ValidCast Mob (%u) tried to cast magic with no mp!\n", m_PEntity->id);
+            //ShowWarning("CMagicState::ValidCast Mob (%u) tried to cast magic with no mp!\n", m_PEntity->id);
         }
         PushError(MSGBASIC_NOT_ENOUGH_MP, PSpell->getID());
         return false;

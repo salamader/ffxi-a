@@ -89,6 +89,8 @@ struct Elevator_t
 
 	uint16 interval;
 	uint16 movetime;
+	uint8			animation;			// ????????
+	uint8			speed;		
 
 	CNpcEntity * Elevator;
 	CNpcEntity * LowerDoor;
@@ -137,7 +139,7 @@ private:
 	
 	
 
-	std::vector<Elevator_t> ElevatorList;
+	std::vector<Elevator_t*> ElevatorList;
     std::vector<Transport_t*> TransportList;
 };
 
