@@ -1424,7 +1424,7 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 	}
 	else
 	{
-       ShowDebug(CL_CYAN"A NULL PENTITY CALLED A FUNCTION ??? WTF %u\n" CL_RESET,packet);
+       ShowDebug(CL_CYAN"A PACKET WAS CALLED WITH NO PENTITY %u\n" CL_RESET,packet);
 	}
 }
 
