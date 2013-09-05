@@ -899,7 +899,7 @@ int32 OnZoneInitialise(uint16 ZoneID)
 
 int32 OnGameIn(CCharEntity* PChar)
 {
-	ShowWarning("27\n");
+	//ShowWarning("27\n");
 	uint8 fristlogin = 0;
 	uint8 shutdown_status = 0;
 	uint8 inevent = 0;

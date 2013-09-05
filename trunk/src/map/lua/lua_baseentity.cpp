@@ -7505,6 +7505,7 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
    if(lua_isnil(L,2) || !lua_isnumber(L,2))
 	{
 		PChar->eventid =-1;
+		PChar->is_inevent = 0;
 	}
 
 	if( !lua_isnil(L,2) && lua_isnumber(L,2) )
@@ -7512,6 +7513,8 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
 			
 		uint16 eventid = lua_tointeger(L,2);
 		PChar->eventid =lua_tointeger(L,2);
+		const int8* Query = "UPDATE chars SET inevent ='1', eventid = '%u' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,eventid,PChar->id);
 	}
 		float to_x = 0;
 		float to_y = 0;
