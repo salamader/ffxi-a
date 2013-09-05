@@ -7502,7 +7502,7 @@ inline int32 CLuaBaseEntity::gotoNpc(lua_State *L)
 
 	
 			
-		uint16 npcid = lua_tointeger(L,1);
+		int32 npcid = lua_tointeger(L,1);
 		
 		
 	
@@ -7512,7 +7512,7 @@ inline int32 CLuaBaseEntity::gotoNpc(lua_State *L)
 		uint8 to_rot = 0;
 		uint16 zone = 0;
 		const char * Query = "SELECT pos_rot,pos_x,pos_y,pos_z,zoneid FROM npc_list WHERE id= '%u';";
-	          int32 ret3 = Sql_Query(SqlHandle,Query,(uint8)lua_tointeger(L,1));
+	          int32 ret3 = Sql_Query(SqlHandle,Query,npcid);
 			
 
 	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
@@ -7553,9 +7553,9 @@ inline int32 CLuaBaseEntity::gotoNpc(lua_State *L)
 				    }
 				 else
 				 {
-                   ShowMessage(CL_YELLOW"NO NPC FOUND IN DATABASE BY THE ID %u \n"CL_RESET,(uint8)lua_tointeger(L,1));
+                   ShowMessage(CL_YELLOW"NO NPC FOUND IN DATABASE BY THE ID %u \n"CL_RESET,npcid);
 				   
-                   sprintf(buf,"There is no npc found in the database by the ID: %d", (uint8)lua_tointeger(L,1));
+                   sprintf(buf,"There is no npc found in the database by the ID: %d", npcid);
 	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 				   return false;
 				 }
@@ -7597,7 +7597,7 @@ inline int32 CLuaBaseEntity::NpcList(lua_State *L)
 	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 		return false;
    }
-   uint8 npclist =(uint8)lua_tointeger(L,1);
+   uint32 npclist =lua_tointeger(L,1);
    int zoneid = 0;
    int npcid = 0;
    string_t name ="none";
@@ -7665,9 +7665,9 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
 		float to_y = 0;
 		float to_z = 0;
 		uint8 to_rot = 0;
-		int zone =(uint8)lua_tointeger(L,1);
+		uint16 zone =lua_tointeger(L,1);
 		const char * Query = "SELECT x,y,z,r FROM zonesystem WHERE zone= '%u';";
-	          int32 ret3 = Sql_Query(SqlHandle,Query,(uint8)lua_tointeger(L,1));
+	          int32 ret3 = Sql_Query(SqlHandle,Query,zone);
 			
 
 	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
@@ -7695,7 +7695,7 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
 					   
              PChar->is_returning = 1;
 				  
-                    PChar->loc.destination = (uint8)lua_tointeger(L,1);
+                    PChar->loc.destination = zone;
 				   PChar->status = STATUS_DISAPPEAR;
 			PChar->animation = ANIMATION_NONE;
 
@@ -7707,9 +7707,9 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
 				    }
 				 else
 				 {
-                   ShowMessage(CL_YELLOW"NO ZONELINE FOUND IN DATABASE BY THE ID %u \n"CL_RESET,(uint8)lua_tointeger(L,1));
+                   ShowMessage(CL_YELLOW"NO ZONELINE FOUND IN DATABASE BY THE ID %u \n"CL_RESET,zone);
 				   
-                   sprintf(buf,"There is no zone found in the database by the ID: %d", (uint8)lua_tointeger(L,1));
+                   sprintf(buf,"There is no zone found in the database by the ID: %d", zone);
 	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 				   return false;
 				 }
@@ -7753,7 +7753,7 @@ inline int32 CLuaBaseEntity::ZoneList(lua_State *L)
 	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 		return false;
    }
-   uint8 zonelist =(uint8)lua_tointeger(L,1);
+   uint16 zonelist =lua_tointeger(L,1);
    int zone = 0;
    string_t name ="none";
    const char *pfmtQuery =  "SELECT zone,name FROM zonesystem WHERE list = %u ORDER BY zone ASC LIMIT 25;";
