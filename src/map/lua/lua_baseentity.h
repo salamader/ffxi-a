@@ -475,6 +475,8 @@ public:
 	int32 show_Command_Menu(lua_State*);
 	int32 set_speed(lua_State*);
 	int32 Zone(lua_State *L);
+	int32 gotoNpc(lua_State *L);
+	int32 NpcList(lua_State *L);
 	int32 ZoneList(lua_State *L);
 	int32 Set_Exp_Rates(lua_State*); 
 	int32 set_Level(lua_State*);				
