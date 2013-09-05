@@ -837,8 +837,29 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 
 				                     ShowDebug(CL_CYAN"map_cleanup: %s timed out, closing session\n" CL_RESET, PChar->GetName());
 									 PChar->shutdown_status =1;
-									
+									PChar->TradePending.clean();
+                                    PChar->InvitePending.clean();
+	                                PChar->PWideScanTarget = NULL;
+
+	                              if (PChar->animation == ANIMATION_ATTACK)
+	                                  {
+		                              PChar->animation = ANIMATION_NONE;
+	                                  }
+
+                                    PChar->PRecastContainer->Del(RECAST_MAGIC);
+
+                                  charutils::SaveCharStats(PChar);
 	
+	                             charutils::SaveCharExp(PChar, PChar->GetMJob());
+	                             charutils::SaveCharPoints(PChar);
+                                 charutils::CheckEquipLogic(PChar, SCRIPT_CHANGEZONE, PChar->getZone());
+	
+                                if (PChar->loc.zone != NULL)
+                                     {
+                                   PChar->loc.zone->DecreaseZoneCounter(PChar);
+                                    }
+	                                 PChar->status = STATUS_DISAPPEAR;
+                                     PChar->PBattleAI->Reset();
 
 		
 

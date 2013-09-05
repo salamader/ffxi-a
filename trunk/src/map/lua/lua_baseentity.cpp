@@ -122,8 +122,8 @@ inline int32 CLuaBaseEntity::leavegame(lua_State *L)
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-	//((CCharEntity*)m_PBaseEntity)->status = STATUS_SHUTDOWN;
-	//((CCharEntity*)m_PBaseEntity)->pushPacket(new CServerIPPacket((CCharEntity*)m_PBaseEntity,1));
+	((CCharEntity*)m_PBaseEntity)->status = STATUS_SHUTDOWN;
+	((CCharEntity*)m_PBaseEntity)->pushPacket(new CServerIPPacket((CCharEntity*)m_PBaseEntity,1));
 
 	return 0;
 }
@@ -3578,7 +3578,7 @@ inline int32 CLuaBaseEntity::costume(lua_State *L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-   /* CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
     if( !lua_isnil(L,-1) && lua_isnumber(L,-1) )
     {
@@ -3594,7 +3594,7 @@ inline int32 CLuaBaseEntity::costume(lua_State *L)
         }
         return 0;
 	}
-    lua_pushinteger(L, PChar->m_Costum);*/
+    lua_pushinteger(L, PChar->m_Costum);
     return 1;
 }
 
@@ -8895,9 +8895,9 @@ inline int32 CLuaBaseEntity::leave_game(lua_State *L)
 	}
 	
 
-	//PChar->status = STATUS_SHUTDOWN;
-	//PChar->clearPacketList();
-	//PChar->pushPacket(new CServerIPPacket(PChar,1));
+	PChar->status = STATUS_SHUTDOWN;
+	PChar->clearPacketList();
+	PChar->pushPacket(new CServerIPPacket(PChar,1));
 	
 	char buf1[110];
 	sprintf(buf1,"Leaving Game" );
