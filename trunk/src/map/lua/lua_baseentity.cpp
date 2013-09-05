@@ -7482,7 +7482,152 @@ inline int32 CLuaBaseEntity::unlockAttachment(lua_State* L)
 ///////////////////////////////////////////////////////////////
 //COMMAND SYSTEM
 ///////////////////////////////////////////////////////////////
+inline int32 CLuaBaseEntity::gotoNpc(lua_State *L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	char buf[110];
+	if(PChar !=NULL)
+	{
+     
+   if(lua_isnil(L,1) || !lua_isnumber(L,1) || !lua_tolstring(L,1,NULL))
+	{
+		sprintf(buf,"COMMAND Example: .gotonpc 1", (uint8)lua_tointeger(L,1));
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		
+		return false;
+	}
+   
+  
+   
 
+	
+			
+		uint16 npcid = lua_tointeger(L,1);
+		
+		
+	
+		float to_x = 0;
+		float to_y = 0;
+		float to_z = 0;
+		uint8 to_rot = 0;
+		uint16 zone = 0;
+		const char * Query = "SELECT pos_rot,pos_x,pos_y,pos_z,zoneid FROM npc_list WHERE id= '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,(uint8)lua_tointeger(L,1));
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+					to_rot =  Sql_GetUIntData(SqlHandle,0);
+					ShowMessage(CL_YELLOW"TO ROT %u \n"CL_RESET,to_rot);	
+				    to_x =  Sql_GetFloatData(SqlHandle,1);
+					ShowMessage(CL_YELLOW"TO X %.3f \n"CL_RESET,to_x);
+				    to_y =  Sql_GetFloatData(SqlHandle,2);
+					ShowMessage(CL_YELLOW"TO X %.3f \n"CL_RESET,to_y);
+				    to_z =  Sql_GetFloatData(SqlHandle,3);
+					ShowMessage(CL_YELLOW"TO X %.3f \n"CL_RESET,to_z);
+				    zone =  Sql_GetUIntData(SqlHandle,4);
+					ShowMessage(CL_YELLOW"TO ZONE %u \n"CL_RESET,to_rot);
+					ShowMessage(CL_YELLOW"PCHAR %s ID %u \n"CL_RESET,PChar->GetName(),PChar->id);
+                   
+				   PChar->loc.p.x = to_x;
+				   PChar->loc.p.y = to_y;
+				   PChar->loc.p.z = to_z;
+				   PChar->loc.p.rotation = to_rot;
+				   
+		           PChar->loc.boundary = 0;
+				   const int8* Query = "UPDATE chars SET returning = '1', pos_zone='%u', pos_prevzone='%u', pos_x='%.3f', pos_y='%.3f', pos_z='%.3f', pos_rot='%u' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,zone,zone,to_x,to_y,to_z,to_rot,PChar->id);
+					   
+					   
+             PChar->is_returning = 1;
+				  
+                    PChar->loc.destination = zone;
+				   PChar->status = STATUS_DISAPPEAR;
+			PChar->animation = ANIMATION_NONE;
+
+			PChar->clearPacketList();
+				 
+	                PChar->pushPacket(new CServerIPPacket(PChar,2));
+						return false;
+		
+				    }
+				 else
+				 {
+                   ShowMessage(CL_YELLOW"NO NPC FOUND IN DATABASE BY THE ID %u \n"CL_RESET,(uint8)lua_tointeger(L,1));
+				   
+                   sprintf(buf,"There is no npc found in the database by the ID: %d", (uint8)lua_tointeger(L,1));
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+				   return false;
+				 }
+		
+       
+	
+   
+			
+	return false;
+	}
+	return false;
+}
+inline int32 CLuaBaseEntity::NpcList(lua_State *L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	char buf[110];
+	if(m_PBaseEntity == NULL)
+	{
+		
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		
+		return false;
+	}
+   if(lua_isnil(L,1) || !lua_isnumber(L,1) || !lua_tolstring(L,1,NULL))
+	{
+		sprintf(buf,"COMMAND Example: .npclist 1");
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		
+		return false;
+	}
+   if(lua_tointeger(L,1) > 12 || lua_tointeger(L,1) < 1)
+	{
+		sprintf(buf,"COMMAND Example: .npclist 1-100");
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+   }
+   uint8 npclist =(uint8)lua_tointeger(L,1);
+   int zoneid = 0;
+   int npcid = 0;
+   string_t name ="none";
+   const char *pfmtQuery =  "SELECT id,zoneid,name FROM npc_list WHERE list = %u ORDER BY zoneid ASC LIMIT 25;";
+
+				int32 ret =  Sql_Query(SqlHandle,pfmtQuery,npclist);
+				if( ret == SQL_ERROR )
+				{
+					sprintf(buf,"No npclist found in the databse.");
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+					return false;;
+				}
+				int i = 0;
+				//Считывание информации о конкректном персонаже
+				//Загрузка всей необходимой информации о персонаже из базы
+				while(Sql_NextRow(SqlHandle) != SQL_NO_DATA) 
+				{
+					npcid    = Sql_GetIntData(SqlHandle,0);
+					zoneid    = Sql_GetIntData(SqlHandle,1);
+					name    = Sql_GetData(SqlHandle,2);
+					sprintf(buf,"NPCLIST %u: ID %u NAME %s ZONE %u",npclist,npcid , name.c_str(),zoneid );
+	                PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+					i++;
+				}
+
+   
+	
+   
+	return false;
+}
 inline int32 CLuaBaseEntity::Zone(lua_State *L)
 {
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
@@ -9012,9 +9157,11 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".getpos .addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
+	sprintf(buf3,".getpos .addmaps .leavegame .homepoint .gotonpc .event .npclist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
-	
+	char buf4[110];
+	sprintf(buf4,".wallhack .zone .zonelist" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	return true;
 	}
 	if(PChar->Account_Level==4)
@@ -9029,8 +9176,11 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".getpos .addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
+	sprintf(buf3,".getpos .addmaps .leavegame .homepoint .gotonpc .event .npclist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
+	char buf4[110];
+	sprintf(buf4,".wallhack .zone .zonelist" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	
 	return true;
 	}
@@ -9661,5 +9811,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,Get_Target),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,ElevatorUp),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,ElevatorDown),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,gotoNpc),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,NpcList),
 	{NULL,NULL}
 };
