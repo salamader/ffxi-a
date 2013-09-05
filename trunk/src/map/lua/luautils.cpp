@@ -903,7 +903,7 @@ int32 OnGameIn(CCharEntity* PChar)
 	uint8 fristlogin = 0;
 	uint8 shutdown_status = 0;
 	uint8 inevent = 0;
-	uint8 eventid = 0;
+	int32 eventid = 0;
 	int deathtime = 0;
 	const char * Query = "SELECT first_login, inevent, eventid,shutdown FROM chars WHERE charid = '%u';";
 	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->id);

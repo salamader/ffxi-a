@@ -186,7 +186,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				 int zone = 0; 
 				 int lastzone = 0; 
 				 uint8 inevent=0;
-				 int16 eventid=0;
+				 int32 eventid=0;
 				 float pos_x=0;
 				 float pos_y=0;
 				 float pos_z=0;
