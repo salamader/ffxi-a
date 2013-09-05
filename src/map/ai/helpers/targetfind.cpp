@@ -70,9 +70,12 @@ void CTargetFind::findWithinArea(CBattleEntity* PTarget, AOERADIUS radiusType, f
   m_radius = radius;
   m_zone = m_PBattleEntity->getZone();
 
-  if(radiusType == AOERADIUS_ATTACKER){
+  if(radiusType == AOERADIUS_ATTACKER)
+  {
     m_PRadiusAround = &m_PBattleEntity->loc.p;
-  } else {
+  } 
+  else 
+  {
     // radius around target
     m_PRadiusAround = &PTarget->loc.p;
   }
@@ -146,7 +149,9 @@ void CTargetFind::findWithinArea(CBattleEntity* PTarget, AOERADIUS radiusType, f
         // all party instead
         addAllInParty(m_PMasterTarget, withPet);
       }
-    } else {
+    } 
+	else 
+	{
       addEntity(m_PMasterTarget, withPet);
     }
 
@@ -245,6 +250,8 @@ void CTargetFind::addAllInParty(CBattleEntity* PTarget, bool withPet)
 
 void CTargetFind::addEntity(CBattleEntity* PTarget, bool withPet)
 {
+	if(PTarget != NULL)
+	{
   if(validEntity(PTarget)){
     m_targets.push_back(PTarget);
   }
@@ -254,6 +261,11 @@ void CTargetFind::addEntity(CBattleEntity* PTarget, bool withPet)
   {
     m_targets.push_back(PTarget->PPet);
   }
+	}
+	else
+	{
+		ShowNotice("YET ANOTHER FUNCTION CALLED WITH OUT PTARGET\n");
+	}
 
 }
 
@@ -315,6 +327,8 @@ validEntity will check if the given entity can be targeted in the AoE.
 */
 bool CTargetFind::validEntity(CBattleEntity* PTarget)
 {
+	if(PTarget != NULL)
+	{
   if(m_targets.size() > MAX_AOE_TARGETS) return false;
 
   if(!(m_findFlags & FINDFLAGS_DEAD) && PTarget->isDead())
@@ -372,12 +386,21 @@ bool CTargetFind::validEntity(CBattleEntity* PTarget)
   }
 
   return false;
+	}
+	else
+	{
+		ShowNotice("FUNCTION CALLED AGAIN WITH A NULL PTARGET\n");
+return false;
+	}
+	return false;
 }
 
 bool CTargetFind::checkIsPlayer(CBattleEntity* PTarget)
 {
-  if(PTarget == NULL) return false;
-  if(PTarget->objtype == TYPE_PC) return true;
+  if(PTarget == NULL)
+  {return false;}
+  if(PTarget->objtype == TYPE_PC)
+  {return true;}
 
   // check if i'm owned by a pc
   return PTarget->PMaster != NULL && PTarget->PMaster->objtype == TYPE_PC;

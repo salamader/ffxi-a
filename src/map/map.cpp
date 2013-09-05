@@ -804,10 +804,51 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 					}
 		                if (shutdown == 1)
 		                   {
-				
+				//This needs clean up today check it out and clean it up. noticed it was not removing
+				//a party member when they logout and then a crash happened from trying to add item to a null party member.
+							   //also look at search server to make sure the invite get send from any where on map.
 			                 if (PChar != NULL)
 			                    {
                                 ShowDebug(CL_CYAN"map_cleanup: %s timed %u\n" CL_RESET, PChar->GetName(),time(NULL));
+
+								if (PChar->PParty != NULL)
+		{
+			if(PChar->PParty->m_PAlliance != NULL)
+			{
+				if(PChar->PParty->GetLeader() == PChar)
+				{
+					if(PChar->PParty->members.size() == 1)
+					{
+						if(PChar->PParty->m_PAlliance->partyList.size() == 2)
+						{
+							PChar->PParty->m_PAlliance->dissolveAlliance();
+						}
+						else if(PChar->PParty->m_PAlliance->partyList.size() == 3)
+						{
+							PChar->PParty->m_PAlliance->removeParty(PChar->PParty);
+						}
+					}
+					else
+					{	//party leader logged off - will pass party lead
+						PChar->PParty->RemoveMember(PChar);
+					}
+				}
+				else
+				{	//not party leader - just drop from party
+					PChar->PParty->RemoveMember(PChar);
+				}
+			}
+			else
+			{
+            //normal party - just drop group
+			PChar->PParty->RemoveMember(PChar);
+			}
+		}
+        if (PChar->PLinkshell != NULL)
+        {
+            // удаляем персонажа из linkshell
+            PChar->PLinkshell->DelMember(PChar);
+        }
 					
 					                 if(PChar->PParty != NULL && PChar->PParty->m_PAlliance != NULL && PChar->PParty->GetLeader() == PChar)
 									 {
