@@ -1271,10 +1271,10 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		{
                 // по любому, это работает неправильно. проблемный код в комментарии
 
-			    //PChar->PBattleAI->SetCurrentAction(ACTION_RAISE_MENU_SELECTION);
-			    //PChar->PBattleAI->CheckCurrentAction(gettick());
+			    PChar->PBattleAI->SetCurrentAction(ACTION_RAISE_MENU_SELECTION);
+			    PChar->PBattleAI->CheckCurrentAction(gettick());
 
-			/*
+			
 			if(RBUFB(data,(0x0C)) == 0)
 			{
 				PChar->status = STATUS_DISAPPEAR;
@@ -1286,7 +1286,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			}else{
 				PChar->m_hasTractor = 0;
 			}
-			*/
+			
 		}
 		break;
 		case 0x14: // окончание обновления данных персонажа
@@ -1843,22 +1843,22 @@ void SmallPacket0x03A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 	uint8 size = PItemContainer->GetSize();
 
-   // if (gettick() - PItemContainer->LastSortingTime < 1000)
-   /// {
-       // if (map_config.lightluggage_block == ++PItemContainer->SortingPacket)
-        //{
-            //ShowWarning(CL_YELLOW"lightluggage detected: <%s> will be removed from server\n" CL_RESET, PChar->GetName());
+    if (gettick() - PItemContainer->LastSortingTime < 1000)
+    {
+        if (map_config.lightluggage_block == ++PItemContainer->SortingPacket)
+        {
+            ShowWarning(CL_YELLOW"lightluggage detected: <%s> will be removed from server\n" CL_RESET, PChar->GetName());
 
-           // PChar->status = STATUS_SHUTDOWN;
-           // PChar->pushPacket(new CServerIPPacket(PChar,1));
-       // }
-    //    return;
-   // }
-   // else
-   // {
+            PChar->status = STATUS_SHUTDOWN;
+            PChar->pushPacket(new CServerIPPacket(PChar,1));
+        }
+        return;
+    }
+    else
+    {
         PItemContainer->SortingPacket = 0;
         PItemContainer->LastSortingTime = gettick();
-   // }
+    }
     for (uint8 slotID = 1; slotID <= size; ++slotID)
     {
         CItem* PItem = PItemContainer->GetItem(slotID);
@@ -3065,7 +3065,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				PChar->loc.p = PZoneLine->m_toPos;
 			}
 		}
-       // ShowInfo(CL_WHITE"Zoning from zone %u to zone %u: %s\n" CL_RESET, PChar->getZone(), PChar->loc.destination, PChar->GetName());
+        ShowInfo(CL_WHITE"Zoning from zone %u to zone %u: %s\n" CL_RESET, PChar->getZone(), PChar->loc.destination, PChar->GetName());
 	}
 	PChar->clearPacketList();
 	PChar->pushPacket(new CServerIPPacket(PChar,2));
@@ -4656,12 +4656,12 @@ void SmallPacket0x0E7(map_session_data_t* session, CCharEntity* PChar, int8* dat
     FLAG_GM_PRODUCER    = 0x07000000,
 	
 	*/
-	//if (PChar->getZone() == 0 ||PChar->godmode == 1)
-	//{
-	//	PChar->status = STATUS_SHUTDOWN;
-	//	PChar->pushPacket(new CServerIPPacket(PChar,1));
-	//}
-	//else
+	if (PChar->getZone() == 0 ||PChar->godmode == 1)
+	{
+		PChar->status = STATUS_SHUTDOWN;
+		PChar->pushPacket(new CServerIPPacket(PChar,1));
+	}
+	else
 	if (PChar->animation == ANIMATION_NONE)
 	{
 		uint8 ExitType = (RBUFB(data,(0x06)) == 1 ? 7 : 35);
