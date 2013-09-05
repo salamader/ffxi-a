@@ -195,7 +195,10 @@ CZone* GetZoneByChar(uint16 ZoneID, CCharEntity* PChar)
 }
 CZone* GetZone(uint16 ZoneID)
 {
-    DSP_DEBUG_BREAK_IF(ZoneID >= MAX_ZONEID);
+    if(ZoneID >= MAX_ZONEID)
+	{
+		ZoneID = 0;
+	}
 	return g_PZoneList[ZoneID];
 }
 
