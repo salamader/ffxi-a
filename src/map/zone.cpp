@@ -386,8 +386,8 @@ void CZone::LoadZoneSettings()
     {
         m_zoneName.insert(0, Sql_GetData(SqlHandle,0));
 
-    m_zoneIP   = (uint32)Sql_GetUIntData(SqlHandle,1);
-    m_zonePort = (uint16)Sql_GetUIntData(SqlHandle,2);
+    m_zoneIP   = inaddr.S_un.S_addr;//(uint32)Sql_GetUIntData(SqlHandle,1);
+    m_zonePort = 54230;//(uint16)Sql_GetUIntData(SqlHandle,2);
     m_zoneMusic.m_song   = (uint8)Sql_GetUIntData(SqlHandle,3);   // background music
     m_zoneMusic.m_bSongS = (uint8)Sql_GetUIntData(SqlHandle,4);   // solo battle music
     m_zoneMusic.m_bSongM = (uint8)Sql_GetUIntData(SqlHandle,5);   // party battle music
