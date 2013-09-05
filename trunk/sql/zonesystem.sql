@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: database
 Target Host: localhost
 Target Database: database
-Date: 8/27/2013 4:16:01 PM
+Date: 9/5/2013 3:16:02 PM
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -28,14 +28,14 @@ CREATE TABLE `zonesystem` (
 -- ----------------------------
 INSERT INTO `zonesystem` VALUES ('0', 'Residential_Area', '0', '0', '0', '0', '1');
 INSERT INTO `zonesystem` VALUES ('1', 'Phanauet_Channel', '0', '-2', '0', '0', '1');
-INSERT INTO `zonesystem` VALUES ('2', 'Carpenters_Landing', '0', '0', '0', '0', '1');
-INSERT INTO `zonesystem` VALUES ('3', 'Manaclipper', '0', '0', '0', '0', '1');
-INSERT INTO `zonesystem` VALUES ('4', 'Bibiki_Bay', '0', '0', '0', '0', '1');
-INSERT INTO `zonesystem` VALUES ('5', 'Uleguerand_Range', '0', '0', '0', '0', '1');
-INSERT INTO `zonesystem` VALUES ('6', 'Bearclaw_Pinnacle', '0', '0', '0', '0', '1');
-INSERT INTO `zonesystem` VALUES ('7', 'Attohwa_Chasm', '0', '0', '0', '0', '1');
-INSERT INTO `zonesystem` VALUES ('8', 'Boneyard_Gully', '0', '0', '0', '0', '1');
-INSERT INTO `zonesystem` VALUES ('9', 'PsoXja', '0', '0', '0', '0', '1');
+INSERT INTO `zonesystem` VALUES ('2', 'Carpenters_Landing', '-139.409', '-1.983', '58.98', '97', '1');
+INSERT INTO `zonesystem` VALUES ('3', 'Manaclipper', '0', '-3', '0', '0', '1');
+INSERT INTO `zonesystem` VALUES ('4', 'Bibiki_Bay', '-393.114', '-3', '-390.818', '56', '1');
+INSERT INTO `zonesystem` VALUES ('5', 'Uleguerand_Range', '-264.192', '-39.953', '-538.076', '227', '1');
+INSERT INTO `zonesystem` VALUES ('6', 'Bearclaw_Pinnacle', '-197.867', '-110.561', '-100.424', '255', '1');
+INSERT INTO `zonesystem` VALUES ('7', 'Attohwa_Chasm', '-320.631', '-4.334', '165.318', '57', '1');
+INSERT INTO `zonesystem` VALUES ('8', 'Boneyard_Gully', '35.726', '0.969', '60.244', '174', '1');
+INSERT INTO `zonesystem` VALUES ('9', 'PsoXja', '-20.259', '32', '-10.269', '191', '1');
 INSERT INTO `zonesystem` VALUES ('10', 'The_Shrouded_Maw', '0', '0', '0', '0', '1');
 INSERT INTO `zonesystem` VALUES ('11', 'Oldton_Movalpolos', '0', '0', '0', '0', '1');
 INSERT INTO `zonesystem` VALUES ('12', 'Newton_Movalpolos', '0', '0', '0', '0', '1');
@@ -282,23 +282,23 @@ INSERT INTO `zonesystem` VALUES ('252', 'Norg', '0', '0', '0', '0', '11');
 INSERT INTO `zonesystem` VALUES ('253', 'Abyssea-Uleguerand', '283', '16', '-298', '124', '11');
 INSERT INTO `zonesystem` VALUES ('254', 'Abyssea-Grauberg', '-73', '-8', '-321', '69', '11');
 INSERT INTO `zonesystem` VALUES ('255', 'Abyssea-Empyreal_Paradox', '-469', '0', '515', '163', '11');
-INSERT INTO `zonesystem` VALUES ('256', 'Western_Adoulin', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('257', 'Eastern_Adoulin', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('258', 'Rala_Waterways', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('259', 'Rala_Waterways_U', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('260', 'Yahse_Hunting_Grounds', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('261', 'Ceizak_Battlegrounds', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('262', 'Foret_de_Hennetiel', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('263', 'Yorcia_Weald', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('264', 'Yorcia_Weald_U', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('265', 'Morimar_Basalt_Fields', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('266', 'Marjami_Ravine', '0', '0', '0', '0', '11');
+INSERT INTO `zonesystem` VALUES ('256', 'Western_Adoulin', '177', '4', '-23', '256', '11');
+INSERT INTO `zonesystem` VALUES ('257', 'Eastern_Adoulin', '-155', '0', '-19', '250', '11');
+INSERT INTO `zonesystem` VALUES ('258', 'Rala_Waterways', '-586.549', '-7.5', '20.047', '258', '11');
+INSERT INTO `zonesystem` VALUES ('259', 'Rala_Waterways_U', '-586.549', '-7.5', '20.047', '258', '11');
+INSERT INTO `zonesystem` VALUES ('260', 'Yahse_Hunting_Grounds', '-375.141', '0.198', '132.739', '81', '11');
+INSERT INTO `zonesystem` VALUES ('261', 'Ceizak_Battlegrounds', '-4.36', '0', '-36.806', '32', '11');
+INSERT INTO `zonesystem` VALUES ('262', 'Foret_de_Hennetiel', '-4.491', '-2.032', '114.201', '226', '11');
+INSERT INTO `zonesystem` VALUES ('263', 'Yorcia_Weald', '14.958', '-2.492', '-60.662', '212', '11');
+INSERT INTO `zonesystem` VALUES ('264', 'Yorcia_Weald_U', '14.958', '-2.492', '-60.662', '212', '11');
+INSERT INTO `zonesystem` VALUES ('265', 'Morimar_Basalt_Fields', '108.929', '-15.716', '-191.515', '255', '11');
+INSERT INTO `zonesystem` VALUES ('266', 'Marjami_Ravine', '25.725', '0.773', '-10.179', '13', '11');
 INSERT INTO `zonesystem` VALUES ('267', 'noname', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('268', 'Sih_Gates', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('269', 'Moh_Gates', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('270', 'Cirdas_Caverns', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('271', 'Cirdas_Caverns_U', '0', '0', '0', '0', '11');
-INSERT INTO `zonesystem` VALUES ('272', 'Dho_Gates', '0', '0', '0', '0', '11');
+INSERT INTO `zonesystem` VALUES ('268', 'Sih_Gates', '-108.886', '-10', '-249.676', '155', '11');
+INSERT INTO `zonesystem` VALUES ('269', 'Moh_Gates', '83.122', '20', '-0.456', '106', '11');
+INSERT INTO `zonesystem` VALUES ('270', 'Cirdas_Caverns', '43.075', '20', '0', '255', '11');
+INSERT INTO `zonesystem` VALUES ('271', 'Cirdas_Caverns_U', '43.075', '20', '0', '255', '11');
+INSERT INTO `zonesystem` VALUES ('272', 'Dho_Gates', '-25.183', '-10.472', '105.668', '155', '11');
 INSERT INTO `zonesystem` VALUES ('273', 'noname', '0', '0', '0', '0', '11');
 INSERT INTO `zonesystem` VALUES ('274', 'noname', '0', '0', '0', '0', '11');
 INSERT INTO `zonesystem` VALUES ('275', 'noname', '0', '0', '0', '0', '12');
@@ -306,7 +306,7 @@ INSERT INTO `zonesystem` VALUES ('276', 'noname', '0', '0', '0', '0', '12');
 INSERT INTO `zonesystem` VALUES ('277', 'noname', '0', '0', '0', '0', '12');
 INSERT INTO `zonesystem` VALUES ('278', 'noname', '0', '0', '0', '0', '12');
 INSERT INTO `zonesystem` VALUES ('279', 'noname', '0', '0', '0', '0', '12');
-INSERT INTO `zonesystem` VALUES ('280', 'Mog_Garden', '0', '0', '0', '0', '12');
+INSERT INTO `zonesystem` VALUES ('280', 'Mog_Garden', '9.147', '0.981', '-14.882', '247', '12');
 INSERT INTO `zonesystem` VALUES ('281', 'noname', '0', '0', '0', '0', '12');
 INSERT INTO `zonesystem` VALUES ('282', 'noname', '0', '0', '0', '0', '12');
 INSERT INTO `zonesystem` VALUES ('283', 'Silver_Knife', '0', '0', '0', '0', '12');
