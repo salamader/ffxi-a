@@ -292,25 +292,24 @@ int32 lobbydata_parse(int32 fd)
 					do_close_lobbydata(sd,fd);
 					return -1;
 				}
-
+              uint32 server_type = 0;
 				uint32 charid = RBUFL(session[sd->login_lobbyview_fd]->rdata,32);
-				 in_addr inaddr;
+				const char * Query = "SELECT server_type FROM accounts WHERE id = '%u';";
+               int32 ret3 = Sql_Query(SqlHandle,Query,sd->accid);
+               if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	            {
+			     		server_type = Sql_GetUIntData(SqlHandle,0);
+						if(server_type == 0)//PUBLIC
+						{
+							in_addr inaddr;
             inaddr.S_un.S_addr = inet_addr(login_config.DNS_Servers_Address);
             if( inaddr.S_un.S_addr == INADDR_NONE)
-               {
-               hostent* phostent = gethostbyname(login_config.DNS_Servers_Address);
-      
-                 if( phostent == 0)
-                   {
-                     return 0;
-                   }
-
-                 if( sizeof(inaddr) != phostent->h_length)
-                   {
-                   return 0;; 
-                   }
-                  inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
-                 }
+              {
+              hostent* phostent = gethostbyname(login_config.DNS_Servers_Address);
+              if( phostent == 0){return false;}
+              if( sizeof(inaddr) != phostent->h_length){return false;}
+              inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
+              }
 
             const char *fmtQuery = "SELECT zoneid FROM zone_settings , chars  WHERE zoneid = pos_zone AND charid = %u;";
             uint32 ZoneIP   = inaddr.S_un.S_addr;//sd->servip;
@@ -385,6 +384,97 @@ int32 lobbydata_parse(int32 fd)
 
 					
 			    }
+
+						}
+						if(server_type == 1)//PRIVATE
+						{
+							in_addr inaddr;
+            inaddr.S_un.S_addr = inet_addr(login_config.NETWORK_Servers_Address);
+            if( inaddr.S_un.S_addr == INADDR_NONE)
+              {
+              hostent* phostent = gethostbyname(login_config.NETWORK_Servers_Address);
+              if( phostent == 0){return false;}
+              if( sizeof(inaddr) != phostent->h_length){return false;}
+              inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
+              }
+
+            const char *fmtQuery = "SELECT zoneid FROM zone_settings , chars  WHERE zoneid = pos_zone AND charid = %u;";
+            uint32 ZoneIP   = inaddr.S_un.S_addr;//sd->servip;
+            uint16 ZonePort = 54230;
+
+            if( Sql_Query(SqlHandle,fmtQuery,charid) != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 )
+            {
+             Sql_NextRow(SqlHandle);
+             if (Sql_GetIntData(SqlHandle,0) == 0)
+				{
+				key3[16] += 6;
+			    }
+              
+               uint8  ZoneID = (uint8)Sql_GetUIntData(SqlHandle,0);
+               WBUFL(ReservePacket,(0x38)) = ZoneIP;
+               WBUFW(ReservePacket,(0x3C)) = ZonePort;
+              
+            }
+			else
+			{
+               WBUFL(ReservePacket,(0x38)) = ZoneIP;
+            }
+               WBUFL(ReservePacket,(0x40)) = ZoneIP; 
+               memcpy(MainReservePacket,ReservePacket,RBUFB(ReservePacket,0));
+
+			   int8 session_key[sizeof(key3)*2+1];
+			   bin2hex(session_key,key3,sizeof(key3));
+
+			   const char * Query = "SELECT accid FROM accounts_sessions WHERE accid = '%u';";
+               int32 ret3 = Sql_Query(SqlHandle,Query,sd->accid);
+               if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	            {
+			     ShowMessage(CL_GREEN"UPDATING SESSION KEY %u \n"CL_RESET,session_key);
+			     const char *Query = "UPDATE accounts_sessions SET  accid ='%u', charid ='%u', session_key =x'%s', server_addr ='%u',server_port='%u', client_addr ='%u', client_port ='%u' WHERE accid = %u";
+                 Sql_Query(SqlHandle,Query,sd->accid, charid, session_key, ZoneIP, ZonePort, sd->client_addr, sd->client_port,sd->accid);
+			
+		        }
+			   else
+			    {
+					const int8* fmtQuery = "SELECT max(targid) FROM accounts_sessions";
+
+	                  if( Sql_Query(SqlHandle,fmtQuery) == SQL_ERROR )
+	                    {
+		                 return -1;
+	                    }
+
+	                  uint32 targid = 0;
+
+	                  if( Sql_NumRows(SqlHandle) != 0 )
+	                    {
+		                Sql_NextRow(SqlHandle);
+		
+		                targid = Sql_GetUIntData(SqlHandle,0) + 1;
+						ShowMessage("MAX TARGETID COUNT %u \n" CL_RESET,targid);
+						if(targid == 1)
+						{     
+							targid = 1024;
+							ShowMessage("MAX TARGETID NEW COUNT %u \n" CL_RESET,targid);
+						}
+		                
+		                ShowMessage(CL_GREEN"INSERTING SESSION KEY %u \n"CL_RESET,session_key);
+				        fmtQuery = "INSERT INTO accounts_sessions(accid,charid,session_key,server_addr,server_port,client_addr,client_port,targid) VALUES(%u,%u,x'%s',%u,%u,%u,%u,%u)";
+
+				           if( Sql_Query(SqlHandle, fmtQuery, sd->accid, charid, session_key, ZoneIP, ZonePort, sd->client_addr,sd->client_port,targid ) == SQL_ERROR )
+				              {
+					           LOBBBY_ERROR_MESSAGE(ReservePacket);
+					           WBUFW(ReservePacket,32) = 305; 
+					           memcpy(MainReservePacket,ReservePacket,RBUFB(ReservePacket,0));
+				              }
+		                }
+					  
+
+					
+			    }
+
+						}
+		        }
+			
 
                 unsigned char Hash[16];
 				uint8 SendBuffSize = RBUFB(MainReservePacket,0);

@@ -52,6 +52,7 @@ struct login_config_t
 
     const char* servername;
 	const char* DNS_Servers_Address;
+	const char* NETWORK_Servers_Address;
 	const char* mysql_host;			// mysql addr     -> localhost:3306
 	uint16      mysql_port;			// mysql port     -> 3306
 	const char* mysql_login;        // mysql login    -> default root

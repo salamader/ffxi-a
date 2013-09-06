@@ -508,7 +508,7 @@ public:
     void            SpawnTransport(CCharEntity* PChar);                             // отображаем транспорт
 
 	void			WideScan(CCharEntity* PChar, uint16 radius);					// сканирование местности с заданным радиусом
-
+	void	        LoadPlayerZoneSettings(CCharEntity* PChar);				// настройки зоны
 	void			DecreaseZoneCounter(CCharEntity* PChar);						// добавляем персонажа в зону
 	void			IncreaseZoneCounter(CCharEntity* PChar);						// удаляем персонажа из зоны
 
@@ -574,10 +574,10 @@ public:
 	CTreasurePool*	m_TreasurePool;			// глобальный TreasuerPool
 
 	CTaskMgr::CTask* ZoneTimer;				// указатель на созданный таймер - ZoneServer. необходим для возможности его остановки
-
+	void	LoadZoneSettings();				// настройки зоны
 	void	LoadZoneLines();				// список zonelines (можно было бы заменить этот метод методом InsertZoneLine)
     void    LoadZoneWeather();              // погода
-	void	LoadZoneSettings();				// настройки зоны
+	
 	void	LoadNavMesh();					// Load the zones navmesh. Must exist in scripts/zones/:zone/NavMesh.nav
 };
 

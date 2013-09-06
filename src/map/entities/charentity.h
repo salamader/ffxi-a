@@ -277,6 +277,7 @@ public:
 	int32			  godmode;
 	int32			  eventid;
 	int32             Rage_Mode;
+	int32             Is_Public_0_Or_Private_1;
 
 	int8			  getShieldSize();
 

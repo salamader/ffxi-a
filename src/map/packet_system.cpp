@@ -174,6 +174,7 @@ void SmallPacket0xFFF(map_session_data_t* session, CCharEntity* PChar, int8* dat
 void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
 
+	//LETS LOAD THE ZONESETTETTING TABLE EACH TIME WE HIT THIS
 	
 
 		 uint8 login_status = 0; 
@@ -312,7 +313,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
         uint16 destination = PChar->loc.destination;
  
 
- 
+        zoneutils::GetZone(PChar->loc.destination)->LoadPlayerZoneSettings(PChar);
         if(destination >= MAX_ZONEID){
  
             //ShowWarning("packet_system::SmallPacket0x00A player tried to enter zone out of range: %d\n", destination);
@@ -512,6 +513,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
         if (PChar->loc.zone != NULL)
  
         {
+			zoneutils::GetZone(PChar->loc.destination)->LoadPlayerZoneSettings(PChar);
 			ShowWarning(CL_YELLOW"Client cannot receive packet or key is invalid: %s\n" CL_RESET, PChar->GetName());
 			ShowWarning(CL_YELLOW"Reset the players to his nations homepoint: %s\n" CL_RESET, PChar->GetName());
 			 if(PChar->profile.nation==0)
@@ -578,10 +580,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		PChar->loc.destination=zone;
 	PChar->status = STATUS_DISAPPEAR;
 	PChar->is_returning = 1;
-			// PChar->is_dead = 0;
 			
-
-			//PChar->status = STATUS_DISAPPEAR;
 			PChar->animation = ANIMATION_NONE;
 
 			PChar->clearPacketList();

@@ -31,35 +31,47 @@ CServerIPPacket::CServerIPPacket(CCharEntity* PChar, uint8 type)
 {
 	this->type = 0x0B;
 	this->size = 0x0E;
-
-	in_addr inaddr;
-   inaddr.S_un.S_addr = inet_addr(map_config.NETWORK_Servers_Address);
-   //ShowFatalError(CL_RED"CZone:GET HOST NAME2(%u)\n" CL_RESET, inaddr);
+	/*Accounts_Table In Database Tells this to do this or that.
+	If youa re hosting public for friends off the network the code will run the
+	Public IP address for them.
+	And for your self if you are local you would set your status to 0
+	so the code runs private network. found in accounts table field name
+	server_type = 0 is public allow all off network
+	server_type = 1 is private allow all on network
+	
+	*/
+	if(PChar->Is_Public_0_Or_Private_1 == 0)
+	{
+	 in_addr inaddr;
+     inaddr.S_un.S_addr = inet_addr(map_config.DNS_Servers_Address);
+     if( inaddr.S_un.S_addr == INADDR_NONE)
+       {
+       hostent* phostent = gethostbyname(map_config.DNS_Servers_Address);
+       if( phostent == 0){return;}
+       if( sizeof(inaddr) != phostent->h_length){return;}
+       inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
+       }
+	 WBUFB(data,(0x04)-4) = type;
+	 WBUFL(data,(0x08)-4) = inaddr.S_un.S_addr;
+	 WBUFW(data,(0x0C)-4) = 54230;
+    }
+	if(PChar->Is_Public_0_Or_Private_1 == 1)
+	{
+	 in_addr inaddr;
+     inaddr.S_un.S_addr = inet_addr(map_config.NETWORK_Servers_Address);
+     if( inaddr.S_un.S_addr == INADDR_NONE)
+       {
+       hostent* phostent = gethostbyname(map_config.NETWORK_Servers_Address);
+       if( phostent == 0){return;}
+       if( sizeof(inaddr) != phostent->h_length){return;}
+       inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
+       }
+	 WBUFB(data,(0x04)-4) = type;
+	 WBUFL(data,(0x08)-4) = inaddr.S_un.S_addr;
+	 WBUFW(data,(0x0C)-4) = 54230;
+    }
    
-   if( inaddr.S_un.S_addr == INADDR_NONE)
-   {
-      hostent* phostent = gethostbyname(map_config.NETWORK_Servers_Address);
-      //ShowFatalError(CL_RED"CZone:GET HOST NAME3(%u)\n" CL_RESET, phostent);
-      if( phostent == 0)
-      {
-         //ShowFatalError(CL_RED"CZone:GET HOST NAME4(%u)\n" CL_RESET, phostent);
-         return;
-      }
 
-      if( sizeof(inaddr) != phostent->h_length)
-      {
-         //ShowFatalError(CL_RED"CZone:GET HOST NAME5(%u)\n" CL_RESET, phostent);
-         return; 
-      }
-
-      inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
-      
-
-      
-   }
-   
-
-	WBUFB(data,(0x04)-4) = type;
-	WBUFL(data,(0x08)-4) = inaddr.S_un.S_addr;
-	WBUFW(data,(0x0C)-4) = 54230;
+	
+	
 }
