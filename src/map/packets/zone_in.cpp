@@ -144,14 +144,21 @@ CZoneInPacket::CZoneInPacket(CCharEntity * PChar, int16 csid)
 	WBUFW(data,(0x52)-4) = PChar->look.sub    + 0x7000;
 	WBUFW(data,(0x54)-4) = PChar->look.ranged + 0x8000;
 
-	if(PChar->first_login != 0)
+	if(PChar->first_login != 0 )//PLAYER IS ZONEING FROM ZONE 0 TO PACKET ELSE ERROR NO KEY FOUND
 	{
-	WBUFB(data,(0x56)-4) = PChar->loc.zone->GetBackgroundMusic();
-	WBUFB(data,(0x58)-4) = PChar->loc.zone->GetBackgroundMusic();
-	WBUFB(data,(0x5A)-4) = PChar->loc.zone->GetSoloBattleMusic();
-	WBUFB(data,(0x5C)-4) = PChar->loc.zone->GetPartyBattleMusic();
-	WBUFW(data,(0x68)-4) = PChar->loc.zone->GetWeather();
-    WBUFL(data,(0x6A)-4) = PChar->loc.zone->GetWeatherChangeTime();
+		if(PChar->is_zoning == 1)
+		{
+			ShowNotice("PACKET ERROR CAN NOT LOGIN IN STRANGE ZONE\n");
+		}
+		else
+		{
+	    WBUFB(data,(0x56)-4) = PChar->loc.zone->GetBackgroundMusic();
+	    WBUFB(data,(0x58)-4) = PChar->loc.zone->GetBackgroundMusic();
+	    WBUFB(data,(0x5A)-4) = PChar->loc.zone->GetSoloBattleMusic();
+	    WBUFB(data,(0x5C)-4) = PChar->loc.zone->GetPartyBattleMusic();
+	    WBUFW(data,(0x68)-4) = PChar->loc.zone->GetWeather();
+        WBUFL(data,(0x6A)-4) = PChar->loc.zone->GetWeatherChangeTime();
+		}
 	}
 	
 
@@ -186,7 +193,14 @@ CZoneInPacket::CZoneInPacket(CCharEntity * PChar, int16 csid)
 		//if 0x01 then pause between zone
 		if(PChar->first_login != 0)
 	    {
-		WBUFB(data,(0xAF)-4) = PChar->loc.zone->CanUseMisc(MISC_MOGMENU);	// флаг, позволяет использовать mog menu за пределами mog house
+			if(PChar->is_zoning == 1)
+		    {
+			ShowNotice("PACKET ERROR CAN NOT LOGIN IN STRANGE ZONE ugh\n");
+		    }
+		    else
+		    {
+		    WBUFB(data,(0xAF)-4) = PChar->loc.zone->CanUseMisc(MISC_MOGMENU);	// флаг, позволяет использовать mog menu за пределами mog house
+		    }
 		}
 	}
 
