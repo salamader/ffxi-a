@@ -403,11 +403,13 @@ int32 map_decipher_packet(int8* buff, size_t size, sockaddr_in* from, map_sessio
 	if( checksum((uint8*)(buff+FFXI_HEADER_SIZE),size-(FFXI_HEADER_SIZE+16),buff+size-16) == 0)
 	{
 		map_session_data->Leftonmap =false;
+		//ShowMessage(CL_BG_RED"CHECK MAP NOW AS I AM STILL ON MAP FALSE I HAVE NOT LEFT\n"CL_RESET);
 		return 0;
 	}
 
 	int8 ip_str[16];
 	map_session_data->Leftonmap =true;
+	ShowMessage(CL_BG_RED"CHECK MAP NOW AS I AM STILL ON MAP TRUE I HAVE LEFT\n"CL_RESET);
 	//ShowError("map_encipher_packet: bad packet from <%s>\n",ip2str(ip,ip_str));
 	return -1;
 }
@@ -758,6 +760,7 @@ int32 Close_Session_Clean_Map(uint32 tick, CTaskMgr::CTask* PTask)
 
 int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 {
+	uint32 checktime = CVanaTime::getInstance()->getSysSecond();
 	map_session_list_t::iterator it = map_session_list.begin();
 
 	while(it != map_session_list.end())
@@ -765,183 +768,98 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 		map_session_data_t* map_session_data = it->second;
 
         CCharEntity* PChar = map_session_data->PChar;
-		
-        if ((time(NULL) - map_session_data->last_update) > 4)
+		//ShowMessage(CL_YELLOW"CHECK MAP TIME %u\n"CL_RESET,checktime);
+        if ( checktime == 0 || checktime == 5 || 
+			checktime == 10 || checktime == 15 ||
+			checktime == 20 || checktime == 25 || 
+			checktime == 30 || checktime == 35 || 
+			checktime == 40 || checktime == 45 ||
+			checktime == 50 || checktime == 55)
         {
-            if (PChar != NULL && !(PChar->nameflags.flags & FLAG_DC))
-            {
-				
-                PChar->nameflags.flags = FLAG_DC;
-				ShowMessage(CL_YELLOW"FLAGS  STATUS = %u FOR PCHAR %s\n"CL_RESET,PChar->nameflags.flags,PChar->GetName());
-                if (PChar->status == STATUS_NORMAL)
-                {
-                    PChar->status = STATUS_UPDATE;
-                    PChar->loc.zone->SpawnPCs(PChar);
-                }
-            }
-			if(map_session_data->Leftonmap == false)
-			{
-			int8 shutdown = 0;
-			const char * Query = "SELECT shutdown FROM chars WHERE charid= '%u';";
-	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->id);
+			//ShowMessage(CL_YELLOW"WHERE IN CHECK TIME %u\n"CL_RESET,checktime);
+                           if (PChar != NULL)
+                           {
+							   if( PChar->is_zoning == -1)
+							   {
+								   ShowMessage(CL_GREEN"SAVE SYSTEM OK FOR PCHAR %s\n"CL_RESET,PChar->GetName());
+				               charutils::SaveCharSystem(PChar);
+							   }
+                            
+                            }
+			                                if(map_session_data->Leftonmap == false)
+			                                   {
+			                                   int8 shutdown = 0;
+			                                   const char * Query = "SELECT shutdown FROM chars WHERE charid= '%u';";
+	                                           int32 ret3 = Sql_Query(SqlHandle,Query,PChar->id);
 			  
 
-	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	                {
+	                                                      if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                                                           {
 						
-				    shutdown =  Sql_GetUIntData(SqlHandle,0);
-					ShowMessage(CL_YELLOW"SHUTDOWN STATUS = %u FOR PCHAR %s\n"CL_RESET,shutdown,PChar->GetName());
-					if(shutdown == 0 )
-					{
+				                                               shutdown =  Sql_GetUIntData(SqlHandle,0);
+					                                           ShowMessage(CL_YELLOW"SHUTDOWN STATUS = %u FOR PCHAR %s\n"CL_RESET,shutdown,PChar->GetName());
+					                                                              if(shutdown == 0 )
+					                                                                  {
 						
 
-				   if ((time(NULL) - map_session_data->last_update) > 10)
-				   {
-					   if( PChar->is_zoning == -1)
-					   {
-                   ShowMessage(CL_YELLOW"SHUTDOWN CHECKING PLAYER STATUS MAY HAVE KILLED BOOT  = %u FOR PCHAR %s\n"CL_RESET,shutdown,PChar->GetName());
-				   Query = "UPDATE accounts SET online ='0' WHERE id = %u";
-                   Sql_Query(SqlHandle,Query,PChar->accid);
-				   Query = "UPDATE chars SET shutdown ='1' WHERE charid = %u";
-                   Sql_Query(SqlHandle,Query,PChar->id);
-					   }
-				   }
-					}
-		                if (shutdown == 1)
-		                   {
+				                                                                                             
+					                                                                                                    // if( PChar->is_zoning == -1)
+					                                                                                                         // {
+                                                                                                                             // ShowMessage(CL_YELLOW"SHUTDOWN CHECKING PLAYER STATUS MAY HAVE KILLED BOOT  = %u FOR PCHAR %s\n"CL_RESET,shutdown,PChar->GetName());
+				                                                                                                             // Query = "UPDATE accounts SET online ='0' WHERE id = %u";
+                                                                                                                             // Sql_Query(SqlHandle,Query,PChar->accid);
+				                                                                                                            //  Query = "UPDATE chars SET shutdown ='1' WHERE charid = %u";
+                                                                                                                            //  Sql_Query(SqlHandle,Query,PChar->id);
+					                                                                                                       //   }
+				                                                                                                 
+					                                                                   }
+		                                                                              if (shutdown == 1)
+		                                                                               {
 				//This needs clean up today check it out and clean it up. noticed it was not removing
 				//a party member when they logout and then a crash happened from trying to add item to a null party member.
 							   //also look at search server to make sure the invite get send from any where on map.
-			                 if (PChar != NULL)
-			                    {
-                                ShowDebug(CL_CYAN"map_cleanup: %s timed %u\n" CL_RESET, PChar->GetName(),time(NULL));
-
-								if (PChar->PParty != NULL)
-		{
-			if(PChar->PParty->m_PAlliance != NULL)
-			{
-				if(PChar->PParty->GetLeader() == PChar)
-				{
-					if(PChar->PParty->members.size() == 1)
-					{
-						if(PChar->PParty->m_PAlliance->partyList.size() == 2)
-						{
-							PChar->PParty->m_PAlliance->dissolveAlliance();
-						}
-						else if(PChar->PParty->m_PAlliance->partyList.size() == 3)
-						{
-							PChar->PParty->m_PAlliance->removeParty(PChar->PParty);
-						}
-					}
-					else
-					{	//party leader logged off - will pass party lead
-						PChar->PParty->RemoveMember(PChar);
-					}
-				}
-				else
-				{	//not party leader - just drop from party
-					PChar->PParty->RemoveMember(PChar);
-				}
-			}
-			else
-			{
-            //normal party - just drop group
-			PChar->PParty->RemoveMember(PChar);
-			}
-		}
-        if (PChar->PLinkshell != NULL)
-        {
-            // удаляем персонажа из linkshell
-            PChar->PLinkshell->DelMember(PChar);
-        }
-					
-					                 if(PChar->PParty != NULL && PChar->PParty->m_PAlliance != NULL && PChar->PParty->GetLeader() == PChar)
-									 {
-						                  if(PChar->PParty->members.size() == 1)
-										  {
-							                   if(PChar->PParty->m_PAlliance->partyList.size() == 2)
-											   {
-								                PChar->PParty->m_PAlliance->dissolveAlliance();
-							                   }
-											   else
-											   {
-													   if(PChar->PParty->m_PAlliance->partyList.size() == 3)
-													   {
-								                        PChar->PParty->m_PAlliance->removeParty(PChar->PParty);
-								                       }
-						                       }
-					                      }
-
-
-					
-					                      if (PChar->PPet != NULL && PChar->PPet->objtype == TYPE_MOB)
-										  {
-						                   petutils::DespawnPet(PChar);
-										  }
-									 }
-
-
-				                     ShowDebug(CL_CYAN"map_cleanup: %s timed out, closing session\n" CL_RESET, PChar->GetName());
-									 PChar->shutdown_status =1;
-									PChar->TradePending.clean();
-                                    PChar->InvitePending.clean();
-	                                PChar->PWideScanTarget = NULL;
-
-	                              if (PChar->animation == ANIMATION_ATTACK)
-	                                  {
-		                              PChar->animation = ANIMATION_NONE;
-	                                  }
-
-                                    PChar->PRecastContainer->Del(RECAST_MAGIC);
-
-                                  charutils::SaveCharStats(PChar);
-	
-	                             charutils::SaveCharExp(PChar, PChar->GetMJob());
-	                             charutils::SaveCharPoints(PChar);
-                                 charutils::CheckEquipLogic(PChar, SCRIPT_CHANGEZONE, PChar->getZone());
-	
-                                if (PChar->loc.zone != NULL)
-                                     {
-                                   PChar->loc.zone->DecreaseZoneCounter(PChar);
-                                    }
-	                                 PChar->status = STATUS_DISAPPEAR;
-                                     PChar->PBattleAI->Reset();
-
-		
-
-         const int8* Query = "UPDATE chars SET shutdown = '1' WHERE charid = %u";
-                      Sql_Query(SqlHandle,Query,PChar->id);
-					   charutils::SaveCharPosition(PChar);
-           map_session_data->shuttingDown = true;
-    		CTaskMgr::getInstance()->AddTask(new CTaskMgr::CTask("close_session", gettick()+10, map_session_data, CTaskMgr::TASK_ONCE, Close_Session_Clean_Map));
-      
-
-	
-				                     //PChar->status = STATUS_SHUTDOWN;
-                                     //PacketParser[0x00D](map_session_data, PChar, 0);
-			                       } 
-			                }
-				     }
+			                                                                                        if (PChar != NULL)
+			                                                                                            {
+                                                                                                                 ShowDebug(CL_CYAN"map_cleanup: %s timed %u\n" CL_RESET, PChar->GetName(),time(NULL));
+								                                                                                 if(PChar->PParty != NULL && PChar->PParty->m_PAlliance != NULL && PChar->PParty->GetLeader() == PChar)
+																												 {
+						                                                                                                if(PChar->PParty->members.size() == 1)
+																														{
+							                                                                                                     if(PChar->PParty->m_PAlliance->partyList.size() == 2)
+																																 {
+								                                                                                                         PChar->PParty->m_PAlliance->dissolveAlliance();
+							                                                                                                     }
+																																 else if(PChar->PParty->m_PAlliance->partyList.size() == 3)
+																																 {
+								                                                                                                        PChar->PParty->m_PAlliance->removeParty(PChar->PParty);
+								                                                                                                  }
+						                                                                                                  }
+					                                                                                              }
+																												 
+								                                                                                          PChar->leavegame();
+                                                                                                                          map_session_data->shuttingDown = true;
+    		                                                                                                              CTaskMgr::getInstance()->AddTask(new CTaskMgr::CTask("close_session", gettick()+10, map_session_data, CTaskMgr::TASK_ONCE, Close_Session_Clean_Map));
+                                                                                                          } 
+			                                                                             }
+				                                               }
 				
-				else 
-					{
-						if(!map_session_data->shuttingDown)
-						{
+				                                              
+		                                       }
+											if(map_session_data->Leftonmap == true)
+						                                            {
 
-				        ShowWarning(CL_YELLOW"map_cleanup: WHITHOUT CHAR timed out, session closed\n" CL_RESET);
-						const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE sessions = %u";
-        Sql_Query(SqlHandle,Query,map_session_data);
-		Query = "UPDATE accounts SET  online = '0' WHERE sessions = %u";
-        Sql_Query(SqlHandle,Query,map_session_data);
-		Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE sessions = %u",map_session_data);
+				                                                  ShowWarning(CL_YELLOW"map_cleanup: WHITHOUT CHAR timed out, session closed\n" CL_RESET);
+						                                          const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE sessions = %u";
+                                                                 Sql_Query(SqlHandle,Query,map_session_data);
+		                                                           Query = "UPDATE accounts SET  online = '0' WHERE sessions = %u";
+                                                                 Sql_Query(SqlHandle,Query,map_session_data);
+		                                                        Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE sessions = %u",map_session_data);
 
-				        aFree(map_session_data->server_packet_data);
-				         map_session_list.erase(it++);
-                         delete map_session_data;
-				         continue;
-			             }
-				    }
-		}
+				                                                    aFree(map_session_data->server_packet_data);
+				                                                      map_session_list.erase(it++);
+                                                                      delete map_session_data;
+				                                                        continue;
+			                                                        }
 		}
         else 
         {
@@ -956,7 +874,7 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
                 PChar->status = STATUS_UPDATE;
                 PChar->loc.zone->SpawnPCs(PChar);
             }
-            charutils::SaveCharStats(PChar);
+            //charutils::SaveCharStats(PChar);
 			}
         }
 		++it;

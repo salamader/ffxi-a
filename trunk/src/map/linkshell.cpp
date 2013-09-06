@@ -187,8 +187,8 @@ void CLinkshell::ChangeMemberRank(int8* MemberName, uint8 toSack)
 		                }
                 }
 	        
-                charutils::SaveCharStats(PMember);
-                charutils::SaveCharEquip(PMember);
+                //charutils::SaveCharStats(PMember);
+                //charutils::SaveCharEquip(PMember);
 
                 if (PMember->status == STATUS_NORMAL) PMember->status = STATUS_UPDATE;
 
@@ -247,8 +247,8 @@ void CLinkshell::RemoveMemberByName(int8* MemberName)
 		            }
             }
 	        
-            charutils::SaveCharStats(PMember);
-            charutils::SaveCharEquip(PMember);
+           // charutils::SaveCharStats(PMember);
+           // charutils::SaveCharEquip(PMember);
 
             if (PMember->status == STATUS_NORMAL) PMember->status = STATUS_UPDATE;
 

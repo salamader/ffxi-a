@@ -312,7 +312,8 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
  
         uint16 destination = PChar->loc.destination;
  
-
+		
+		zoneutils::GetZone(PChar->loc.destination)->LoadPlayerZoneLines(PChar);
         zoneutils::GetZone(PChar->loc.destination)->LoadPlayerZoneSettings(PChar);
         if(destination >= MAX_ZONEID){
  
@@ -529,7 +530,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 						  PChar->loc.destination = 230;
 						 
 
-						 Query = "UPDATE chars SET pos_prevzone ='230', pos_zone ='230', first_login ='2' WHERE charid = %u;";
+						 Query = "UPDATE chars SET pos_prevzone ='230', pos_zone ='230', first_login ='0' WHERE charid = %u;";
                          Sql_Query(SqlHandle, Query, PChar->id);
 						
                       // return;
@@ -547,7 +548,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 						  PChar->loc.p.rotation = 213;
 						  PChar->loc.destination = 234;
 						 
-						 Query = "UPDATE chars SET pos_prevzone ='234', pos_zone ='234', first_login ='2' WHERE charid = %u;";
+						 Query = "UPDATE chars SET pos_prevzone ='234', pos_zone ='234', first_login ='0' WHERE charid = %u;";
                        Sql_Query(SqlHandle, Query,PChar->id);
 					
 					 // return;
@@ -565,7 +566,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 						  PChar->loc.p.rotation = 48;
 						  PChar->loc.destination = 240;
 						  
-						Query = "UPDATE chars SET pos_prevzone ='240', pos_zone ='240', first_login ='2' WHERE charid = %u;";
+						Query = "UPDATE chars SET pos_prevzone ='240', pos_zone ='240', first_login ='0' WHERE charid = %u;";
                         Sql_Query(SqlHandle, Query, PChar->id);
 						
 					 // return;
@@ -575,7 +576,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
     
 	PChar->is_zoning = 1;
 	PChar->PTreasurePool = NULL;
-    PChar->loc.zone = NULL;
+    //PChar->loc.zone = NULL;
     PChar->loc.prevzone =zone;
 		PChar->loc.destination=zone;
 	PChar->status = STATUS_DISAPPEAR;
@@ -678,7 +679,7 @@ PChar->pushPacket(new CServerIPPacket(PChar,2));
 				  }
 				  
 	            //  charutils::SaveCharPosition(PChar);
-	              charutils::SaveZonesVisited(PChar);
+	              //charutils::SaveZonesVisited(PChar);
                   charutils::RecoverFailedSendBox(PChar);
 	              
 	              PChar->pushPacket(new CZoneVisitedPacket(PChar));
@@ -832,7 +833,7 @@ PChar->pushPacket(new CServerIPPacket(PChar,2));
  
 	//charutils::SaveCharPosition(PChar);
  
-	charutils::SaveZonesVisited(PChar);
+	//charutils::SaveZonesVisited(PChar);
  
 
  
@@ -920,8 +921,10 @@ void SmallPacket0x00C(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowNotice(CL_BG_YELLOW"SmallPacket0x00D\n"CL_RESET);
 	if(PChar != NULL)
 	{
+		ShowNotice(CL_BG_YELLOW"SmallPacket0x00D IM IN\n"CL_RESET);
     session->blowfish.status = BLOWFISH_WAITING;
 
     PChar->TradePending.clean();
@@ -932,19 +935,28 @@ void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	{
 		PChar->animation = ANIMATION_NONE;
 	}
-
+	if(PChar->PRecastContainer != NULL)// ONE EXIT OR LEAVE GAME WE ARE CLEANING EVERYTHING OF THAT PLAYER SHOULD IT BE NULLED THEN ERACED??? JUST BECASUSE ITS 0 STILL MEANS ITS IN MEMORY.
+	{
     PChar->PRecastContainer->Del(RECAST_MAGIC);
-
-    charutils::SaveCharStats(PChar);
+	}
+	//TO DO MAKE A TIMER TO SAVE EVERY 5 SECONDS THEN REMOVE ALL THE SAVES HAVE IT IN ONE LOCATION IN ONE FUNCTION
+    //charutils::SaveCharStats(PChar);
 	
 	charutils::SaveCharExp(PChar, PChar->GetMJob());
-	charutils::SaveCharPoints(PChar);
+	//charutils::SaveCharPoints(PChar);
     charutils::CheckEquipLogic(PChar, SCRIPT_CHANGEZONE, PChar->getZone());
-	
+	if(PChar->is_zoning == 1 && PChar->loc.zone == NULL )
+	{
+		ShowNotice(CL_BG_YELLOW"WE HAVE LOGGED OUT WE WANT TO CLEAN THE MAP NOW\n"CL_RESET);
+		session->shuttingDown = true;//PLAYER HAS SHUT DOWN BY LOGOUT KILL OR BY SOME OTHER COMMAND 
+		session->Leftonmap = false; //FALSE NO DO NOT LEAVE ON MAP TRUE WOULD LEAVE PLAYER ON MAP
+		CTaskMgr::getInstance()->AddTask(new CTaskMgr::CTask("Close_Session_Clean_Map", gettick()+10, session, CTaskMgr::TASK_ONCE, Close_Session_Clean_Map));
+	}
     if (PChar->loc.zone != NULL)
     {
         PChar->loc.zone->DecreaseZoneCounter(PChar);
     }
+	
 
 	PChar->status = STATUS_DISAPPEAR;
     PChar->PBattleAI->Reset();
@@ -1382,7 +1394,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				PChar->loc.zone->SpawnNPCs(PChar);
 				PChar->loc.zone->SpawnMOBs(PChar);
 			}
-			charutils::SaveCharPosition(PChar);
+			//charutils::SaveCharPosition(PChar);
 			if(PChar->godmode == 0)
 			{
 				PChar->nameflags.flags =0;
@@ -1931,9 +1943,9 @@ void SmallPacket0x03A(map_session_data_t* session, CCharEntity* PChar, int8* dat
         if (map_config.lightluggage_block == ++PItemContainer->SortingPacket)
         {
             ShowWarning(CL_YELLOW"lightluggage detected: <%s> will be removed from server\n" CL_RESET, PChar->GetName());
-
-            PChar->status = STATUS_SHUTDOWN;
-            PChar->pushPacket(new CServerIPPacket(PChar,1));
+			PChar->is_zoning = 1;
+	        PChar->loc.zone = NULL;
+			PChar->leavegame();
         }
         return;
     }
@@ -2933,7 +2945,7 @@ void SmallPacket0x050(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 
 	charutils::EquipItem(PChar, slotID, equipSlotID);
-    charutils::SaveCharEquip(PChar);
+    //charutils::SaveCharEquip(PChar);
 
 	luautils::CheckForGearSet(PChar); // check for gear set on gear change
 	return;
@@ -3084,6 +3096,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 
 	uint32 zoneLineID = RBUFL(data,(0x04));
+	ShowDebug(CL_CYAN"SmallPacket0x5E: GET ZONELINE ID %u\n" CL_RESET, zoneLineID);
     //TODO: verify packet in adoulin expansion
 	uint8  town		  = RBUFB(data,(0x16)); // используются при выходе из mog house
 	uint8  zone		  = RBUFB(data,(0x17)); // используются при выходе из mog house
@@ -3103,7 +3116,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 		if (PZoneLine == NULL) // разворачиваем персонажа на 180° и отправляем туда, откуда пришел
 		{
-           // ShowError(CL_RED"SmallPacket0x5E: Zone line %u not found\n" CL_RESET, zoneLineID); // в идеале нужно добавить зону и координаты
+            ShowError(CL_RED"SmallPacket0x5E: Zone line %u not found\n" CL_RESET, zoneLineID); // в идеале нужно добавить зону и координаты
 
 			PChar->loc.p.rotation += 128;
 
@@ -3111,11 +3124,18 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
             PChar->pushPacket(new CCSPositionPacket(PChar));
 
             PChar->status = STATUS_UPDATE;
+			const char * Query = "INSERT INTO zonelines(zoneline,fromzone,tozone) VALUES('%u','%u','0');";
+
+	if( Sql_Query(SqlHandle,Query,zoneLineID,PChar->loc.destination) == SQL_ERROR )
+	{
+		
+		return;
+	}
             return;
 		}else{
 			if (zoneutils::GetZone(PZoneLine->m_toZone)->GetIP() == 0) 	// разворачиваем персонажа на 180° и отправляем туда, откуда пришел
 			{
-				//ShowDebug(CL_CYAN"SmallPacket0x5E: Zone %u closed to chars\n" CL_RESET, PZoneLine->m_toZone);
+				ShowDebug(CL_CYAN"SmallPacket0x5E: Zone %u closed to chars\n" CL_RESET, PZoneLine->m_toZone);
 
 				PChar->loc.p.rotation += 128;
 
@@ -3213,7 +3233,7 @@ void SmallPacket0x064(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	uint8 KeyTable = RBUFB(data,(0x4A));
 	memcpy(PChar->keys.seenList+(0x40*KeyTable),data+(0x08),0x40);
 
-	charutils::SaveKeyItems(PChar);
+	//charutils::SaveKeyItems(PChar);
 	return;
 }
 
@@ -4349,8 +4369,8 @@ void SmallPacket0x0C4(map_session_data_t* session, CCharEntity* PChar, int8* dat
                 }
                 break;
             }
-            charutils::SaveCharStats(PChar);
-            charutils::SaveCharEquip(PChar);
+           // charutils::SaveCharStats(PChar);
+            //charutils::SaveCharEquip(PChar);
 
             if (PChar->status == STATUS_NORMAL) PChar->status = STATUS_UPDATE;
 
@@ -4453,7 +4473,7 @@ void SmallPacket0x0DC(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			//if(RBUFB(data,(0x10)) == 2)	// autogroup off
 			break;
 	}
-    charutils::SaveCharStats(PChar);
+    //charutils::SaveCharStats(PChar);
 
 	PChar->status = STATUS_UPDATE;
 	PChar->pushPacket(new CMenuConfigPacket(PChar));
@@ -4741,8 +4761,10 @@ void SmallPacket0x0E7(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	*/
 	if (PChar->getZone() == 0 ||PChar->godmode == 1)
 	{
-		PChar->status = STATUS_SHUTDOWN;
-		PChar->pushPacket(new CServerIPPacket(PChar,1));
+		//TO DO MAKE A FUNCTION TO EXIT THE GAME IN PLAYERS DUPLCATE CODE IN MANY LOCATIONS
+		PChar->is_zoning = 1;
+	    PChar->loc.zone = NULL;
+		PChar->leavegame();
 	}
 	else
 	if (PChar->animation == ANIMATION_NONE)
@@ -4868,7 +4890,7 @@ void SmallPacket0x0F2(map_session_data_t* session, CCharEntity* PChar, int8* dat
 {
 	PChar->loc.boundary = RBUFW(data,(0x06));
 
-	charutils::SaveCharPosition(PChar);
+	//charutils::SaveCharPosition(PChar);
 	return;
 }
 
@@ -5117,7 +5139,7 @@ void SmallPacket0x100(map_session_data_t* session, CCharEntity* PChar, int8* dat
         PChar->health.hp = PChar->GetMaxHP();
         PChar->health.mp = PChar->GetMaxMP();
 
-        charutils::SaveCharStats(PChar);
+        //charutils::SaveCharStats(PChar);
 
 		PChar->pushPacket(new CCharJobsPacket(PChar));
 		PChar->pushPacket(new CCharUpdatePacket(PChar));

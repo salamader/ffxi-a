@@ -508,6 +508,7 @@ public:
     void            SpawnTransport(CCharEntity* PChar);                             // отображаем транспорт
 
 	void			WideScan(CCharEntity* PChar, uint16 radius);					// сканирование местности с заданным радиусом
+	void            LoadPlayerZoneLines(CCharEntity* PChar);
 	void	        LoadPlayerZoneSettings(CCharEntity* PChar);				// настройки зоны
 	void			DecreaseZoneCounter(CCharEntity* PChar);						// добавляем персонажа в зону
 	void			IncreaseZoneCounter(CCharEntity* PChar);						// удаляем персонажа из зоны

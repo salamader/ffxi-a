@@ -207,7 +207,55 @@ CNpcEntity* GetTrigger(uint16 TargID, uint16 ZoneID)
 	g_PTrigger->targid = TargID;
 	g_PTrigger->id = ((4096 + ZoneID) << 12) + TargID;
 
-    ShowWarning(CL_YELLOW"Server need NPC <%u>\n" CL_RESET, g_PTrigger->id);
+	uint32 npcid = 0;
+	const char * Query = "SELECT npcid FROM npc_list WHERE npcid = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,g_PTrigger->id);
+			if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	             {
+						
+				   npcid =  Sql_GetUIntData(SqlHandle,0);
+				   ShowWarning(CL_YELLOW"Server Has NPC NAME %s\n" CL_RESET,g_PTrigger->name.c_str());
+				 ShowWarning(CL_YELLOW"Server Has NPC ID %u\n" CL_RESET,g_PTrigger->id);
+				 ShowWarning(CL_YELLOW"Server Has NPC ZONE %u \n" CL_RESET,ZoneID);
+				 ShowWarning(CL_YELLOW"Server Has NPC LOOK BODY %u \n" CL_RESET,g_PTrigger->look.body);
+				 ShowWarning(CL_YELLOW"Server Has NPC LOOK FACE %u \n" CL_RESET,g_PTrigger->look.face);
+				 ShowWarning(CL_YELLOW"Server Has NPC LOOK FEET %u \n" CL_RESET,g_PTrigger->look.feet);
+				 ShowWarning(CL_YELLOW"Server Has NPC LOOK HANDS %u \n" CL_RESET,g_PTrigger->look.hands);
+				 ShowWarning(CL_YELLOW"Server Has NPC LOOK HEAD %u \n" CL_RESET,g_PTrigger->look.head);
+				 ShowWarning(CL_YELLOW"Server Has NPC LOOK LEGS %u \n" CL_RESET,g_PTrigger->look.legs);
+				 ShowWarning(CL_YELLOW"Server Has NPC LOOK MAIN %u \n" CL_RESET,g_PTrigger->look.main);
+				 ShowWarning(CL_YELLOW"Server Has NPC LOOK RACE %u \n" CL_RESET,g_PTrigger->look.race);
+				 ShowWarning(CL_YELLOW"Server Has NPC LOOK RANGE %u \n" CL_RESET,g_PTrigger->look.ranged);
+				 ShowWarning(CL_YELLOW"Server Has NPC LOOK SIZE %u \n" CL_RESET,g_PTrigger->look.size);
+				 ShowWarning(CL_YELLOW"Server Has NPC LOOK SUB %u \n" CL_RESET,g_PTrigger->look.sub);
+                 ShowWarning(CL_YELLOW"Server Has NPC <%u>\n" CL_RESET, npcid);
+				 }
+				 else
+				 {
+					 //INSERT INTO
+					 Query = "INSERT INTO npc_list(npcid,name,zoneid) VALUES('%u','%s','%u');";
+
+	if( Sql_Query(SqlHandle,Query,g_PTrigger->id,g_PTrigger->GetName(),ZoneID) == SQL_ERROR )
+	{
+		
+		return g_PTrigger;
+	}
+	             ShowWarning(CL_YELLOW"Server needs NPC NAME %s\n" CL_RESET,g_PTrigger->name.c_str());
+				 ShowWarning(CL_YELLOW"Server needs NPC ID %u\n" CL_RESET,g_PTrigger->id);
+				 ShowWarning(CL_YELLOW"Server needs NPC ZONE %u \n" CL_RESET,ZoneID);
+				 ShowWarning(CL_YELLOW"Server needs NPC LOOK BODY %u \n" CL_RESET,g_PTrigger->look.body);
+				 ShowWarning(CL_YELLOW"Server needs NPC LOOK FACE %u \n" CL_RESET,g_PTrigger->look.face);
+				 ShowWarning(CL_YELLOW"Server needs NPC LOOK FEET %u \n" CL_RESET,g_PTrigger->look.feet);
+				 ShowWarning(CL_YELLOW"Server needs NPC LOOK HANDS %u \n" CL_RESET,g_PTrigger->look.hands);
+				 ShowWarning(CL_YELLOW"Server needs NPC LOOK HEAD %u \n" CL_RESET,g_PTrigger->look.head);
+				 ShowWarning(CL_YELLOW"Server needs NPC LOOK LEGS %u \n" CL_RESET,g_PTrigger->look.legs);
+				 ShowWarning(CL_YELLOW"Server needs NPC LOOK MAIN %u \n" CL_RESET,g_PTrigger->look.main);
+				 ShowWarning(CL_YELLOW"Server needs NPC LOOK RACE %u \n" CL_RESET,g_PTrigger->look.race);
+				 ShowWarning(CL_YELLOW"Server needs NPC LOOK RANGE %u \n" CL_RESET,g_PTrigger->look.ranged);
+				 ShowWarning(CL_YELLOW"Server needs NPC LOOK SIZE %u \n" CL_RESET,g_PTrigger->look.size);
+				 ShowWarning(CL_YELLOW"Server needs NPC LOOK SUB %u \n" CL_RESET,g_PTrigger->look.sub);
+                 ShowWarning(CL_YELLOW"Server needs NPC not found in database auto build npc success \n" CL_RESET);
+				 }
 	return g_PTrigger;
 }
 

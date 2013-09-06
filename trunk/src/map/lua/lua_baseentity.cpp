@@ -119,12 +119,23 @@ CLuaBaseEntity::CLuaBaseEntity(CBaseEntity* PEntity)
 
 inline int32 CLuaBaseEntity::leavegame(lua_State *L)
 {
-	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
-	DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
-	((CCharEntity*)m_PBaseEntity)->status = STATUS_SHUTDOWN;
-	((CCharEntity*)m_PBaseEntity)->pushPacket(new CServerIPPacket((CCharEntity*)m_PBaseEntity,1));
-
+	if(m_PBaseEntity == NULL)
+	{
+		
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		
+		return false;
+	}
+	
+    
+	PChar->leavegame();
 	return 0;
 }
 
@@ -1039,7 +1050,7 @@ inline int32 CLuaBaseEntity::setNation(lua_State *L)
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
     PChar->profile.nation = (uint8)lua_tointeger(L,-1);
-    charutils::SaveCharNation(PChar);
+    //charutils::SaveCharNation(PChar);
     return 0;
 }
 
@@ -1066,7 +1077,7 @@ inline int32 CLuaBaseEntity::setRankPoints(lua_State *L)
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
 	PChar->profile.rankpoints = (int32)lua_tointeger(L, -1);
-	charutils::SaveMissionsList(PChar);
+	//charutils::SaveMissionsList(PChar);
 	return 0;
 }
 
@@ -1082,7 +1093,7 @@ inline int32 CLuaBaseEntity::addRankPoints(lua_State *L)
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
 	PChar->profile.rankpoints += (int32)lua_tointeger(L, -1);;
-	charutils::SaveMissionsList(PChar);
+	//charutils::SaveMissionsList(PChar);
 	return 0;
 }
 
@@ -1111,7 +1122,7 @@ inline int32 CLuaBaseEntity::setRank(lua_State *L)
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
 	PChar->profile.rank[PChar->profile.nation] = (int32)lua_tointeger(L, -1);;
-	charutils::SaveMissionsList(PChar);
+	//charutils::SaveMissionsList(PChar);
 	return 0;
 }
 
@@ -1140,7 +1151,7 @@ inline int32 CLuaBaseEntity::addQuest(lua_State *L)
 			PChar->m_questLog[logID].current [questID/8] |= (1 << (questID % 8));
 			PChar->pushPacket(new CQuestMissionLogPacket(PChar, logID, 1));
 
-            charutils::SaveQuestsList(PChar);
+            //charutils::SaveQuestsList(PChar);
 		}
 	}else{
 		ShowError(CL_RED"Lua::addQuest: LogID %i or QuestID %i is invalid\n" CL_RESET, logID, questID);
@@ -1176,7 +1187,7 @@ inline int32 CLuaBaseEntity::delQuest(lua_State *L)
 			PChar->pushPacket(new CQuestMissionLogPacket(PChar, logID, 1));
 			PChar->pushPacket(new CQuestMissionLogPacket(PChar, logID, 2));
 
-			charutils::SaveQuestsList(PChar);
+			//charutils::SaveQuestsList(PChar);
 		}
 	}else{
 		ShowError(CL_RED"Lua::delQuest: LogID %i or QuestID %i is invalid\n" CL_RESET, logID, questID);
@@ -1238,7 +1249,7 @@ inline int32 CLuaBaseEntity::completeQuest(lua_State *L)
 			PChar->pushPacket(new CQuestMissionLogPacket(PChar, logID, 1));
 			PChar->pushPacket(new CQuestMissionLogPacket(PChar, logID, 2));
 		}
-        charutils::SaveQuestsList(PChar);
+        //charutils::SaveQuestsList(PChar);
 	}else{
 		ShowError(CL_RED"Lua::completeQuest: LogID %i or QuestID %i is invalid\n" CL_RESET, logID, questID);
 	}
@@ -1303,7 +1314,7 @@ inline int32 CLuaBaseEntity::addMission(lua_State *L)
         PChar->m_missionLog[LogID].current = MissionID;
 		PChar->pushPacket(new CQuestMissionLogPacket(PChar, LogID+11, 1));
 
-		charutils::SaveMissionsList(PChar);
+		//charutils::SaveMissionsList(PChar);
     }
     else
     {
@@ -1346,7 +1357,7 @@ inline int32 CLuaBaseEntity::delMission(lua_State *L)
 			PChar->m_missionLog[LogID].complete[MissionID] = false;
 			PChar->pushPacket(new CQuestMissionLogPacket(PChar, LogID+11, 2));
 		}
-		charutils::SaveMissionsList(PChar);
+		//charutils::SaveMissionsList(PChar);
     }
     else
     {
@@ -1444,7 +1455,7 @@ inline int32 CLuaBaseEntity::completeMission(lua_State *L)
 	    PChar->pushPacket(new CQuestMissionLogPacket(PChar, LogID+11, 1));
 	    PChar->pushPacket(new CQuestMissionLogPacket(PChar, LogID+11, 2));
 
-	    charutils::SaveMissionsList(PChar);
+	    //charutils::SaveMissionsList(PChar);
     }
     else
     {
@@ -1470,7 +1481,7 @@ inline int32 CLuaBaseEntity::addKeyItem(lua_State *L)
 	{
 		PChar->pushPacket(new CKeyItemsPacket(PChar,(KEYS_TABLE)(KeyItemID >> 9)));
 
-		charutils::SaveKeyItems(PChar);
+		//charutils::SaveKeyItems(PChar);
 	}
 	return 0;
 }
@@ -1492,7 +1503,7 @@ inline int32 CLuaBaseEntity::delKeyItem(lua_State *L)
 	{
 		PChar->pushPacket(new CKeyItemsPacket(PChar,(KEYS_TABLE)(KeyItemID >> 9)));
 
-		charutils::SaveKeyItems(PChar);
+		//charutils::SaveKeyItems(PChar);
 	}
 	return 0;
 }
@@ -1553,7 +1564,7 @@ inline int32 CLuaBaseEntity::unseenKeyItem(lua_State *L)
 	{
 		PChar->pushPacket(new CKeyItemsPacket(PChar,(KEYS_TABLE)(KeyItemID >> 9)));
 
-		charutils::SaveKeyItems(PChar);
+		//charutils::SaveKeyItems(PChar);
 	}
 	return 0;
 }
@@ -1697,7 +1708,7 @@ inline int32 CLuaBaseEntity::addSpell(lua_State *L)
 
     if (charutils::addSpell(PChar, SpellID))
     {
-        charutils::SaveSpells(PChar);
+        //charutils::SaveSpells(PChar);
         PChar->pushPacket(new CCharSpellsPacket(PChar));
 		if(!silent)
 			PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 23));
@@ -1724,7 +1735,7 @@ inline int32 CLuaBaseEntity::addAllSpells(lua_State *L)
 		 {
 			if (charutils::addSpell(PChar, ValidSpells[i]))
 			{
-				charutils::SaveSpells(PChar);
+				//charutils::SaveSpells(PChar);
 			}
 		 }
     PChar->pushPacket(new CCharSpellsPacket(PChar));
@@ -1791,7 +1802,7 @@ inline int32 CLuaBaseEntity::delSpell(lua_State *L)
 
 	if (charutils::delSpell(PChar,SpellID))
 	{
-		charutils::SaveSpells(PChar);
+		//charutils::SaveSpells(PChar);
 		PChar->pushPacket(new CCharSpellsPacket(PChar));
 	}
 	return 0;
@@ -1817,7 +1828,7 @@ inline int32 CLuaBaseEntity::addLearnedAbility(lua_State *L)
     if (charutils::addLearnedAbility(PChar, AbilityID))
     {
 		charutils::addAbility(PChar, AbilityID);
-        charutils::SaveLearnedAbilities(PChar);
+        //charutils::SaveLearnedAbilities(PChar);
         PChar->pushPacket(new CCharAbilitiesPacket(PChar));
         PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 442));
     }
@@ -1882,7 +1893,7 @@ inline int32 CLuaBaseEntity::delLearnedAbility(lua_State *L)
 
 	if (charutils::delLearnedAbility(PChar,AbilityID))
 	{
-		charutils::SaveLearnedAbilities(PChar);
+		//charutils::SaveLearnedAbilities(PChar);
 		PChar->pushPacket(new CCharAbilitiesPacket(PChar));
 	}
 	return 0;
@@ -2919,7 +2930,7 @@ inline int CLuaBaseEntity::addTitle(lua_State *L)
     PChar->pushPacket(new CCharStatsPacket(PChar));
 
     charutils::addTitle(PChar, TitleID);
-    charutils::SaveTitles(PChar);
+   // charutils::SaveTitles(PChar);
     return 0;
 }
 
@@ -2948,7 +2959,7 @@ inline int32 CLuaBaseEntity::delTitle(lua_State *L)
         }
 		PChar->pushPacket(new CCharStatsPacket(PChar));
 
-        charutils::SaveTitles(PChar);
+        //charutils::SaveTitles(PChar);
 	}
 	return 0;
 }
@@ -3430,7 +3441,7 @@ inline int32 CLuaBaseEntity::setFame(lua_State *L)
             ((CCharEntity*)m_PBaseEntity)->profile.fame[3] = fame;
         break;
     }
-    charutils::SaveFame((CCharEntity*)m_PBaseEntity);
+   // charutils::SaveFame((CCharEntity*)m_PBaseEntity);
     return 0;
 }
 
@@ -3471,7 +3482,7 @@ inline int32 CLuaBaseEntity::addFame(lua_State *L)
             ((CCharEntity*)m_PBaseEntity)->profile.fame[3] += fame;
         break;
     }
-    charutils::SaveFame((CCharEntity*)m_PBaseEntity);
+   // charutils::SaveFame((CCharEntity*)m_PBaseEntity);
     return 0;
 }
 
@@ -4473,10 +4484,10 @@ inline int32 CLuaBaseEntity::changeJob(lua_State *L)
     PChar->health.hp = PChar->GetMaxHP();
     PChar->health.mp = PChar->GetMaxMP();
 
-    charutils::SaveCharStats(PChar);
+    //charutils::SaveCharStats(PChar);
     charutils::SaveCharJob(PChar, PChar->GetMJob());
     charutils::SaveCharExp(PChar, PChar->GetMJob());
-	charutils::SaveCharPoints(PChar);
+	//charutils::SaveCharPoints(PChar);
 	charutils::UpdateHealth(PChar);
 
     PChar->pushPacket(new CCharJobsPacket(PChar));
@@ -4556,7 +4567,7 @@ inline int32 CLuaBaseEntity::setsLevel(lua_State *L)
     PChar->health.hp = PChar->GetMaxHP();
     PChar->health.mp = PChar->GetMaxMP();
 
-    charutils::SaveCharStats(PChar);
+    //charutils::SaveCharStats(PChar);
     charutils::SaveCharJob(PChar, PChar->GetMJob());
     charutils::SaveCharExp(PChar, PChar->GetMJob());
 
@@ -4605,10 +4616,10 @@ inline int32 CLuaBaseEntity::setLevel(lua_State *L)
     PChar->health.hp = PChar->GetMaxHP();
     PChar->health.mp = PChar->GetMaxMP();
 
-    charutils::SaveCharStats(PChar);
+    //charutils::SaveCharStats(PChar);
     charutils::SaveCharJob(PChar, PChar->GetMJob());
     charutils::SaveCharExp(PChar, PChar->GetMJob());
-	charutils::SaveCharPoints(PChar);
+	//charutils::SaveCharPoints(PChar);
 
     PChar->pushPacket(new CCharJobsPacket(PChar));
     PChar->pushPacket(new CCharStatsPacket(PChar));
@@ -4717,7 +4728,7 @@ inline int32 CLuaBaseEntity::moghouseFlag(lua_State *L)
     if (!lua_isnil(L,1) && lua_isnumber(L,1))
     {
         PChar->profile.mhflag |= (uint8)lua_tointeger(L,1);
-        charutils::SaveCharStats(PChar);
+        //charutils::SaveCharStats(PChar);
         return 0;
     }
     lua_pushinteger(L, PChar->profile.mhflag);
@@ -4826,7 +4837,7 @@ inline int32 CLuaBaseEntity::equipItem(lua_State *L)
     if(SLOT != ERROR_SLOTID){
 	    PItem = (CItemArmor*)PChar->getStorage(LOC_INVENTORY)->GetItem(SLOT);
 	    charutils::EquipItem(PChar, SLOT, PItem->getSlotType());
-		charutils::SaveCharEquip(PChar);
+		//charutils::SaveCharEquip(PChar);
 	}
     return 0;
 }
@@ -5382,7 +5393,7 @@ inline int32 CLuaBaseEntity::changeContainerSize(lua_State *L)
 
 		    PChar->getStorage(LocationID)->AddBuff(lua_tointeger(L,2));
 		    PChar->pushPacket(new CInventorySizePacket(PChar));
-		    charutils::SaveCharInventoryCapacity(PChar);
+		   // charutils::SaveCharInventoryCapacity(PChar);
         }
         else
         {
@@ -6401,7 +6412,7 @@ inline int32 CLuaBaseEntity::addCP(lua_State *L)
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
 	PChar->RegionPoints[PChar->profile.nation] += cp;
-	charutils::SaveCharPoints(PChar);
+	//charutils::SaveCharPoints(PChar);
 	PChar->pushPacket(new CConquestPacket(PChar));
 
 	return 0;
@@ -6420,7 +6431,7 @@ inline int32 CLuaBaseEntity::delCP(lua_State *L)
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
 	PChar->RegionPoints[PChar->profile.nation] -= cp;
-	charutils::SaveCharPoints(PChar);
+	//charutils::SaveCharPoints(PChar);
 	PChar->pushPacket(new CConquestPacket(PChar));
 
 	return 0;
@@ -6465,7 +6476,7 @@ inline int32 CLuaBaseEntity::addPoint(lua_State *L)
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
 	PChar->RegionPoints[type] += point;
-	charutils::SaveCharPoints(PChar);
+	//charutils::SaveCharPoints(PChar);
 
 	return 0;
 }
@@ -6489,7 +6500,7 @@ inline int32 CLuaBaseEntity::delPoint(lua_State *L)
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
 	PChar->RegionPoints[type] -= point;
-	charutils::SaveCharPoints(PChar);
+	//charutils::SaveCharPoints(PChar);
 
 	return 0;
 }
@@ -6560,7 +6571,7 @@ inline int32 CLuaBaseEntity::addNationTeleport(lua_State *L)
 			return 0;
 	}
 
-	charutils::SaveCharPoints(PChar);
+	//charutils::SaveCharPoints(PChar);
 	return 0;
 }
 
@@ -7222,28 +7233,9 @@ inline int32 CLuaBaseEntity::checkNameFlags(lua_State* L)
 	return 1;
 }
 
-inline int32 CLuaBaseEntity::getGMLevel(lua_State* L)
-{
-	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
-	DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
-	lua_pushnumber(L,PChar->m_GMlevel);
-	return 1;
-}
 
-inline int32 CLuaBaseEntity::setGMLevel(lua_State* L)
-{
-	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
-	DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
-
-	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-
-	PChar->m_GMlevel = (uint8)lua_tonumber(L,1);
-	charutils::SaveCharGMLevel(PChar);
-	return 0;
-}
 inline int32 CLuaBaseEntity::PrintToPlayer(lua_State* L)
 {
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
@@ -9087,16 +9079,12 @@ inline int32 CLuaBaseEntity::leave_game(lua_State *L)
 		return false;
 	}
 	
-
-	PChar->status = STATUS_SHUTDOWN;
-	PChar->clearPacketList();
-	PChar->pushPacket(new CServerIPPacket(PChar,1));
+   PChar->leavegame();
 	
 	char buf1[110];
 	sprintf(buf1,"Leaving Game" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
-	const int8* Query = "UPDATE chars SET online = '0', shutdown = '1',  inevent = '0' WHERE charid = %u";
-                       Sql_Query(SqlHandle,Query, PChar->id);
+	
 		
 	return false;
 }
@@ -9270,7 +9258,7 @@ inline int32 CLuaBaseEntity::add_Key_Item(lua_State *L)
 	{
 		PChar->pushPacket(new CKeyItemsPacket(PChar,(KEYS_TABLE)(KeyItemID >> 9)));
 
-		charutils::SaveKeyItems(PChar);
+		//charutils::SaveKeyItems(PChar);
 	}
 
 	
@@ -9427,7 +9415,7 @@ inline int32 CLuaBaseEntity::add_All_Spells(lua_State *L)
 		 {
 			if (charutils::addSpell(PChar, ValidSpells[i]))
 			{
-				charutils::SaveSpells(PChar);
+				//charutils::SaveSpells(PChar);
 			}
 		 }
     PChar->pushPacket(new CCharSpellsPacket(PChar));
@@ -9813,8 +9801,8 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getBaseHP),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getBaseMP),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,checkNameFlags),
-	LUNAR_DECLARE_METHOD(CLuaBaseEntity,getGMLevel),
-	LUNAR_DECLARE_METHOD(CLuaBaseEntity,setGMLevel),
+	
+	
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,PrintToPlayer),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,getBaseMP),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,pathThrough),

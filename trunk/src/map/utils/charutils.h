@@ -119,8 +119,7 @@ namespace charutils
 	int32	hasWeaponSkill(CCharEntity* PChar, uint16 WeaponSkillID);   // declaration of function to check for weapon skill
 	int32	delWeaponSkill(CCharEntity* PChar, uint16 WeaponSkillID);   // declaration of function to delete weapon skill
 
-	void	SaveCharJob(CCharEntity* PChar, JOBTYPE job);		        // сохраняем уровень для выбранной профессий персонажа
-	void	SaveCharExp(CCharEntity* PChar, JOBTYPE job);		        // сохраняем опыт для выбранной профессии персонажа
+	
 	void	SaveCharEquip(CCharEntity* PChar);					        // сохраняем экипировку и внешний вид персонажа
 	void	SaveCharPosition(CCharEntity* PChar);				        // сохраняем позицию персонажа
 	void	SaveMissionsList(CCharEntity* PChar);                       // Save the missions list
@@ -133,13 +132,18 @@ namespace charutils
 	void	SaveLearnedAbilities(CCharEntity* PChar);					// saved learned abilities (corsair rolls)
     void    SaveTitles(CCharEntity* PChar);						        // сохраняем заслуженные звания
 	void	SaveCharStats(CCharEntity* PChar);					        // сохраняем флаги, текущие значения жихней, маны и профессий
-    void    SaveCharGMLevel(CCharEntity* PChar);                        // saves the char's gm level and nameflags
+   
 	void	SaveCharNation(CCharEntity* PChar);							// Sace the character's nation of allegiance.
-	void	SaveCharSkills(CCharEntity* PChar, uint8 skillID);	        // сохраняем указанный skill персонажа
+	
 	void	SaveCharPoints(CCharEntity* PChar);							// Conquest point, Nation TP
 	void	SaveDeathTime(CCharEntity* PChar);							// Saves when this character last died.
+	void    SaveCharSystem(CCharEntity* PChar);
+	void	SaveCharUnlockedWeapons(CCharEntity* PChar);
 	bool	hasMogLockerAccess(CCharEntity* PChar);						// true if have access, false otherwise.
-
+    void	SaveCharSkills(CCharEntity* PChar, uint8 skillID);	        // сохраняем указанный skill персонажа
+	void	SaveCharJob(CCharEntity* PChar, JOBTYPE job);		        // сохраняем уровень для выбранной профессий персонажа
+	void	SaveCharExp(CCharEntity* PChar, JOBTYPE job);		        // сохраняем опыт для выбранной профессии персонажа
+	void	saveCharWsPoints(CCharEntity* PChar, uint16 indexid, int32 points);
     uint32  AddExpBonus(CCharEntity* PChar, uint32 exp);
     void    ResetAllTwoHours();
 
@@ -147,10 +151,10 @@ namespace charutils
 
 	uint8	AvatarPerpetuationReduction(CCharEntity* PChar);
 
-	void	SaveCharUnlockedWeapons(CCharEntity* PChar);
+	
 	void	LoadCharUnlockedWeapons(CCharEntity* PChar);
 	void	loadCharWsPoints(CCharEntity* PChar);
-	void	saveCharWsPoints(CCharEntity* PChar, uint16 indexid, int32 points);
+	
 
     void    OpenSendBox(CCharEntity* PChar);
     void    RecoverFailedSendBox(CCharEntity* PChar);

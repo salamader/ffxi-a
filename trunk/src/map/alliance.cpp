@@ -163,7 +163,7 @@ void CAlliance::addParty(CParty * party)
 	for (uint8 i = 0; i < party->members.size(); ++i)
 	{
 		party->ReloadTreasurePool((CCharEntity*)party->members.at(i));
-		charutils::SaveCharStats((CCharEntity*)party->members.at(i));
+		//charutils::SaveCharStats((CCharEntity*)party->members.at(i));
 	}
 }
 
