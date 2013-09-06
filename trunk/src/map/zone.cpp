@@ -333,35 +333,77 @@ void CZone::LoadZoneWeather()
 *  Загружаем настройки зоны из базы										*
 *																		*
 ************************************************************************/
-
 void CZone::LoadZoneSettings()
 {
-	/*in_addr inaddr;
-   inaddr.S_un.S_addr = inet_addr(map_config.DNS_Servers_Address);
-   //ShowFatalError(CL_RED"CZone:GET HOST NAME2(%u)\n" CL_RESET, inaddr);
-   
-   if( inaddr.S_un.S_addr == INADDR_NONE)
-   {
-      hostent* phostent = gethostbyname(map_config.DNS_Servers_Address);
-      //ShowFatalError(CL_RED"CZone:GET HOST NAME3(%u)\n" CL_RESET, phostent);
-      if( phostent == 0)
-      {
-         //ShowFatalError(CL_RED"CZone:GET HOST NAME4(%u)\n" CL_RESET, phostent);
-         return;
+	//IT WILL AUTOMATICLY SET TO THE NETWORK IP THEN IT WILL SWITCH TO PLAYER COMMAND
+	//OFF NETOWRK OR ON NETWORK EITHER WAY SHOULD WORK!
+	in_addr inaddr;
+     inaddr.S_un.S_addr = inet_addr(map_config.NETWORK_Servers_Address);
+     if( inaddr.S_un.S_addr == INADDR_NONE)
+       {
+       hostent* phostent = gethostbyname(map_config.NETWORK_Servers_Address);
+       if( phostent == 0){return;}
+       if( sizeof(inaddr) != phostent->h_length){return;}
+       inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
+       }
+	 static const int8* Query =
+        "SELECT "
+          "zone.name,"
+          "zone.zoneip,"
+          "zone.zoneport,"
+          "zone.music,"
+          "zone.battlesolo,"
+          "zone.battlemulti,"
+          "zone.tax,"
+          "zone.misc,"
+          "zone.navmesh,"
+          "zone.zonetype,"
+          "bcnm.name "
+        "FROM zone_settings AS zone "
+        "LEFT JOIN bcnm_info AS bcnm "
+        "USING (zoneid) "
+        "WHERE zoneid = %u "
+        "LIMIT 1";
+
+    if (Sql_Query(SqlHandle, Query, m_zoneID) != SQL_ERROR &&
+        Sql_NumRows(SqlHandle) != 0 &&
+        Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+    {
+        m_zoneName.insert(0, Sql_GetData(SqlHandle,0));
+
+    m_zoneIP   = inaddr.S_un.S_addr;
+    m_zonePort = (uint16)Sql_GetUIntData(SqlHandle,2);
+    m_zoneMusic.m_song   = (uint8)Sql_GetUIntData(SqlHandle,3);   // background music
+    m_zoneMusic.m_bSongS = (uint8)Sql_GetUIntData(SqlHandle,4);   // solo battle music
+    m_zoneMusic.m_bSongM = (uint8)Sql_GetUIntData(SqlHandle,5);   // party battle music
+    m_tax = (uint16)(Sql_GetFloatData(SqlHandle,6) * 100);      // tax for bazaar
+    m_miscMask = (uint16)Sql_GetUIntData(SqlHandle,7);
+    m_useNavMesh = (bool)Sql_GetIntData(SqlHandle,8);
+
+    m_zoneType = (ZONETYPE)Sql_GetUIntData(SqlHandle, 9);
+
+        if (Sql_GetData(SqlHandle,10) != NULL) // сейчас нельзя использовать bcnmid, т.к. они начинаются с нуля
+        {
+            m_InstanceHandler = new CInstanceHandler(m_zoneID);
       }
-
-      if( sizeof(inaddr) != phostent->h_length)
-      {
-         //ShowFatalError(CL_RED"CZone:GET HOST NAME5(%u)\n" CL_RESET, phostent);
-         return; 
-      }
-
-      inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
-      
-
-      
-   }*/
-    static const int8* Query =
+        if (m_miscMask & MISC_TREASURE)
+    {
+            m_TreasurePool = new CTreasurePool(TREASUREPOOL_ZONE);
+    }
+    }
+    else
+    {
+        ShowFatalError(CL_RED"CZone::LoadZoneSettings: Cannot load zone settings (%u)\n" CL_RESET, m_zoneID);
+    }
+	
+	
+    
+}
+void CZone::LoadPlayerZoneSettings(CCharEntity* PChar)
+{
+	if(PChar == NULL)
+	{
+		 static const int8* Query =
         "SELECT "
           "zone.name,"
           "zone.zoneip,"
@@ -410,6 +452,132 @@ void CZone::LoadZoneSettings()
     {
         ShowFatalError(CL_RED"CZone::LoadZoneSettings: Cannot load zone settings (%u)\n" CL_RESET, m_zoneID);
     }
+	}
+	if(PChar->Is_Public_0_Or_Private_1 == 0)
+	{
+	 in_addr inaddr;
+     inaddr.S_un.S_addr = inet_addr(map_config.DNS_Servers_Address);
+     if( inaddr.S_un.S_addr == INADDR_NONE)
+       {
+       hostent* phostent = gethostbyname(map_config.DNS_Servers_Address);
+       if( phostent == 0){return;}
+       if( sizeof(inaddr) != phostent->h_length){return;}
+       inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
+       }
+	 static const int8* Query =
+        "SELECT "
+          "zone.name,"
+          "zone.zoneip,"
+          "zone.zoneport,"
+          "zone.music,"
+          "zone.battlesolo,"
+          "zone.battlemulti,"
+          "zone.tax,"
+          "zone.misc,"
+          "zone.navmesh,"
+          "zone.zonetype,"
+          "bcnm.name "
+        "FROM zone_settings AS zone "
+        "LEFT JOIN bcnm_info AS bcnm "
+        "USING (zoneid) "
+        "WHERE zoneid = %u "
+        "LIMIT 1";
+
+    if (Sql_Query(SqlHandle, Query, m_zoneID) != SQL_ERROR &&
+        Sql_NumRows(SqlHandle) != 0 &&
+        Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+    {
+        m_zoneName.insert(0, Sql_GetData(SqlHandle,0));
+
+    m_zoneIP   = inaddr.S_un.S_addr;
+    m_zonePort = (uint16)Sql_GetUIntData(SqlHandle,2);
+    m_zoneMusic.m_song   = (uint8)Sql_GetUIntData(SqlHandle,3);   // background music
+    m_zoneMusic.m_bSongS = (uint8)Sql_GetUIntData(SqlHandle,4);   // solo battle music
+    m_zoneMusic.m_bSongM = (uint8)Sql_GetUIntData(SqlHandle,5);   // party battle music
+    m_tax = (uint16)(Sql_GetFloatData(SqlHandle,6) * 100);      // tax for bazaar
+    m_miscMask = (uint16)Sql_GetUIntData(SqlHandle,7);
+    m_useNavMesh = (bool)Sql_GetIntData(SqlHandle,8);
+
+    m_zoneType = (ZONETYPE)Sql_GetUIntData(SqlHandle, 9);
+
+        if (Sql_GetData(SqlHandle,10) != NULL) // сейчас нельзя использовать bcnmid, т.к. они начинаются с нуля
+        {
+            m_InstanceHandler = new CInstanceHandler(m_zoneID);
+      }
+        if (m_miscMask & MISC_TREASURE)
+    {
+            m_TreasurePool = new CTreasurePool(TREASUREPOOL_ZONE);
+    }
+    }
+    else
+    {
+        ShowFatalError(CL_RED"CZone::LoadZoneSettings: Cannot load zone settings (%u)\n" CL_RESET, m_zoneID);
+    }
+	 
+    }
+	if(PChar->Is_Public_0_Or_Private_1 == 1)
+	{
+	 in_addr inaddr;
+     inaddr.S_un.S_addr = inet_addr(map_config.NETWORK_Servers_Address);
+     if( inaddr.S_un.S_addr == INADDR_NONE)
+       {
+       hostent* phostent = gethostbyname(map_config.NETWORK_Servers_Address);
+       if( phostent == 0){return;}
+       if( sizeof(inaddr) != phostent->h_length){return;}
+       inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
+       }
+	 static const int8* Query =
+        "SELECT "
+          "zone.name,"
+          "zone.zoneip,"
+          "zone.zoneport,"
+          "zone.music,"
+          "zone.battlesolo,"
+          "zone.battlemulti,"
+          "zone.tax,"
+          "zone.misc,"
+          "zone.navmesh,"
+          "zone.zonetype,"
+          "bcnm.name "
+        "FROM zone_settings AS zone "
+        "LEFT JOIN bcnm_info AS bcnm "
+        "USING (zoneid) "
+        "WHERE zoneid = %u "
+        "LIMIT 1";
+
+    if (Sql_Query(SqlHandle, Query, m_zoneID) != SQL_ERROR &&
+        Sql_NumRows(SqlHandle) != 0 &&
+        Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+    {
+        m_zoneName.insert(0, Sql_GetData(SqlHandle,0));
+
+    m_zoneIP   = inaddr.S_un.S_addr;
+    m_zonePort = (uint16)Sql_GetUIntData(SqlHandle,2);
+    m_zoneMusic.m_song   = (uint8)Sql_GetUIntData(SqlHandle,3);   // background music
+    m_zoneMusic.m_bSongS = (uint8)Sql_GetUIntData(SqlHandle,4);   // solo battle music
+    m_zoneMusic.m_bSongM = (uint8)Sql_GetUIntData(SqlHandle,5);   // party battle music
+    m_tax = (uint16)(Sql_GetFloatData(SqlHandle,6) * 100);      // tax for bazaar
+    m_miscMask = (uint16)Sql_GetUIntData(SqlHandle,7);
+    m_useNavMesh = (bool)Sql_GetIntData(SqlHandle,8);
+
+    m_zoneType = (ZONETYPE)Sql_GetUIntData(SqlHandle, 9);
+
+        if (Sql_GetData(SqlHandle,10) != NULL) // сейчас нельзя использовать bcnmid, т.к. они начинаются с нуля
+        {
+            m_InstanceHandler = new CInstanceHandler(m_zoneID);
+      }
+        if (m_miscMask & MISC_TREASURE)
+    {
+            m_TreasurePool = new CTreasurePool(TREASUREPOOL_ZONE);
+    }
+    }
+    else
+    {
+        ShowFatalError(CL_RED"CZone::LoadZoneSettings: Cannot load zone settings (%u)\n" CL_RESET, m_zoneID);
+    }
+	 
+    }
+    
 }
 
 void CZone::LoadNavMesh()

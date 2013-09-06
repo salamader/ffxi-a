@@ -54,6 +54,7 @@ CCharEntity::CCharEntity()
 	godmode = 0;
 	eventid = -1;
 	Rage_Mode = 0;
+	Is_Public_0_Or_Private_1 = 0; // PUBLIC ACCESSS
 
 	Container    = new CTradeContainer();
 	UContainer	 = new CUContainer();

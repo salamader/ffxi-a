@@ -294,6 +294,11 @@ int32 login_config_read(const char *cfgName)
         {
 			login_config.DNS_Servers_Address = aStrdup(w2);
         }
+		else if (strcmp(w1, "NETWORK_Servers_Address" ) == 0)
+        {
+			login_config.NETWORK_Servers_Address = aStrdup(w2);
+        }
+		
         else if (strcmp(w1, "mysql_host" ) == 0)
         {
 			login_config.mysql_host = aStrdup(w2);

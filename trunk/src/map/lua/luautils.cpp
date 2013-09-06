@@ -904,8 +904,10 @@ int32 OnGameIn(CCharEntity* PChar)
 	uint8 shutdown_status = 0;
 	uint8 inevent = 0;
 	int32 eventid = 0;
+	int32 Is_Public_0_Or_Private_1 = 0;
+	int32 accountID = 0;
 	int deathtime = 0;
-	const char * Query = "SELECT first_login, inevent, eventid,shutdown FROM chars WHERE charid = '%u';";
+	const char * Query = "SELECT first_login, inevent, eventid,shutdown,accid FROM chars WHERE charid = '%u';";
 	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->id);
 			
 
@@ -916,10 +918,19 @@ int32 OnGameIn(CCharEntity* PChar)
 				   inevent =  Sql_GetUIntData(SqlHandle,1);
 				   eventid =  Sql_GetUIntData(SqlHandle,2);
 				   shutdown_status = Sql_GetUIntData(SqlHandle,3);
+				   accountID = Sql_GetUIntData(SqlHandle,4);
 				   PChar->first_login = fristlogin;
 				   PChar->is_inevent =inevent;
 				   PChar->eventid =eventid;
 				   PChar->shutdown_status = shutdown_status;
+				   PChar->accid = accountID;
+				   Query = "SELECT server_type FROM accounts WHERE id = '%u';";
+	               ret3 = Sql_Query(SqlHandle,Query,PChar->accid);
+			       if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						Is_Public_0_Or_Private_1 =  Sql_GetUIntData(SqlHandle,0);
+				        PChar->Is_Public_0_Or_Private_1 = Is_Public_0_Or_Private_1;
+				    }
 				   if(shutdown_status == 1)
 				   {
                    PChar->shutdown_status = 0;
@@ -939,6 +950,8 @@ int32 OnGameIn(CCharEntity* PChar)
 				 ShowError("luautils::OnGameIn: PChar In Event Status = %u\n",PChar->is_inevent);
 				 ShowError("luautils::OnGameIn: PChar Event ID Status = %u\n",PChar->eventid);
 				 ShowError("luautils::OnGameIn: PChar DEATH TIME Status = %u\n",PChar->m_DeathTimestamp);
+				 ShowError("luautils::OnGameIn: PChar SERVER TYPE Status = %u\n",PChar->Is_Public_0_Or_Private_1);
+				 
 				 }
 	int8 File[255];
 	memset(File,0,sizeof(File));
