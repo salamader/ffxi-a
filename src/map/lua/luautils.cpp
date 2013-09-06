@@ -846,7 +846,7 @@ int32 OnServerStart()
 
 int32 OnZoneInitialise(uint16 ZoneID)
 {
-	ShowWarning("26\n");
+	//ShowWarning("26\n");
 	CZone* PZone = zoneutils::GetZone(ZoneID);
 
 	int8 File[255];
@@ -923,6 +923,7 @@ int32 OnGameIn(CCharEntity* PChar)
 				   PChar->is_inevent =inevent;
 				   PChar->eventid =eventid;
 				   PChar->shutdown_status = shutdown_status;
+				   
 				   PChar->accid = accountID;
 				   Query = "SELECT server_type FROM accounts WHERE id = '%u';";
 	               ret3 = Sql_Query(SqlHandle,Query,PChar->accid);
@@ -934,6 +935,8 @@ int32 OnGameIn(CCharEntity* PChar)
 				   if(shutdown_status == 1)
 				   {
                    PChar->shutdown_status = 0;
+				   Query = "UPDATE chars SET  online = '1', shutdown = '0' WHERE charid = %u";
+                   Sql_Query(SqlHandle,Query,PChar->id);
 				   PChar->status = STATUS_NORMAL;
 				   }
 				   Query = "SELECT death FROM char_stats WHERE charid = '%u';";
@@ -1027,7 +1030,8 @@ int32 OnZoneIn(CCharEntity* PChar)
 				 }
 				 else
 				 {
-					 snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
 				 }
 	
 
@@ -1091,8 +1095,23 @@ int32 OnRegionEnter(CCharEntity* PChar, CRegion* PRegion)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onRegionEnter");
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				 }
+				 else
+				 {
+					// snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
 
 	PChar->m_event.reset();
 	PChar->m_event.Script.insert(0,File);
@@ -1147,8 +1166,23 @@ int32 OnRegionLeave(CCharEntity* PChar, CRegion* PRegion)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onRegionLeave");
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				 }
+				 else
+				 {
+					// snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
 
 	PChar->m_event.reset();
 	PChar->m_event.Script.insert(0,File);
@@ -1205,8 +1239,24 @@ int32 OnTrigger(CCharEntity* PChar, CBaseEntity* PNpc)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onTrigger");
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
 
-	snprintf( File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", PChar->loc.zone->GetName(),PNpc->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", zonename.c_str(),PNpc->GetName());
+				 }
+				 else
+				 {
+					// snprintf(File, sizeof(File), "scripts/zones/Residential_Area/npcs/Moogle.lua");
+					 return false;
+				 }
+
+	//snprintf( File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", PChar->loc.zone->GetName(),PNpc->GetName());
 
 	PChar->m_event.reset();
     PChar->m_event.Target = PNpc;
@@ -1284,7 +1334,23 @@ int32 OnEventUpdate(CCharEntity* PChar, uint16 eventID, uint32 result)
 	if (luaL_loadfile(LuaHandle, PChar->m_event.Script.c_str()) || lua_pcall(LuaHandle, 0, 0, 0))
 	{
 		memset(File,0,sizeof(File));
-		snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+		string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+		//snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
 
 		if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 		{
@@ -1342,7 +1408,23 @@ int32 OnEventFinish(CCharEntity* PChar, uint16 eventID, uint32 result)
 	if (luaL_loadfile(LuaHandle, PChar->m_event.Script.c_str()) || lua_pcall(LuaHandle, 0, 0, 0))
 	{
 		memset(File,0,sizeof(File));
-		snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+		string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				 }
+				 else
+				 {
+					// snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+		//snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
 
 		if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 		{
@@ -1401,8 +1483,23 @@ int32 OnTrade(CCharEntity* PChar, CBaseEntity* PNpc)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onTrade");
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", PChar->loc.zone->GetName(),PNpc->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", zonename.c_str(),PNpc->GetName());
+				 }
+				 else
+				 {
+					// snprintf(File, sizeof(File), "scripts/zones/Residential_Area/npcs/Moogle.lua");
+					 return false;
+				 }
+	//snprintf(File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", PChar->loc.zone->GetName(),PNpc->GetName());
 
 	PChar->m_event.reset();
     PChar->m_event.Target = PNpc;

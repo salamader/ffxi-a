@@ -264,6 +264,29 @@ void CZone::LoadZoneLines()
 		}
 	}
 }
+void CZone::LoadPlayerZoneLines(CCharEntity* PChar)
+{
+	static const int8 fmtQuery[] = "SELECT zoneline, tozone, tox, toy, toz, rotation FROM zonelines WHERE fromzone = %u";
+
+	int32 ret = Sql_Query(SqlHandle, fmtQuery, m_zoneID);
+
+	if( ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0)
+	{
+		while(Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+		{
+			zoneLine_t* zl = new zoneLine_t;
+
+			zl->m_zoneLineID = (uint32)Sql_GetIntData(SqlHandle,0);
+			zl->m_toZone  = (uint16)Sql_GetIntData(SqlHandle,1);
+			zl->m_toPos.x = Sql_GetFloatData(SqlHandle,2);
+			zl->m_toPos.y = Sql_GetFloatData(SqlHandle,3);
+			zl->m_toPos.z = Sql_GetFloatData(SqlHandle,4);
+			zl->m_toPos.rotation = (uint8)Sql_GetIntData(SqlHandle,5);
+
+			m_zoneLineList.push_back(zl);
+		}
+	}
+}
 
 /************************************************************************
 *                                                                       *
@@ -337,7 +360,7 @@ void CZone::LoadZoneSettings()
 {
 	//IT WILL AUTOMATICLY SET TO THE NETWORK IP THEN IT WILL SWITCH TO PLAYER COMMAND
 	//OFF NETOWRK OR ON NETWORK EITHER WAY SHOULD WORK!
-	in_addr inaddr;
+	 in_addr inaddr;
      inaddr.S_un.S_addr = inet_addr(map_config.NETWORK_Servers_Address);
      if( inaddr.S_un.S_addr == INADDR_NONE)
        {
@@ -396,63 +419,12 @@ void CZone::LoadZoneSettings()
         ShowFatalError(CL_RED"CZone::LoadZoneSettings: Cannot load zone settings (%u)\n" CL_RESET, m_zoneID);
     }
 	
-	
+	return;
     
 }
 void CZone::LoadPlayerZoneSettings(CCharEntity* PChar)
 {
-	if(PChar == NULL)
-	{
-		 static const int8* Query =
-        "SELECT "
-          "zone.name,"
-          "zone.zoneip,"
-          "zone.zoneport,"
-          "zone.music,"
-          "zone.battlesolo,"
-          "zone.battlemulti,"
-          "zone.tax,"
-          "zone.misc,"
-          "zone.navmesh,"
-          "zone.zonetype,"
-          "bcnm.name "
-        "FROM zone_settings AS zone "
-        "LEFT JOIN bcnm_info AS bcnm "
-        "USING (zoneid) "
-        "WHERE zoneid = %u "
-        "LIMIT 1";
-
-    if (Sql_Query(SqlHandle, Query, m_zoneID) != SQL_ERROR &&
-        Sql_NumRows(SqlHandle) != 0 &&
-        Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-    {
-        m_zoneName.insert(0, Sql_GetData(SqlHandle,0));
-
-    m_zoneIP   = (uint32)Sql_GetUIntData(SqlHandle,1);
-    m_zonePort = (uint16)Sql_GetUIntData(SqlHandle,2);
-    m_zoneMusic.m_song   = (uint8)Sql_GetUIntData(SqlHandle,3);   // background music
-    m_zoneMusic.m_bSongS = (uint8)Sql_GetUIntData(SqlHandle,4);   // solo battle music
-    m_zoneMusic.m_bSongM = (uint8)Sql_GetUIntData(SqlHandle,5);   // party battle music
-    m_tax = (uint16)(Sql_GetFloatData(SqlHandle,6) * 100);      // tax for bazaar
-    m_miscMask = (uint16)Sql_GetUIntData(SqlHandle,7);
-    m_useNavMesh = (bool)Sql_GetIntData(SqlHandle,8);
-
-    m_zoneType = (ZONETYPE)Sql_GetUIntData(SqlHandle, 9);
-
-        if (Sql_GetData(SqlHandle,10) != NULL) // сейчас нельзя использовать bcnmid, т.к. они начинаются с нуля
-        {
-            m_InstanceHandler = new CInstanceHandler(m_zoneID);
-      }
-        if (m_miscMask & MISC_TREASURE)
-    {
-            m_TreasurePool = new CTreasurePool(TREASUREPOOL_ZONE);
-    }
-    }
-    else
-    {
-        ShowFatalError(CL_RED"CZone::LoadZoneSettings: Cannot load zone settings (%u)\n" CL_RESET, m_zoneID);
-    }
-	}
+	
 	if(PChar->Is_Public_0_Or_Private_1 == 0)
 	{
 	 in_addr inaddr;
@@ -513,7 +485,7 @@ void CZone::LoadPlayerZoneSettings(CCharEntity* PChar)
     {
         ShowFatalError(CL_RED"CZone::LoadZoneSettings: Cannot load zone settings (%u)\n" CL_RESET, m_zoneID);
     }
-	 
+	 return;
     }
 	if(PChar->Is_Public_0_Or_Private_1 == 1)
 	{
@@ -575,7 +547,7 @@ void CZone::LoadPlayerZoneSettings(CCharEntity* PChar)
     {
         ShowFatalError(CL_RED"CZone::LoadZoneSettings: Cannot load zone settings (%u)\n" CL_RESET, m_zoneID);
     }
-	 
+	 return;
     }
     
 }
@@ -835,8 +807,13 @@ void CZone::SetWeather(WEATHER weather)
 void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 {
     DSP_DEBUG_BREAK_IF(PChar == NULL);
-   // DSP_DEBUG_BREAK_IF(PChar->loc.zone != this);
-	
+    if(PChar->loc.zone != this)
+	{
+		
+    ShowDebug("THE ZONE %u is not this %u %s .\n",PChar->loc.zone, this,PChar->GetName());
+	PChar->loc.zone = this;
+	}
+	PChar->is_zoning = 1;
 	//remove pets
 	if(PChar->PPet != NULL)
     {
@@ -871,7 +848,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 	}
 
 	//remove bcnm status
-	if(m_InstanceHandler != NULL && PChar->StatusEffectContainer->HasStatusEffect(EFFECT_BATTLEFIELD))
+/*	if(m_InstanceHandler != NULL && PChar->StatusEffectContainer->HasStatusEffect(EFFECT_BATTLEFIELD))
     {
 		if(m_InstanceHandler->disconnectFromBcnm(PChar)){
 			ShowDebug("Removed %s from the BCNM they were in as they have left the zone.\n",PChar->GetName());
@@ -886,7 +863,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 				PChar->loc.p.y = pos[1];
 				PChar->loc.p.z = pos[2];
 				PChar->loc.p.rotation = pos[3];
-				charutils::SaveCharPosition(PChar);
+				//charutils::SaveCharPosition(PChar);
 			}
 			else{
 				ShowWarning("%s has disconnected from the BCNM but cannot move them to the lobby as the lobby position is unknown!\n",PChar->GetName());
@@ -908,13 +885,13 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 				PChar->loc.p.y = pos[1];
 				PChar->loc.p.z = pos[2];
 				PChar->loc.p.rotation = pos[3];
-				charutils::SaveCharPosition(PChar);
+				//charutils::SaveCharPosition(PChar);
 			}
 			else{
 				ShowWarning("%s has disconnected from the BCNM but cannot move them to the lobby as the lobby position is unknown!\n",PChar->GetName());
 			}
 		}
-	}
+	}*/
 
 	for (EntityList_t::const_iterator it = m_mobList.begin() ; it != m_mobList.end() ; ++it)
 	{
@@ -943,12 +920,17 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 		for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 		{
 			CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-			SpawnIDList_t::iterator PC = PCurrentChar->SpawnPCList.find(PChar->id);
-
-			if( PC != PCurrentChar->SpawnPCList.end() )
+			for (SpawnIDList_t::const_iterator itt = PCurrentChar->SpawnMOBList.begin() ; itt != PCurrentChar->SpawnMOBList.end() ; ++itt)
 			{
-				PCurrentChar->SpawnPCList.erase(PC);
+				CCharEntity* PTarget = (CCharEntity*)itt->second;
+			    PTarget->SpawnPCList.find(PChar->id);
+
+			if( PCurrentChar == PTarget )
+			{
+				ShowDebug(CL_CYAN"CZone:: %s I DONT KNOW <%u> %s\n" CL_RESET, GetName(), PCurrentChar->SpawnMOBList.size(),PChar->GetName());
+				PCurrentChar->SpawnPCList.erase(itt);
 				PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_DESPAWN));
+			}
 			}
 		}
 	}
@@ -970,7 +952,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
         }
     }
 
-    PChar->loc.zone = NULL;
+   // PChar->loc.zone = NULL;
     PChar->loc.prevzone = m_zoneID;
 
     PChar->SpawnPCList.clear();
@@ -990,12 +972,12 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 {
 	DSP_DEBUG_BREAK_IF(PChar == NULL);
-    DSP_DEBUG_BREAK_IF(PChar->loc.zone != NULL);
+   // DSP_DEBUG_BREAK_IF(PChar->loc.zone != NULL);
 	DSP_DEBUG_BREAK_IF(PChar->PTreasurePool != NULL);
 
     // ищем свободный targid для входящего в зону персонажа
     PChar->targid  = 1024;
-	
+	PChar->is_zoning = -1;
 	
 	 
 	
@@ -1107,6 +1089,8 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 
 void CZone::SpawnMOBs(CCharEntity* PChar)
 {
+	if(PChar != NULL && PChar->loc.zone != NULL)
+	{
 	for (EntityList_t::const_iterator it = m_mobList.begin() ; it != m_mobList.end() ; ++it)
 	{
 		CMobEntity* PCurrentMob = (CMobEntity*)it->second;
@@ -1151,6 +1135,11 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 			}
 		}
 	}
+	}
+	else
+	{
+     ShowDebug(CL_CYAN"SPAWNING MOBS: WITH NO PLAYER \n" CL_RESET);
+	}
 }
 
 /************************************************************************
@@ -1162,6 +1151,8 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 
 void CZone::SpawnPETs(CCharEntity* PChar)
 {
+	if(PChar != NULL && PChar->loc.zone != NULL)
+	{
 	for (EntityList_t::const_iterator it = m_petList.begin() ; it != m_petList.end() ; ++it)
 	{
 		CPetEntity* PCurrentPet = (CPetEntity*)it->second;
@@ -1185,6 +1176,11 @@ void CZone::SpawnPETs(CCharEntity* PChar)
 			}
 		}
 	}
+	}
+	else
+	{
+     ShowDebug(CL_CYAN"SPAWNING PETS: WITH NO PLAYER \n" CL_RESET);
+	}
 }
 
 /************************************************************************
@@ -1195,6 +1191,8 @@ void CZone::SpawnPETs(CCharEntity* PChar)
 
 void CZone::SpawnNPCs(CCharEntity* PChar)
 {
+	if(PChar != NULL && PChar->loc.zone != NULL)
+	{
 	for (EntityList_t::const_iterator it = m_npcList.begin() ; it != m_npcList.end() ; ++it)
 	{
 		CNpcEntity* PCurrentNpc = (CNpcEntity*)it->second;
@@ -1220,6 +1218,11 @@ void CZone::SpawnNPCs(CCharEntity* PChar)
 			}
 		}
 	}
+	}
+	else
+	{
+     ShowDebug(CL_CYAN"SPAWNING NPCS: WITH NO PLAYER \n" CL_RESET);
+	}
 }
 
 /************************************************************************
@@ -1233,6 +1236,8 @@ void CZone::SpawnNPCs(CCharEntity* PChar)
 
 void CZone::SpawnPCs(CCharEntity* PChar)
 {
+	if(PChar != NULL && PChar->loc.zone != NULL)
+	{
 	for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 	{
 		CCharEntity* PCurrentChar = (CCharEntity*)it->second;
@@ -1269,6 +1274,11 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 			}
 		}
 	}
+	}
+	else
+	{
+     ShowDebug(CL_CYAN"SPAWNING PLAYERS: WITH NO PLAYER \n" CL_RESET);
+	}
 }
 
 /************************************************************************
@@ -1279,6 +1289,8 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 
 void CZone::SpawnMoogle(CCharEntity* PChar)
 {
+	if(PChar != NULL && PChar->loc.zone != NULL)
+	{
 	for (EntityList_t::const_iterator it = m_npcList.begin() ; it != m_npcList.end() ; ++it)
 	{
 		CNpcEntity* PCurrentNpc = (CNpcEntity*)it->second;
@@ -1292,6 +1304,11 @@ void CZone::SpawnMoogle(CCharEntity* PChar)
 			return;
 		}
 	}
+	}
+	else
+	{
+     ShowDebug(CL_CYAN"SPAWNING MOGGLE: WITH NO PLAYER \n" CL_RESET);
+	}
 }
 
 /************************************************************************
@@ -1302,11 +1319,18 @@ void CZone::SpawnMoogle(CCharEntity* PChar)
 
 void CZone::SpawnTransport(CCharEntity* PChar)
 {
+	if(PChar != NULL && PChar->loc.zone != NULL)
+	{
 	if (m_Transport != NULL)
     {
 		PChar->pushPacket(new CEntityUpdatePacket(m_Transport, ENTITY_SPAWN));
 	    return;
     }
+	}
+	else
+	{
+     ShowDebug(CL_CYAN"SPAWNING TRANSPORT: WITH NO PLAYER \n" CL_RESET);
+	}
 }
 
 /************************************************************************
@@ -1530,6 +1554,7 @@ CCharEntity* CZone::GetCharByName(int8* name)
 
 void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, CBasicPacket* packet)
 {
+	ShowDebug(CL_CYAN"PACKETS %u \n" CL_RESET,packet);
 	if(PEntity != NULL)
 	{
 	if (!m_charList.empty())
@@ -1548,12 +1573,21 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 				for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 				{
 					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-					if (PEntity != PCurrentChar)
+					if(PCurrentChar != NULL)
 					{
+					   if (PEntity != PCurrentChar)
+					   {
 						if(distance(PEntity->loc.p, PCurrentChar->loc.p) < 50)
 						{
 							PCurrentChar->pushPacket(new CBasicPacket(*packet));
 						}
+						break;
+					   }
+					   break;
+					}
+					else
+					{
+                     ShowDebug(CL_CYAN"1A PACKET WAS CALLED WITH NO CURRENT PLAYER \n" CL_RESET);
 					}
 				}
 			}
@@ -1563,12 +1597,21 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 				for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 				{
 					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-					if (PEntity != PCurrentChar)
+					if(PCurrentChar != NULL)
 					{
+					  if (PEntity != PCurrentChar)
+					  {
 						if(distance(PEntity->loc.p, PCurrentChar->loc.p) < 180)
 						{
 							PCurrentChar->pushPacket(new CBasicPacket(*packet));
 						}
+						break;
+					  }
+					break;
+					}
+					else
+					{
+                     ShowDebug(CL_CYAN"2A PACKET WAS CALLED WITH NO CURRENT PLAYER %u\n" CL_RESET,packet);
 					}
 				}
 			}
@@ -1578,10 +1621,17 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 				for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 				{
 					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-
-					if (PEntity != PCurrentChar)
+					if(PCurrentChar != NULL)
 					{
+					  if (PEntity != PCurrentChar)
+					  {
 						PCurrentChar->pushPacket(new CBasicPacket(*packet));
+					  }
+					break;
+					}
+					else
+					{
+                     ShowDebug(CL_CYAN"3A PACKET WAS CALLED WITH NO CURRENT PLAYER %u\n" CL_RESET,packet);
 					}
 				}
 			}
@@ -1592,7 +1642,8 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 	}
 	else
 	{
-       ShowDebug(CL_CYAN"A PACKET WAS CALLED WITH NO PENTITY %u\n" CL_RESET,packet);
+       //ShowDebug(CL_CYAN"A PACKET WAS CALLED WITH NO PENTITY %u\n" CL_RESET,packet);
+	  // delete packet;
 	}
 }
 
@@ -1639,6 +1690,43 @@ void CZone::WideScan(CCharEntity* PChar, uint16 radius)
 
 void CZone::ZoneServer(uint32 tick)
 {
+	 for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
+    {
+        CCharEntity* PChar = (CCharEntity*)it->second;
+
+        if (PChar->shutdown_status == 0)
+        {
+			if(PChar->is_zoning == 1)
+			{
+				ShowDebug(CL_CYAN"DIFFERNT ZONING STRANGE HAPPENINGs\n" CL_RESET);
+				
+			}
+			else
+			{
+				//if(PChar->PRecastContainer != NULL)
+				//{
+            PChar->PRecastContainer->Check(tick);
+				//}
+				//if(PChar->StatusEffectContainer != NULL)
+				//{
+            PChar->StatusEffectContainer->CheckEffects(tick);
+				//}
+				//if(PChar->PBattleAI != NULL)
+				//{
+            PChar->PBattleAI->CheckCurrentAction(tick);
+				//}
+				//if(PChar->PTreasurePool != NULL)
+				//{
+            PChar->PTreasurePool->CheckItems(tick);
+				//}
+				//if(PChar->StatusEffectContainer != NULL)
+				//{
+			PChar->StatusEffectContainer->CheckRegen(tick);
+				//}
+			}
+			
+        }
+    }
 	for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end() ; ++it)
 	{
 		CMobEntity* PMob = (CMobEntity*)it->second;
@@ -1678,26 +1766,7 @@ void CZone::ZoneServer(uint32 tick)
 		m_InstanceHandler->handleInstances(tick);
 	}
 
-    for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
-    {
-        CCharEntity* PChar = (CCharEntity*)it->second;
-
-        if (PChar->shutdown_status == 0)
-        {
-			if(PChar->is_zoning == 1)
-			{
-				ShowDebug(CL_CYAN"DIFFERNT ZONING STRANGE HAPPENINGs\n" CL_RESET);
-			}
-			else
-			{
-            PChar->PRecastContainer->Check(tick);
-            PChar->StatusEffectContainer->CheckEffects(tick);
-            PChar->PBattleAI->CheckCurrentAction(tick);
-            PChar->PTreasurePool->CheckItems(tick);
-			PChar->StatusEffectContainer->CheckRegen(tick);
-			}
-        }
-    }
+   
 }
 
 /************************************************************************

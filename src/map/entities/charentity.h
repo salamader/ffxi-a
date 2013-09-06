@@ -286,6 +286,8 @@ public:
 	bool			getMijinGakure();
 	void			setMijinGakure(bool isMijinGakure);
 
+	int32           leavegame();
+
 	bool			  isWeaponUnlocked(uint16 indexid);					// return if weapon is broken
 	bool			  addWsPoints(uint8 points, uint16 WeaponIndex);	// return if weapon is broken
 	UnlockedWeapons_t unlockedWeapons[MAX_UNLOCKABLE_WEAPONS];			// chars unlocked weapon status

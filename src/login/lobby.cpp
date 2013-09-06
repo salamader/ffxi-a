@@ -528,6 +528,11 @@ int32 do_close_lobbydata(login_session_data_t *loginsd,int32 fd)
 	             if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 	                {
 					 Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE accid = %u",loginsd->accid);
+					 //AND UPDATE SHUTDOWN STATUS AND ONLINE STATUS
+					 Query = "UPDATE chars SET  online = '0', shutdown = '1' WHERE accid = %u";
+                     Sql_Query(SqlHandle,Query,loginsd->accid);
+					 Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
+                     Sql_Query(SqlHandle,Query,loginsd->accid);
 				    }
 		erase_loginsd_byaccid(loginsd->accid);
 		ShowMessage(CL_GREEN"CLOSED LOBBY DATA:\n"CL_RESET );

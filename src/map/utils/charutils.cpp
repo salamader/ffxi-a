@@ -1143,7 +1143,7 @@ void UpdateSubJob(CCharEntity* PChar)
     PChar->health.hp = PChar->GetMaxHP();
     PChar->health.mp = PChar->GetMaxMP();
 
-    charutils::SaveCharStats(PChar);
+   // charutils::SaveCharStats(PChar);
     charutils::SaveCharJob(PChar, PChar->GetMJob());
     charutils::SaveCharExp(PChar, PChar->GetMJob());
     charutils::UpdateHealth(PChar);
@@ -1815,7 +1815,7 @@ void CheckValidEquipment(CCharEntity* PChar)
 
 
     BuildingCharWeaponSkills(PChar);
-    SaveCharEquip(PChar);
+   // SaveCharEquip(PChar);
 }
 
 void RemoveAllEquipment(CCharEntity* PChar)
@@ -1836,7 +1836,7 @@ void RemoveAllEquipment(CCharEntity* PChar)
     PChar->pushPacket(new CCharAppearancePacket(PChar));
 
     BuildingCharWeaponSkills(PChar);
-    SaveCharEquip(PChar);
+   // SaveCharEquip(PChar);
 }
 
 /************************************************************************
@@ -2790,7 +2790,7 @@ void setTitle(CCharEntity* PChar, uint16 Title)
     PChar->pushPacket(new CCharStatsPacket(PChar));
 
     addTitle(PChar, Title);
-    SaveTitles(PChar);
+   // SaveTitles(PChar);
 }
 
 /************************************************************************
@@ -3470,7 +3470,7 @@ void DelExperiencePoints(CCharEntity* PChar, float retainPercent)
         PChar->pushPacket(new CCharJobExtraPacket(PChar, false));
         PChar->pushPacket(new CCharSyncPacket(PChar));
 
-        SaveCharStats(PChar);
+       // SaveCharStats(PChar);
         SaveCharJob(PChar, PChar->GetMJob());
 
 		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageDebugPacket(PChar, PChar, PChar->jobs.job[PChar->GetMJob()], 0, 11));
@@ -3649,10 +3649,10 @@ void AddExperiencePoints(bool expFromRaise, CCharEntity* PChar, CBaseEntity* PMo
             PChar->health.hp = PChar->GetMaxHP();
             PChar->health.mp = PChar->GetMaxMP();
 
-            SaveCharStats(PChar);
+           // SaveCharStats(PChar);
             SaveCharJob(PChar, PChar->GetMJob());
             SaveCharExp(PChar, PChar->GetMJob());
-			SaveCharPoints(PChar);
+			//SaveCharPoints(PChar);
 
             PChar->pushPacket(new CCharJobsPacket(PChar));
             PChar->pushPacket(new CCharUpdatePacket(PChar));
@@ -3670,10 +3670,10 @@ void AddExperiencePoints(bool expFromRaise, CCharEntity* PChar, CBaseEntity* PMo
         }
     }
 
-	SaveCharStats(PChar);
+	//SaveCharStats(PChar);
     SaveCharJob(PChar, PChar->GetMJob());
     SaveCharExp(PChar, PChar->GetMJob());
-	SaveCharPoints(PChar);
+	//SaveCharPoints(PChar);
     PChar->pushPacket(new CCharStatsPacket(PChar));
 
 	if(onLimitMode)
@@ -4073,13 +4073,7 @@ void SaveCharStats(CCharEntity* PChar)
 *																		*
 ************************************************************************/
 
-void SaveCharGMLevel(CCharEntity* PChar)
-{
-	const int8* Query = "UPDATE %s SET %s %u WHERE charid = %u;";
 
-	Sql_Query(SqlHandle,Query,"chars","gmlevel =",PChar->m_GMlevel,PChar->id);
-	Sql_Query(SqlHandle,Query,"char_stats","nameflags =",PChar->nameflags.flags,PChar->id);
-}
 
 /************************************************************************
 *																		*
@@ -4254,7 +4248,26 @@ void SaveCharPoints(CCharEntity* PChar)
         PChar->RegionPoints[13],
 		PChar->id);
 }
-
+void SaveCharSystem(CCharEntity* PChar)
+{
+        SaveCharEquip( PChar);					        // сохраняем экипировку и внешний вид персонажа
+		SaveCharPosition( PChar);				        // сохраняем позицию персонажа
+		SaveMissionsList( PChar);                       // Save the missions list
+		SaveQuestsList( PChar);					        // сохраняем список ксевтов
+       SaveFame( PChar);                               // Save area fame / reputation
+		SaveZonesVisited( PChar);				        // сохраняем посещенные зоны
+		SaveKeyItems(PChar);					        // сохраняем ключевые предметы
+		SaveCharInventoryCapacity( PChar);              // Save Character inventory capacity
+		SaveSpells( PChar);						        // сохраняем выученные заклинания
+		SaveLearnedAbilities( PChar);					// saved learned abilities (corsair rolls)
+        SaveTitles( PChar);						        // сохраняем заслуженные звания
+		SaveCharStats( PChar);					        // сохраняем флаги, текущие значения жихней, маны и профессий
+     
+		SaveCharNation( PChar);							// Sace the character's nation of allegiance.
+	    SaveCharPoints( PChar);							// Conquest point, Nation TP
+		SaveDeathTime( PChar);							// Saves when this character last died.
+	   SaveCharUnlockedWeapons( PChar);
+}
 uint32  AddExpBonus(CCharEntity* PChar, uint32 exp)
 {
     int32 bonus = 0;

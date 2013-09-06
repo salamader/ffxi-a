@@ -397,7 +397,7 @@ void CAICharNormal::ActionFall()
 		charutils::DelExperiencePoints(m_PChar,map_config.exp_retain);
 
 
-	charutils::SaveDeathTime(m_PChar);
+	//charutils::SaveDeathTime(m_PChar);
 
 }
 
