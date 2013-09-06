@@ -3759,6 +3759,10 @@ void LoadCharUnlockedWeapons(CCharEntity* PChar)
 
 void SaveCharPosition(CCharEntity* PChar)
 {
+	if(PChar->loc.destination == 0)
+	{
+		return;
+	}
 	const int8* Query =
         "UPDATE chars "
         "SET "

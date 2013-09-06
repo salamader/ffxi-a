@@ -793,13 +793,18 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 					ShowMessage(CL_YELLOW"SHUTDOWN STATUS = %u FOR PCHAR %s\n"CL_RESET,shutdown,PChar->GetName());
 					if(shutdown == 0 )
 					{
+						
+
 				   if ((time(NULL) - map_session_data->last_update) > 10)
 				   {
+					   if( PChar->is_zoning == -1)
+					   {
                    ShowMessage(CL_YELLOW"SHUTDOWN CHECKING PLAYER STATUS MAY HAVE KILLED BOOT  = %u FOR PCHAR %s\n"CL_RESET,shutdown,PChar->GetName());
 				   Query = "UPDATE accounts SET online ='0' WHERE id = %u";
                    Sql_Query(SqlHandle,Query,PChar->accid);
 				   Query = "UPDATE chars SET shutdown ='1' WHERE charid = %u";
                    Sql_Query(SqlHandle,Query,PChar->id);
+					   }
 				   }
 					}
 		                if (shutdown == 1)

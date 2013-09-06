@@ -266,7 +266,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
         if (PChar->loc.zone != NULL)
  
         {
- //ShowNotice(CL_RED"MY ZONE IS NOT NULL %u\n"CL_RESET,PChar->loc.zone);
+ ShowNotice(CL_RED"MY ZONE IS NOT NULL %u\n"CL_RESET,PChar->loc.zone);
             PacketParser[0x00D](session, PChar, NULL);
  
         }
@@ -335,6 +335,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			  }
 			  else
 			  {
+
 				   //ShowNotice(CL_RED"MY DESTINATION IS NORM ZONE %u\n"CL_RESET,destination);
               zoneutils::GetZone(destination)->IncreaseZoneCounter(PChar);
 			  }
@@ -512,7 +513,86 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
  
         {
 			ShowWarning(CL_YELLOW"Client cannot receive packet or key is invalid: %s\n" CL_RESET, PChar->GetName());
- 
+			ShowWarning(CL_YELLOW"Reset the players to his nations homepoint: %s\n" CL_RESET, PChar->GetName());
+			 if(PChar->profile.nation==0)
+					  {
+                     // ShowNotice(CL_RED"TRACER: SANDY %u\n" CL_RESET,PChar->profile.nation);
+					//  ShowNotice(CL_RED"TRACER: SANDY GETZONE %u\n" CL_RESET,PChar->getZone());
+					   
+						  //SANDY
+						  PChar->loc.p.x = -96;
+						  PChar->loc.p.y = -1;
+						  PChar->loc.p.z = -40;
+						  PChar->loc.p.rotation = 224;
+						  PChar->loc.destination = 230;
+						 
+
+						 Query = "UPDATE chars SET pos_prevzone ='230', pos_zone ='230', first_login ='2' WHERE charid = %u;";
+                         Sql_Query(SqlHandle, Query, PChar->id);
+						
+                      // return;
+			           
+					  }
+					  if(PChar->profile.nation==1)
+					  {
+					 // ShowNotice(CL_RED"TRACER: BASTOCK %u\n" CL_RESET,PChar->profile.nation);
+					 // ShowNotice(CL_RED"TRACER: BASTOCK GETZONE %u\n" CL_RESET,PChar->getZone());
+					  
+						  //BASTOK
+						PChar->loc.p.x = -45;
+						  PChar->loc.p.y = -0;
+						  PChar->loc.p.z = 26;
+						  PChar->loc.p.rotation = 213;
+						  PChar->loc.destination = 234;
+						 
+						 Query = "UPDATE chars SET pos_prevzone ='234', pos_zone ='234', first_login ='2' WHERE charid = %u;";
+                       Sql_Query(SqlHandle, Query,PChar->id);
+					
+					 // return;
+					  
+					  }
+					  if(PChar->profile.nation==2)
+					  {//2
+					 // ShowNotice(CL_RED"TRACER: WINDY %u\n" CL_RESET,PChar->profile.nation);
+					 // ShowNotice(CL_RED"TRACER: WINDY GETZONE %u\n" CL_RESET,PChar->getZone());
+					 
+						  //WINDY
+						  PChar->loc.p.x = -120;
+						  PChar->loc.p.y = -6;
+						  PChar->loc.p.z = 175;
+						  PChar->loc.p.rotation = 48;
+						  PChar->loc.destination = 240;
+						  
+						Query = "UPDATE chars SET pos_prevzone ='240', pos_zone ='240', first_login ='2' WHERE charid = %u;";
+                        Sql_Query(SqlHandle, Query, PChar->id);
+						
+					 // return;
+					  }//2
+
+	
+    
+	PChar->is_zoning = 1;
+	PChar->PTreasurePool = NULL;
+    PChar->loc.zone = NULL;
+    PChar->loc.prevzone =zone;
+		PChar->loc.destination=zone;
+	PChar->status = STATUS_DISAPPEAR;
+	PChar->is_returning = 1;
+			// PChar->is_dead = 0;
+			
+
+			//PChar->status = STATUS_DISAPPEAR;
+			PChar->animation = ANIMATION_NONE;
+
+			PChar->clearPacketList();
+			
+PChar->pushPacket(new CServerIPPacket(PChar,2));
+	zoneutils::GetZone(PChar->loc.destination)->DecreaseZoneCounter(PChar);
+    PChar->SpawnPCList.clear();
+	PChar->SpawnNPCList.clear();
+	PChar->SpawnMOBList.clear();
+	PChar->SpawnPETList.clear();
+	
         }
  
 	}
@@ -1334,6 +1414,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
                        Sql_Query(SqlHandle,Query,PChar->id);
 					   
              PChar->first_login = 2;
+			 PChar->is_zoning = -1;
 			 
 					   
 			}

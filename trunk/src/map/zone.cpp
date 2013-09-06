@@ -336,7 +336,7 @@ void CZone::LoadZoneWeather()
 
 void CZone::LoadZoneSettings()
 {
-	in_addr inaddr;
+	/*in_addr inaddr;
    inaddr.S_un.S_addr = inet_addr(map_config.DNS_Servers_Address);
    //ShowFatalError(CL_RED"CZone:GET HOST NAME2(%u)\n" CL_RESET, inaddr);
    
@@ -360,7 +360,7 @@ void CZone::LoadZoneSettings()
       
 
       
-   }
+   }*/
     static const int8* Query =
         "SELECT "
           "zone.name,"
@@ -386,8 +386,8 @@ void CZone::LoadZoneSettings()
     {
         m_zoneName.insert(0, Sql_GetData(SqlHandle,0));
 
-    m_zoneIP   = inaddr.S_un.S_addr;//(uint32)Sql_GetUIntData(SqlHandle,1);
-    m_zonePort = 54230;//(uint16)Sql_GetUIntData(SqlHandle,2);
+    m_zoneIP   = (uint32)Sql_GetUIntData(SqlHandle,1);
+    m_zonePort = (uint16)Sql_GetUIntData(SqlHandle,2);
     m_zoneMusic.m_song   = (uint8)Sql_GetUIntData(SqlHandle,3);   // background music
     m_zoneMusic.m_bSongS = (uint8)Sql_GetUIntData(SqlHandle,4);   // solo battle music
     m_zoneMusic.m_bSongM = (uint8)Sql_GetUIntData(SqlHandle,5);   // party battle music
@@ -667,8 +667,8 @@ void CZone::SetWeather(WEATHER weather)
 void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 {
     DSP_DEBUG_BREAK_IF(PChar == NULL);
-    DSP_DEBUG_BREAK_IF(PChar->loc.zone != this);
-
+   // DSP_DEBUG_BREAK_IF(PChar->loc.zone != this);
+	
 	//remove pets
 	if(PChar->PPet != NULL)
     {
@@ -1516,11 +1516,18 @@ void CZone::ZoneServer(uint32 tick)
 
         if (PChar->shutdown_status == 0)
         {
+			if(PChar->is_zoning == 1)
+			{
+				ShowDebug(CL_CYAN"DIFFERNT ZONING STRANGE HAPPENINGs\n" CL_RESET);
+			}
+			else
+			{
             PChar->PRecastContainer->Check(tick);
             PChar->StatusEffectContainer->CheckEffects(tick);
             PChar->PBattleAI->CheckCurrentAction(tick);
             PChar->PTreasurePool->CheckItems(tick);
 			PChar->StatusEffectContainer->CheckRegen(tick);
+			}
         }
     }
 }
@@ -1558,6 +1565,12 @@ void CZone::ZoneServerRegion(uint32 tick)
 
         if (PChar->shutdown_status == 0)
         {
+			if(PChar->is_zoning == 1)
+			{
+				ShowDebug(CL_CYAN"DIFFERNT ZONING STRANGE HAPPENINGs\n" CL_RESET);
+			}
+			else
+			{
             PChar->PRecastContainer->Check(tick);
             PChar->StatusEffectContainer->CheckEffects(tick);
             PChar->PBattleAI->CheckCurrentAction(tick);
@@ -1584,6 +1597,7 @@ void CZone::ZoneServerRegion(uint32 tick)
             }
             PChar->m_InsideRegionID = RegionID;
         }
+	  }
 	}
 }
 

@@ -7727,8 +7727,15 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
 				   PChar->loc.p.rotation = to_rot;
 				   
 		           PChar->loc.boundary = 0;
+				   if(zone == 0)
+	                 {
+		               //DO NOT SAVE IN NULL ZONE THATS THE ONLY TIME WE GET A BAD PACKET
+	                 }
+				   else
+				   {
 				   const int8* Query = "UPDATE chars SET returning = '1', pos_zone='%u', pos_prevzone='%u', pos_x='%.3f', pos_y='%.3f', pos_z='%.3f', pos_rot='%u' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,zone,zone,to_x,to_y,to_z,to_rot,PChar->id);
+				   }
 					   
 					   
              PChar->is_returning = 1;

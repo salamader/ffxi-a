@@ -1001,7 +1001,22 @@ int32 OnZoneIn(CCharEntity* PChar)
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onZoneIn");
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				 }
+				 else
+				 {
+					 snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+				 }
+	
 
 	PChar->m_event.reset();
 	PChar->m_event.Script.insert(0,File);
