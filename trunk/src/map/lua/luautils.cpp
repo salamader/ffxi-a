@@ -1027,6 +1027,7 @@ int32 OnZoneIn(CCharEntity* PChar)
 						
 				   zonename =  Sql_GetData(SqlHandle,0);
 				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				   PChar->pushPacket(new CCharUpdatePacket(PChar));
 				 }
 				 else
 				 {

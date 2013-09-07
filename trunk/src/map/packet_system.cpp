@@ -315,6 +315,8 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		
 		zoneutils::GetZone(PChar->loc.destination)->LoadPlayerZoneLines(PChar);
         zoneutils::GetZone(PChar->loc.destination)->LoadPlayerZoneSettings(PChar);
+		//zoneutils::LoadPlayerMOBList(PChar->loc.destination);
+		PChar->pushPacket(new CCharUpdatePacket(PChar));
         if(destination >= MAX_ZONEID){
  
             //ShowWarning("packet_system::SmallPacket0x00A player tried to enter zone out of range: %d\n", destination);
@@ -1028,9 +1030,10 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 	//ShowMessage(CL_GREEN"UPDATE: PLAYER SHUTDOWN STATUS =%u \n"CL_RESET,PChar->shutdown_status);
 	if (PChar->shutdown_status == 0)
 	{
-		//ShowMessage(CL_GREEN"UPDATE: IN =%u \n"CL_RESET,PChar->shutdown_status);
+		ShowMessage(CL_GREEN"UPDATE: IN =%u \n"CL_RESET,PChar->shutdown_status);
 		
-
+		
+        
 		PChar->loc.p.x = RBUFF(data,(0x04));
 		PChar->loc.p.y = RBUFF(data,(0x08));
 		PChar->loc.p.z = RBUFF(data,(0x0C));
@@ -1042,7 +1045,7 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 		 const int8* Query = "UPDATE chars SET shutdown = '0' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,PChar->id);
 		
-			PChar->status = STATUS_NORMAL;
+			
             PChar->loc.zone->SpawnPCs(PChar);
 			PChar->loc.zone->SpawnNPCs(PChar);
 		
@@ -3116,8 +3119,9 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 		if (PZoneLine == NULL) // разворачиваем персонажа на 180° и отправляем туда, откуда пришел
 		{
+			//TODO SELECT FROM DATABASE TO SEE IF ZONE LINE IS AREADY THERE IF SO UPDATE THE ZONELINES IF NOT INSERT INTO ZONELINES
             ShowError(CL_RED"SmallPacket0x5E: Zone line %u not found\n" CL_RESET, zoneLineID); // в идеале нужно добавить зону и координаты
-
+			zoneutils::GetZone(PChar->loc.destination)->LoadPlayerZoneLines(PChar); 
 			PChar->loc.p.rotation += 128;
 
             PChar->pushPacket(new CMessageSystemPacket(0,0,2));
@@ -3200,6 +3204,7 @@ void SmallPacket0x060(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x061(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	//TODO MAKE A ONE TIME PACKET SYSTEM CALL FOR EACH ACTION
 	PChar->pushPacket(new CCharUpdatePacket(PChar));
 	PChar->pushPacket(new CCharHealthPacket(PChar));
 	PChar->pushPacket(new CCharStatsPacket(PChar));

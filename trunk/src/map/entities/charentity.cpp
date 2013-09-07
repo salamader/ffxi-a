@@ -365,7 +365,7 @@ int32 CCharEntity::leavegame()
 {
 	CCharEntity* PChar = (CCharEntity*)this;
 	 PChar->is_zoning = 1;
-	 PChar->loc.zone->m_InstanceHandler = NULL;
+	 
 	 
 	PChar->status = STATUS_SHUTDOWN;
 	/*
@@ -472,7 +472,7 @@ int32 CCharEntity::leavegame()
 	        charutils::SaveCharExp(PChar, PChar->GetMJob());
 	        //charutils::SaveCharPoints(PChar);
             //charutils::SaveCharPosition(PChar);
-			PChar->loc.zone->DecreaseZoneCounter(PChar);
+			PChar->status = STATUS_DISAPPEAR;
 			PChar->clearPacketList();
 	        PChar->pushPacket(new CServerIPPacket(PChar,1));
 	        ShowMessage(CL_YELLOW"SHUTDOWN CHECKING PLAYER STATUS MAY HAVE KILLED BOOT FOR PCHAR %s\n"CL_RESET,PChar->GetName());
