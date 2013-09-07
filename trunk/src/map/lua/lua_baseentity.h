@@ -501,6 +501,7 @@ public:
 	int32 ElevatorUp(lua_State* L);
 	int32 ElevatorDown(lua_State* L);
 	int32 getnpctext(lua_State* L);
+	int32 getactionmessage(lua_State* L);
 };
 
 #endif

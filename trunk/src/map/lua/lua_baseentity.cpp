@@ -706,56 +706,7 @@ inline int32 CLuaBaseEntity::addItem(lua_State *L)
 
 inline int32 CLuaBaseEntity::resetPlayer(lua_State *L)
 {
-	DSP_DEBUG_BREAK_IF(lua_isnil(L,1));
-
-	const int8* charName  = lua_tostring(L, -1);
-	uint32 id = 0;
-
-
-	// char will not be logged in so get the id manually
-	const int8* Query = "SELECT charid FROM chars WHERE charname = '%s';";
-	int32 ret = Sql_Query(SqlHandle,Query,charName);
-
-	if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-		id = (int32)Sql_GetIntData(SqlHandle,0);
-
-
-	// could not get player from database
-	if (id == 0){
-		ShowDebug("Could not get the character from database.\n");
-		return 1;
-	}
-
-	// delete the account session
-	Query = "DELETE FROM accounts_sessions WHERE charid = %u;";
-	Sql_Query(SqlHandle, Query, id);
-
-
-
-	// send the player to lower jeuno
-	Query =
-        "UPDATE chars "
-        "SET "
-          "pos_zone = %u,"
-          "pos_prevzone = %u,"
-          "pos_rot = %u,"
-          "pos_x = %.3f,"
-          "pos_y = %.3f,"
-          "pos_z = %.3f,"
-          "boundary = %u "
-        "WHERE charid = %u;";
-
-    Sql_Query(SqlHandle, Query,
-        245,		// lower jeuno
-        122,		// prev zone
-        86,			// rotation
-        33.464f,	// x
-        -5.000f,	// y
-		69.162f,	// z
-        0,			//boundary,
-        id);
-
-	ShowDebug("Player reset was successful.\n");
+	
 
 	return 1;
 }
@@ -7617,7 +7568,7 @@ inline int32 CLuaBaseEntity::NpcList(lua_State *L)
 		
 		return false;
 	}
-   if(lua_tointeger(L,1) > 12 || lua_tointeger(L,1) < 1)
+   if(lua_tointeger(L,1) > 50 || lua_tointeger(L,1) < 1)
 	{
 		sprintf(buf,"COMMAND Example: .npclist 1-100");
 	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
@@ -8730,6 +8681,47 @@ inline int32 CLuaBaseEntity::add_Item(lua_State *L)
 	return true;
 	
 }
+inline int32 CLuaBaseEntity::getactionmessage(lua_State* L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+
+	if(lua_isnil(L,1) || !lua_isnumber(L,1))
+	{
+		char buf[110];
+        sprintf(buf,"Command Example: .getactionmessage 1 1 1");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	}
+
+    uint16 messageID = (uint16)lua_tointeger(L,1);
+
+	uint32 param0 = 0;
+	uint32 param1 = 0;
+
+    if( !lua_isnil(L,2) && lua_isnumber(L,2) )
+        param0 = (uint32)lua_tointeger(L,2);
+    if( !lua_isnil(L,3) && lua_isnumber(L,3) )
+        param1 = (uint32)lua_tointeger(L,3);
+
+	
+		PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, param0, param1, messageID));
+	char buf[110];
+        sprintf(buf,"Get Action Message: param0 %u param1 %u messageID %u", param0 ,param1,messageID);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	
+	return 0;
+}
 inline int32 CLuaBaseEntity::getnpctext(lua_State* L)
 {
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
@@ -8748,28 +8740,40 @@ inline int32 CLuaBaseEntity::getnpctext(lua_State* L)
 	if(lua_isnil(L,1) || !lua_isnumber(L,1))
 	{
 		char buf[110];
-        sprintf(buf,"Command Example: .getmessage 1 1 1");
+        sprintf(buf,"Command Example: .getnpctext 1 1 1 1 1 1");
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 		return false;
 	}
 
-    uint16 messageID = (uint16)lua_tointeger(L,1);
+   uint16 messageID = (uint16)lua_tointeger(L,1);
 
 	uint32 param0 = 0;
 	uint32 param1 = 0;
+	uint32 param2 = 0;
+	uint32 param3 = 0;
 
-    if( !lua_isnil(L,2) && lua_isnumber(L,2) )
-        param0 = (uint32)lua_tointeger(L,2);
-    if( !lua_isnil(L,3) && lua_isnumber(L,3) )
-        param1 = (uint32)lua_tointeger(L,3);
+	bool showName = 0;
 
+	if( !lua_isnil(L,2) && lua_isnumber(L,2) )
+		param0 = (uint32)lua_tointeger(L,2);
+	if( !lua_isnil(L,3) && lua_isnumber(L,3) )
+		param1 = (uint32)lua_tointeger(L,3);
+	if( !lua_isnil(L,4) && lua_isnumber(L,4) )
+		param2 = (uint32)lua_tointeger(L,4);
+	if( !lua_isnil(L,5) && lua_isnumber(L,5) )
+		param3 = (uint32)lua_tointeger(L,5);
+
+	if( !lua_isnil(L,6) && lua_isboolean(L,6) )
+		showName = ( lua_toboolean(L,6) == 0 ? false : true );
+
+	PChar->pushPacket(new CMessageSpecialPacket(PChar,messageID,param0,param1,param2,param3,showName));
 	
-		PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, param0, param1, messageID));
 	char buf[110];
-        sprintf(buf,"Get Message: param0 %u param1 %u messageID %u", param0 ,param1,messageID);
+        sprintf(buf,"Get NPC Text: messageID %u param0 %u param1 %u param2 %u param3 %u showName %u", messageID,param0,param1,param2,param3,showName);
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	
 	return 0;
+	
 }
 inline int32 CLuaBaseEntity::spawn_Mob(lua_State *L)
 {
@@ -9264,7 +9268,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf3,".addkeyitem .getpos .addmaps .leavegame .homepoint .gotonpc .event" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	char buf4[110];
-	sprintf(buf4,".getnpctext .npclist .wallhack .zone .zonelist" );
+	sprintf(buf4,".getnpctext .getactionmessage .npclist .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	return true;
 	}
@@ -9283,7 +9287,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf3,".addkeyitem .getpos .addmaps .leavegame .homepoint .gotonpc .event" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	char buf4[110];
-	sprintf(buf4,".getnpctext .npclist .wallhack .zone .zonelist" );
+	sprintf(buf4,".getnpctext .getactionmessage .npclist .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	
 	return true;
@@ -9918,5 +9922,6 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,gotoNpc),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,NpcList),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,getnpctext),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,getactionmessage),
 	{NULL,NULL}
 };

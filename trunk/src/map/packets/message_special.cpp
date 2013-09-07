@@ -41,8 +41,9 @@ CMessageSpecialPacket::CMessageSpecialPacket(
 {
 	this->type = 0x2A;
 	this->size = 0x10;
-
+	ShowDebug(CL_BG_BLUE"type %u size %u\n"CL_RESET,this->type,this->size);
 	//DSP_DEBUG_BREAK_IF(PEntity == NULL);
+	string_t message = "";
 
 	WBUFL(data,(0x04)-4) = PEntity->id;
 
@@ -52,11 +53,11 @@ CMessageSpecialPacket::CMessageSpecialPacket(
 	WBUFL(data,(0x14)-4) = param3;
 
 	WBUFW(data,(0x18)-4) = PEntity->targid;
-
+    ShowDebug(CL_BG_BLUE"NAME %s \n"CL_RESET,PEntity->GetName());
 	if (ShowName)
 	{
 		this->size = 0x18;
-
+		
 		memcpy(data+(0x1E)-4, PEntity->GetName(), (PEntity->name.size() > 15 ? 15 : PEntity->name.size())); 
 	}
 	else if (PEntity->objtype == TYPE_PC)
@@ -65,4 +66,6 @@ CMessageSpecialPacket::CMessageSpecialPacket(
 	}
 
 	WBUFW(data,(0x1A)-4) = messageID;
+	
+	ShowDebug(CL_BG_BLUE"MESsAGE %s \n"CL_RESET,message.c_str());
 }
