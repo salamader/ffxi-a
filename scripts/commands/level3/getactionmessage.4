@@ -1,5 +1,5 @@
 -----------------------------------
---	[Command name]: getnpctext
+--	[Command name]: getactionmessage
 --	[Author      ]: 
 --	[Description ]: 
 -----------------------------------
@@ -7,7 +7,7 @@
 -----------------------------------
 -- Action
 -----------------------------------
- function onTrigger(player,messageID,param0,param1,param2,param3,showName)                
- player:getnpctext(messageID,param0,param1,param2,param3,showName);
+ function onTrigger(player,param0, param1, messageID)                
+ player:getactionmessage(param0, param1, messageID);
 		
 	end;
