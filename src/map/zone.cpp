@@ -37,6 +37,7 @@
 #include "utils/itemutils.h"
 #include "map.h"
 #include "utils/mobutils.h"
+#include "utils/zoneutils.h"
 #include "entities/npcentity.h"
 #include "entities/petentity.h"
 #include "utils/petutils.h"
@@ -811,9 +812,15 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 	{
 		
     ShowDebug("THE ZONE %u is not this %u %s .\n",PChar->loc.zone, this,PChar->GetName());
-	PChar->loc.zone = this;
+	return;
+	//PChar->loc.zone = this;
 	}
 	PChar->is_zoning = 1;
+	PChar->status = STATUS_DISAPPEAR;
+
+	
+			
+	
 	//remove pets
 	if(PChar->PPet != NULL)
     {
@@ -848,7 +855,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 	}
 
 	//remove bcnm status
-/*	if(m_InstanceHandler != NULL && PChar->StatusEffectContainer->HasStatusEffect(EFFECT_BATTLEFIELD))
+	if(m_InstanceHandler != NULL && PChar->StatusEffectContainer->HasStatusEffect(EFFECT_BATTLEFIELD))
     {
 		if(m_InstanceHandler->disconnectFromBcnm(PChar)){
 			ShowDebug("Removed %s from the BCNM they were in as they have left the zone.\n",PChar->GetName());
@@ -891,8 +898,8 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 				ShowWarning("%s has disconnected from the BCNM but cannot move them to the lobby as the lobby position is unknown!\n",PChar->GetName());
 			}
 		}
-	}*/
-
+	}
+	
 	for (EntityList_t::const_iterator it = m_mobList.begin() ; it != m_mobList.end() ; ++it)
 	{
 		CMobEntity* PCurrentMob = (CMobEntity*)it->second;
@@ -901,6 +908,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 			PCurrentMob->m_OwnerID.clean();
 		}
 	}
+	
 
     // TODO: могут возникать проблемы с переходом между одной и той же зоной (zone == prevzone)
 
@@ -920,17 +928,12 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 		for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 		{
 			CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-			for (SpawnIDList_t::const_iterator itt = PCurrentChar->SpawnMOBList.begin() ; itt != PCurrentChar->SpawnMOBList.end() ; ++itt)
-			{
-				CCharEntity* PTarget = (CCharEntity*)itt->second;
-			    PTarget->SpawnPCList.find(PChar->id);
+			SpawnIDList_t::iterator PC = PCurrentChar->SpawnPCList.find(PChar->id);
 
-			if( PCurrentChar == PTarget )
+			if( PC != PCurrentChar->SpawnPCList.end() )
 			{
-				ShowDebug(CL_CYAN"CZone:: %s I DONT KNOW <%u> %s\n" CL_RESET, GetName(), PCurrentChar->SpawnMOBList.size(),PChar->GetName());
-				PCurrentChar->SpawnPCList.erase(itt);
+				PCurrentChar->SpawnPCList.erase(PC);
 				PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_DESPAWN));
-			}
 			}
 		}
 	}
@@ -952,9 +955,9 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
         }
     }
 
-   // PChar->loc.zone = NULL;
+    PChar->loc.zone = NULL;
     PChar->loc.prevzone = m_zoneID;
-
+	
     PChar->SpawnPCList.clear();
 	PChar->SpawnNPCList.clear();
 	PChar->SpawnMOBList.clear();
@@ -972,36 +975,30 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 {
 	DSP_DEBUG_BREAK_IF(PChar == NULL);
-   // DSP_DEBUG_BREAK_IF(PChar->loc.zone != NULL);
+    if(PChar->loc.zone != NULL)
+	{
+		return;
+	}
 	DSP_DEBUG_BREAK_IF(PChar->PTreasurePool != NULL);
 
     // ищем свободный targid для входящего в зону персонажа
     PChar->targid  = 1024;
 	PChar->is_zoning = -1;
+	uint32 targid = 0;
+
+	                
 	
-	 
-	
-	const int8* fmtQuery = "SELECT max(targid) FROM accounts_sessions";
+	const char * Query = "SELECT targid FROM accounts_sessions WHERE charid= '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->id);
+			
 
-	                  if( Sql_Query(SqlHandle,fmtQuery) == SQL_ERROR )
-	                    {
-		                 return;
-	                    }
-
-	                  uint32 targid = 0;
-
-	                  if( Sql_NumRows(SqlHandle) != 0 )
-	                    {
-		                Sql_NextRow(SqlHandle);
-		
-		                targid = Sql_GetUIntData(SqlHandle,0) + 1;
-						ShowMessage("MAX TARGETID COUNT %u \n" CL_RESET,targid);
-						if(targid == 1)
-						{
-							targid = 1024;
-							ShowMessage("MAX TARGETID NEW COUNT %u \n" CL_RESET,targid);
-						}
-    PChar->targid = targid;
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   targid =  Sql_GetUIntData(SqlHandle,0);
+				   ShowMessage("MAX TARGETID NEW COUNT %u \n" CL_RESET,targid);
+				 
+               PChar->targid = targid;
 
     for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 	{
@@ -1515,7 +1512,7 @@ void CZone::TOTDChange(TIMETYPE TOTD)
 		for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
 		{
 			CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-			if(PCurrentChar != NULL)
+			if(PCurrentChar != NULL && PCurrentChar->loc.zone != NULL)
 			{
 			charutils::CheckEquipLogic(PCurrentChar, ScriptType, TOTD);
 			}
@@ -1554,95 +1551,63 @@ CCharEntity* CZone::GetCharByName(int8* name)
 
 void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, CBasicPacket* packet)
 {
-	ShowDebug(CL_CYAN"PACKETS %u \n" CL_RESET,packet);
+	//ShowDebug(CL_CYAN"PACKETS %u \n" CL_RESET,packet);
 	if(PEntity != NULL)
 	{
 	if (!m_charList.empty())
 	{
-		switch(message_type)
-		{
-			case CHAR_INRANGE_SELF :
-			{
-				if (PEntity->objtype == TYPE_PC)
-				{
-					((CCharEntity*)PEntity)->pushPacket(new CBasicPacket(*packet));
-				}
-			}
-			case CHAR_INRANGE :
-			{
-				for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
+
+		for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 				{
 					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-					if(PCurrentChar != NULL)
+					if(PCurrentChar != NULL && PCurrentChar->loc.zone != NULL )
 					{
-					   if (PEntity != PCurrentChar)
-					   {
-						if(distance(PEntity->loc.p, PCurrentChar->loc.p) < 50)
+
+						if(message_type == CHAR_INRANGE)
 						{
-							PCurrentChar->pushPacket(new CBasicPacket(*packet));
+                             if (PEntity != PCurrentChar)
+					            {
+						          if(distance(PEntity->loc.p, PCurrentChar->loc.p) < 50)
+						            {
+							         PCurrentChar->pushPacket(new CBasicPacket(*packet));
+						            }
+						        }
 						}
-						break;
-					   }
-					   break;
-					}
-					else
-					{
-                     ShowDebug(CL_CYAN"1A PACKET WAS CALLED WITH NO CURRENT PLAYER \n" CL_RESET);
-					}
-				}
-			}
-			break;
-			case CHAR_INSHOUT :
-			{
-				for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
-				{
-					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-					if(PCurrentChar != NULL)
-					{
-					  if (PEntity != PCurrentChar)
-					  {
-						if(distance(PEntity->loc.p, PCurrentChar->loc.p) < 180)
+						if(message_type == CHAR_INRANGE_SELF)
 						{
-							PCurrentChar->pushPacket(new CBasicPacket(*packet));
+                             if (PEntity->objtype == TYPE_PC)
+				                {
+					                 ((CCharEntity*)PEntity)->pushPacket(new CBasicPacket(*packet));
+				                }
 						}
-						break;
-					  }
-					break;
+						if(message_type == CHAR_INSHOUT)
+						{
+                             if (PEntity != PCurrentChar)
+					            {
+						          if(distance(PEntity->loc.p, PCurrentChar->loc.p) < 180)
+						            {
+							         PCurrentChar->pushPacket(new CBasicPacket(*packet));
+						            }
+						
+					            }
+						}
+						if(message_type == CHAR_INZONE)
+						{
+                             if (PEntity != PCurrentChar)
+					            {
+						       PCurrentChar->pushPacket(new CBasicPacket(*packet));
+					            }
+						}
 					}
-					else
-					{
-                     ShowDebug(CL_CYAN"2A PACKET WAS CALLED WITH NO CURRENT PLAYER %u\n" CL_RESET,packet);
-					}
-				}
-			}
-			break;
-			case CHAR_INZONE :
-			{
-				for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
-				{
-					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-					if(PCurrentChar != NULL)
-					{
-					  if (PEntity != PCurrentChar)
-					  {
-						PCurrentChar->pushPacket(new CBasicPacket(*packet));
-					  }
-					break;
-					}
-					else
-					{
-                     ShowDebug(CL_CYAN"3A PACKET WAS CALLED WITH NO CURRENT PLAYER %u\n" CL_RESET,packet);
-					}
-				}
-			}
-			break;
 		}
-	}
+	
+		
 	delete packet;
+	}
 	}
 	else
 	{
-       //ShowDebug(CL_CYAN"A PACKET WAS CALLED WITH NO PENTITY %u\n" CL_RESET,packet);
+       ShowDebug(CL_CYAN"A PACKET WAS CALLED WITH NO PENTITY %u\n" CL_RESET,packet);
 	  // delete packet;
 	}
 }
@@ -1699,30 +1664,30 @@ void CZone::ZoneServer(uint32 tick)
 			if(PChar->is_zoning == 1)
 			{
 				ShowDebug(CL_CYAN"DIFFERNT ZONING STRANGE HAPPENINGs\n" CL_RESET);
-				
+				return;
 			}
 			else
 			{
-				//if(PChar->PRecastContainer != NULL)
-				//{
+				if(PChar->PRecastContainer != NULL)
+				{
             PChar->PRecastContainer->Check(tick);
-				//}
-				//if(PChar->StatusEffectContainer != NULL)
-				//{
+				}
+				if(PChar->StatusEffectContainer != NULL)
+				{
             PChar->StatusEffectContainer->CheckEffects(tick);
-				//}
-				//if(PChar->PBattleAI != NULL)
-				//{
+				}
+				if(PChar->PBattleAI != NULL)
+				{
             PChar->PBattleAI->CheckCurrentAction(tick);
-				//}
-				//if(PChar->PTreasurePool != NULL)
-				//{
+				}
+				if(PChar->PTreasurePool != NULL)
+				{
             PChar->PTreasurePool->CheckItems(tick);
-				//}
-				//if(PChar->StatusEffectContainer != NULL)
-				//{
+				}
+				if(PChar->StatusEffectContainer != NULL)
+				{
 			PChar->StatusEffectContainer->CheckRegen(tick);
-				//}
+				}
 			}
 			
         }
@@ -1805,13 +1770,26 @@ void CZone::ZoneServerRegion(uint32 tick)
 			if(PChar->is_zoning == 1)
 			{
 				ShowDebug(CL_CYAN"DIFFERNT ZONING STRANGE HAPPENINGs\n" CL_RESET);
+				return;
 			}
 			else
 			{
+				if(PChar->PRecastContainer != NULL)
+				{
             PChar->PRecastContainer->Check(tick);
+				}
+				if( PChar->StatusEffectContainer != NULL)
+				{
             PChar->StatusEffectContainer->CheckEffects(tick);
+				}
+				if( PChar->PBattleAI != NULL)
+				{
             PChar->PBattleAI->CheckCurrentAction(tick);
+				}
+				if( PChar->PTreasurePool != NULL)
+				{
             PChar->PTreasurePool->CheckItems(tick);
+				}
 
             uint32 RegionID = 0;
 

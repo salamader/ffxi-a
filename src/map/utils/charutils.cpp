@@ -1851,7 +1851,7 @@ void RemoveAllEquipment(CCharEntity* PChar)
 
 void CheckEquipLogic(CCharEntity* PChar, SCRIPTTYPE ScriptType, uint32 param)
 {
-	if(PChar != NULL)
+	if(PChar != NULL && PChar->loc.zone != NULL)
 	{
 	if (!(PChar->m_EquipFlag & ScriptType))
 		return;

@@ -784,6 +784,19 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 								   ShowMessage(CL_GREEN"SAVE SYSTEM OK FOR PCHAR %s\n"CL_RESET,PChar->GetName());
 				               charutils::SaveCharSystem(PChar);
 							   }
+							   if (PChar != NULL && (PChar->nameflags.flags & FLAG_DC))
+			{
+            PChar->nameflags.flags &= ~FLAG_DC;
+			ShowMessage(CL_YELLOW"ELSE FLAGS  STATUS = %u FOR PCHAR %s\n"CL_RESET,PChar->nameflags.flags,PChar->GetName());
+            PChar->pushPacket(new CCharUpdatePacket(PChar));
+
+            if (PChar->status == STATUS_NORMAL)
+            {
+                PChar->status = STATUS_UPDATE;
+                PChar->loc.zone->SpawnPCs(PChar);
+            }
+            //charutils::SaveCharStats(PChar);
+			}
                             
                             }
 			                                if(map_session_data->Leftonmap == false)

@@ -908,10 +908,37 @@ inline int32 CLuaBaseEntity::getZone(lua_State *L)
 
 inline int32 CLuaBaseEntity::getZoneName(lua_State *L)
 {
-	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
-    DSP_DEBUG_BREAK_IF(m_PBaseEntity->loc.zone == NULL);
+	 CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
 
-    lua_pushstring( L, m_PBaseEntity->loc.zone->GetName() );
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   lua_pushstring( L, zonename.c_str() );
+				 }
+				 else
+				 {
+					 
+					 return false;
+				 }
+
+    
 	return 1;
 }
 
@@ -3085,7 +3112,10 @@ inline int32 CLuaBaseEntity::messageSpecial(lua_State *L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-	DSP_DEBUG_BREAK_IF(lua_isnil(L,-1) || !lua_isnumber(L,-1));
+	if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
+	{
+		return false;
+	}
 
 	uint16 messageID = (uint16)lua_tointeger(L,1);
 
@@ -9190,10 +9220,10 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".getpos .addmaps .leavegame .homepoint .gotonpc .event .npclist" );
+	sprintf(buf3,".addkeyitem .getpos .addmaps .leavegame .homepoint .gotonpc .event" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	char buf4[110];
-	sprintf(buf4,".wallhack .zone .zonelist" );
+	sprintf(buf4,".npclist .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	return true;
 	}
@@ -9209,10 +9239,10 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".getpos .addmaps .leavegame .homepoint .gotonpc .event .npclist" );
+	sprintf(buf3,".addkeyitem .getpos .addmaps .leavegame .homepoint .gotonpc .event" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	char buf4[110];
-	sprintf(buf4,".wallhack .zone .zonelist" );
+	sprintf(buf4,".npclist .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	
 	return true;
