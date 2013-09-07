@@ -8730,6 +8730,47 @@ inline int32 CLuaBaseEntity::add_Item(lua_State *L)
 	return true;
 	
 }
+inline int32 CLuaBaseEntity::getnpctext(lua_State* L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+
+	if(lua_isnil(L,1) || !lua_isnumber(L,1))
+	{
+		char buf[110];
+        sprintf(buf,"Command Example: .getmessage 1 1 1");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	}
+
+    uint16 messageID = (uint16)lua_tointeger(L,1);
+
+	uint32 param0 = 0;
+	uint32 param1 = 0;
+
+    if( !lua_isnil(L,2) && lua_isnumber(L,2) )
+        param0 = (uint32)lua_tointeger(L,2);
+    if( !lua_isnil(L,3) && lua_isnumber(L,3) )
+        param1 = (uint32)lua_tointeger(L,3);
+
+	
+		PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, param0, param1, messageID));
+	char buf[110];
+        sprintf(buf,"Get Message: param0 %u param1 %u messageID %u", param0 ,param1,messageID);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	
+	return 0;
+}
 inline int32 CLuaBaseEntity::spawn_Mob(lua_State *L)
 {
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
@@ -9223,7 +9264,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf3,".addkeyitem .getpos .addmaps .leavegame .homepoint .gotonpc .event" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	char buf4[110];
-	sprintf(buf4,".npclist .wallhack .zone .zonelist" );
+	sprintf(buf4,".getnpctext .npclist .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	return true;
 	}
@@ -9242,7 +9283,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf3,".addkeyitem .getpos .addmaps .leavegame .homepoint .gotonpc .event" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	char buf4[110];
-	sprintf(buf4,".npclist .wallhack .zone .zonelist" );
+	sprintf(buf4,".getnpctext .npclist .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	
 	return true;
@@ -9876,5 +9917,6 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,ElevatorDown),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,gotoNpc),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,NpcList),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,getnpctext),
 	{NULL,NULL}
 };
