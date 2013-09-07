@@ -146,7 +146,7 @@ CZoneInPacket::CZoneInPacket(CCharEntity * PChar, int16 csid)
 
 	if(PChar->first_login != 0 )//PLAYER IS ZONEING FROM ZONE 0 TO PACKET ELSE ERROR NO KEY FOUND
 	{
-		if(PChar->is_zoning == 1)
+		if(PChar->is_zoning == 1 || PChar->loc.zone== NULL)
 		{
 			ShowNotice("PACKET ERROR CAN NOT LOGIN IN STRANGE ZONE\n");
 		}
@@ -193,7 +193,7 @@ CZoneInPacket::CZoneInPacket(CCharEntity * PChar, int16 csid)
 		//if 0x01 then pause between zone
 		if(PChar->first_login != 0)
 	    {
-			if(PChar->is_zoning == 1)
+			if(PChar->is_zoning == 1 || PChar->loc.zone== NULL)
 		    {
 			ShowNotice("PACKET ERROR CAN NOT LOGIN IN STRANGE ZONE ugh\n");
 		    }

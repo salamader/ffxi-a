@@ -608,11 +608,19 @@ int32 lobbyview_parse(int32 fd)
 		case 0x26:
 			{
 				uint8 SendBuffSize = 0x28;
-
+				uint32 expansions = 0;
 				LOBBY_026_RESERVEPACKET(ReservPacket);
-				WBUFW(ReservPacket,32) = login_config.expansions;	// BitMask for expansions;
-			
-				//Хеширование пакета, и запись значения Хеш функции в пакет
+				
+				const char * Query = "SELECT expansions FROM accounts WHERE id = '%u';";
+          int32 ret3 = Sql_Query(SqlHandle,Query,sd->accid);
+         if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	       {
+			expansions =  Sql_GetIntData(SqlHandle,0);
+			ShowDebug(CL_WHITE"lobbyview_parse:Expansion: %u \n"CL_RESET,expansions);
+			if(expansions == 4094)
+			{
+             WBUFW(ReservPacket,32) = expansions;	// BitMask for expansions;
+			 //Хеширование пакета, и запись значения Хеш функции в пакет
 				unsigned char Hash[16];
 				md5(ReservPacket, Hash, SendBuffSize);
 				memcpy(ReservPacket+12,Hash,16);
@@ -622,6 +630,22 @@ int32 lobbyview_parse(int32 fd)
 				RFIFOSKIP(fd,session[fd]->rdata_size);
 				RFIFOFLUSH(fd);
 				WFIFOSET(fd,SendBuffSize);
+				ShowDebug(CL_WHITE"lobbyview_parse:Expansion: %u SEEKERS OK\n"CL_RESET,expansions);
+			}
+			else
+			{
+				ShowDebug(CL_WHITE"lobbyview_parse:Expansion: %u OTHER NOT OK\n"CL_RESET,expansions);
+				do_close_lobbydata(sd,fd);
+			do_close_tcp(fd);
+			return 0;
+			}
+		 }
+		 else
+		 {
+			 ShowDebug(CL_WHITE"lobbyview_parse:Expansion: %u NOT FOUND IN DATABSE\n"CL_RESET,expansions);
+		 }
+			
+				
 				
 			}
 			break;

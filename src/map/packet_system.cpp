@@ -576,24 +576,8 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 	
     
-	PChar->is_zoning = 1;
-	PChar->PTreasurePool = NULL;
-    //PChar->loc.zone = NULL;
-    PChar->loc.prevzone =zone;
-		PChar->loc.destination=zone;
-	PChar->status = STATUS_DISAPPEAR;
-	PChar->is_returning = 1;
-			
-			PChar->animation = ANIMATION_NONE;
-
-			PChar->clearPacketList();
-			
-PChar->pushPacket(new CServerIPPacket(PChar,2));
-	zoneutils::GetZone(PChar->loc.destination)->DecreaseZoneCounter(PChar);
-    PChar->SpawnPCList.clear();
-	PChar->SpawnNPCList.clear();
-	PChar->SpawnMOBList.clear();
-	PChar->SpawnPETList.clear();
+	                    PChar->leavegame();
+	
 	
         }
  
