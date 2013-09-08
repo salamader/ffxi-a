@@ -338,7 +338,8 @@ void LoadNPCList(CZone* PZone)
           status,\
           unknown,\
           look,\
-          name_prefix \
+          name_prefix, \
+		  zoneid \
         FROM npc_list \
         WHERE zoneid = %u AND npcid < 1024;";
 
@@ -369,10 +370,10 @@ void LoadNPCList(CZone* PZone)
 
 			PNpc->namevis = (uint8)Sql_GetIntData(SqlHandle,11);
 			PNpc->status  = (STATUSTYPE)Sql_GetIntData(SqlHandle,12);
-			//PNpc->unknown = (uint32)Sql_GetUIntData(SqlHandle,13);
+			PNpc->unknown = (uint32)Sql_GetUIntData(SqlHandle,13);
 
-			//PNpc->name_prefix = (uint8)Sql_GetIntData(SqlHandle,15);
-
+			PNpc->name_prefix = (uint8)Sql_GetIntData(SqlHandle,15);
+			PNpc->loc.destination = (uint16)Sql_GetIntData(SqlHandle,16);
 			memcpy(&PNpc->look,Sql_GetData(SqlHandle,14),20);
 
 			PZone->InsertNPC(PNpc);
@@ -424,7 +425,7 @@ void LoadMOBList(CZone* PZone)
 			Slash, Pierce, H2H, Impact, \
 			Fire, Ice, Wind, Earth, Lightning, Water, Light, Dark, Element, \
 			mob_pools.familyid, name_prefix, unknown, animationsub, \
-			(mob_family_system.HP / 100), (mob_family_system.MP / 100), hasSpellScript, spellList, ATT, ACC, mob_groups.poolid \
+			(mob_family_system.HP / 100), (mob_family_system.MP / 100), hasSpellScript, spellList, ATT, ACC, mob_groups.poolid,mob_groups.zoneid \
 			FROM mob_groups LEFT JOIN mob_pools ON mob_groups.poolid = mob_pools.poolid \
 			LEFT JOIN mob_spawn_points ON mob_groups.groupid = mob_spawn_points.groupid \
 			LEFT JOIN mob_family_system ON mob_pools.familyid = mob_family_system.familyid \
@@ -496,7 +497,7 @@ void LoadMOBList(CZone* PZone)
             PMob->defRank = (uint8)Sql_GetIntData(SqlHandle,33);
             PMob->attRank = (uint8)Sql_GetIntData(SqlHandle,55);
             PMob->accRank = (uint8)Sql_GetIntData(SqlHandle,56);
-
+			PMob->loc.destination = (uint16)Sql_GetUIntData(SqlHandle,58);
 			PMob->setModifier(MOD_SLASHRES, (uint16)(Sql_GetFloatData(SqlHandle,34) * 1000));
 			PMob->setModifier(MOD_PIERCERES,(uint16)(Sql_GetFloatData(SqlHandle,35) * 1000));
 			PMob->setModifier(MOD_HTHRES,   (uint16)(Sql_GetFloatData(SqlHandle,36) * 1000));

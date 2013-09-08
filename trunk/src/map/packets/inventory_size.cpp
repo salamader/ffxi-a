@@ -38,7 +38,10 @@ CInventorySizePacket::CInventorySizePacket(CCharEntity* PChar)
 {
 	this->type = 0x1C;
 	this->size = 0x1A;
-
+	if(PChar->loc.zone == NULL)
+	{
+		return;
+	}
 	WBUFB(data,(0x04)-4) = 1 + PChar->getStorage(LOC_INVENTORY)->GetSize();
 	WBUFB(data,(0x05)-4) = 1 + PChar->getStorage(LOC_MOGSAFE)->GetSize();
 	WBUFB(data,(0x06)-4) = 1 + PChar->getStorage(LOC_STORAGE)->GetSize();

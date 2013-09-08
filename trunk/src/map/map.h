@@ -111,10 +111,10 @@ struct map_session_data_t
 	blowfish_t  blowfish;					// unique decypher keys
 	CCharEntity *PChar;						// game char
     bool        shuttingDown;               // prevents double session closing
-	bool        Leftonmap;
+	
     map_session_data_t()
     {   
-		Leftonmap = false;
+		
         shuttingDown = false;
     }
 };

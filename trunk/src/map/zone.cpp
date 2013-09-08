@@ -185,6 +185,7 @@ const int8* CZone::GetName()
 	return m_zoneName.c_str();
 }
 
+
 uint8 CZone::GetSoloBattleMusic()
 {
 	return m_zoneMusic.m_bSongS;
@@ -562,9 +563,11 @@ void CZone::LoadNavMesh()
   if(m_navMesh == NULL){
     m_navMesh = new CNavMesh();
   }
-
+  
   int8 file[255];
   memset(file,0,sizeof(file));
+  
+  
   snprintf(file, sizeof(file), "scripts/zones/%s/NavMesh.nav", GetName());
 
   if(m_navMesh->load(file))
@@ -757,7 +760,10 @@ void CZone::TransportDepart(CBaseEntity* PTransportNPC)
 
 void CZone::SetWeather(WEATHER weather)
 {
-    DSP_DEBUG_BREAK_IF(weather >= MAX_WEATHER_ID);
+    if(weather >= MAX_WEATHER_ID)
+	{
+		return;
+	}
 
 	if (m_Weather == weather)
 		return;
@@ -807,6 +813,7 @@ void CZone::SetWeather(WEATHER weather)
 
 void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 {
+	ShowMessage(CL_YELLOW"I AM STILL CLEANING MAP AND DECREASING ZONE\n"CL_RESET);
     DSP_DEBUG_BREAK_IF(PChar == NULL);
     if(PChar->loc.zone != this)
 	{
@@ -913,8 +920,27 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
     // TODO: могут возникать проблемы с переходом между одной и той же зоной (zone == prevzone)
 
 	m_charList.erase(PChar->targid);
+	PChar->SpawnPCList.erase(PChar->id);
+	ShowMessage(CL_YELLOW"DECREASE THIS ZONE ID %u\n"CL_RESET,PChar->loc.destination);
+	 
+  string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
 
-	ShowDebug(CL_CYAN"CZone:: %s DecreaseZoneCounter <%u> %s\n" CL_RESET, GetName(), m_charList.size(),PChar->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				  // snprintf(file, sizeof(file), "scripts/zones/%s/NavMesh.nav", zonename.c_str());
+				   ShowMessage(CL_YELLOW"CZone:: %s DecreaseZoneCounter <%u> %s OK \n" CL_RESET, zonename.c_str(), m_charList.size(),PChar->GetName());
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return;
+				 }
+	
 
 	if (ZoneTimer && m_charList.empty())
 	{
@@ -925,17 +951,8 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 	}
 	else
 	{
-		for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
-		{
-			CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-			SpawnIDList_t::iterator PC = PCurrentChar->SpawnPCList.find(PChar->id);
-
-			if( PC != PCurrentChar->SpawnPCList.end() )
-			{
-				PCurrentChar->SpawnPCList.erase(PC);
-				PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_DESPAWN));
-			}
-		}
+		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CCharPacket(PChar,ENTITY_DESPAWN));
+		//PChar->pushPacket(new CCharPacket(PChar,ENTITY_DESPAWN));
 	}
 	if (PChar->m_LevelRestriction != 0)
 	{
@@ -962,6 +979,16 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 	PChar->SpawnNPCList.clear();
 	PChar->SpawnMOBList.clear();
 	PChar->SpawnPETList.clear();
+	if(PChar->shutdown_status ==1 )
+	{
+		ShowMessage(CL_YELLOW"I AM NOW GOING TO FINISH MAP CLEAN UP\n"CL_RESET);
+		
+		const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE charid = %u";
+        Sql_Query(SqlHandle,Query,PChar->id);
+		Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
+        Sql_Query(SqlHandle,Query,PChar->accid);
+		
+	}
 }
 
 /************************************************************************
@@ -1028,7 +1055,26 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
     PChar->m_PVPFlag = CanUseMisc(MISC_PVP);
 
 	m_charList[PChar->targid] = PChar;
-	ShowDebug(CL_CYAN"CZone:: %s IncreaseZoneCounter <%u> %s \n" CL_RESET, GetName(), m_charList.size(),PChar->GetName());
+	PChar->SpawnPCList[PChar->id] = PChar;
+	ShowDebug("INCREASE THIS IS %u \n",PChar->loc.destination);
+  string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				  
+				   ShowDebug(CL_CYAN"CZone:: %s IncreaseZoneCounter <%u> %s \n" CL_RESET, zonename.c_str(), m_charList.size(),PChar->GetName());
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return;
+				 }
+	
 
 	if (!ZoneTimer && !m_charList.empty())
 	{
@@ -1233,48 +1279,45 @@ void CZone::SpawnNPCs(CCharEntity* PChar)
 
 void CZone::SpawnPCs(CCharEntity* PChar)
 {
-	if(PChar != NULL && PChar->loc.zone != NULL)
-	{
 	for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 	{
-		CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+	CCharEntity* PCurrentChar = (CCharEntity*)it->second;
 		SpawnIDList_t::iterator PC = PChar->SpawnPCList.find(PCurrentChar->id);
 
 		if (PChar != PCurrentChar)
 		{
+			ShowDebug(CL_CYAN"SPAWNING PC 1 \n" CL_RESET);
 			if(distance(PChar->loc.p, PCurrentChar->loc.p) < 50)
 			{
+				ShowDebug(CL_CYAN"SPAWNING PC 2 \n" CL_RESET);
 				if( PC == PChar->SpawnPCList.end() )
 				{
+					ShowDebug(CL_CYAN"SPAWNING PC THISONE \n" CL_RESET);
 					PChar->SpawnPCList[PCurrentChar->id] = PCurrentChar;
 					PChar->pushPacket(new CCharPacket(PCurrentChar,ENTITY_SPAWN));
 
 					PCurrentChar->SpawnPCList[PChar->id] = PChar;
 					PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_SPAWN));
-					PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CCharPacket(PCurrentChar, ENTITY_SPAWN));
-					PCurrentChar->loc.zone->PushPacket(PCurrentChar, CHAR_INRANGE, new CCharPacket(PChar, ENTITY_SPAWN));
-				}else{
+				}else
+				{
+					ShowDebug(CL_CYAN"SPAWNING PC THISONE 1 \n" CL_RESET);
 					PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_UPDATE));
-					PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CCharPacket(PCurrentChar, ENTITY_UPDATE));
-					PCurrentChar->loc.zone->PushPacket(PCurrentChar, CHAR_INRANGE, new CCharPacket(PChar, ENTITY_UPDATE));
 				}
-			} else {
+			} 
+			else 
+			{
+				ShowDebug(CL_CYAN"ELSE SPAWNING PC THISONE \n" CL_RESET);
 				if( PC != PChar->SpawnPCList.end() )
 				{
+					ShowDebug(CL_CYAN"ELSE SPAWNING PC THISONE ERACE \n" CL_RESET);
 					PChar->SpawnPCList.erase(PC);
 					PChar->pushPacket(new CCharPacket(PCurrentChar,ENTITY_DESPAWN));
 
 					PCurrentChar->SpawnPCList.erase(PChar->id);
 					PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_DESPAWN));
-					
 				}
 			}
 		}
-	}
-	}
-	else
-	{
-     ShowDebug(CL_CYAN"SPAWNING PLAYERS: WITH NO PLAYER \n" CL_RESET);
 	}
 }
 
@@ -1514,7 +1557,7 @@ void CZone::TOTDChange(TIMETYPE TOTD)
 			CCharEntity* PCurrentChar = (CCharEntity*)it->second;
 			if(PCurrentChar != NULL && PCurrentChar->loc.zone != NULL)
 			{
-			charutils::CheckEquipLogic(PCurrentChar, ScriptType, TOTD);
+		//	charutils::CheckEquipLogic(PCurrentChar, ScriptType, TOTD);
 			}
 		}
 	}
@@ -1607,7 +1650,7 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 	}
 	else
 	{
-       ShowDebug(CL_CYAN"A PACKET WAS CALLED WITH NO PENTITY %u\n" CL_RESET,packet);
+      // ShowDebug(CL_CYAN"A PACKET WAS CALLED WITH NO PENTITY %u\n" CL_RESET,packet);
 	  // delete packet;
 	}
 }
@@ -1663,7 +1706,7 @@ void CZone::ZoneServer(uint32 tick)
         {
 			if(PChar->is_zoning == 1)
 			{
-				ShowDebug(CL_CYAN"DIFFERNT ZONING STRANGE HAPPENINGs\n" CL_RESET);
+				//ShowDebug(CL_CYAN"DIFFERNT ZONING STRANGE HAPPENINGs\n" CL_RESET);
 				return;
 			}
 			else
