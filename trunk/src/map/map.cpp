@@ -546,6 +546,10 @@ int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t*
 		SmallPD_Type = (RBUFW(SmallPD_ptr,0) & 0x1FF);
 		
 		PacketParser[SmallPD_Type](map_session_data, PChar, SmallPD_ptr);
+		if(SmallPD_Type != 21)//21 is player update packet that is called none stop so not want to spam
+		{
+		ShowMessage(CL_YELLOW"PACKET TYPE: %u\n" CL_RESET,SmallPD_Type);
+		}
 		
       //  
 		
