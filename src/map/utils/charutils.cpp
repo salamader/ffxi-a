@@ -1858,7 +1858,7 @@ void CheckEquipLogic(CCharEntity* PChar, SCRIPTTYPE ScriptType, uint32 param)
 
 	for(uint8 slotID = 0; slotID < 16; ++slotID)
 	{
-		CItem* PItem = PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->equip[slotID]);
+ 		CItem* PItem = PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->equip[slotID]);
 
 		if ((PItem != NULL) && PItem->isType(ITEM_ARMOR))
 		{
@@ -4254,7 +4254,7 @@ void SaveCharSystem(CCharEntity* PChar)
 		SaveCharPosition( PChar);				        // сохраняем позицию персонажа
 		SaveMissionsList( PChar);                       // Save the missions list
 		SaveQuestsList( PChar);					        // сохраняем список ксевтов
-       SaveFame( PChar);                               // Save area fame / reputation
+        SaveFame( PChar);                               // Save area fame / reputation
 		SaveZonesVisited( PChar);				        // сохраняем посещенные зоны
 		SaveKeyItems(PChar);					        // сохраняем ключевые предметы
 		SaveCharInventoryCapacity( PChar);              // Save Character inventory capacity
@@ -4262,11 +4262,11 @@ void SaveCharSystem(CCharEntity* PChar)
 		SaveLearnedAbilities( PChar);					// saved learned abilities (corsair rolls)
         SaveTitles( PChar);						        // сохраняем заслуженные звания
 		SaveCharStats( PChar);					        // сохраняем флаги, текущие значения жихней, маны и профессий
-     
+        SaveCharExp(PChar, PChar->GetMJob());
 		SaveCharNation( PChar);							// Sace the character's nation of allegiance.
 	    SaveCharPoints( PChar);							// Conquest point, Nation TP
 		SaveDeathTime( PChar);							// Saves when this character last died.
-	   SaveCharUnlockedWeapons( PChar);
+	    SaveCharUnlockedWeapons( PChar);
 }
 uint32  AddExpBonus(CCharEntity* PChar, uint32 exp)
 {

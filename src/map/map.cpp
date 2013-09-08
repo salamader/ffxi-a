@@ -64,6 +64,7 @@
 #include "lua/luautils.h"
 
 #include "packets/basic.h"
+#include "packets/char.h"
 #include "packets/server_ip.h"
 #include "packets/char_update.h"
 
@@ -402,13 +403,13 @@ int32 map_decipher_packet(int8* buff, size_t size, sockaddr_in* from, map_sessio
 
 	if( checksum((uint8*)(buff+FFXI_HEADER_SIZE),size-(FFXI_HEADER_SIZE+16),buff+size-16) == 0)
 	{
-		map_session_data->Leftonmap =false;
-		//ShowMessage(CL_BG_RED"CHECK MAP NOW AS I AM STILL ON MAP FALSE I HAVE NOT LEFT\n"CL_RESET);
+		map_session_data->shuttingDown =false;
+		
 		return 0;
 	}
 
 	int8 ip_str[16];
-	map_session_data->Leftonmap =true;
+	map_session_data->shuttingDown =true;
 	ShowMessage(CL_BG_RED"CHECK MAP NOW AS I AM STILL ON MAP TRUE I HAVE LEFT\n"CL_RESET);
 	//ShowError("map_encipher_packet: bad packet from <%s>\n",ip2str(ip,ip_str));
 	return -1;
@@ -659,51 +660,13 @@ int32 send_parse(int8 *buff, size_t* buffsize, sockaddr_in* from, map_session_da
 
 	if (*buffsize > 1350)
 	{
-		//I NOTICED WHEN A PLAYER IS IN A ACTION OF ANY KIND WHEN THIS LARGE BUFF IS CALLED IT LOOPS AND LOOPS
-		//THE ACTION UNTILL THE PLAYER LAGGS ALL THE WAY OUT OF THE SERVER FROM CONNECTION 100% 
-		//TO DC HOW EVER LONG THAT TAKES SO I THOUGHT MAYBE KILL THE SESSION FROM THE MAP SERVER 
-		// TO STOP THE LOOP JUST INCASE THIS IS WHAT CAUSES OTHER PLAYERS TO DC ALONG WITH THIS USER
+		//I NOTICED WHEN A PLAYER LOGS IN THERE ARE SOME CASES WHERE THEY ARE GETTING TO BIG OF A PACKET TO GAOL IS TO REDUCE THE PACKETS
+		//BEING SENT ON LOGIN, ONCE ONCE THIS REDUCTION IS DONE TEHN WE CAN START UP DATING OTHER PACKETS IT LOOKED LIKE THIS
+		//WAS CALLED BECASUE OF ALL THE SPELL CASTING FROM THE MOBS. SO THAT IS TURNED OFF RIGHT NOW
+		//AND I HAVENT BEEN GETTING THIS AT ALL
 		ShowWarning(CL_YELLOW"send_parse: packet is very big <%u>\n" CL_RESET,*buffsize);
 		ShowWarning(CL_YELLOW"GET SESSION<%u>\n" CL_RESET,map_session_data);
-		WBUFL(buff,8) = (uint32)time(NULL);
-	WBUFW(buff,0) = map_session_data->server_packet_id;
-	WBUFW(buff,2) = map_session_data->client_packet_id; 
-
-	// сохранение текущего времени (32 BIT!)
 	
-
-	//Сжимаем данные без учета заголовка
-	//Возвращаемый размер в 8 раз больше реальных данных
-	uint32 PacketSize = zlib_compress(buff+FFXI_HEADER_SIZE, *buffsize-FFXI_HEADER_SIZE, PTempBuff, *buffsize, zlib_compress_table);
-
-	//Запись размера данных без учета заголовка
-	WBUFL(PTempBuff,(PacketSize+7)/8) = PacketSize;
-
-	//Расчет hash'a также без учета заголовка, но с учетом записанного выше размера данных
-	PacketSize = (PacketSize+7)/8+4;
-	uint8 hash[16];
-	md5((uint8*)PTempBuff, hash, PacketSize);
-	memcpy(PTempBuff+PacketSize, hash, 16);
-	PacketSize += 16;
-
-    if (PacketSize > 1800 )
-    {
-        ShowFatalError(CL_RED"%Memory manager: PTempBuff is overflowed (%u)\n" CL_RESET, PacketSize);
-    }
-
-	//making total packet
-	memcpy(buff+FFXI_HEADER_SIZE, PTempBuff, PacketSize);
-
-	uint32 CypherSize = (PacketSize/4)&-2;
-
-	blowfish_t* pbfkey = &map_session_data->blowfish;
-
-	for(uint32 j = 0; j < CypherSize; j += 2)
-	{
-		blowfish_encipher((uint32*)(buff)+j+7, (uint32*)(buff)+j+8, pbfkey->P, pbfkey->S[0]);
-	}
-		
-		 *buffsize = PacketSize+FFXI_HEADER_SIZE;
 		 
 	}
 	return 0;
@@ -725,11 +688,8 @@ int32 Close_Session_Clean_Map(uint32 tick, CTaskMgr::CTask* PTask)
 		map_session_data->PChar != NULL)					// crash occured when both server_packet_data & PChar were NULL
 	{
 		Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE charid = %u",map_session_data->PChar->id);
-        const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE charid = %u";
-        Sql_Query(SqlHandle,Query,map_session_data->PChar->id);
-		Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
-        Sql_Query(SqlHandle,Query,map_session_data->PChar->accid);
-		ShowDebug(CL_RED"PLAYERS ACCOUNT ID = %u GET\n"CL_RESET,map_session_data->PChar->accid);
+        
+		ShowMessage(CL_YELLOW"FINISHED MAP CLEAN FOR PLAYERS ACCOUNT ID = %u GET\n"CL_RESET,map_session_data->PChar->accid);
 		
 		uint64 port64 = map_session_data->client_port;
 		uint64 ipp	  = map_session_data->client_addr;
@@ -743,7 +703,7 @@ int32 Close_Session_Clean_Map(uint32 tick, CTaskMgr::CTask* PTask)
 		map_session_data = NULL;
 
 		map_session_list.erase(ipp);
-		ShowDebug(CL_CYAN"map_close_session: session closed\n" CL_RESET);
+		ShowMessage(CL_YELLOW"MAP CLEANED 100% OK\n" CL_RESET);
 		
 		return 0;
 	}
@@ -768,7 +728,7 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 		map_session_data_t* map_session_data = it->second;
 
         CCharEntity* PChar = map_session_data->PChar;
-		//ShowMessage(CL_YELLOW"CHECK MAP TIME %u\n"CL_RESET,checktime);
+		
         if ( checktime == 0 || checktime == 5 || 
 			checktime == 10 || checktime == 15 ||
 			checktime == 20 || checktime == 25 || 
@@ -776,120 +736,96 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 			checktime == 40 || checktime == 45 ||
 			checktime == 50 || checktime == 55)
         {
-			//ShowMessage(CL_YELLOW"WHERE IN CHECK TIME %u\n"CL_RESET,checktime);
-                           if (PChar != NULL)
-                           {
-							   if( PChar->is_zoning == -1)
-							   {
-								   ShowMessage(CL_GREEN"SAVE SYSTEM OK FOR PCHAR %s\n"CL_RESET,PChar->GetName());
-				               charutils::SaveCharSystem(PChar);
-							   }
-							   if (PChar != NULL && (PChar->nameflags.flags & FLAG_DC))
-			{
-            PChar->nameflags.flags &= ~FLAG_DC;
-			ShowMessage(CL_YELLOW"ELSE FLAGS  STATUS = %u FOR PCHAR %s\n"CL_RESET,PChar->nameflags.flags,PChar->GetName());
-            PChar->pushPacket(new CCharUpdatePacket(PChar));
-
-            if (PChar->status == STATUS_NORMAL)
+			if (PChar != NULL)
             {
-                PChar->status = STATUS_UPDATE;
-                PChar->loc.zone->SpawnPCs(PChar);
-            }
-            //charutils::SaveCharStats(PChar);
-			}
+					if( PChar->is_zoning == -1)//-1 PLAYER IS NOT ZONING RIGHT NOW
+					   {
+						charutils::SaveCharSystem(PChar);//SAVE CHARACTERS SYSTEM EVERY 5 SECONDS
+					   }
+							   
+			}     
                             
-                            }
-			                                if(map_session_data->Leftonmap == false)
-			                                   {
-			                                   int8 shutdown = 0;
-			                                   const char * Query = "SELECT shutdown FROM chars WHERE charid= '%u';";
-	                                           int32 ret3 = Sql_Query(SqlHandle,Query,PChar->id);
-			  
-
-	                                                      if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	                                                           {
-						
-				                                               shutdown =  Sql_GetUIntData(SqlHandle,0);
-					                                           ShowMessage(CL_YELLOW"SHUTDOWN STATUS = %u FOR PCHAR %s\n"CL_RESET,shutdown,PChar->GetName());
-					                                                              if(shutdown == 0 )
-					                                                                  {
-						
-
-				                                                                                             
-					                                                                                                    // if( PChar->is_zoning == -1)
-					                                                                                                         // {
-                                                                                                                             // ShowMessage(CL_YELLOW"SHUTDOWN CHECKING PLAYER STATUS MAY HAVE KILLED BOOT  = %u FOR PCHAR %s\n"CL_RESET,shutdown,PChar->GetName());
-				                                                                                                             // Query = "UPDATE accounts SET online ='0' WHERE id = %u";
-                                                                                                                             // Sql_Query(SqlHandle,Query,PChar->accid);
-				                                                                                                            //  Query = "UPDATE chars SET shutdown ='1' WHERE charid = %u";
-                                                                                                                            //  Sql_Query(SqlHandle,Query,PChar->id);
-					                                                                                                       //   }
-				                                                                                                 
-					                                                                   }
-		                                                                              if (shutdown == 1)
-		                                                                               {
-				//This needs clean up today check it out and clean it up. noticed it was not removing
-				//a party member when they logout and then a crash happened from trying to add item to a null party member.
-							   //also look at search server to make sure the invite get send from any where on map.
-			                                                                                        if (PChar != NULL)
-			                                                                                            {
-                                                                                                                 ShowDebug(CL_CYAN"map_cleanup: %s timed %u\n" CL_RESET, PChar->GetName(),time(NULL));
-								                                                                                 if(PChar->PParty != NULL && PChar->PParty->m_PAlliance != NULL && PChar->PParty->GetLeader() == PChar)
-																												 {
-						                                                                                                if(PChar->PParty->members.size() == 1)
-																														{
-							                                                                                                     if(PChar->PParty->m_PAlliance->partyList.size() == 2)
-																																 {
-								                                                                                                         PChar->PParty->m_PAlliance->dissolveAlliance();
-							                                                                                                     }
-																																 else if(PChar->PParty->m_PAlliance->partyList.size() == 3)
-																																 {
-								                                                                                                        PChar->PParty->m_PAlliance->removeParty(PChar->PParty);
-								                                                                                                  }
-						                                                                                                  }
-					                                                                                              }
-																												 
-								                                                                                          PChar->leavegame();
-                                                                                                                          map_session_data->shuttingDown = true;
-    		                                                                                                              CTaskMgr::getInstance()->AddTask(new CTaskMgr::CTask("close_session", gettick()+10, map_session_data, CTaskMgr::TASK_ONCE, Close_Session_Clean_Map));
-                                                                                                          } 
-			                                                                             }
-				                                               }
-				
-				                                              
-		                                       }
-											if(map_session_data->Leftonmap == true)
-						                                            {
-
-				                                                  ShowWarning(CL_YELLOW"map_cleanup: WHITHOUT CHAR timed out, session closed\n" CL_RESET);
-						                                          const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE sessions = %u";
-                                                                 Sql_Query(SqlHandle,Query,map_session_data);
-		                                                           Query = "UPDATE accounts SET  online = '0' WHERE sessions = %u";
-                                                                 Sql_Query(SqlHandle,Query,map_session_data);
-		                                                        Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE sessions = %u",map_session_data);
-
-				                                                    aFree(map_session_data->server_packet_data);
-				                                                      map_session_list.erase(it++);
-                                                                      delete map_session_data;
-				                                                        continue;
-			                                                        }
+			if(map_session_data->shuttingDown == false)//START SESSION SHUTDOWN STATUS
+			  {
+			   int8 shutdown = 0;
+			   const char * Query = "SELECT shutdown FROM chars WHERE charid= '%u';";
+	           int32 ret3 = Sql_Query(SqlHandle,Query,PChar->id);
+			   if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)//START DATABASE SELECTION
+	            {
+				shutdown =  Sql_GetUIntData(SqlHandle,0);
+				if (shutdown == 1)//START IF SHUTDOWN FROM DATABASE
+		         {
+				   if (PChar != NULL)
+			        {
+					  if(PChar->shutdown_status ==1)//THIS IS /logout normal command if this is not called they killed the boot.
+						{
+                         ShowMessage(CL_YELLOW"I AM CLEANING THE MAP NOW: %s timed %u\n" CL_RESET, PChar->GetName(),time(NULL));
+						  if(PChar->PParty != NULL && PChar->PParty->m_PAlliance != NULL && PChar->PParty->GetLeader() == PChar)
+							{
+						     if(PChar->PParty->members.size() == 1)
+							  {
+							   if(PChar->PParty->m_PAlliance->partyList.size() == 2)
+								 {
+								  PChar->PParty->m_PAlliance->dissolveAlliance();
+							     }
+								 else 
+									 {
+										   if(PChar->PParty->m_PAlliance->partyList.size() == 3)
+											{
+								              PChar->PParty->m_PAlliance->removeParty(PChar->PParty);
+								            }
+						             }
+					           }
+						    }
+						if (PChar->PParty != NULL)
+		                 {
+			             PChar->PParty->RemoveMember(PChar);
+		                 }
+						if (PChar->PLinkshell != NULL)
+                         {
+                        PChar->PLinkshell->DelMember(PChar);
+                         }
+		                if (PChar->PPet != NULL && PChar->PPet->objtype == TYPE_MOB)
+		                 {
+		                 petutils::DespawnPet(PChar);
+		                 }
+						SpawnIDList_t::iterator PC = PChar->SpawnPCList.find(PChar->id);
+                        if( !PChar->SpawnPCList.empty() )
+			              {
+							ShowMessage(CL_YELLOW"I CLEANED: MY CHAR SPAWN PC\n" CL_RESET);
+				          PChar->SpawnPCList.erase(PChar->id);
+						  PChar->pushPacket(new CCharPacket(PChar,ENTITY_DESPAWN));
+				          }
+						CTaskMgr::getInstance()->AddTask(new CTaskMgr::CTask("close_session", gettick()+10, map_session_data, CTaskMgr::TASK_ONCE, Close_Session_Clean_Map));
+						}
+					  else// ELSE THE PLAYER KILLED THE BOOT AND IS STILL ON THE MAP AND THE LOGIN SERVER CALLED THIS METHOD
+					  {
+						  //SHOULD BE TWO FUNCTION CALLED LEAVEGAME AND PACKET PARSER
+						  ShowMessage(CL_YELLOW"PLAYER KILLED THE BOOT DIFFERENT MAP CLEAN\n" CL_RESET);
+						  PChar->leavegame();
+						  PacketParser[0x00D](map_session_data, PChar, 0);
+					  }
+		              } 
+			        }//END IF SHUTDOWN FROM DATABASE
+				   }//END DATABASE SELECTION
+				}//END SESSION SHUTDOWN STATUS
+				if(map_session_data->shuttingDown == true)//THIS FUNCTION IS ONLY CALLED WHEN A PLAYER IS ON MAP AND THE SERVER RESTARTS
+				{
+				//THIS SHOULD NEVER HAPPEN BUT IF IT DOSE REASON BEING THE SERVER CRASHS AND IT WAS RESTARTED
+				//OR THE CLIENT LOST CONNECTION TO THE PHRAS FUNCTION
+                ShowWarning(CL_YELLOW"map_cleanup: WHITHOUT CHAR timed out, session closed\n" CL_RESET);
+				const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE sessions = %u";
+                Sql_Query(SqlHandle,Query,map_session_data);
+		        Query = "UPDATE accounts SET  online = '0' WHERE sessions = %u";
+                Sql_Query(SqlHandle,Query,map_session_data);
+		        Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE sessions = %u",map_session_data);
+                aFree(map_session_data->server_packet_data);
+				map_session_list.erase(it++);
+                delete map_session_data;
+				continue;
+			    }
 		}
-        else 
-        {
-			if (PChar != NULL && (PChar->nameflags.flags & FLAG_DC))
-			{
-            PChar->nameflags.flags &= ~FLAG_DC;
-			ShowMessage(CL_YELLOW"ELSE FLAGS  STATUS = %u FOR PCHAR %s\n"CL_RESET,PChar->nameflags.flags,PChar->GetName());
-            PChar->pushPacket(new CCharUpdatePacket(PChar));
-
-            if (PChar->status == STATUS_NORMAL)
-            {
-                PChar->status = STATUS_UPDATE;
-                PChar->loc.zone->SpawnPCs(PChar);
-            }
-            //charutils::SaveCharStats(PChar);
-			}
-        }
+        
 		++it;
 	}
 	return 0;

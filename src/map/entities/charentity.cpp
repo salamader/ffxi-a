@@ -363,126 +363,13 @@ void CCharEntity::setMijinGakure(bool isMijinGakure)
 
 int32 CCharEntity::leavegame()
 {
-	CCharEntity* PChar = (CCharEntity*)this;
-	 PChar->is_zoning = 1;
-	 
-	 
-	PChar->status = STATUS_SHUTDOWN;
-	/*
-	NULL IT ALL OUT 
-	*/
-	PChar->objtype		= TYPE_PC;
-	PChar->m_EcoSystem = SYSTEM_HUMANOID;
-
-	PChar->m_event.reset();
-
-	PChar->m_GMlevel = 0;
-	PChar->SetExpRates = 1;
-	PChar->first_login = 0;
 	
-	PChar->is_returning = 0;
-	PChar->is_inevent = 0;
-	PChar->is_dead = 0;
-	PChar->online_status = 0;
-	PChar->shutdown_status = 1;
-    PChar->accid = 0;
-	PChar->godmode = 0;
-	PChar->eventid = -1;
-	PChar->Rage_Mode = 0;
-	PChar->Is_Public_0_Or_Private_1 = 0; // PUBLIC ACCESSS
-	
-	PChar->Container->Clean();    
-	PChar->UContainer->Clean();	 
-
-	PChar->m_Inventory	 = NULL;
-	PChar->m_Mogsafe	 = NULL;
-	PChar->m_Storage	 = NULL;
-	PChar->m_Tempitems	 = NULL;
-	PChar->m_Moglocker	 = NULL;
-	PChar->m_Mogsatchel = NULL;
-	PChar->m_Mogsack	 = NULL;
-
-   PChar->m_AutomatonName = "";
-
-	
-
-	PChar->m_missionLog[4].current = 0; // MISSION_TOAU
-	PChar->m_missionLog[5].current = 0; // MISSION_WOTG
-
-	PChar->m_rangedDelay = 0;
-	PChar->m_copCurrent = 0;
-	PChar->m_acpCurrent = 0;
-	PChar->m_mkeCurrent = 0;
-	PChar->m_asaCurrent = 0;
-
-    PChar->m_Costum     = 0;
-    PChar->m_PVPFlag    = 0;
-	PChar->m_hasTractor = 0;
-	PChar->m_hasRaise	 = 0;
-    PChar->m_hasAutoTarget    = 1;
-	PChar->m_InsideRegionID   = 0;
-	PChar->m_LevelRestriction = 0;
-	PChar->m_insideBCNM = false;
-	PChar->m_lastBcnmTimePrompt = 0;
-	PChar->m_AHHistoryTimestamp = 0;
-	PChar->m_DeathTimestamp = 0;
-
-	PChar->m_EquipFlag  = 0;
-    PChar->m_EquipBlock = 0;
-	PChar->m_EquipSwap = false;
-
-
-	PChar->MeritMode = false;
-
-	PChar->m_isWeaponSkillKill = false;
-	PChar->m_isMijinGakure = false;
-
-    PChar->BazaarID.clean();
-    PChar->TradePending.clean();
-    PChar->InvitePending.clean();
-
-    PChar->PLinkshell = NULL;
-	PChar->PTreasurePool = NULL;
-	PChar->PWideScanTarget = NULL;
-
-    PChar->PRecastContainer = NULL;
-	PChar->PLatentEffectContainer = NULL;
-    
-	PChar->petZoningInfo.respawnPet = false;
-	PChar->petZoningInfo.petID = 0;
-	PChar->petZoningInfo.petType = PETTYPE_AVATAR;			// dummy data, the bool tells us to respawn if required
-	PChar->petZoningInfo.petHP = 0;
-	PChar->petZoningInfo.petTP = 0;
-	
-	/* ITS ALL NULL AND CLEAN SHOULD I ERASE??*/
-	if (PChar->PParty != NULL)
-		{
-			PChar->PParty->RemoveMember(PChar);
-		}
-        if (PChar->PLinkshell != NULL)
-        {
-            PChar->PLinkshell->DelMember(PChar);
-        }
-		if (PChar->PPet != NULL && PChar->PPet->objtype == TYPE_MOB)
-		{
-		    petutils::DespawnPet(PChar);
-		}
-			ShowDebug(CL_CYAN"map_cleanup: %s timed out, closing session\n" CL_RESET, PChar->GetName());
-			//charutils::SaveCharStats(PChar);
-	        charutils::SaveCharExp(PChar, PChar->GetMJob());
-	        //charutils::SaveCharPoints(PChar);
-            //charutils::SaveCharPosition(PChar);
-			PChar->status = STATUS_DISAPPEAR;
-			PChar->clearPacketList();
-	        PChar->pushPacket(new CServerIPPacket(PChar,1));
-	        ShowMessage(CL_YELLOW"SHUTDOWN CHECKING PLAYER STATUS MAY HAVE KILLED BOOT FOR PCHAR %s\n"CL_RESET,PChar->GetName());
-			const int8*	 Query = "UPDATE accounts SET online ='0' WHERE id = %u";
-            Sql_Query(SqlHandle,Query,PChar->accid);
-		    Query = "UPDATE chars SET shutdown ='1' WHERE charid = %u";
-            Sql_Query(SqlHandle,Query,PChar->id);
-				  PChar->loc.zone = NULL; 
-    
-	
-
+	ShowMessage(CL_YELLOW"I AM LEAVEING GAME %s\n"CL_RESET,this->GetName());
+	this->is_zoning = 1;
+	this->shutdown_status =1;
+	this->status = STATUS_SHUTDOWN;
+	this->clearPacketList();
+	this->pushPacket(new CServerIPPacket(this,1));
+   
 	return false;
 }

@@ -317,6 +317,8 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
         zoneutils::GetZone(PChar->loc.destination)->LoadPlayerZoneSettings(PChar);
 		//zoneutils::LoadPlayerMOBList(PChar->loc.destination);
 		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		PChar->pushPacket(new CCharSkillsPacket(PChar));
+		PChar->pushPacket(new CCharPacket(PChar,ENTITY_UPDATE));
         if(destination >= MAX_ZONEID){
  
             //ShowWarning("packet_system::SmallPacket0x00A player tried to enter zone out of range: %d\n", destination);
@@ -850,6 +852,10 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x00C(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	if(PChar->loc.zone == NULL)
+	{
+		return;
+	}
 	PChar->pushPacket(new CInventorySizePacket(PChar));
 	PChar->pushPacket(new CMenuConfigPacket(PChar));
 	PChar->pushPacket(new CCharJobsPacket(PChar));
@@ -907,10 +913,10 @@ void SmallPacket0x00C(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	ShowNotice(CL_BG_YELLOW"SmallPacket0x00D\n"CL_RESET);
+	ShowMessage(CL_YELLOW"I AM STILL CLEANING MAP\n"CL_RESET);
 	if(PChar != NULL)
 	{
-		ShowNotice(CL_BG_YELLOW"SmallPacket0x00D IM IN\n"CL_RESET);
+		ShowMessage(CL_YELLOW"I AM STILL CLEANING MAP AND IM IN\n"CL_RESET);
     session->blowfish.status = BLOWFISH_WAITING;
 
     PChar->TradePending.clean();
@@ -925,19 +931,11 @@ void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	{
     PChar->PRecastContainer->Del(RECAST_MAGIC);
 	}
-	//TO DO MAKE A TIMER TO SAVE EVERY 5 SECONDS THEN REMOVE ALL THE SAVES HAVE IT IN ONE LOCATION IN ONE FUNCTION
-    //charutils::SaveCharStats(PChar);
+	
 	
 	charutils::SaveCharExp(PChar, PChar->GetMJob());
-	//charutils::SaveCharPoints(PChar);
-    charutils::CheckEquipLogic(PChar, SCRIPT_CHANGEZONE, PChar->getZone());
-	if(PChar->is_zoning == 1 && PChar->loc.zone == NULL )
-	{
-		ShowNotice(CL_BG_YELLOW"WE HAVE LOGGED OUT WE WANT TO CLEAN THE MAP NOW\n"CL_RESET);
-		session->shuttingDown = true;//PLAYER HAS SHUT DOWN BY LOGOUT KILL OR BY SOME OTHER COMMAND 
-		session->Leftonmap = false; //FALSE NO DO NOT LEAVE ON MAP TRUE WOULD LEAVE PLAYER ON MAP
-		CTaskMgr::getInstance()->AddTask(new CTaskMgr::CTask("Close_Session_Clean_Map", gettick()+10, session, CTaskMgr::TASK_ONCE, Close_Session_Clean_Map));
-	}
+	charutils::CheckEquipLogic(PChar, SCRIPT_CHANGEZONE, PChar->getZone());
+	
     if (PChar->loc.zone != NULL)
     {
         PChar->loc.zone->DecreaseZoneCounter(PChar);
@@ -1012,9 +1010,9 @@ void SmallPacket0x011(map_session_data_t* session, CCharEntity* PChar, int8* dat
 void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
 	//ShowMessage(CL_GREEN"UPDATE: PLAYER SHUTDOWN STATUS =%u \n"CL_RESET,PChar->shutdown_status);
-	if (PChar->shutdown_status == 0)
+	if (PChar->shutdown_status == 0 && PChar->loc.zone != NULL)
 	{
-		ShowMessage(CL_GREEN"UPDATE: IN =%u \n"CL_RESET,PChar->shutdown_status);
+		//ShowMessage(CL_GREEN"UPDATE: IN =%u \n"CL_RESET,PChar->shutdown_status);
 		
 		
         
@@ -1931,7 +1929,7 @@ void SmallPacket0x03A(map_session_data_t* session, CCharEntity* PChar, int8* dat
         {
             ShowWarning(CL_YELLOW"lightluggage detected: <%s> will be removed from server\n" CL_RESET, PChar->GetName());
 			PChar->is_zoning = 1;
-	        PChar->loc.zone = NULL;
+	       
 			PChar->leavegame();
         }
         return;
@@ -4752,7 +4750,7 @@ void SmallPacket0x0E7(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	{
 		//TO DO MAKE A FUNCTION TO EXIT THE GAME IN PLAYERS DUPLCATE CODE IN MANY LOCATIONS
 		PChar->is_zoning = 1;
-	    PChar->loc.zone = NULL;
+	   
 		PChar->leavegame();
 	}
 	else
@@ -5070,6 +5068,7 @@ void SmallPacket0x0FB(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x100(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowNotice(CL_BG_YELLOW"SmallPacket0x100\n"CL_RESET);
 	if (PChar->loc.zone->CanUseMisc(MISC_MOGMENU))
 	{
 		uint8 mjob = RBUFB(data,(0x04));

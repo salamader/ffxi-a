@@ -3574,7 +3574,7 @@ inline int32 CLuaBaseEntity::costume(lua_State *L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+    /*CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
     if( !lua_isnil(L,-1) && lua_isnumber(L,-1) )
     {
@@ -3590,7 +3590,7 @@ inline int32 CLuaBaseEntity::costume(lua_State *L)
         }
         return 0;
 	}
-    lua_pushinteger(L, PChar->m_Costum);
+    lua_pushinteger(L, PChar->m_Costum);*/
     return 1;
 }
 
