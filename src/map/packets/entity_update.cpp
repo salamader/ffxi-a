@@ -99,8 +99,8 @@ CEntityUpdatePacket::CEntityUpdatePacket(CBaseEntity* PEntity, ENTITYUPDATE type
 				case TYPE_NPC:
 				{
 					WBUFB(data,(0x1E)-4) = 0x64;
-					//WBUFL(data,(0x21)-4) = ((CNpcEntity*)PEntity)->unknown;
-                   // WBUFB(data,(0x27)-4) = ((CNpcEntity*)PEntity)->name_prefix;     // gender and something else
+					WBUFL(data,(0x21)-4) = ((CNpcEntity*)PEntity)->unknown;
+                    WBUFB(data,(0x27)-4) = ((CNpcEntity*)PEntity)->name_prefix;     // gender and something else
 				}
 				break;
 				case TYPE_MOB:

@@ -579,6 +579,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	
     
 	                    PChar->leavegame();
+						//PacketParser[0x00D](session, PChar, 0);
 	
 	
         }
@@ -4737,48 +4738,47 @@ void SmallPacket0x0E2(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0E7(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	if (PChar->status != STATUS_NORMAL && PChar->godmode == 0)
-		return;
-	/*
-	FLAG_GM_SUPPORT     = 0x04000000,
-    FLAG_GM_SENIOR      = 0x05000000,
-    FLAG_GM_LEAD        = 0x06000000,
-    FLAG_GM_PRODUCER    = 0x07000000,
+	ShowMessage(CL_YELLOW"SmallPacket0x0E7: PLAYER LOGOUT\n"CL_RESET);
 	
-	*/
+	
 	if (PChar->getZone() == 0 ||PChar->godmode == 1)
 	{
+		ShowMessage(CL_YELLOW"SmallPacket0x0E7: RETURN DO NOTHING\n"CL_RESET);
 		//TO DO MAKE A FUNCTION TO EXIT THE GAME IN PLAYERS DUPLCATE CODE IN MANY LOCATIONS
 		PChar->is_zoning = 1;
 	   
 		PChar->leavegame();
 	}
-	else
+	
 	if (PChar->animation == ANIMATION_NONE)
 	{
+		ShowMessage(CL_YELLOW"SmallPacket0x0E7: ANIMATION_NONE\n"CL_RESET);
 		uint8 ExitType = (RBUFB(data,(0x06)) == 1 ? 7 : 35);
 
-		if (PChar->PPet == NULL ||
-		   (PChar->PPet->m_EcoSystem != SYSTEM_AVATAR &&
-			PChar->PPet->m_EcoSystem != SYSTEM_ELEMENTAL))
+		if (PChar->PPet == NULL ||(PChar->PPet->m_EcoSystem != SYSTEM_AVATAR && PChar->PPet->m_EcoSystem != SYSTEM_ELEMENTAL))
 		{
 			PChar->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_HEALING,0,0,10,0));
 		}
 		PChar->status = STATUS_UPDATE;
 		PChar->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_LEAVEGAME,0,ExitType,5,0));
 	}
-	else if (PChar->animation == ANIMATION_HEALING)
+	
+	if (PChar->animation == ANIMATION_HEALING)
 	{
+		ShowMessage(CL_YELLOW"SmallPacket0x0E7: ANIMATION_HEALING\n"CL_RESET);
 		if (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_LEAVEGAME))
 		{
 			PChar->status = STATUS_UPDATE;
 			PChar->StatusEffectContainer->DelStatusEffect(EFFECT_HEALING);
-		} else {
+		} 
+		else 
+		{
 			uint8 ExitType = (RBUFB(data,(0x06)) == 1 ? 7 : 35);
 
 			PChar->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_LEAVEGAME,0,ExitType,5,0));
 		}
 	}
+	
 	return;
 }
 
@@ -4791,8 +4791,7 @@ void SmallPacket0x0E7(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0E8(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	if (PChar->status != STATUS_NORMAL && PChar->godmode == 0)
-		return;
+	ShowMessage(CL_YELLOW"SmallPacket0x0E8: ANIMATION_HEALING RESTING\n"CL_RESET);
 
 	switch (PChar->animation)
 	{

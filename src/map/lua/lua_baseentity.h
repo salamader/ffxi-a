@@ -497,11 +497,17 @@ public:
 	int32 add_Key_Item(lua_State*);	
 	int32 WallHack(lua_State*);	
 	int32 Get_Pos(lua_State*);
-	int32 Get_Target(lua_State*);
+	
 	int32 ElevatorUp(lua_State* L);
 	int32 ElevatorDown(lua_State* L);
 	int32 getnpctext(lua_State* L);
 	int32 getactionmessage(lua_State* L);
+	int32 gettarget(lua_State* L);
+	int32 moblist(lua_State* L);
+	int32 mobmove(lua_State* L);
+	int32 setmobpos(lua_State* L);
+	int32 npcmove(lua_State* L);
+	int32 setnpcpos(lua_State* L);
 };
 
 #endif

@@ -8681,6 +8681,308 @@ inline int32 CLuaBaseEntity::add_Item(lua_State *L)
 	return true;
 	
 }
+inline int32 CLuaBaseEntity::moblist(lua_State* L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+
+	
+	char buf[110];
+        sprintf(buf,"MOBLIST COMMAND");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	
+	return 0;
+}
+inline int32 CLuaBaseEntity::mobmove(lua_State* L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+
+	
+	char buf[110];
+        sprintf(buf,"MOB MOVE COMMAND");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	
+	return 0;
+}
+inline int32 CLuaBaseEntity::npcmove(lua_State* L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+
+	
+	char buf[110];
+        sprintf(buf,"NPC MOVE COMMAND");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	
+	return 0;
+}
+inline int32 CLuaBaseEntity::setmobpos(lua_State* L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	CNpcEntity* PMob = (CNpcEntity*)PChar->loc.zone->GetEntity(PChar->m_TargID, TYPE_MOB);
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	if(PMob != NULL)
+	{
+	if(PMob->objtype == TYPE_MOB)
+	{
+	PMob->loc.p.x = PChar->loc.p.x;
+	PMob->loc.p.y = PChar->loc.p.y;
+	PMob->loc.p.z = PChar->loc.p.z;
+	PMob->loc.p.rotation = PChar->loc.p.rotation;
+	PChar->pushPacket(new CEntityUpdatePacket(PMob, ENTITY_UPDATE));
+	
+	char buf[110];
+        sprintf(buf,"SET MOB POS COMMAND");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	}
+	else
+	{
+		char buf8[110];
+        sprintf(buf8,"Mob Target Is Not type mob: %u",PMob->objtype);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf8)));
+		return false;
+	}
+	
+	return false;
+	}
+	char buf8[110];
+        sprintf(buf8,"Wasn't Able To Find Mob Target");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf8)));
+	return false;
+}
+inline int32 CLuaBaseEntity::setnpcpos(lua_State* L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	CNpcEntity* PNpc = (CNpcEntity*)PChar->loc.zone->GetEntity(PChar->m_TargID, TYPE_NPC);
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	if(PNpc != NULL)
+	{
+	if(PNpc->objtype == TYPE_NPC)
+	{
+	PNpc->loc.p.x = PChar->loc.p.x;
+	PNpc->loc.p.y = PChar->loc.p.y;
+	PNpc->loc.p.z = PChar->loc.p.z;
+	PNpc->loc.p.rotation = PChar->loc.p.rotation;
+	PChar->pushPacket(new CEntityUpdatePacket(PNpc, ENTITY_UPDATE));
+	
+	char buf[110];
+        sprintf(buf,"SET NPC POS COMMAND");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	}
+	else
+	{
+		char buf8[110];
+        sprintf(buf8,"Npc Target Is Not type npc: %u",PNpc->objtype);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf8)));
+		return false;
+	}
+	
+	return false;
+	}
+	char buf8[110];
+        sprintf(buf8,"Wasn't Able To Find Npc Target");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf8)));
+	return false;
+}
+inline int32 CLuaBaseEntity::gettarget(lua_State* L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	CMobEntity* PMob = (CMobEntity*)PChar->loc.zone->GetEntity(PChar->m_TargID, TYPE_MOB);
+	CPetEntity* PPet = (CPetEntity*)PChar->loc.zone->GetEntity(PChar->m_TargID, TYPE_PET);
+    CNpcEntity* PNpc = (CNpcEntity*)PChar->loc.zone->GetEntity(PChar->m_TargID, TYPE_NPC);
+	CCharEntity* PChars = (CCharEntity*)PChar->loc.zone->GetEntity(PChar->m_TargID, TYPE_PC);
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	
+	if(PMob != NULL)
+	{
+		if(PMob->objtype ==TYPE_MOB)
+		{
+	    char buf[110];
+        sprintf(buf,"Getting Mob Target");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	    char buf1[110];
+        sprintf(buf1,"TargetID: %u",PMob->m_TargID);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+		char buf2[110];
+        sprintf(buf2,"RealID: %u",PMob->id);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
+		char buf3[110];
+        sprintf(buf3,"Name: %s",PMob->GetName());
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
+		char buf4[110];
+        sprintf(buf4,"x: %0.3f",PMob->loc.p.x);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
+		char buf5[110];
+        sprintf(buf5,"y: %0.3f",PMob->loc.p.y);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf5)));
+		char buf6[110];
+        sprintf(buf6,"z: %0.3f",PMob->loc.p.z);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf6)));
+		char buf7[110];
+        sprintf(buf7,"rot: %u",PMob->loc.p.rotation);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf7)));
+		char buf8[110];
+        sprintf(buf8,"zone: %u",PMob->loc.destination);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf8)));
+		return false; 
+		}
+		else
+		{
+         char buf8[110];
+        sprintf(buf8,"Mob Target Is Not type mob: %u",PMob->objtype);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf8)));
+		return false; 
+		}
+	}
+	if(PNpc != NULL)
+	{
+		if(PNpc->objtype ==TYPE_NPC)
+		{
+	    char buf[110];
+        sprintf(buf,"Getting Npc Target");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	    char buf1[110];
+        sprintf(buf1,"TargetID: %u",PNpc->m_TargID);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+		char buf2[110];
+        sprintf(buf2,"RealID: %u",PNpc->id);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
+		char buf3[110];
+        sprintf(buf3,"Name: %s",PNpc->GetName());
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
+		char buf4[110];
+        sprintf(buf4,"x: %0.3f",PNpc->loc.p.x);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
+		char buf5[110];
+        sprintf(buf5,"y: %0.3f",PNpc->loc.p.y);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf5)));
+		char buf6[110];
+        sprintf(buf6,"z: %0.3f",PNpc->loc.p.z);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf6)));
+		char buf7[110];
+        sprintf(buf7,"rot: %u",PNpc->loc.p.rotation);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf7)));
+		char buf8[110];
+        sprintf(buf8,"zone: %u",PNpc->loc.destination);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf8)));
+		return false; 
+		}
+		else
+		{
+         char buf8[110];
+        sprintf(buf8,"Npc Target Is Not type npc: %u",PNpc->objtype);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf8)));
+		return false; 
+		}
+	}
+	if(PChars != NULL)
+	{
+		if(PChars->objtype ==TYPE_PC)
+		{
+	    char buf[110];
+        sprintf(buf,"Getting PChar Target");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	    char buf1[110];
+        sprintf(buf1,"TargetID: %u",PChars->m_TargID);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+		char buf2[110];
+        sprintf(buf2,"RealID: %u",PChars->id);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
+		char buf3[110];
+        sprintf(buf3,"Name: %s",PChars->GetName());
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
+		char buf4[110];
+        sprintf(buf4,"x: %0.3f",PChars->loc.p.x);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
+		char buf5[110];
+        sprintf(buf5,"y: %0.3f",PChars->loc.p.y);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf5)));
+		char buf6[110];
+        sprintf(buf6,"z: %0.3f",PChars->loc.p.z);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf6)));
+		char buf7[110];
+        sprintf(buf7,"rot: %u",PChars->loc.p.rotation);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf7)));
+		char buf8[110];
+        sprintf(buf8,"zone: %u",PChars->loc.destination);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf8)));
+		return false; 
+		}
+		else
+		{
+         char buf8[110];
+        sprintf(buf8,"PChar Target Is Not type pc: %u",PChars->objtype);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf8)));
+		return false; 
+		}
+	}
+		
+	
+	return false;  
+}
 inline int32 CLuaBaseEntity::getactionmessage(lua_State* L)
 {
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
@@ -9051,7 +9353,7 @@ return false;
 inline int32 CLuaBaseEntity::GearSets(lua_State *L)
 {
     CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-	CMobEntity* PMob = new CMobEntity;
+	
 	
 	if(m_PBaseEntity == NULL)
 	{
@@ -9099,7 +9401,7 @@ inline int32 CLuaBaseEntity::GearSets(lua_State *L)
 inline int32 CLuaBaseEntity::Morph(lua_State *L)
 {
     CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-	CMobEntity* PMob = new CMobEntity;
+	
 	
 	if(m_PBaseEntity == NULL)
 	{
@@ -9232,7 +9534,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".getpos .addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
+	sprintf(buf3,".gettarget .getpos .addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	return true;
 	}
@@ -9248,7 +9550,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".getpos .addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
+	sprintf(buf3,".gettarget .getpos .addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	
 	return true;
@@ -9259,16 +9561,16 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf,"Lgm Commands." );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	char buf1[110];
-	sprintf(buf1,"?hello #server .com .ah .gm .morph .demorph .additem .gearset .setspeed" );
+	sprintf(buf1,"?hello #server .com .ah .gm .morph .demorph .additem .gearset .setspeed .gettarget" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 	char buf2[110];
-	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
+	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil .addkeyitem " );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".addkeyitem .getpos .addmaps .leavegame .homepoint .gotonpc .event" );
+	sprintf(buf3,".getactionmessage .getnpctext .getpos .addmaps .leavegame .homepoint .gotonpc .event" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	char buf4[110];
-	sprintf(buf4,".getnpctext .getactionmessage .npclist .wallhack .zone .zonelist" );
+	sprintf(buf4,".npcmove .setnpcpos .npclist .setmobpos .mobmove .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	return true;
 	}
@@ -9278,16 +9580,16 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf,"Server Owner Commands." );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	char buf1[110];
-	sprintf(buf1,"?hello #server .com .ah .gm .morph .demorph .additem .gearset .setspeed" );
+	sprintf(buf1,"?hello #server .com .ah .gm .morph .demorph .additem .gearset .setspeed .gettarget" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 	char buf2[110];
-	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
+	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil .addkeyitem " );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".addkeyitem .getpos .addmaps .leavegame .homepoint .gotonpc .event" );
+	sprintf(buf3,".getactionmessage .getnpctext .getpos .addmaps .leavegame .homepoint .gotonpc .event" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	char buf4[110];
-	sprintf(buf4,".getnpctext .getactionmessage .npclist .wallhack .zone .zonelist" );
+	sprintf(buf4,".npcmove .setnpcpos .npclist .setmobpos .mobmove .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	
 	return true;
@@ -9399,29 +9701,7 @@ inline int32 CLuaBaseEntity::ElevatorDown(lua_State* L)
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 	return 0;
 }
-inline int32 CLuaBaseEntity::Get_Target(lua_State *L)
-{
-	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 
-	if(m_PBaseEntity == NULL)
-	{
-		
-		return false;
-	}
-	if(m_PBaseEntity->objtype != TYPE_PC)
-	{
-		
-		return false;
-	}
-	
-
-	
-	
-	char buf1[110];
-	sprintf(buf1,"X = %0.3f Y = %0.3f Z = %0.3f R = %u Zone = %u ",PChar->loc.p.x,PChar->loc.p.y,PChar->loc.p.z,PChar->loc.p.rotation,PChar->loc.destination );
-	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
-	return false;
-}
 inline int32 CLuaBaseEntity::Get_Pos(lua_State *L)
 {
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
@@ -9916,12 +10196,18 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,add_Key_Item),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,WallHack),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,Get_Pos),
-	LUNAR_DECLARE_METHOD(CLuaBaseEntity,Get_Target),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,ElevatorUp),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,ElevatorDown),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,gotoNpc),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,NpcList),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,getnpctext),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,getactionmessage),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,gettarget),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,moblist),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,mobmove),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,setmobpos),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,npcmove),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,setnpcpos),
+	
 	{NULL,NULL}
 };
