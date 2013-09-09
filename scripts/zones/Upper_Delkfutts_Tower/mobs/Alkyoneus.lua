@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: Den of Rancor
--- NPC:  HakuTaku
+-- Area: Upper Delkfutt's Tower
+-- NPC:  Alkyoneus
 -----------------------------------
 
 -----------------------------------

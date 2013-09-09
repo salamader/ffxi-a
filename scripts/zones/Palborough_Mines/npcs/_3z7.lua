@@ -19,8 +19,8 @@ end;
 -- onTrigger Action
 -----------------------------------
 
-function onTrigger(player)
-	player:ElevatorDown(player,22);
+function onTrigger(player,npc)
+	RunElevator(22);
 end;
 
 -----------------------------------
