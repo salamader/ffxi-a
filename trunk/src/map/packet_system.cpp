@@ -534,8 +534,10 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 						  PChar->loc.destination = 230;
 						 
 
-						 Query = "UPDATE chars SET pos_prevzone ='230', pos_zone ='230', first_login ='0' WHERE charid = %u;";
-                         Sql_Query(SqlHandle, Query, PChar->id);
+						 Query = "UPDATE chars \
+                            SET pos_rot = '224', pos_x = '-96', pos_y = '-1', pos_z = '-40'  ,pos_prevzone = '230',pos_zone = '230'\
+							WHERE charid = %u;";
+                        Sql_Query(SqlHandle, Query, PChar->id);
 						
                       // return;
 			           
@@ -552,8 +554,10 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 						  PChar->loc.p.rotation = 213;
 						  PChar->loc.destination = 234;
 						 
-						 Query = "UPDATE chars SET pos_prevzone ='234', pos_zone ='234', first_login ='0' WHERE charid = %u;";
-                       Sql_Query(SqlHandle, Query,PChar->id);
+						Query = "UPDATE chars \
+                            SET pos_rot = '213', pos_x = '-45', pos_y = '-0', pos_z = '25'  ,pos_prevzone = '234',pos_zone = '234'\
+							WHERE charid = %u;";
+                        Sql_Query(SqlHandle, Query, PChar->id);
 					
 					 // return;
 					  
@@ -570,16 +574,18 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 						  PChar->loc.p.rotation = 48;
 						  PChar->loc.destination = 240;
 						  
-						Query = "UPDATE chars SET pos_prevzone ='240', pos_zone ='240', first_login ='0' WHERE charid = %u;";
+						Query = "UPDATE chars \
+                            SET pos_rot = '48', pos_x = '-120', pos_y = '-6', pos_z = '175'  ,pos_prevzone = '240',pos_zone = '240'\
+							WHERE charid = %u;";
                         Sql_Query(SqlHandle, Query, PChar->id);
 						
 					 // return;
 					  }//2
 
 	
-    
+    //I ZONED IN TO MOGHOUSE AND THIS IS WHAT HAPPENS THEN WHEN I LOGIN BACK IN IT SHOWED I WAS STILL ON MAP SO DO A FULL CLEAN UP IF THIS HAPPENS
 	                    PChar->leavegame();
-						//PacketParser[0x00D](session, PChar, 0);
+						PacketParser[0x00D](session, PChar, 0);
 	
 	
         }
@@ -1188,7 +1194,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		case 0x03: // spellcast
 		{
 			uint16 SpellID = RBUFW(data,(0x0C));
-
+			ShowWarning("SPELL CAST ID %u\n",SpellID);
 			PChar->PBattleAI->SetCurrentSpell(SpellID);
 			PChar->PBattleAI->SetCurrentAction(ACTION_MAGIC_START, TargID);
 			PChar->PBattleAI->CheckCurrentAction(gettick());
@@ -4207,7 +4213,7 @@ void SmallPacket0x0BE(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					PChar->PMeritPoints->SaveMeritPoints(PChar->id, false);
 
 
-
+					ShowDebug("BUILDING CHAR SKILL TABLE 18\n");
 					charutils::BuildingCharSkillsTable(PChar);
 					charutils::CalculateStats(PChar);
 					charutils::CheckValidEquipment(PChar);
@@ -5111,7 +5117,7 @@ void SmallPacket0x100(map_session_data_t* session, CCharEntity* PChar, int8* dat
             }
 
 		}
-
+		ShowDebug("BUILDING CHAR SKILL TABLE 1\n");
 		charutils::BuildingCharSkillsTable(PChar);
 		charutils::CalculateStats(PChar);
         charutils::BuildingCharTraitsTable(PChar);

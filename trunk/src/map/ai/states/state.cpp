@@ -69,6 +69,7 @@ STATESTATUS CState::Update(uint32 tick)
 
 bool CState::CheckValidTarget(CBattleEntity* PTarget)
 {
+	
 	if(PTarget == NULL)
 	{
 		return false;
@@ -84,6 +85,7 @@ bool CState::CheckValidTarget(CBattleEntity* PTarget)
     // pc only checks
     if(m_PEntity->objtype == TYPE_PC)
     {
+		ShowWarning("CheckValidTarget  SPELL TARGET %u \n",PTarget);
         // assert you cannot target pets for anything
         if(PTarget->PMaster != NULL && PTarget->PMaster->objtype == TYPE_PC)
         {

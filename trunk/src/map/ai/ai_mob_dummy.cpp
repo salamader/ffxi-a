@@ -123,6 +123,8 @@ void CAIMobDummy::CheckCurrentAction(uint32 tick)
 
 void CAIMobDummy::ActionRoaming()
 {
+	uint32 checktime = CVanaTime::getInstance()->getSysSecond();
+	
 	// If there's someone on our enmity list, go from roaming -> engaging
 	if (m_PMob->PEnmityContainer->GetHighestEnmity() != NULL && !(m_PMob->m_roamFlags & ROAMFLAG_IGNORE))
 	{
@@ -152,6 +154,7 @@ void CAIMobDummy::ActionRoaming()
 
 	// wait my time
 	if(m_Tick - m_LastWaitTime < m_WaitTime){
+		
 		m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
 		return;
 	}
@@ -232,14 +235,7 @@ void CAIMobDummy::ActionRoaming()
 
 				m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
 			}
-			else if(m_PMob->m_roamFlags & ROAMFLAG_EVENT)
-			{
-				// allow custom event action
-				luautils::OnMobRoamAction(m_PMob);
-				m_LastActionTime = m_Tick;
-
-				m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
-			}
+			
 			else if(m_PMob->CanRoam() && m_PPathFind->RoamAround(m_PMob->m_SpawnPoint, m_PMob->m_roamFlags))
 			{
 
@@ -268,12 +264,18 @@ void CAIMobDummy::ActionRoaming()
 		}
 
 	}
-
-	// this is called way too often and consumes too many resources
-	// if ((m_Tick - m_SpawnTime) % 3000 <= 400)
-	// {
-	// 	luautils::OnMobRoam(m_PMob);
-	// }
+	
+	if(checktime == 10|| checktime == 30 || checktime == 50)
+	{
+	//ShowMessage(CL_YELLOW"ROAMING CHECK TIME %u\n" CL_RESET, checktime);
+	 	luautils::OnMobRoam(m_PMob);
+		luautils::OnMobRoamAction(m_PMob);
+		
+		
+		
+		m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
+	}
+	
 }
 
 /************************************************************************

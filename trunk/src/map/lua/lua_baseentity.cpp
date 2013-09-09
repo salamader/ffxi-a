@@ -1623,7 +1623,7 @@ inline int32 CLuaBaseEntity::setSkillRank(lua_State *L)
 	PChar->WorkingSkills.skill[skillID] += 1;
 	PChar->RealSkills.rank[skillID] = newrank;
 	//PChar->RealSkills.skill[skillID] += 1;
-
+	ShowDebug("BUILDING CHAR SKILL TABLE 7\n");
 	charutils::BuildingCharSkillsTable(PChar);
 	charutils::SaveCharSkills(PChar, skillID);
 	PChar->pushPacket(new CCharSkillsPacket(PChar));
@@ -2017,6 +2017,7 @@ inline int32 CLuaBaseEntity::levelRestriction(lua_State* L)
 			PChar->SetSLevel(PChar->jobs.job[PChar->GetSJob()]);
 
             blueutils::ValidateBlueSpells(PChar);
+			ShowDebug("BUILDING CHAR SKILL TABLE 8\n");
 			charutils::BuildingCharSkillsTable(PChar);
 			charutils::CalculateStats(PChar);
 			charutils::BuildingCharTraitsTable(PChar);
@@ -2051,7 +2052,7 @@ inline int32 CLuaBaseEntity::sjRestriction(lua_State* L)
 		PChar->SetSJob(job);
 		PChar->SetSLevel(PChar->jobs.job[PChar->GetSJob()]);
 	}
-
+	ShowDebug("BUILDING CHAR SKILL TABLE 9\n");
 	charutils::BuildingCharSkillsTable(PChar);
 	charutils::CalculateStats(PChar);
 	charutils::BuildingCharAbilityTable(PChar);
@@ -4453,6 +4454,7 @@ inline int32 CLuaBaseEntity::changeJob(lua_State *L)
     {
         blueutils::UnequipAllBlueSpells(PChar);
     }
+	ShowDebug("BUILDING CHAR SKILL TABLE 10\n");
     charutils::BuildingCharSkillsTable(PChar);
 	charutils::CalculateStats(PChar);
     charutils::CheckValidEquipment(PChar);
@@ -4536,7 +4538,7 @@ inline int32 CLuaBaseEntity::setsLevel(lua_State *L)
 	PChar->jobs.job[PChar->GetSJob()] = (uint8)lua_tointeger(L,1);
 	PChar->SetSLevel(PChar->jobs.job[PChar->GetSJob()]);
 
-
+	ShowDebug("BUILDING CHAR SKILL TABLE 11\n");
     charutils::BuildingCharSkillsTable(PChar);
 	charutils::CalculateStats(PChar);
     charutils::CheckValidEquipment(PChar);
@@ -4585,7 +4587,7 @@ inline int32 CLuaBaseEntity::setLevel(lua_State *L)
 	PChar->SetSLevel(PChar->jobs.job[PChar->GetSJob()]);
 
     blueutils::ValidateBlueSpells(PChar);
-
+	ShowDebug("BUILDING CHAR SKILL TABLE 12\n");
 	charutils::CalculateStats(PChar);
     charutils::CheckValidEquipment(PChar);
     charutils::BuildingCharSkillsTable(PChar);
@@ -7149,7 +7151,7 @@ inline int32 CLuaBaseEntity::recalculateSkillsTable(lua_State* L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC)
 
     CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-
+	ShowDebug("BUILDING CHAR SKILL TABLE 13\n");
     charutils::BuildingCharSkillsTable(PChar);
     charutils::BuildingCharWeaponSkills(PChar);
 
@@ -7980,21 +7982,15 @@ inline int32 CLuaBaseEntity::change_Job(lua_State *L)
 	
 		return false;
 	 }
-	  if(lua_tointeger(L,1) > 20 || lua_tointeger(L,1) < 1)
+	  if(lua_tointeger(L,1) > 22 || lua_tointeger(L,1) < 1)
 	{
 		
 		char buf[110];
-        sprintf(buf,"Command Example: .setmainjob 1-20");
+        sprintf(buf,"Command Example: .setmainjob 1-22");
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 			return false;
 	}
-	 if(PChar->GetSJob() == PChar->GetMJob() ||PChar->GetMJob() == PChar->GetSJob())
-	 {
-		 char buf[110];
-        sprintf(buf,"Unable To Change Your Main Job To Sub Job!");
-	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
-		 return false;
-	 }  
+	   
 	      
 
 	
@@ -8003,7 +7999,7 @@ inline int32 CLuaBaseEntity::change_Job(lua_State *L)
 
 	PChar->jobs.unlocked |= (1 << (uint8)lua_tointeger(L,1));
 	PChar->SetMJob((uint8)lua_tointeger(L,1));
-
+	ShowDebug("BUILDING CHAR SKILL TABLE 14\n");
     charutils::BuildingCharSkillsTable(PChar);
 	charutils::CalculateStats(PChar);
     charutils::CheckValidEquipment(PChar);
@@ -8015,10 +8011,7 @@ inline int32 CLuaBaseEntity::change_Job(lua_State *L)
     PChar->health.hp = PChar->GetMaxHP();
     PChar->health.mp = PChar->GetMaxMP();
 
-    //charutils::SaveCharStats(PChar);
-    //charutils::SaveCharJob(PChar, PChar->GetMJob());
-    //charutils::SaveCharExp(PChar, PChar->GetMJob());
-	//charutils::SaveCharPoints(PChar);
+    
 	charutils::UpdateHealth(PChar);
 
     PChar->pushPacket(new CCharJobsPacket(PChar));
@@ -8029,7 +8022,7 @@ inline int32 CLuaBaseEntity::change_Job(lua_State *L)
     PChar->pushPacket(new CMenuMeritPacket(PChar));
     PChar->pushPacket(new CCharSyncPacket(PChar));
 	
-	int32 n = (uint8)lua_tointeger(L,1);
+	int32 n = lua_tointeger(L,1);
 	string_t name= "none";
 	if(n==1)
 	{
@@ -8110,6 +8103,14 @@ inline int32 CLuaBaseEntity::change_Job(lua_State *L)
 	if(n==20)
 	{
 		name ="Scholar";
+	}
+	if(n==21)
+	{
+		name ="Geo";
+	}
+	if(n==22)
+	{
+		name ="Run";
 	}
 	
         char buf[110];
@@ -8147,7 +8148,7 @@ inline int32 CLuaBaseEntity::change_sub_Job(lua_State *L)
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 		return false;
 	 }
-	 if(lua_tointeger(L,1) > 20 || lua_tointeger(L,1) < 1)
+	 if(lua_tointeger(L,1) > 22 || lua_tointeger(L,1) < 1)
 	{
 		
 		char buf[110];
@@ -8156,18 +8157,12 @@ inline int32 CLuaBaseEntity::change_sub_Job(lua_State *L)
 			return false;
 	}
 
-	if(PChar->GetSJob() == PChar->GetMJob() ||PChar->GetMJob() == PChar->GetSJob())
-	 {
-		 char buf[110];
-        sprintf(buf,"Unable To Change Your Sub Job To Main Job!");
-	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
-		 return false;
-	 }
+	
 
 	PChar->jobs.unlocked |= (1 << (uint8)lua_tointeger(L,1));
 	PChar->SetSJob((uint8)lua_tointeger(L,1));
 
-
+	ShowDebug("BUILDING CHAR SKILL TABLE 15\n");
     charutils::BuildingCharSkillsTable(PChar);
 	charutils::CalculateStats(PChar);
     charutils::CheckValidEquipment(PChar);
@@ -8179,9 +8174,7 @@ inline int32 CLuaBaseEntity::change_sub_Job(lua_State *L)
     PChar->health.hp = PChar->GetMaxHP();
     PChar->health.mp = PChar->GetMaxMP();
 
-   //charutils::SaveCharStats(PChar);
-  // charutils::SaveCharJob(PChar, PChar->GetMJob());
-  // charutils::SaveCharExp(PChar, PChar->GetMJob());
+   
 	charutils::UpdateHealth(PChar);
 
     PChar->pushPacket(new CCharJobsPacket(PChar));
@@ -8193,7 +8186,7 @@ inline int32 CLuaBaseEntity::change_sub_Job(lua_State *L)
     PChar->pushPacket(new CCharSyncPacket(PChar));
 	
 	
-	int32 n = (uint8)lua_tointeger(L,1);
+	int32 n = lua_tointeger(L,1);
 	string_t name= "none";
 	if(n==1)
 	{
@@ -8274,6 +8267,14 @@ inline int32 CLuaBaseEntity::change_sub_Job(lua_State *L)
 	if(n==20)
 	{
 		name ="Scholar";
+	}
+	if(n==21)
+	{
+		name ="Geo";
+	}
+	if(n==22)
+	{
+		name ="Run";
 	}
 	
         char buf[110];
@@ -8362,9 +8363,10 @@ inline int32 CLuaBaseEntity::set_sub_Level(lua_State *L)
 	PChar->SetSLevel((uint8)lua_tointeger(L,1));
 	//PChar->jobs.exp[PChar->GetMJob()] = 0;
 	PChar->jobs.job[PChar->GetSJob()] = (uint8)lua_tointeger(L,1);// THIS WAS SET FOR MAIN NOW SET FOR SUB
-	//PChar->SetSLevel(PChar->jobs.job[PChar->GetSJob()]);
+	PChar->SetSLevel(PChar->jobs.job[PChar->GetSJob()]);
 
 	charutils::CalculateStats(PChar);
+	ShowDebug("BUILDING CHAR SKILL TABLE 16\n");
     charutils::CheckValidEquipment(PChar);
    charutils::BuildingCharSkillsTable(PChar);
   charutils::BuildingCharAbilityTable(PChar);
@@ -8469,10 +8471,11 @@ inline int32 CLuaBaseEntity::set_Level(lua_State *L)
 	PChar->SetMLevel((uint8)lua_tointeger(L,1));
 	//PChar->jobs.exp[PChar->GetMJob()] = 0;
 	PChar->jobs.job[PChar->GetMJob()] = (uint8)lua_tointeger(L,1);
-	PChar->SetSLevel(PChar->jobs.job[PChar->GetSJob()]);
-
+	PChar->SetMLevel(PChar->jobs.job[PChar->GetMJob()]);
+	ShowMessage("SETMAIN LEVEL %u\n",PChar->GetMJob());
 	charutils::CalculateStats(PChar);
     charutils::CheckValidEquipment(PChar);
+	ShowDebug("BUILDING CHAR SKILL TABLE 17\n");
    charutils::BuildingCharSkillsTable(PChar);
   charutils::BuildingCharAbilityTable(PChar);
   charutils::BuildingCharTraitsTable(PChar);
@@ -8482,10 +8485,7 @@ inline int32 CLuaBaseEntity::set_Level(lua_State *L)
     PChar->health.hp = PChar->GetMaxHP();
     PChar->health.mp = PChar->GetMaxMP();
 
-   //charutils::SaveCharStats(PChar);
-  // charutils::SaveCharJob(PChar, PChar->GetMJob());
-  // charutils::SaveCharExp(PChar, PChar->GetMJob());
-	//charutils::SaveCharPoints(PChar);
+   
 
     PChar->pushPacket(new CCharJobsPacket(PChar));
     PChar->pushPacket(new CCharStatsPacket(PChar));
@@ -8770,6 +8770,7 @@ inline int32 CLuaBaseEntity::setmobpos(lua_State* L)
 	PMob->loc.p.y = PChar->loc.p.y;
 	PMob->loc.p.z = PChar->loc.p.z;
 	PMob->loc.p.rotation = PChar->loc.p.rotation;
+	PMob->loc.p.moving = PChar->loc.p.moving;
 	PChar->pushPacket(new CEntityUpdatePacket(PMob, ENTITY_UPDATE));
 	
 	char buf[110];
@@ -8815,6 +8816,7 @@ inline int32 CLuaBaseEntity::setnpcpos(lua_State* L)
 	PNpc->loc.p.y = PChar->loc.p.y;
 	PNpc->loc.p.z = PChar->loc.p.z;
 	PNpc->loc.p.rotation = PChar->loc.p.rotation;
+	PNpc->loc.p.moving = PChar->loc.p.moving;
 	PChar->pushPacket(new CEntityUpdatePacket(PNpc, ENTITY_UPDATE));
 	
 	char buf[110];
@@ -9763,22 +9765,49 @@ inline int32 CLuaBaseEntity::add_All_Spells(lua_State *L)
 	if(m_PBaseEntity->objtype != TYPE_PC){return false;}
 
     CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-
-	uint16 elements = sizeof ValidSpells / sizeof ValidSpells[0];
-
-		 for(uint16 i = 1; i < elements; ++i)
-		 {
-			if (charutils::addSpell(PChar, ValidSpells[i]))
-			{
-				//charutils::SaveSpells(PChar);
-			}
-		 }
-    PChar->pushPacket(new CCharSpellsPacket(PChar));
-    PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 23));
-	
 	char buf[110];
-        sprintf(buf,"Adding All Spells");
-	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	int32 spellid = 0;
+			  
+   string_t name ="none";
+   const char *pfmtQuery =  "SELECT spellid,name FROM spell_list WHERE learnall = '1' ORDER BY id ASC LIMIT 649;";
+
+				int32 ret =  Sql_Query(SqlHandle,pfmtQuery);
+				if( ret == SQL_ERROR )
+				{
+					sprintf(buf,"No spelllist found in the databse.");
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+					return false;;
+				}
+				int i = 0;
+				//Считывание информации о конкректном персонаже
+				//Загрузка всей необходимой информации о персонаже из базы
+				while(Sql_NextRow(SqlHandle) != SQL_NO_DATA) 
+				{
+					spellid    = Sql_GetIntData(SqlHandle,0);
+					
+					name    = Sql_GetData(SqlHandle,1);
+					charutils::addSpell(PChar, i);
+					sprintf(buf,"Learned New Spell: ID: %u NAME: %s",spellid , name.c_str() );
+	                PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+					PChar->pushPacket(new CCharSpellsPacket(PChar));
+					i++;
+				}
+
+	//uint16 elements = sizeof ValidSpells / sizeof ValidSpells[0];
+
+		// for(uint16 i = 1; i < elements; ++i)
+		// {
+			//if ()
+			//{
+				//charutils::SaveSpells(PChar);
+			//}
+		// }
+    
+    //PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 23));
+	
+	
+        //sprintf(buf,"Adding All Spells");
+	    //PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	return 0;
 }
 inline int32 CLuaBaseEntity::set_Gil(lua_State *L)
