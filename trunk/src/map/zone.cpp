@@ -813,7 +813,7 @@ void CZone::SetWeather(WEATHER weather)
 
 void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 {
-	ShowMessage(CL_YELLOW"I AM STILL CLEANING MAP AND DECREASING ZONE\n"CL_RESET);
+	//ShowMessage(CL_YELLOW"I AM STILL CLEANING MAP AND DECREASING ZONE\n"CL_RESET);
     DSP_DEBUG_BREAK_IF(PChar == NULL);
     if(PChar->loc.zone != this)
 	{
@@ -921,9 +921,9 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 
 	m_charList.erase(PChar->targid);
 	PChar->SpawnPCList.erase(PChar->id);
-	ShowMessage(CL_YELLOW"DECREASE THIS ZONE ID %u\n"CL_RESET,PChar->loc.destination);
+	//ShowMessage(CL_YELLOW"DECREASE THIS ZONE ID %u\n"CL_RESET,PChar->loc.destination);
 	 
-  string_t zonename = "noname";
+  /*string_t zonename = "noname";
 	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
 	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
 			
@@ -939,7 +939,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 				 {
 					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
 					 return;
-				 }
+				 }*/
 	
 
 	if (ZoneTimer && m_charList.empty())
@@ -981,7 +981,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 	PChar->SpawnPETList.clear();
 	if(PChar->shutdown_status ==1 )
 	{
-		ShowMessage(CL_YELLOW"I AM NOW GOING TO FINISH MAP CLEAN UP\n"CL_RESET);
+		//ShowMessage(CL_YELLOW"I AM NOW GOING TO FINISH MAP CLEAN UP\n"CL_RESET);
 		
 		const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE charid = %u";
         Sql_Query(SqlHandle,Query,PChar->id);
@@ -1023,7 +1023,7 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 	                {
 						
 				   targid =  Sql_GetUIntData(SqlHandle,0);
-				   ShowMessage("MAX TARGETID NEW COUNT %u \n" CL_RESET,targid);
+				  // ShowMessage("MAX TARGETID NEW COUNT %u \n" CL_RESET,targid);
 				 
                PChar->targid = targid;
 
@@ -1032,13 +1032,13 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
         if (PChar->targid != it->first)
         {
 			PChar->targid++;
-			ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid);
+			//ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid);
 			const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
             Sql_Query(SqlHandle,fmtQuery,PChar->targid,PChar->id);
             break;
         }
         PChar->targid++;
-		ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid++);
+		//ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid++);
 		const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
         Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
     }
@@ -1056,7 +1056,7 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 
 	m_charList[PChar->targid] = PChar;
 	PChar->SpawnPCList[PChar->id] = PChar;
-	ShowDebug("INCREASE THIS IS %u \n",PChar->loc.destination);
+	/*ShowDebug("INCREASE THIS IS %u \n",PChar->loc.destination);
   string_t zonename = "noname";
 	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
 	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
@@ -1073,7 +1073,7 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 				 {
 					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
 					 return;
-				 }
+				 }*/
 	
 
 	if (!ZoneTimer && !m_charList.empty())
@@ -1286,13 +1286,13 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 
 		if (PChar != PCurrentChar)
 		{
-			ShowDebug(CL_CYAN"SPAWNING PC 1 \n" CL_RESET);
+			//ShowDebug(CL_CYAN"SPAWNING PC 1 \n" CL_RESET);
 			if(distance(PChar->loc.p, PCurrentChar->loc.p) < 50)
 			{
-				ShowDebug(CL_CYAN"SPAWNING PC 2 \n" CL_RESET);
+				//ShowDebug(CL_CYAN"SPAWNING PC 2 \n" CL_RESET);
 				if( PC == PChar->SpawnPCList.end() )
 				{
-					ShowDebug(CL_CYAN"SPAWNING PC THISONE \n" CL_RESET);
+					//ShowDebug(CL_CYAN"SPAWNING PC THISONE \n" CL_RESET);
 					PChar->SpawnPCList[PCurrentChar->id] = PCurrentChar;
 					PChar->pushPacket(new CCharPacket(PCurrentChar,ENTITY_SPAWN));
 
@@ -1300,16 +1300,16 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 					PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_SPAWN));
 				}else
 				{
-					ShowDebug(CL_CYAN"SPAWNING PC THISONE 1 \n" CL_RESET);
+					//ShowDebug(CL_CYAN"SPAWNING PC THISONE 1 \n" CL_RESET);
 					PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_UPDATE));
 				}
 			} 
 			else 
 			{
-				ShowDebug(CL_CYAN"ELSE SPAWNING PC THISONE \n" CL_RESET);
+				//ShowDebug(CL_CYAN"ELSE SPAWNING PC THISONE \n" CL_RESET);
 				if( PC != PChar->SpawnPCList.end() )
 				{
-					ShowDebug(CL_CYAN"ELSE SPAWNING PC THISONE ERACE \n" CL_RESET);
+					//ShowDebug(CL_CYAN"ELSE SPAWNING PC THISONE ERACE \n" CL_RESET);
 					PChar->SpawnPCList.erase(PC);
 					PChar->pushPacket(new CCharPacket(PCurrentChar,ENTITY_DESPAWN));
 
@@ -1342,6 +1342,10 @@ void CZone::SpawnMoogle(CCharEntity* PChar)
 			PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_SPAWN));
 			PCurrentNpc->status = STATUS_DISAPPEAR;
 			return;
+		}
+		else
+		{
+           ShowDebug(CL_CYAN"SPAWNING MOGGLE: ELSE CHECK \n" CL_RESET);
 		}
 	}
 	}

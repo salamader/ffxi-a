@@ -22,7 +22,20 @@ namespace pol_pass
         {
             InitializeComponent();
 
-            string fileName = "ffxi-boot.ini";
+            string fileName = @"ffxi-boot.ini";
+            string curFile = @"ROM9\6\118.DAT";
+            Console.WriteLine(File.Exists(fileName) ? true : false);
+            if (File.Exists(fileName) == false)
+            {
+                error.Text = "No ffxi-boot.ini";
+                return;
+            }
+            Console.WriteLine(File.Exists(curFile) ? true : false);
+            if (File.Exists(curFile)== false)
+            {
+                error.Text = "Seekers Not Found";
+                return;
+            }
             ffxiboot.Text = fileName;
             this.Width = 248;
             this.Height = 425;

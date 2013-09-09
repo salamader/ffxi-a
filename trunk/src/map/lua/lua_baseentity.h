@@ -190,7 +190,7 @@ public:
 	int32 getSkillRank(lua_State*);			// Get your current skill craft Rank
 	int32 setSkillRank(lua_State*);			// Set new skill craft rank
 	int32 addSpell(lua_State*);				// Add spell to Entity spell list
-	int32 addAllSpells(lua_State*);			// Add all spells to GM char
+	
     int32 hasSpell(lua_State*);				// Check to see if character has item in spell list
 	int32 canLearnSpell(lua_State*);		// Check to see if character can learn spell, 0 if so
 	int32 delSpell(lua_State*);				// Remove spell from Entity spell list
