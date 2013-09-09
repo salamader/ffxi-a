@@ -155,10 +155,30 @@ void SmallPacket0x000(map_session_data_t* session, CCharEntity* PChar, int8* dat
 *  Нереализованный пакет                                                *
 *                                                                       *
 ************************************************************************/
-
-void SmallPacket0xFFF(map_session_data_t* session, CCharEntity* PChar, int8* data)
+//OPEN MOG PACKET
+void SmallPacket0x0CB(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-    //ShowDebug(CL_CYAN"parse: SmallPacket is not implemented Type<%03hX>\n" CL_RESET, (RBUFW(data,0) & 0x1FF));
+    ShowDebug(CL_CYAN"SmallPacket0x0CB DATA0 %u\n" CL_RESET, (RBUFW(data,0) & 0x0CB));
+	ShowDebug(CL_CYAN"SmallPacket0x0CB DATA1 %u\n" CL_RESET, (RBUFW(data,1) & 0x0CB));
+	ShowDebug(CL_CYAN"SmallPacket0x0CB DATA2 %u\n" CL_RESET, (RBUFW(data,2) & 0x0CB));
+	ShowDebug(CL_CYAN"SmallPacket0x0CB DATA3 %u\n" CL_RESET, (RBUFW(data,3) & 0x0CB));
+	ShowDebug(CL_CYAN"SmallPacket0x0CB DATA4 %u\n" CL_RESET, (RBUFW(data,4) & 0x0CB));
+    return;
+}
+
+void SmallPacket0x0A0(map_session_data_t* session, CCharEntity* PChar, int8* data)
+{
+    ShowDebug(CL_CYAN"parse: SmallPacket is not implemented Type<%03hX>\n" CL_RESET, (RBUFW(data,0) & 0x0A0));
+    return;
+}
+void SmallPacket0x0A1(map_session_data_t* session, CCharEntity* PChar, int8* data)
+{
+    ShowDebug(CL_CYAN"parse: SmallPacket is not implemented Type<%03hX>\n" CL_RESET, (RBUFW(data,0) & 0x0A1));
+    return;
+}
+void SmallPacket0x0D4(map_session_data_t* session, CCharEntity* PChar, int8* data)
+{
+    ShowDebug(CL_CYAN"parse: SmallPacket is not implemented Type<%03hX>\n" CL_RESET, (RBUFW(data,0) & 0x0D4));
     return;
 }
 
@@ -3093,10 +3113,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	uint8  town		  = RBUFB(data,(0x16)); // используются при выходе из mog house
 	uint8  zone		  = RBUFB(data,(0x17)); // используются при выходе из mog house
 
-	// переход между зонами с использованием таблицы zoneline
-	//
-	// игнорируем все zoneline пакеты,
-	// пока не завершен текущий переход
+	
 
 	if (PChar->status == STATUS_NORMAL ||
         PChar->status == STATUS_UPDATE)
@@ -3110,7 +3127,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		{
 			//TODO SELECT FROM DATABASE TO SEE IF ZONE LINE IS AREADY THERE IF SO UPDATE THE ZONELINES IF NOT INSERT INTO ZONELINES
             ShowError(CL_RED"SmallPacket0x5E: Zone line %u not found\n" CL_RESET, zoneLineID); // в идеале нужно добавить зону и координаты
-			zoneutils::GetZone(PChar->loc.destination)->LoadPlayerZoneLines(PChar); 
+			
 			PChar->loc.p.rotation += 128;
 
             PChar->pushPacket(new CMessageSystemPacket(0,0,2));
@@ -3118,14 +3135,12 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
             PChar->status = STATUS_UPDATE;
 			const char * Query = "INSERT INTO zonelines(zoneline,fromzone,tozone) VALUES('%u','%u','0');";
-
-	if( Sql_Query(SqlHandle,Query,zoneLineID,PChar->loc.destination) == SQL_ERROR )
-	{
-		
-		return;
-	}
+			if( Sql_Query(SqlHandle,Query,zoneLineID,PChar->loc.destination) == SQL_ERROR ){return;}
+	        zoneutils::GetZone(PChar->loc.destination)->LoadPlayerZoneLines(PChar); 
             return;
-		}else{
+		}
+		else
+		{
 			if (zoneutils::GetZone(PZoneLine->m_toZone)->GetIP() == 0) 	// разворачиваем персонажа на 180° и отправляем туда, откуда пришел
 			{
 				ShowDebug(CL_CYAN"SmallPacket0x5E: Zone %u closed to chars\n" CL_RESET, PZoneLine->m_toZone);
@@ -3137,7 +3152,16 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
                 PChar->status = STATUS_UPDATE;
                 return;
-			} else {
+			}
+			else 
+			{
+				int8 shutdown = 0;
+			   const char * Query = "SELECT fromzone,tozone,tox,toy,toz,rotation FROM zonelines WHERE zoneline= '%u';";
+	           int32 ret3 = Sql_Query(SqlHandle,Query,zoneLineID);
+			   if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)//START DATABASE SELECTION
+	            {
+				shutdown =  Sql_GetUIntData(SqlHandle,0);
+			   }
                 // выход из MogHouse
 				if(PZoneLine->m_zoneLineID == 1903324538)
 				{
@@ -3155,7 +3179,9 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					    }
                     }
                     PChar->loc.destination = prevzone;
-				} else {
+				} 
+				else
+				{
                     PChar->loc.destination = PZoneLine->m_toZone;
 				}
 				PChar->loc.p = PZoneLine->m_toPos;
@@ -4463,8 +4489,15 @@ void SmallPacket0x0DC(map_session_data_t* session, CCharEntity* PChar, int8* dat
                 PChar->m_hasAutoTarget = true;
 			break;
 		case 0x8000:
-			//if(RBUFB(data,(0x10)) == 1)	// autogroup on
-			//if(RBUFB(data,(0x10)) == 2)	// autogroup off
+			if(RBUFB(data,(0x10)) == 1)	// autogroup on
+			{
+				//todo add fuction
+
+			}
+			if(RBUFB(data,(0x10)) == 2)	// autogroup off
+			{
+				//todo add fuction
+			}
 			break;
 	}
     //charutils::SaveCharStats(PChar);
@@ -5541,8 +5574,8 @@ void PacketParserInitialize()
     PacketSize[0x084] = 0x06; PacketParser[0x084] = &SmallPacket0x084;
     PacketSize[0x085] = 0x04; PacketParser[0x085] = &SmallPacket0x085;
     PacketSize[0x096] = 0x12; PacketParser[0x096] = &SmallPacket0x096;
-    PacketSize[0x0A0] = 0x00; PacketParser[0x0A0] = &SmallPacket0xFFF;	// not implemented
-    PacketSize[0x0A1] = 0x00; PacketParser[0x0A1] = &SmallPacket0xFFF;	// not implemented
+    PacketSize[0x0A0] = 0x00; PacketParser[0x0A0] = &SmallPacket0x0A0;	// not implemented
+    PacketSize[0x0A1] = 0x00; PacketParser[0x0A1] = &SmallPacket0x0A1;	// not implemented
     PacketSize[0x0A2] = 0x00; PacketParser[0x0A2] = &SmallPacket0x0A2;
     PacketSize[0x0AA] = 0x00; PacketParser[0x0AA] = &SmallPacket0x0AA;
     PacketSize[0x0AB] = 0x00; PacketParser[0x0AB] = &SmallPacket0x0AB;
@@ -5553,10 +5586,10 @@ void PacketParserInitialize()
     PacketSize[0x0BE] = 0x00; PacketParser[0x0BE] = &SmallPacket0x0BE;	//  merit packet
     PacketSize[0x0C3] = 0x00; PacketParser[0x0C3] = &SmallPacket0x0C3;
     PacketSize[0x0C4] = 0x0C; PacketParser[0x0C4] = &SmallPacket0x0C4;
-    PacketSize[0x0CB] = 0x00; PacketParser[0x0CB] = &SmallPacket0xFFF;	// not implemented
+    PacketSize[0x0CB] = 0x00; PacketParser[0x0CB] = &SmallPacket0x0CB;	// not implemented
     PacketSize[0x0D2] = 0x00; PacketParser[0x0D2] = &SmallPacket0x0D2;
     PacketSize[0x0D3] = 0x00; PacketParser[0x0D3] = &SmallPacket0x0D3;
-    PacketSize[0x0D4] = 0x00; PacketParser[0x0D4] = &SmallPacket0xFFF;	// not implemented
+    PacketSize[0x0D4] = 0x00; PacketParser[0x0D4] = &SmallPacket0x0D4;	// not implemented
     PacketSize[0x0DB] = 0x00; PacketParser[0x0DB] = &SmallPacket0x0DB;
     PacketSize[0x0DC] = 0x0A; PacketParser[0x0DC] = &SmallPacket0x0DC;
     PacketSize[0x0DD] = 0x08; PacketParser[0x0DD] = &SmallPacket0x0DD;
