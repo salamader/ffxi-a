@@ -704,81 +704,81 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	              {
 	             
 
-	             // ShowNotice(CL_RED"WE ARE IN MOG HOUSE PLAYER IN STATUS %u\n"CL_RESET,login_status);
+	              ShowNotice(CL_RED"WE ARE IN MOG HOUSE PLAYER IN STATUS %u\n"CL_RESET,login_status);
 				  if(PChar->loc.destination == 0)
 				  {
-					//  ShowNotice(CL_RED"WE ARE IN MOG HOUSE LETS SET LAST POSTION \n"CL_RESET);
+					  ShowNotice(CL_RED"WE ARE IN MOG HOUSE LETS SET LAST POSTION \n"CL_RESET);
 				  }
 				  else
 				  {
-					  // ShowNotice(CL_RED"WE ARE IN EXITING MOG HOUSE LETS GET LAST POSTION \n"CL_RESET);
+					   ShowNotice(CL_RED"WE ARE IN EXITING MOG HOUSE LETS GET LAST POSTION \n"CL_RESET);
 					 
 					      PChar->loc.p.x = pos_x;
 						  PChar->loc.p.y = pos_y;
 						  PChar->loc.p.z = pos_z;
 						  if(zone == 48)
 	                       {
-		                  // ShowMessage(CL_GREEN"EXITING MOG HOUSE 48\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 48\n"CL_RESET);
 		                   PChar->loc.p.rotation = 189;
 		                   }
 						  if(zone == 50)
 	                       {
-		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 48\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 48\n"CL_RESET);
 		                   PChar->loc.p.rotation = 255;
 		                   }
 						 if(zone == 230)
 	                       {
-		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 230\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 230\n"CL_RESET);
 		                   PChar->loc.p.rotation = 89;
 		                   }
 	                     if(zone == 231)
 	                       {
-		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 231\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 231\n"CL_RESET);
 		                   PChar->loc.p.rotation = 152;
 		                   }
 	                     if(zone == 232)
 	                       {
-		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 232\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 232\n"CL_RESET);
 		                   PChar->loc.p.rotation = 159;
 		                   }
 						  if(zone == 234)//BASTOK MINE CS 0x7534
 	                       {
-		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 234\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 234\n"CL_RESET);
 		                   PChar->loc.p.rotation = 132;
 		                   }
 						  if(zone == 235)//BASTOK MARKETS CS 0x7534
 	                       {
-		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 235\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 235\n"CL_RESET);
 		                   PChar->loc.p.rotation = 129;
 		                   }
 						   if(zone == 236)//BASTOK PORT CS 0x7534
 	                       {
-		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 236\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 236\n"CL_RESET);
 		                   PChar->loc.p.rotation = 188;
 		                   }
 						   if(zone == 238)
 	                       {
-		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 238\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 238\n"CL_RESET);
 		                   PChar->loc.p.rotation = 192;
 		                   }
 						   if(zone == 239)
 	                       {
-		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 239\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 239\n"CL_RESET);
 		                   PChar->loc.p.rotation = 253;
 		                   }
 						   if(zone == 240)
 	                       {
-		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 240\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 240\n"CL_RESET);
 		                   PChar->loc.p.rotation = 64;
 		                   }
 						   if(zone == 241)
 	                       {
-		                //   ShowMessage(CL_GREEN"EXITING MOG HOUSE 241\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 241\n"CL_RESET);
 		                   PChar->loc.p.rotation = 3;
 		                   }
 						   if(zone == 243)
 	                       {
-		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 243\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 243\n"CL_RESET);
 						   PChar->loc.p.x = 51;
 						   PChar->loc.p.y = 9;
 						   PChar->loc.p.z = -73;
@@ -786,17 +786,17 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		                   }
 						   if(zone == 244)
 	                       {
-		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 244\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 244\n"CL_RESET);
 		                   PChar->loc.p.rotation = 174;
 		                   }
 						   if(zone == 245)
 	                       {
-		                 //  ShowMessage(CL_GREEN"EXITING MOG HOUSE 245\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 245\n"CL_RESET);
 		                   PChar->loc.p.rotation = 88;
 		                   }
 						   if(zone == 246)
 	                       {
-		                //   ShowMessage(CL_GREEN"EXITING MOG HOUSE 246\n"CL_RESET);
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 246\n"CL_RESET);
 		                   PChar->loc.p.rotation = 2;
 		                   }
 						 
@@ -812,7 +812,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					  || nation == 0 && zone == 235 || nation == 0 && zone == 236 || nation == 0 && zone == 238 || nation == 0 && zone == 239 || nation == 0 && zone == 240 
 					  || nation == 0 && zone == 241 || nation == 0 && zone == 243 || nation == 0 && zone == 244 || nation == 0 && zone == 245 || nation == 0 && zone == 246)
 				  {
-					 // ShowMessage(CL_GREEN"PROFILE NATION SANDY\n"CL_RESET);
+					  ShowMessage(CL_GREEN"PROFILE NATION SANDY\n"CL_RESET);
 					  //AND IF THEY CHANGE JOBS 0x7534
 	              PChar->pushPacket(new CZoneInPacket(PChar,-1));
 				  }
@@ -821,7 +821,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					  || nation == 1 && zone == 231 || nation == 1 && zone == 232 || nation == 1 && zone == 238 || nation == 1 && zone == 239 || nation == 1 && zone == 240 
 					  || nation == 1 && zone == 241 || nation == 1 && zone == 243 || nation == 1 && zone == 244 || nation == 1 && zone == 245 || nation == 1 && zone == 246)
 				  {
-					 // ShowMessage(CL_GREEN"PROFILE NATION BASTOK\n"CL_RESET);
+					  ShowMessage(CL_GREEN"PROFILE NATION BASTOK\n"CL_RESET);
 					  //AND IF THEY CHANGE JOBS 0x7534
 	              PChar->pushPacket(new CZoneInPacket(PChar,-1));
 				  }
@@ -830,7 +830,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					  || nation == 2 && zone == 231 || nation == 2 && zone == 232 || nation == 2 && zone == 234 || nation == 2 && zone == 235 || nation == 2 && zone == 246 
 					  || nation == 2 && zone == 243 || nation == 2 && zone == 244 || nation == 2 && zone == 245 || nation == 2 && zone == 246)
 				  {
-					 // ShowMessage(CL_GREEN"PROFILE NATION WINDY\n"CL_RESET);
+					  ShowMessage(CL_GREEN"PROFILE NATION WINDY\n"CL_RESET);
 					  //AND IF THEY CHANGE JOBS ??? NEED TO DO 0x7534
 	              PChar->pushPacket(new CZoneInPacket(PChar,-1));
 				  }
@@ -2371,26 +2371,7 @@ void SmallPacket0x04D(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		case 0x06:
 		case 0x08:
 		{
-			// 0x08 и 0x06 идентичны
-			//
-			// 0х06 - добавляем предмет в определенную ячейку
-			// 0х08 - обновляем предмет в определенной ячейке
-
-			// отправляем персонажу все новые предметы (предметы, которые персонаж еще не видел в delivery box)
-			// клиент отправляет запрос серверу для каждого нового предмета, при этом указывая, какая ячейка его интересует
-			//
-			// сервер должен отправлять два пакета с действием 0х06
-			// у первого пакета data[0x0c] равняется 0x02, у второго 0x01, в остальном заголовок идентичен
-			// возможно это связано с тем, что я сам отправлял себе предметы
-			//
-			// 0x4b 0x2c 0x00 0x00 0x06 0x01 0x01 0x01 0xff 0xff 0xff 0xff 0x02 0x01 0xff 0xff
-			// 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-			// 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-			// 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-			// 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-			//
-			// зачем нужен этот пустой пакет я не знаю, но и без него все отлично работает
-			// предположительно он отчищает целевую ячейку от предметов, на всякий случай
+			
 
             if (PChar->UContainer->GetType() == UCONTAINER_DELIVERYBOX &&
                !PChar->UContainer->IsSlotEmpty(slotID))
@@ -3112,11 +3093,10 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
     //TODO: verify packet in adoulin expansion
 	uint8  town		  = RBUFB(data,(0x16)); // используются при выходе из mog house
 	uint8  zone		  = RBUFB(data,(0x17)); // используются при выходе из mog house
-
+	ShowMessage(CL_YELLOW"ZONELINE: TOWN %u \n" CL_RESET,town);
 	
 
-	if (PChar->status == STATUS_NORMAL ||
-        PChar->status == STATUS_UPDATE)
+	if (PChar->is_zoning == -1)//IS NOT ZONEING YET
 	{
 		PChar->status = STATUS_DISAPPEAR;
 		PChar->loc.boundary = 0;
@@ -3155,18 +3135,38 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			}
 			else 
 			{
-				int8 shutdown = 0;
+				uint16 fromzone = 0;
+				uint16 tozone = 0;
+				float tox = 0;
+				float toy = 0;
+				float toz = 0;
+				uint16 rotation = 0;
 			   const char * Query = "SELECT fromzone,tozone,tox,toy,toz,rotation FROM zonelines WHERE zoneline= '%u';";
 	           int32 ret3 = Sql_Query(SqlHandle,Query,zoneLineID);
 			   if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)//START DATABASE SELECTION
 	            {
-				shutdown =  Sql_GetUIntData(SqlHandle,0);
-			   }
+				fromzone =  Sql_GetUIntData(SqlHandle,0);
+				ShowMessage(CL_YELLOW"ZONELINE: fromzone %u \n" CL_RESET, fromzone);
+				tozone =  Sql_GetUIntData(SqlHandle,1);
+				ShowMessage(CL_YELLOW"ZONELINE: tozone %u \n" CL_RESET, tozone);
+				tox =Sql_GetFloatData(SqlHandle,2);
+				ShowMessage(CL_YELLOW"ZONELINE: tox %0.3f \n" CL_RESET, tox);
+				toy =Sql_GetFloatData(SqlHandle,3);
+				ShowMessage(CL_YELLOW"ZONELINE: toy %0.3f \n" CL_RESET, toy);
+				toz =Sql_GetFloatData(SqlHandle,4);
+				ShowMessage(CL_YELLOW"ZONELINE: toz %0.3f \n" CL_RESET, toz);
+				rotation =  Sql_GetUIntData(SqlHandle,5);
+				ShowMessage(CL_YELLOW"ZONELINE: rotation %u \n" CL_RESET, rotation);
+				
                 // выход из MogHouse
 				if(PZoneLine->m_zoneLineID == 1903324538)
 				{
                     uint16 prevzone = PChar->loc.prevzone;
-
+					ShowMessage(CL_YELLOW"ZONELINE: EXITING MOGHOUSE %u \n" CL_RESET,PZoneLine->m_zoneLineID);
+					//this is exiting moghouse we need to switch fisrt login status to 3 to the moghosue system in packet SmallPacket0x00A
+					//It might be exiting unk yet
+					const int8* Query = "UPDATE chars SET first_login = '3' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,PChar->id);
                     if (zone != 0)  // 0 - выход в предыдущую зону, остальные значения - выбор зоны по имени
                     {
 					    switch (town)
@@ -3178,16 +3178,24 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 						    case 5: prevzone = zone + (zone == 1 ? 0x2F : 0x30); break;
 					    }
                     }
+					ShowMessage(CL_YELLOW"ZONELINE: ZONE is NOT  %u \n" CL_RESET,PZoneLine->m_toZone);
                     PChar->loc.destination = prevzone;
 				} 
 				else
 				{
-                    PChar->loc.destination = PZoneLine->m_toZone;
+					ShowMessage(CL_YELLOW"ZONELINE: ELSE Destination %u \n" CL_RESET,PZoneLine->m_toZone);
+                    PChar->loc.destination = tozone;
 				}
-				PChar->loc.p = PZoneLine->m_toPos;
+				ShowMessage(CL_YELLOW"ZONELINE: ELSE AND x y z r %u \n" CL_RESET,PZoneLine->m_toZone);
+				PChar->loc.p.x = tox;
+				PChar->loc.p.y= tox;
+					PChar->loc.p.z= tox;
+					PChar->loc.p.rotation =rotation;
+
 			}
 		}
         ShowInfo(CL_WHITE"Zoning from zone %u to zone %u: %s\n" CL_RESET, PChar->getZone(), PChar->loc.destination, PChar->GetName());
+		}
 	}
 	PChar->clearPacketList();
 	PChar->pushPacket(new CServerIPPacket(PChar,2));
@@ -3958,7 +3966,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	{
 		if(PChar->Account_Level==1 || PChar->Account_Level==2 || PChar->Account_Level==3 || PChar->Account_Level==4)
 		{
-            for (uint16 zone = 0; zone < 256; ++zone)
+            for (uint16 zone = 0; zone < MAX_ZONEID; ++zone)
             {
             zoneutils::GetZone(zone)->PushPacket(
                 PChar,
@@ -3985,7 +3993,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			
 			
 		}
-            for (uint16 zone = 0; zone < 256; ++zone)
+            for (uint16 zone = 0; zone < MAX_ZONEID; ++zone)
             {
             zoneutils::GetZone(zone)->PushPacket(
                 PChar,
@@ -4777,12 +4785,12 @@ void SmallPacket0x0E2(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0E7(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	ShowMessage(CL_YELLOW"SmallPacket0x0E7: PLAYER LOGOUT\n"CL_RESET);
+	//ShowMessage(CL_YELLOW"SmallPacket0x0E7: PLAYER LOGOUT\n"CL_RESET);
 	
 	
 	if (PChar->getZone() == 0 ||PChar->godmode == 1)
 	{
-		ShowMessage(CL_YELLOW"SmallPacket0x0E7: RETURN DO NOTHING\n"CL_RESET);
+		//ShowMessage(CL_YELLOW"SmallPacket0x0E7: RETURN DO NOTHING\n"CL_RESET);
 		//TO DO MAKE A FUNCTION TO EXIT THE GAME IN PLAYERS DUPLCATE CODE IN MANY LOCATIONS
 		PChar->is_zoning = 1;
 	   
@@ -4791,7 +4799,7 @@ void SmallPacket0x0E7(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	
 	if (PChar->animation == ANIMATION_NONE)
 	{
-		ShowMessage(CL_YELLOW"SmallPacket0x0E7: ANIMATION_NONE\n"CL_RESET);
+		//ShowMessage(CL_YELLOW"SmallPacket0x0E7: ANIMATION_NONE\n"CL_RESET);
 		uint8 ExitType = (RBUFB(data,(0x06)) == 1 ? 7 : 35);
 
 		if (PChar->PPet == NULL ||(PChar->PPet->m_EcoSystem != SYSTEM_AVATAR && PChar->PPet->m_EcoSystem != SYSTEM_ELEMENTAL))
@@ -4804,7 +4812,7 @@ void SmallPacket0x0E7(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	
 	if (PChar->animation == ANIMATION_HEALING)
 	{
-		ShowMessage(CL_YELLOW"SmallPacket0x0E7: ANIMATION_HEALING\n"CL_RESET);
+		//ShowMessage(CL_YELLOW"SmallPacket0x0E7: ANIMATION_HEALING\n"CL_RESET);
 		if (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_LEAVEGAME))
 		{
 			PChar->status = STATUS_UPDATE;
@@ -4830,7 +4838,7 @@ void SmallPacket0x0E7(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0E8(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	ShowMessage(CL_YELLOW"SmallPacket0x0E8: ANIMATION_HEALING RESTING\n"CL_RESET);
+	//ShowMessage(CL_YELLOW"SmallPacket0x0E8: ANIMATION_HEALING RESTING\n"CL_RESET);
 
 	switch (PChar->animation)
 	{

@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="pol-pass.exe" size="566784">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="pol-pass.exe" size="567296">
       <assemblyIdentity name="pol-pass" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>mCZMCq/NxNmBo1YBqFekxV1lor1JZYIAClTD/RpA9vg=</dsig:DigestValue>
+        <dsig:DigestValue>dh+u6SY6EmIe9onFa9sNxbNL2BN0wzxkh4INQbhz0dQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

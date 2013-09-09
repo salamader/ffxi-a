@@ -693,7 +693,7 @@ int32 Close_Session_Clean_Map(uint32 tick, CTaskMgr::CTask* PTask)
 	{
 		Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE charid = %u",map_session_data->PChar->id);
         
-		ShowMessage(CL_YELLOW"FINISHED MAP CLEAN FOR PLAYERS ACCOUNT ID = %u GET\n"CL_RESET,map_session_data->PChar->accid);
+		//ShowMessage(CL_YELLOW"FINISHED MAP CLEAN FOR PLAYERS ACCOUNT ID = %u GET\n"CL_RESET,map_session_data->PChar->accid);
 		
 		uint64 port64 = map_session_data->client_port;
 		uint64 ipp	  = map_session_data->client_addr;
@@ -764,7 +764,7 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 			        {
 					  if(PChar->shutdown_status ==1)//THIS IS /logout normal command if this is not called they killed the boot.
 						{
-                         ShowMessage(CL_YELLOW"I AM CLEANING THE MAP NOW: %s timed %u\n" CL_RESET, PChar->GetName(),time(NULL));
+                        // ShowMessage(CL_YELLOW"I AM CLEANING THE MAP NOW: %s timed %u\n" CL_RESET, PChar->GetName(),time(NULL));
 						  if(PChar->PParty != NULL && PChar->PParty->m_PAlliance != NULL && PChar->PParty->GetLeader() == PChar)
 							{
 						     if(PChar->PParty->members.size() == 1)
@@ -797,7 +797,7 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 						SpawnIDList_t::iterator PC = PChar->SpawnPCList.find(PChar->id);
                         if( !PChar->SpawnPCList.empty() )
 			              {
-							ShowMessage(CL_YELLOW"I CLEANED: MY CHAR SPAWN PC\n" CL_RESET);
+							//ShowMessage(CL_YELLOW"I CLEANED: MY CHAR SPAWN PC\n" CL_RESET);
 				          PChar->SpawnPCList.erase(PChar->id);
 						  PChar->pushPacket(new CCharPacket(PChar,ENTITY_DESPAWN));
 				          }
@@ -806,7 +806,7 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 					  else// ELSE THE PLAYER KILLED THE BOOT AND IS STILL ON THE MAP AND THE LOGIN SERVER CALLED THIS METHOD
 					  {
 						  //SHOULD BE TWO FUNCTION CALLED LEAVEGAME AND PACKET PARSER
-						  ShowMessage(CL_YELLOW"PLAYER KILLED THE BOOT DIFFERENT MAP CLEAN\n" CL_RESET);
+						 // ShowMessage(CL_YELLOW"PLAYER KILLED THE BOOT DIFFERENT MAP CLEAN\n" CL_RESET);
 						  PChar->leavegame();
 						  PacketParser[0x00D](map_session_data, PChar, 0);
 					  }
@@ -818,7 +818,7 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 				{
 				//THIS SHOULD NEVER HAPPEN BUT IF IT DOSE REASON BEING THE SERVER CRASHS AND IT WAS RESTARTED
 				//OR THE CLIENT LOST CONNECTION TO THE PHRAS FUNCTION
-                ShowWarning(CL_YELLOW"map_cleanup: WHITHOUT CHAR timed out, session closed\n" CL_RESET);
+               // ShowWarning(CL_YELLOW"map_cleanup: WHITHOUT CHAR timed out, session closed\n" CL_RESET);
 				const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE sessions = %u";
                 Sql_Query(SqlHandle,Query,map_session_data);
 		        Query = "UPDATE accounts SET  online = '0' WHERE sessions = %u";

@@ -11,3 +11,16 @@ C:\Users\Administrator\Desktop\pol-pass\pol-pass\obj\Debug\pol-pass.exe.manifest
 C:\Users\Administrator\Desktop\pol-pass\pol-pass\obj\Debug\pol-pass.application
 C:\Users\Administrator\Desktop\pol-pass\pol-pass\obj\Debug\pol-pass.exe
 C:\Users\Administrator\Desktop\pol-pass\pol-pass\obj\Debug\pol-pass.pdb
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\bin\Debug\pol-pass.exe.config
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Debug\pol-pass.exe
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Debug\pol-pass.pdb
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\bin\Debug\pol-pass.exe.manifest
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\bin\Debug\pol-pass.application
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\bin\Debug\pol-pass.exe
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\bin\Debug\pol-pass.pdb
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Debug\pol-pass.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Debug\pol_pass.Form1.resources
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Debug\pol_pass.Properties.Resources.resources
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Debug\pol-pass.csproj.GenerateResource.Cache
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Debug\pol-pass.exe.manifest
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Debug\pol-pass.application

@@ -103,7 +103,6 @@
             this.error.Size = new System.Drawing.Size(28, 13);
             this.error.TabIndex = 7;
             this.error.Text = "error";
-            this.error.Visible = false;
             // 
             // chatBrowser
             // 

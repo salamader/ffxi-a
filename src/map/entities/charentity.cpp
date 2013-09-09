@@ -364,7 +364,7 @@ void CCharEntity::setMijinGakure(bool isMijinGakure)
 int32 CCharEntity::leavegame()
 {
 	
-	ShowMessage(CL_YELLOW"I AM LEAVEING GAME %s\n"CL_RESET,this->GetName());
+	//ShowMessage(CL_YELLOW"I AM LEAVEING GAME %s\n"CL_RESET,this->GetName());
 	this->is_zoning = 1;
 	this->shutdown_status =1;
 	this->status = STATUS_SHUTDOWN;

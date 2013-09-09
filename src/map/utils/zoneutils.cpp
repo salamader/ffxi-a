@@ -135,11 +135,11 @@ CZone* GetZoneByChar(uint16 ZoneID, CCharEntity* PChar)
 	{
 		return false;
 	}
-	ShowDebug(CL_CYAN "GET ZONE %u BY CHAR %s \n"CL_RESET,ZoneID,PChar->GetName());
+	//ShowDebug(CL_CYAN "GET ZONE %u BY CHAR %s \n"CL_RESET,ZoneID,PChar->GetName());
     DSP_DEBUG_BREAK_IF(ZoneID >= MAX_ZONEID);
 	
-	ShowDebug(CL_CYAN "GET IN EVENT ID %u BY CHAR %s\n"CL_RESET,PChar->is_inevent,PChar->GetName());
-	ShowDebug(CL_CYAN "GET EVENT ID %u BY CHAR %s \n"CL_RESET,PChar->eventid,PChar->GetName());
+	//ShowDebug(CL_CYAN "GET IN EVENT ID %u BY CHAR %s\n"CL_RESET,PChar->is_inevent,PChar->GetName());
+	//ShowDebug(CL_CYAN "GET EVENT ID %u BY CHAR %s \n"CL_RESET,PChar->eventid,PChar->GetName());
 	           
 				 if(PChar->first_login == 0)
 				 {
@@ -155,15 +155,15 @@ CZone* GetZoneByChar(uint16 ZoneID, CCharEntity* PChar)
 	          if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 	             {
 				   zone =  Sql_GetUIntData(SqlHandle,0);
-				   ShowDebug(CL_RED"PLAYER %s HOME ZONE %u\n"CL_RESET,PChar->GetName(),zone);
+				  // ShowDebug(CL_RED"PLAYER %s HOME ZONE %u\n"CL_RESET,PChar->GetName(),zone);
 				   pos_x =  Sql_GetFloatData(SqlHandle,1);
-				    ShowDebug(CL_RED"PLAYER %s HOME x %.3f\n"CL_RESET,PChar->GetName(),pos_x);
+				 //   ShowDebug(CL_RED"PLAYER %s HOME x %.3f\n"CL_RESET,PChar->GetName(),pos_x);
 				   pos_y =  Sql_GetFloatData(SqlHandle,2);
-				    ShowDebug(CL_RED"PLAYER %s HOME y %.3f\n"CL_RESET,PChar->GetName(),pos_y);
+				 //   ShowDebug(CL_RED"PLAYER %s HOME y %.3f\n"CL_RESET,PChar->GetName(),pos_y);
 				   pos_z =  Sql_GetFloatData(SqlHandle,3);
-				    ShowDebug(CL_RED"PLAYER %s HOME z %.3f\n"CL_RESET,PChar->GetName(),pos_z);
+				 //   ShowDebug(CL_RED"PLAYER %s HOME z %.3f\n"CL_RESET,PChar->GetName(),pos_z);
 				   pos_rot =  Sql_GetUIntData(SqlHandle,4);
-				    ShowDebug(CL_RED"PLAYER %s HOME r %u\n"CL_RESET,PChar->GetName(),pos_rot);
+				 //   ShowDebug(CL_RED"PLAYER %s HOME r %u\n"CL_RESET,PChar->GetName(),pos_rot);
 				   PChar->loc.p.x = pos_x;
 			       PChar->loc.p.y = pos_y;
 			       PChar->loc.p.z = pos_z;
@@ -605,7 +605,7 @@ void LoadMOBList(CZone* PZone)
 	}
 }
 
-CZone* LoadPlayerMOBList(uint16 ZoneID)
+CZone* LoadPlayerMOBList(uint16 ZoneID,uint16 MobID)//function to reload moblist by player its not done yet i do not want to load a whole zone just one mob at a time.
 {
 	CZone* PZone = new CZone((ZONEID)ZoneID, GetCurrentRegion(ZoneID), GetCurrentContinent(ZoneID));
     const int8* Query =
@@ -617,12 +617,12 @@ CZone* LoadPlayerMOBList(uint16 ZoneID)
 			Slash, Pierce, H2H, Impact, \
 			Fire, Ice, Wind, Earth, Lightning, Water, Light, Dark, Element, \
 			mob_pools.familyid, name_prefix, unknown, animationsub, \
-			(mob_family_system.HP / 100), (mob_family_system.MP / 100), hasSpellScript, spellList, ATT, ACC, mob_groups.poolid \
+			(mob_family_system.HP / 100), (mob_family_system.MP / 100), hasSpellScript, spellList, ATT, ACC, mob_groups.poolid,mob_groups.zoneid \
 			FROM mob_groups LEFT JOIN mob_pools ON mob_groups.poolid = mob_pools.poolid \
 			LEFT JOIN mob_spawn_points ON mob_groups.groupid = mob_spawn_points.groupid \
 			LEFT JOIN mob_family_system ON mob_pools.familyid = mob_family_system.familyid \
-			WHERE (pos_x <> 0 AND pos_y <> 0 AND pos_z <> 0) \
-			AND mob_groups.zoneid = %u LIMIT 50;";
+			WHERE mobid = %u \
+			AND mob_groups.zoneid = %u LIMIT 1;";
 
     int32 ret = Sql_Query(SqlHandle, Query, ZoneID);
 
@@ -717,7 +717,7 @@ CZone* LoadPlayerMOBList(uint16 ZoneID)
 			PMob->m_Family = (uint16)Sql_GetIntData(SqlHandle,47);
 			PMob->m_name_prefix = (uint8)Sql_GetIntData(SqlHandle,48);
 			PMob->m_unknown = (uint32)Sql_GetIntData(SqlHandle,49);
-
+			PMob->loc.destination = (uint16)Sql_GetUIntData(SqlHandle,58);
 			//Special sub animation for Mob (yovra, jailer of love, phuabo)
 			// yovra 1: en hauteur, 2: en bas, 3: en haut
 			// phuabo 1: sous l'eau, 2: sort de l'eau, 3: rentre dans l'eau
