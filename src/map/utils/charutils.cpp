@@ -706,6 +706,7 @@ void LoadChar(CCharEntity* PChar)
 
     blueutils::LoadSetSpells(PChar);
     puppetutils::LoadAutomaton(PChar);
+	ShowDebug("BUILDING CHAR SKILL TABLE 3\n");
 	BuildingCharSkillsTable(PChar);
     PChar->PRecastContainer->ResetAbilities();
 	BuildingCharAbilityTable(PChar);
@@ -1131,6 +1132,7 @@ bool HasItem(CCharEntity* PChar, uint16 ItemID)
 
 void UpdateSubJob(CCharEntity* PChar)
 {
+	ShowDebug("BUILDING CHAR SKILL TABLE 4\n");
     charutils::BuildingCharSkillsTable(PChar);
     charutils::CalculateStats(PChar);
     charutils::CheckValidEquipment(PChar);
@@ -1144,8 +1146,8 @@ void UpdateSubJob(CCharEntity* PChar)
     PChar->health.mp = PChar->GetMaxMP();
 
    // charutils::SaveCharStats(PChar);
-    charutils::SaveCharJob(PChar, PChar->GetMJob());
-    charutils::SaveCharExp(PChar, PChar->GetMJob());
+   // charutils::SaveCharJob(PChar, PChar->GetMJob());
+   // charutils::SaveCharExp(PChar, PChar->GetMJob());
     charutils::UpdateHealth(PChar);
 
     PChar->pushPacket(new CCharJobsPacket(PChar));
@@ -3450,7 +3452,7 @@ void DelExperiencePoints(CCharEntity* PChar, float retainPercent)
 			PChar->SetMLevel(PChar->jobs.job[PChar->GetMJob()]);
 			PChar->SetSLevel(PChar->jobs.job[PChar->GetSJob()]);
 		}
-
+		ShowDebug("BUILDING CHAR SKILL TABLE 5\n");
         BuildingCharSkillsTable(PChar);
         CalculateStats(PChar);
         CheckValidEquipment(PChar);
@@ -3471,7 +3473,7 @@ void DelExperiencePoints(CCharEntity* PChar, float retainPercent)
         PChar->pushPacket(new CCharSyncPacket(PChar));
 
        // SaveCharStats(PChar);
-        SaveCharJob(PChar, PChar->GetMJob());
+       // SaveCharJob(PChar, PChar->GetMJob());
 
 		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageDebugPacket(PChar, PChar, PChar->jobs.job[PChar->GetMJob()], 0, 11));
 	}
@@ -3637,7 +3639,7 @@ void AddExperiencePoints(bool expFromRaise, CCharEntity* PChar, CBaseEntity* PMo
             {
                 PChar->SetMLevel(PChar->jobs.job[PChar->GetMJob()]);
                 PChar->SetSLevel(PChar->jobs.job[PChar->GetSJob()]);
-
+				ShowDebug("BUILDING CHAR SKILL TABLE 6\n");
                 BuildingCharSkillsTable(PChar);
                 CalculateStats(PChar);
                 BuildingCharAbilityTable(PChar);
@@ -3650,8 +3652,8 @@ void AddExperiencePoints(bool expFromRaise, CCharEntity* PChar, CBaseEntity* PMo
             PChar->health.mp = PChar->GetMaxMP();
 
            // SaveCharStats(PChar);
-            SaveCharJob(PChar, PChar->GetMJob());
-            SaveCharExp(PChar, PChar->GetMJob());
+           // SaveCharJob(PChar, PChar->GetMJob());
+           // SaveCharExp(PChar, PChar->GetMJob());
 			//SaveCharPoints(PChar);
 
             PChar->pushPacket(new CCharJobsPacket(PChar));
@@ -3671,8 +3673,8 @@ void AddExperiencePoints(bool expFromRaise, CCharEntity* PChar, CBaseEntity* PMo
     }
 
 	//SaveCharStats(PChar);
-    SaveCharJob(PChar, PChar->GetMJob());
-    SaveCharExp(PChar, PChar->GetMJob());
+    //SaveCharJob(PChar, PChar->GetMJob());
+    //SaveCharExp(PChar, PChar->GetMJob());
 	//SaveCharPoints(PChar);
     PChar->pushPacket(new CCharStatsPacket(PChar));
 
@@ -4263,7 +4265,12 @@ void SaveCharSystem(CCharEntity* PChar)
         SaveTitles( PChar);						        // сохраняем заслуженные звания
 		SaveCharStats( PChar);					        // сохраняем флаги, текущие значения жихней, маны и профессий
         SaveCharExp(PChar, PChar->GetMJob());
-		SaveCharNation( PChar);							// Sace the character's nation of allegiance.
+		SaveCharJob(PChar, PChar->GetMJob());
+		if(PChar->GetSJob() != NULL)
+		{
+		SaveCharJob(PChar, PChar->GetSJob());
+		}
+        SaveCharNation( PChar);							// Sace the character's nation of allegiance.
 	    SaveCharPoints( PChar);							// Conquest point, Nation TP
 		SaveDeathTime( PChar);							// Saves when this character last died.
 	    SaveCharUnlockedWeapons( PChar);

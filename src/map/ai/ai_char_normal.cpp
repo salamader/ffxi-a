@@ -89,6 +89,7 @@ void CAICharNormal::CheckCurrentAction(uint32 tick)
     {
         m_PChar->pushPacket(new CCharAppearancePacket(m_PChar));
         m_PChar->pushPacket(new CCharUpdatePacket(m_PChar));
+		ShowDebug("BUILDING CHAR SKILL TABLE 2\n");
         charutils::BuildingCharSkillsTable(m_PChar);
         charutils::CalculateStats(m_PChar);
 
@@ -1197,6 +1198,7 @@ void CAICharNormal::ActionMagicStart()
 
     if(m_PMagicState->IsOnCoolDown(m_Tick))
     {
+		ShowWarning("SET CURRENT ACTION ActionMagicStar ERROR \n");
         MagicStartError();
         return;
     }
@@ -1212,6 +1214,7 @@ void CAICharNormal::ActionMagicStart()
     }
     else
     {
+		ShowWarning("SET CURRENT ACTION ActionMagicStar ERROR 1 \n");
         MagicStartError();
     }
 }

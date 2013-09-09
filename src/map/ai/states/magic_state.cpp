@@ -43,10 +43,12 @@ CMagicState::CMagicState(CBattleEntity* PEntity, CTargetFind* PTargetFind, float
 
 STATESTATUS CMagicState::CastSpell(CSpell* PSpell, CBattleEntity* PTarget, uint8 flags)
 {
-	if(!CanCastSpell(PSpell, PTarget, flags))
-	{
-		return STATESTATUS_ERROR;
-	}
+	//ShowWarning("CastSpell  SPELL %u TARGET %u FlAG %u\n",PSpell ,PTarget,flags);
+	//if(!CanCastSpell(PSpell, PTarget, flags))
+	//{
+	//	ShowWarning("CastSpell  SPELL %u TARGET %u FlAG %u ERROR\n",PSpell ,PTarget,flags);
+	//	return STATESTATUS_ERROR;
+	//}
 
 	Clear();
 
@@ -75,10 +77,12 @@ STATESTATUS CMagicState::CastSpell(CSpell* PSpell, CBattleEntity* PTarget, uint8
 
 bool CMagicState::CanCastSpell(CSpell* PSpell, CBattleEntity* PTarget, uint8 flags)
 {
+	//ShowWarning("CanCastSpell  SPELL %u TARGET %u FlAG %u\n",PSpell ,PTarget,flags);
 	if(PSpell == NULL) return false;
 
 	if(!ValidCast(PSpell, PTarget))
 	{
+		ShowWarning("CanCastSpell  SPELL %u TARGET %u FlAG %u ERRER\n",PSpell ,PTarget,flags);
 		return false;
 	}
 
@@ -394,7 +398,12 @@ bool CMagicState::CheckInterrupt()
 
 bool CMagicState::ValidCast(CSpell* PSpell, CBattleEntity* PTarget)
 {
-    if(!CheckValidTarget(PTarget)) return false;
+		//ShowWarning("ValidCast  SPELL %u TARGET %u \n",PSpell ,PTarget);
+    if(!CheckValidTarget(PTarget))
+		{
+			ShowWarning("ValidCast  SPELL %u TARGET ERROR%u \n",PSpell ,PTarget);
+			return false;
+	}
 
 	if(!m_enableCasting ||
 		m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_SILENCE) ||

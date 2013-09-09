@@ -598,6 +598,7 @@ void CBattleEntity::SetMLevel(uint8 mlvl)
 void CBattleEntity::SetSLevel(uint8 slvl)
 {
 	m_slvl = (slvl > (m_mlvl >> 1) ? (m_mlvl == 1 ? 1 : (m_mlvl >> 1)) : slvl);
+
 }
 
 /************************************************************************
