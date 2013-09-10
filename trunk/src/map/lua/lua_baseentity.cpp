@@ -9485,7 +9485,7 @@ inline int32 CLuaBaseEntity::NpcMorph(lua_State *L)
 	
 	if(PNpc != NULL)
 	{
-		if(PNpc->objtype ==TYPE_MOB)
+		if(PNpc->objtype ==TYPE_NPC)
 		{
 	 if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
 	{

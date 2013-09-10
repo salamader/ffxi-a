@@ -1329,21 +1329,24 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 
 void CZone::SpawnMoogle(CCharEntity* PChar)
 {
-	if(PChar != NULL && PChar->loc.zone != NULL)
-	{
+	
 	for (EntityList_t::const_iterator it = m_npcList.begin() ; it != m_npcList.end() ; ++it)
 	{
 		CNpcEntity* PCurrentNpc = (CNpcEntity*)it->second;
 
 		if(PCurrentNpc->look.face == 82)//MOGGLE FACE ID 82 == PChar->m_costume 
 		{
-			PCurrentNpc->status = STATUS_NORMAL;
+			ShowDebug(CL_CYAN"SPAWNING MOGGLE: ELSE CHECK ZONE %u \n" CL_RESET,PChar->loc.zone);
+			//PCurrentNpc->status = STATUS_NORMAL;
 			PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_UPDATE));
-			PCurrentNpc->status = STATUS_DISAPPEAR;
-			return;
+			//PCurrentNpc->status = STATUS_DISAPPEAR;
+			//return;
 		}
 		else
 		{
+		 
+			//SANDY ZONE 69719840 and TOWN ID 
+			//WINDY ZONE 69715664 and TOWN ID AND AL ZAHBI
 			ShowDebug(CL_CYAN"SPAWNING MOGGLE: ELSE CHECK NAME %s \n" CL_RESET,PCurrentNpc->GetName());
 			ShowDebug(CL_CYAN"SPAWNING MOGGLE: ELSE CHECK ZONE DESTINATION %u \n" CL_RESET,PCurrentNpc->loc.destination);
 			ShowDebug(CL_CYAN"SPAWNING MOGGLE: ELSE CHECK ZONE %u \n" CL_RESET,PChar->loc.zone);
@@ -1353,16 +1356,12 @@ void CZone::SpawnMoogle(CCharEntity* PChar)
                ShowDebug(CL_CYAN"SPAWNING MOGGLE: HOLLY FUCK WTF IS THIS CLEAN UP %u \n" CL_RESET,PCurrentNpc->loc.destination);
 			}
 			PCurrentNpc->loc.p = PChar->loc.p;
-			PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_DESPAWN));
-			PCurrentNpc->status = STATUS_DISAPPEAR;
+			PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_SPAWN));
+			//PCurrentNpc->status = STATUS_DISAPPEAR;
 			
 		}
 	}
-	}
-	else
-	{
-     ShowDebug(CL_CYAN"SPAWNING MOGGLE: WITH NO PLAYER \n" CL_RESET);
-	}
+	
 }
 
 /************************************************************************

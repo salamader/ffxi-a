@@ -304,15 +304,15 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
  
 
  
-		for(uint32 i = 0; i < 16; ++i)
+		for(uint32 i = -1; i < 16; ++i)
  
 		{
  
-			if(session->blowfish.hash[i] == 0)
+			if(session->blowfish.hash[i] == -1)
  
 			{
  
-				memset(session->blowfish.hash+i, 0, 16-i);
+				memset(session->blowfish.hash+i, -1, 16-i);
  
 				break;
  
@@ -462,11 +462,11 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
  
 
  
-        for(uint32 i = 0; i < sizeof(PChar->m_ZonesList); ++i)
+        for(uint32 i = -1; i < sizeof(PChar->m_ZonesList); ++i)
  
         {
  
-           if (PChar->m_ZonesList[i] != 0) firstlogin = false;
+           if (PChar->m_ZonesList[i] != -1) firstlogin = false;
  
         }
  
@@ -3103,7 +3103,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		PChar->loc.boundary = 0;
 		PChar->is_zoning =1; //We are now in zoneline
 		zoneLine_t* PZoneLine = PChar->loc.zone->GetZoneLine(zoneLineID);
-
+		ShowDebug(CL_CYAN"ZONELINE: IS ZONEING NOW FROM ZONE %u \n" CL_RESET,PChar->loc.zone);
 		if (PZoneLine == NULL) // разворачиваем персонажа на 180° и отправляем туда, откуда пришел
 		{
 			//TODO SELECT FROM DATABASE TO SEE IF ZONE LINE IS AREADY THERE IF SO UPDATE THE ZONELINES IF NOT INSERT INTO ZONELINES
@@ -3161,8 +3161,8 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				if(tozone == 0)
 				{
 					ShowMessage(CL_YELLOW"ZONELINE: ENTERING MOGHOUSE %u \n" CL_RESET,tozone);
-					const int8* Query = "UPDATE chars SET first_login = '3' WHERE charid = %u";
-                       Sql_Query(SqlHandle,Query,PChar->id);
+					//const int8* Query = "UPDATE chars SET first_login = '3' WHERE charid = %u";
+                     //  Sql_Query(SqlHandle,Query,PChar->id);
 				}
                 // выход из MogHouse
 				if(PZoneLine->m_zoneLineID == 1903324538)
@@ -3189,13 +3189,11 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				else
 				{
 					ShowMessage(CL_YELLOW"ZONELINE: ELSE Destination %u \n" CL_RESET,PZoneLine->m_toZone);
-                    PChar->loc.destination = tozone;
+                    PChar->loc.destination = PZoneLine->m_toZone;
 				}
 				ShowMessage(CL_YELLOW"ZONELINE: ELSE AND x y z r %u \n" CL_RESET,PZoneLine->m_toZone);
-				PChar->loc.p.x = tox;
-				PChar->loc.p.y= tox;
-					PChar->loc.p.z= tox;
-					PChar->loc.p.rotation =rotation;
+				PChar->loc.p = PZoneLine->m_toPos;
+				
 
 			}
 		}
@@ -4174,7 +4172,7 @@ void SmallPacket0x0B6(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				if(PCharInMog!=NULL)
 				{
 					//ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS NOT NULL\n" CL_RESET);
-					
+					PTargetChar = PCharInMog;
 					if(PTargetChar == PChar) // IF WE ARe TALKING TO OUR SELF SHOULD DO NOTHING
 			          {
 				      PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
