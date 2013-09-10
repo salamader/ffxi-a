@@ -199,7 +199,7 @@ int32 SendUncnown0x39Packet(lua_State* L)
 int32 GetNPCByID(lua_State* L)
 {
 	ShowWarning("1\n");
-	if( !lua_isnil(L,-1) && lua_isnumber(L,-1) )
+	/*if( !lua_isnil(L,-1) && lua_isnumber(L,-1) )
 	{
 		uint32 npcid = (uint32)lua_tointeger(L, -1);
 
@@ -220,7 +220,7 @@ int32 GetNPCByID(lua_State* L)
 
 		return 1;
 	}
-	lua_pushnil(L);
+	lua_pushnil(L);*/
 	return 1;
 }
 

@@ -38,7 +38,7 @@
 #include "packets/weather.h"
 #include "navmesh.h"
 
-
+#define MIN_ZONEID 0
 enum ZONEID : uint16
 {
 	ZONE_RESIDENTIAL_AREA             = 0,
