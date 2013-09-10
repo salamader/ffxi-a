@@ -940,10 +940,10 @@ void SmallPacket0x00C(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	ShowMessage(CL_YELLOW"I AM STILL CLEANING MAP\n"CL_RESET);
+	//ShowMessage(CL_YELLOW"I AM STILL CLEANING MAP\n"CL_RESET);
 	if(PChar != NULL)
 	{
-		ShowMessage(CL_YELLOW"I AM STILL CLEANING MAP AND IM IN\n"CL_RESET);
+		///ShowMessage(CL_YELLOW"I AM STILL CLEANING MAP AND IM IN\n"CL_RESET);
     session->blowfish.status = BLOWFISH_WAITING;
 
     PChar->TradePending.clean();
@@ -1399,8 +1399,9 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		{
 			if (PChar->loc.destination == 0)
 			{
-				//ShowDebug(CL_RED"PLAYER %s Spawn MOG %u\n"CL_RESET,PChar->GetName(),PChar->getZone());
-				zoneutils::GetZone(PChar->loc.prevzone)->SpawnMoogle(PChar);
+				ShowDebug(CL_RED"PLAYER %s SPAWNING MOGGLE %u\n"CL_RESET,PChar->GetName(),PChar->getZone());
+				//zoneutils::GetZone(230)->SpawnMoogle(PChar);
+				PChar->loc.zone->SpawnMoogle(PChar);
 			}else{
 				PChar->loc.zone->SpawnPCs(PChar);
 				PChar->loc.zone->SpawnNPCs(PChar);
@@ -1412,7 +1413,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				PChar->nameflags.flags =0;
 				PChar->pushPacket(new CCharUpdatePacket(PChar));
 			}
-			if(PChar->is_inevent != 0)
+			if(PChar->is_inevent != 0)//A CHECK SWITCH SAYING THE USER WAS IN A EVENT AND NOT IS SWITCH BACK TO NOT BEING IN IT BECASUE THEY ARE IN IT
 	            {
 				
 				const int8* Query = "UPDATE chars SET  inevent = '0' WHERE charid = %u";
@@ -1420,7 +1421,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			    PChar->is_inevent = 0;
 			    }
 			
-			if(PChar->first_login == 0 )
+			if(PChar->first_login == 0 )//ON CHARACTER CREATION FRIST LOGIN
 			{
 				
 				const int8* Query = "UPDATE chars SET first_login = '1' WHERE charid = %u";
@@ -1430,7 +1431,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				  
 					   
 			}
-			if(PChar->first_login == 2 )
+			if(PChar->first_login == 2 )//NORMAL ZONEING
 			{
 				
 				const int8* Query = "UPDATE chars SET first_login = '2' WHERE charid = %u";
@@ -1441,7 +1442,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			 
 					   
 			}
-			if(PChar->first_login == 3 )
+			if(PChar->first_login == 3 )//MOGHOUSE SWITCH
 			{
 				
 				const int8* Query = "UPDATE chars SET first_login = '2' WHERE charid = %u";
@@ -1451,7 +1452,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			 
 					   
 			}
-			if(PChar->is_returning == 1 )
+			if(PChar->is_returning == 1 )//JUST A CHECK TO SEE IF THEY ARE RETURNING 
 			{
 				
 				const int8* Query = "UPDATE chars SET returning = '0' WHERE charid = %u";
@@ -1462,7 +1463,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			 
 
 			}
-			if(PChar->online_status == 0 )
+			if(PChar->online_status == 0 )//JUST A CHECK TO SEE IF THEY ARE ONLINE OR OFF LINE
 			{
 				
                 const int8* Query = "UPDATE chars SET online = '1',shutdown ='0' WHERE charid = %u";
@@ -3100,7 +3101,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	{
 		PChar->status = STATUS_DISAPPEAR;
 		PChar->loc.boundary = 0;
-
+		PChar->is_zoning =1; //We are now in zoneline
 		zoneLine_t* PZoneLine = PChar->loc.zone->GetZoneLine(zoneLineID);
 
 		if (PZoneLine == NULL) // разворачиваем персонажа на 180° и отправляем туда, откуда пришел
@@ -3157,7 +3158,12 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				ShowMessage(CL_YELLOW"ZONELINE: toz %0.3f \n" CL_RESET, toz);
 				rotation =  Sql_GetUIntData(SqlHandle,5);
 				ShowMessage(CL_YELLOW"ZONELINE: rotation %u \n" CL_RESET, rotation);
-				
+				if(tozone == 0)
+				{
+					ShowMessage(CL_YELLOW"ZONELINE: ENTERING MOGHOUSE %u \n" CL_RESET,tozone);
+					const int8* Query = "UPDATE chars SET first_login = '3' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,PChar->id);
+				}
                 // выход из MogHouse
 				if(PZoneLine->m_zoneLineID == 1903324538)
 				{
@@ -3165,8 +3171,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					ShowMessage(CL_YELLOW"ZONELINE: EXITING MOGHOUSE %u \n" CL_RESET,PZoneLine->m_zoneLineID);
 					//this is exiting moghouse we need to switch fisrt login status to 3 to the moghosue system in packet SmallPacket0x00A
 					//It might be exiting unk yet
-					const int8* Query = "UPDATE chars SET first_login = '3' WHERE charid = %u";
-                       Sql_Query(SqlHandle,Query,PChar->id);
+					
                     if (zone != 0)  // 0 - выход в предыдущую зону, остальные значения - выбор зоны по имени
                     {
 					    switch (town)
@@ -3178,7 +3183,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 						    case 5: prevzone = zone + (zone == 1 ? 0x2F : 0x30); break;
 					    }
                     }
-					ShowMessage(CL_YELLOW"ZONELINE: ZONE is NOT  %u \n" CL_RESET,PZoneLine->m_toZone);
+					ShowMessage(CL_YELLOW"ZONELINE: ZONE is NOT  %u \n" CL_RESET,prevzone);
                     PChar->loc.destination = prevzone;
 				} 
 				else
