@@ -1588,7 +1588,7 @@ int32 OnTrade(CCharEntity* PChar, CBaseEntity* PNpc)
 int32 OnNpcSpawn(CBaseEntity* PNpc)
 {
     DSP_DEBUG_BREAK_IF(PNpc == NULL);
-	ShowDebug("NPC ZONE LOCATION IS %u\n",PNpc->loc.destination);
+	//ShowDebug("NPC ZONE LOCATION IS %u\n",PNpc->loc.destination);
     int8 File[255];
     memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
@@ -1648,7 +1648,7 @@ int32 OnNpcSpawn(CBaseEntity* PNpc)
 int32 OnNpcPath(CBaseEntity* PNpc)
 {
     DSP_DEBUG_BREAK_IF(PNpc == NULL);
-	ShowDebug("NPC ZONE LOCATION IS %u\n",PNpc->loc.destination);
+	//ShowDebug("NPC ZONE LOCATION IS %u\n",PNpc->loc.destination);
     int8 File[255];
     memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);

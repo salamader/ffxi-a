@@ -9417,6 +9417,104 @@ inline int32 CLuaBaseEntity::Morph(lua_State *L)
 	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	 return false;
 }
+inline int32 CLuaBaseEntity::MobMorph(lua_State *L)
+{
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	CMobEntity* PMob = (CMobEntity*)PChar->loc.zone->GetEntity(PChar->m_TargID, TYPE_MOB);
+
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	
+	if(PMob != NULL)
+	{
+		if(PMob->objtype ==TYPE_MOB)
+		{
+	 if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .mobmorph 20");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	 }
+	 int costum = lua_tointeger(L,-1);
+	
+	
+		   PMob->look.face = costum;		
+		  
+        
+           
+	
+           
+            PChar->pushPacket(new CEntityUpdatePacket(PMob,ENTITY_UPDATE));
+
+			char buf[110];
+     sprintf(buf,"Morphing Mob In To ID: %u", costum);
+	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	 return false;
+		}
+		return false;
+	}
+	return false;
+}
+inline int32 CLuaBaseEntity::NpcMorph(lua_State *L)
+{
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	CNpcEntity* PNpc = (CNpcEntity*)PChar->loc.zone->GetEntity(PChar->m_TargID, TYPE_NPC);
+
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	
+	if(PNpc != NULL)
+	{
+		if(PNpc->objtype ==TYPE_MOB)
+		{
+	 if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .npcmorph 20");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	 }
+	 int costum = lua_tointeger(L,-1);
+	
+	
+		   PNpc->look.face = costum;		
+		  
+        
+           
+	
+           
+            PChar->pushPacket(new CEntityUpdatePacket(PNpc,ENTITY_UPDATE));
+
+			char buf[110];
+     sprintf(buf,"Morphing Npc In To ID: %u", costum);
+	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	 return false;
+		}
+		return false;
+	}
+	return false;
+}
 inline int32 CLuaBaseEntity::leave_game(lua_State *L)
 {
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
@@ -9528,8 +9626,11 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf2,".setexprates .setmainjob .setmainlevel .setsubjob .setsublevel .setgil" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
 	char buf3[110];
-	sprintf(buf3,".gettarget .getpos .addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
+	sprintf(buf3,".gettarget .getpos .addmaps .leavegame .homepoint .mobmorph .npcmorph" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
+	char buf4[110];
+	sprintf(buf4,".wallhack .zone .zonelist" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	
 	return true;
 	}
@@ -9548,8 +9649,11 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf3,".getactionmessage .getnpctext .getpos .addmaps .leavegame .homepoint .gotonpc .event" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	char buf4[110];
-	sprintf(buf4,".npcmove .setnpcpos .npclist .setmobpos .mobmove .wallhack .zone .zonelist" );
+	sprintf(buf4,".npcmove .npcmorph .mobmorph .setnpcpos .npclist .setmobpos .mobmove .wallhack .zone " );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
+	char buf5[110];
+	sprintf(buf5,".zonelist" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf5)));
 	return true;
 	}
 	if(PChar->Account_Level==4)
@@ -9567,8 +9671,11 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf3,".getactionmessage .getnpctext .getpos .addmaps .leavegame .homepoint .gotonpc .event" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	char buf4[110];
-	sprintf(buf4,".npcmove .setnpcpos .npclist .setmobpos .mobmove .wallhack .zone .zonelist" );
+	sprintf(buf4,".npcmove .npcmorph .mobmorph .setnpcpos .npclist .setmobpos .mobmove .wallhack .zone " );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
+	char buf5[110];
+	sprintf(buf5,".zonelist" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf5)));
 	
 	return true;
 	}
@@ -10217,6 +10324,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,setmobpos),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,npcmove),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,setnpcpos),
-	
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,NpcMorph),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,MobMorph),
 	{NULL,NULL}
 };

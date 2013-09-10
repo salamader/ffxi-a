@@ -1335,17 +1335,27 @@ void CZone::SpawnMoogle(CCharEntity* PChar)
 	{
 		CNpcEntity* PCurrentNpc = (CNpcEntity*)it->second;
 
-		if( PCurrentNpc->loc.p.z == 1.5 &&
-			PCurrentNpc->look.face == 0x52)
+		if(PCurrentNpc->look.face == 82)//MOGGLE FACE ID 82 == PChar->m_costume 
 		{
 			PCurrentNpc->status = STATUS_NORMAL;
-			PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_SPAWN));
+			PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_UPDATE));
 			PCurrentNpc->status = STATUS_DISAPPEAR;
 			return;
 		}
 		else
 		{
-           ShowDebug(CL_CYAN"SPAWNING MOGGLE: ELSE CHECK \n" CL_RESET);
+			ShowDebug(CL_CYAN"SPAWNING MOGGLE: ELSE CHECK NAME %s \n" CL_RESET,PCurrentNpc->GetName());
+			ShowDebug(CL_CYAN"SPAWNING MOGGLE: ELSE CHECK ZONE DESTINATION %u \n" CL_RESET,PCurrentNpc->loc.destination);
+			ShowDebug(CL_CYAN"SPAWNING MOGGLE: ELSE CHECK ZONE %u \n" CL_RESET,PChar->loc.zone);
+			if(PCurrentNpc->loc.destination == 0)
+			{
+				
+               ShowDebug(CL_CYAN"SPAWNING MOGGLE: HOLLY FUCK WTF IS THIS CLEAN UP %u \n" CL_RESET,PCurrentNpc->loc.destination);
+			}
+			PCurrentNpc->loc.p = PChar->loc.p;
+			PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_DESPAWN));
+			PCurrentNpc->status = STATUS_DISAPPEAR;
+			
 		}
 	}
 	}
