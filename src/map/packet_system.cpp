@@ -280,17 +280,16 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
  
 
  
-	if (PChar->status == STATUS_DISAPPEAR)
+	if (PChar->is_zoning == 1)//WE ARE INCREASEING OUR ZONE ENTERING INTO THE WORLD
+    {
+ ShowNotice(CL_RED"PChar->status == STATUS_DISAPPEAR iz_zoning==1 %u\n"CL_RESET,PChar->loc.zone);
+        //if (PChar->loc.zone != NULL)
  
-	{
+        //{
+// ShowNotice(CL_RED"MY ZONE IS NOT NULL %u\n"CL_RESET,PChar->loc.zone);
+          //  PacketParser[0x00D](session, PChar, NULL);
  
-        if (PChar->loc.zone != NULL)
- 
-        {
- ShowNotice(CL_RED"MY ZONE IS NOT NULL %u\n"CL_RESET,PChar->loc.zone);
-            PacketParser[0x00D](session, PChar, NULL);
- 
-        }
+       // }
  
 
  
@@ -304,15 +303,15 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
  
 
  
-		for(uint32 i = -1; i < 16; ++i)
+		for(uint32 i = 0; i < 16; ++i)
  
 		{
  
-			if(session->blowfish.hash[i] == -1)
+			if(session->blowfish.hash[i] == 0)
  
 			{
  
-				memset(session->blowfish.hash+i, -1, 16-i);
+				memset(session->blowfish.hash+i, 0, 16-i);
  
 				break;
  
@@ -462,11 +461,11 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
  
 
  
-        for(uint32 i = -1; i < sizeof(PChar->m_ZonesList); ++i)
+        for(uint32 i = 0; i < sizeof(PChar->m_ZonesList); ++i)
  
         {
  
-           if (PChar->m_ZonesList[i] != -1) firstlogin = false;
+           if (PChar->m_ZonesList[i] != 0) firstlogin = false;
  
         }
  
@@ -539,9 +538,10 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
  
         {
 			zoneutils::GetZone(PChar->loc.destination)->LoadPlayerZoneSettings(PChar);
+			
 			ShowWarning(CL_YELLOW"Client cannot receive packet or key is invalid: %s\n" CL_RESET, PChar->GetName());
 			ShowWarning(CL_YELLOW"Reset the players to his nations homepoint: %s\n" CL_RESET, PChar->GetName());
-			 if(PChar->profile.nation==0)
+			 /*if(PChar->profile.nation==0)
 					  {
                      // ShowNotice(CL_RED"TRACER: SANDY %u\n" CL_RESET,PChar->profile.nation);
 					//  ShowNotice(CL_RED"TRACER: SANDY GETZONE %u\n" CL_RESET,PChar->getZone());
@@ -601,11 +601,11 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 						
 					 // return;
 					  }//2
-
+					  */
 	
     //I ZONED IN TO MOGHOUSE AND THIS IS WHAT HAPPENS THEN WHEN I LOGIN BACK IN IT SHOWED I WAS STILL ON MAP SO DO A FULL CLEAN UP IF THIS HAPPENS
-	                    PChar->leavegame();
-						PacketParser[0x00D](session, PChar, 0);
+	                    //PChar->leavegame();
+						//PacketParser[0x00D](session, PChar, 0);
 	
 	
         }
@@ -614,25 +614,14 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
  
     if (PChar->loc.prevzone == 0 && !firstlogin)
      {
- //ShowNotice(CL_RED"ELSE MY PREVZONE %u\n"CL_RESET,PChar->loc.prevzone);
+ ShowNotice(CL_RED"ELSE MY PREVZONE %u\n"CL_RESET,PChar->loc.prevzone);
 		PChar->loc.prevzone = PChar->getZone();
  
 	}
 
 	              
 
-	              /* if(login_status==1)
-				   {
-					   
-					  ShowNotice(CL_RED"WE ARE AT FIRST LOGIN IN EVENT %u\n"CL_RESET,inevent);
-					  
-				      ShowNotice(CL_RED"EVENT == %u\n"CL_RESET,inevent);
-					  ShowNotice(CL_RED"EVENT NUMBER == %u\n"CL_RESET,eventid);
-					  PChar->pushPacket(new CDownloadingDataPacket());
-                      PChar->pushPacket(new CZoneInPacket(PChar,eventid)); 
-					  PChar->pushPacket(new CZoneVisitedPacket(PChar));
-			        return;
-					}*/
+	            
 
 	             if(login_status==2)
 	              {
@@ -693,8 +682,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					  PChar->pushPacket(new CZoneInPacket(PChar,EventID));
 				  }
 				  
-	            //  charutils::SaveCharPosition(PChar);
-	              //charutils::SaveZonesVisited(PChar);
+	            
                   charutils::RecoverFailedSendBox(PChar);
 	              
 	              PChar->pushPacket(new CZoneVisitedPacket(PChar));
@@ -801,7 +789,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		                   }
 						 
 				  }
-				  
+				  ShowMessage(CL_GREEN"DOWNLOADING DATA \n"CL_RESET);
 	              PChar->pushPacket(new CDownloadingDataPacket());
 				  
 				 // 0= SANDY
@@ -836,6 +824,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				  }
 				  else
 				  {
+					  ShowMessage(CL_GREEN"ZONE IN PACKET EVENT -1 \n"CL_RESET);
                   PChar->pushPacket(new CZoneInPacket(PChar,-1));
 				  }
 	              PChar->pushPacket(new CZoneVisitedPacket(PChar));
@@ -3169,6 +3158,8 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				{
                     uint16 prevzone = PChar->loc.prevzone;
 					ShowMessage(CL_YELLOW"ZONELINE: EXITING MOGHOUSE %u \n" CL_RESET,PZoneLine->m_zoneLineID);
+					const int8* Query = "UPDATE chars SET first_login = '3' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,PChar->id);
 					//this is exiting moghouse we need to switch fisrt login status to 3 to the moghosue system in packet SmallPacket0x00A
 					//It might be exiting unk yet
 					

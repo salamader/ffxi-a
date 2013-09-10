@@ -557,7 +557,8 @@ inline int32 CLuaBaseEntity::getRace(lua_State *L)
 
 inline int32 CLuaBaseEntity::setPos(lua_State *L)
 {
-	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
+	ShowMessage("LUA CALLING SETPOS FOR PLAYER\n");
+	/*DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
 
     if( m_PBaseEntity->objtype != TYPE_PC)
     {
@@ -616,7 +617,7 @@ inline int32 CLuaBaseEntity::setPos(lua_State *L)
     else
     {
         m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_SPAWN));
-    }
+    }*/
 	return 0;
 }
 

@@ -56,7 +56,7 @@ namespace zoneutils
 
 void TOTDCharnge(TIMETYPE TOTD)
 {
-	for (uint16 ZoneID = 0; ZoneID < MAX_ZONEID; ZoneID++)
+	for (uint16 ZoneID = MIN_ZONEID; ZoneID < MAX_ZONEID; ZoneID++)
 	{
 		g_PZoneList[ZoneID]->TOTDChange(TOTD);
 	}
@@ -100,7 +100,7 @@ void UpdateWeather()
     uint8 WeatherChange = 0;
     uint8 WeatherFrequency = 0;
 
-    for (uint16 ZoneID = 0; ZoneID < MAX_ZONEID; ZoneID++)
+    for (uint16 ZoneID = MIN_ZONEID; ZoneID < MAX_ZONEID; ZoneID++)
     {
         if (!g_PZoneList[ZoneID]->IsWeatherStatic())
         {
@@ -197,7 +197,7 @@ CZone* GetZone(uint16 ZoneID)
 {
     if(ZoneID >= MAX_ZONEID)
 	{
-		ZoneID = 0;
+		ZoneID = MIN_ZONEID;
 	}
 	return g_PZoneList[ZoneID];
 }
@@ -278,7 +278,7 @@ CBaseEntity* GetEntity(uint32 ID, uint8 filter)
 
 CCharEntity* GetCharByName(int8* name)
 {
-    for (uint16 ZoneID = 0; ZoneID < MAX_ZONEID; ZoneID++)
+    for (uint16 ZoneID = MIN_ZONEID; ZoneID < MAX_ZONEID; ZoneID++)
     {
         CCharEntity* PChar = g_PZoneList[ZoneID]->GetCharByName(name);
 
@@ -298,7 +298,7 @@ CCharEntity* GetCharByName(int8* name)
 
 CCharEntity* GetCharFromRegion(uint32 charid, uint16 targid, uint8 RegionID)
 {
-    for (uint16 ZoneID = 0; ZoneID < MAX_ZONEID; ZoneID++)
+    for (uint16 ZoneID = MIN_ZONEID; ZoneID < MAX_ZONEID; ZoneID++)
 	{
         if (g_PZoneList[ZoneID]->GetRegionID() == RegionID)
         {
@@ -808,7 +808,7 @@ void LoadZoneList()
 {
 	g_PTrigger = new CNpcEntity();	// нужно в конструкторе CNpcEntity задавать модель по умолчанию
 
-	for (uint16 ZoneID = 0; ZoneID < MAX_ZONEID; ZoneID++)
+	for (uint16 ZoneID = MIN_ZONEID; ZoneID < MAX_ZONEID; ZoneID++)
 	{
         CZone* PZone = new CZone((ZONEID)ZoneID, GetCurrentRegion(ZoneID), GetCurrentContinent(ZoneID));
 
@@ -1145,7 +1145,7 @@ CONTINENTTYPE GetCurrentContinent(uint16 ZoneID)
 
 void FreeZoneList()
 {
-	for (uint16 ZoneID = 0; ZoneID < MAX_ZONEID; ZoneID++)
+	for (uint16 ZoneID = MIN_ZONEID; ZoneID < MAX_ZONEID; ZoneID++)
 	{
 		delete g_PZoneList[ZoneID];
 	}

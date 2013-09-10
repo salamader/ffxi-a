@@ -72,8 +72,8 @@ CTransportHandler* CTransportHandler::getInstance()
 
 CTransportHandler::CTransportHandler() 
 {
-    InitializeTransport();
-	InitializeElevators();
+ //   InitializeTransport();
+//	InitializeElevators();
 }
 
 /************************************************************************
