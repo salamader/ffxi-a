@@ -504,7 +504,7 @@ public:
 	void			SpawnMOBs(CCharEntity* PChar);									// отображаем MOBs в зоне
 	void			SpawnPETs(CCharEntity* PChar);									// отображаем PETs в зоне
 	void			SpawnNPCs(CCharEntity* PChar);									// отображаем NPCs в зоне
-	void			SpawnMoogle(CCharEntity* PChar);								// отображаем Moogle в MogHouse
+	int32			SpawnMoogle(CCharEntity* PChar);								// отображаем Moogle в MogHouse
     void            SpawnTransport(CCharEntity* PChar);                             // отображаем транспорт
 
 	void			WideScan(CCharEntity* PChar, uint16 radius);					// сканирование местности с заданным радиусом

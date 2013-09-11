@@ -1413,7 +1413,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			{
 				ShowDebug(CL_RED"PLAYER %s SPAWNING MOGGLE %u\n"CL_RESET,PChar->GetName(),PChar->getZone());
 				zoneutils::GetZone(PChar->loc.prevzone)->SpawnMoogle(PChar);
-				//PChar->loc.zone->SpawnMoogle(PChar);
+				
 			}else{
 				PChar->loc.zone->SpawnPCs(PChar);
 				PChar->loc.zone->SpawnNPCs(PChar);
