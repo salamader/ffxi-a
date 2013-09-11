@@ -37,6 +37,7 @@ void CState::PushMessage(MSGBASIC_ID msgID, int32 param, int32 value)
 	}
 
 	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PEntity,PTarget,param,value,msgID));
+	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE, new CMessageBasicPacket(m_PEntity,PTarget,param,value,msgID));
 }
 
 void CState::PushError(MSGBASIC_ID msgID, int32 param, int32 value)

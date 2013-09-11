@@ -1249,6 +1249,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				{
 					MOB->m_CallForHelp = 0x20;
 					PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(PChar,PChar,0,0,19));
+					PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CMessageBasicPacket(PChar,PChar,0,0,19));
 					break;
 				}
 			}
@@ -3056,6 +3057,7 @@ void SmallPacket0x05D(map_session_data_t* session, CCharEntity* PChar, int8* dat
     }
 
 	PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCharEmotionPacket(PChar,data));
+	PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CCharEmotionPacket(PChar,data));
 	return;
 }
 
@@ -3832,6 +3834,7 @@ void SmallPacket0x0A2(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	uint16 diceroll = 1 + rand()%1000;
 
 	PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageStandardPacket(PChar, diceroll, 88));
+	PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CMessageStandardPacket(PChar, diceroll, 88));
 	return;
 }
 

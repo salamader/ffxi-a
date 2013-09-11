@@ -768,9 +768,10 @@ int32 startSynth(CCharEntity* PChar)
 	PChar->animation = ANIMATION_SYNTH;
 	PChar->pushPacket(new CCharUpdatePacket(PChar));
 
-    if(PChar->loc.zone->GetID() != 255 && PChar->loc.zone->GetID() != 0)
+    if(PChar->loc.zone->GetID() != MAX_ZONEID && PChar->loc.zone->GetID() != MIN_ZONEID)
     {
         PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CSynthAnimationPacket(PChar,effect,result));
+		 PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CSynthAnimationPacket(PChar,effect,result));
     }
     else
     {
@@ -851,7 +852,7 @@ int32 doSynthResult(CCharEntity* PChar)
         if(PChar->loc.zone->GetID() != 255 && PChar->loc.zone->GetID() != 0)
         {
             // Don't send this packet to the zone it does funky stuff.
-            //PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CSynthMessagePacket(PChar, SYNTH_SUCCESS, itemID, quantity));
+            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CSynthMessagePacket(PChar, SYNTH_SUCCESS, itemID, quantity));
 
             PChar->pushPacket(new CSynthMessagePacket(PChar, SYNTH_SUCCESS, itemID, quantity));
         }
