@@ -79,6 +79,9 @@ CEntityUpdatePacket::CEntityUpdatePacket(CBaseEntity* PEntity, ENTITYUPDATE type
 		}
 		case ENTITY_UPDATE:
 		{
+
+			
+
 			WBUFB(data,(0x0B)-4) = PEntity->loc.p.rotation;
 			WBUFF(data,(0x0C)-4) = PEntity->loc.p.x;
 			WBUFF(data,(0x10)-4) = PEntity->loc.p.y;
@@ -129,6 +132,7 @@ CEntityUpdatePacket::CEntityUpdatePacket(CBaseEntity* PEntity, ENTITYUPDATE type
 									WBUFB (data,(0x1E)-4) = PMob->GetHPP();
 									WBUFB (data,(0x27)-4) = 0x08;
 									memcpy(data+(0x34)-4, PEntity->GetName(),(PEntity->name.size() > 15 ? 15 : PEntity->name.size()));
+									
 							}
 						}
 					}

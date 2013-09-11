@@ -371,6 +371,7 @@ int32 do_sockets(int32 next)
 
 int32 parse_console(int8* buf)
 {
+	ShowStatus("int32 parse_console(int8* buf)\n");
 	return 0;
 }
 
@@ -514,7 +515,7 @@ int32 recv_parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_da
 		// don't need memcpy header
 		memcpy(buff+FFXI_HEADER_SIZE,PacketDataBuff,PacketDataSize);
 		*buffsize = FFXI_HEADER_SIZE+PacketDataSize;
-
+		ShowStatus("int32 recv_parse(ELSE)\n");
 		aFree(PacketDataBuff);
 		return 0;
 	}

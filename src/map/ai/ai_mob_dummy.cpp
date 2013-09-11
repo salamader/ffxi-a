@@ -1346,6 +1346,8 @@ void CAIMobDummy::ActionAttack()
 						{
 							Action.messageID = 0;
 							m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,1, MSGBASIC_SHADOW_ABSORB));
+							m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,1, MSGBASIC_SHADOW_ABSORB));
+						
 						}
 						else if (battleutils::IsAnticipated(m_PBattleTarget,false,false))
 						{

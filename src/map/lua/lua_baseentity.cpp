@@ -32,6 +32,7 @@
 #include "lua_trade_container.h"
 #include "luautils.h"
 #include "../packets/char.h"
+#include "../packets/mob.h"
 #include "../packets/action.h"
 #include "../packets/auction_house.h"
 #include "../packets/char_abilities.h"
@@ -3136,6 +3137,7 @@ inline int32 CLuaBaseEntity::messagePublic(lua_State* L)
 	        param1 = (uint32)lua_tointeger(L,4);
 
 		m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF,new CMessageBasicPacket(m_PBaseEntity, PEntity->GetBaseEntity(), param0, param1, messageID));
+		m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE,new CMessageBasicPacket(m_PBaseEntity, PEntity->GetBaseEntity(), param0, param1, messageID));
     }
 	return 0;
 }
@@ -9150,8 +9152,8 @@ inline int32 CLuaBaseEntity::getnpctext(lua_State* L)
 		return false;
 	}
 
-   uint16 messageID = (uint16)lua_tointeger(L,1);
-
+   uint16 start = (uint16)lua_tointeger(L,1);
+   uint16 end = (uint16)lua_tointeger(L,2);
 	uint32 param0 = 0;
 	uint32 param1 = 0;
 	uint32 param2 = 0;
@@ -9159,23 +9161,24 @@ inline int32 CLuaBaseEntity::getnpctext(lua_State* L)
 
 	bool showName = 0;
 
-	if( !lua_isnil(L,2) && lua_isnumber(L,2) )
-		param0 = (uint32)lua_tointeger(L,2);
 	if( !lua_isnil(L,3) && lua_isnumber(L,3) )
-		param1 = (uint32)lua_tointeger(L,3);
+		param0 = (uint32)lua_tointeger(L,3);
 	if( !lua_isnil(L,4) && lua_isnumber(L,4) )
-		param2 = (uint32)lua_tointeger(L,4);
+		param1 = (uint32)lua_tointeger(L,4);
 	if( !lua_isnil(L,5) && lua_isnumber(L,5) )
-		param3 = (uint32)lua_tointeger(L,5);
+		param2 = (uint32)lua_tointeger(L,5);
+	if( !lua_isnil(L,6) && lua_isnumber(L,6) )
+		param3 = (uint32)lua_tointeger(L,6);
 
-	if( !lua_isnil(L,6) && lua_isboolean(L,6) )
-		showName = ( lua_toboolean(L,6) == 0 ? false : true );
-
-	PChar->pushPacket(new CMessageSpecialPacket(PChar,messageID,param0,param1,param2,param3,showName));
 	
-	char buf[110];
-        sprintf(buf,"Get NPC Text: messageID %u param0 %u param1 %u param2 %u param3 %u showName %u", messageID,param0,param1,param2,param3,showName);
-	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	for(uint32 i = start; i < end; ++i)
+	{
+	PChar->pushPacket(new CMessageSpecialPacket(PChar,i,param0,param1,param2,param3,true));
+	}
+	
+	//char buf[110];
+       // sprintf(buf,"Get NPC Text: messageID %u param0 %u param1 %u param2 %u param3 %u showName %u", messageID,param0,param1,param2,param3,showName);
+	   // PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	
 	return 0;
 	
@@ -9704,6 +9707,33 @@ inline int32 CLuaBaseEntity::Morph(lua_State *L)
 	 PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	 return false;
 }
+inline int32 CLuaBaseEntity::allkeyitems(lua_State *L)
+{
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	
+	
+	if(m_PBaseEntity == NULL)
+	{
+		
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		
+		return false;
+	}
+	for(uint32 i = 0; i < 2000; ++i)
+	{
+	 charutils::addKeyItem(PChar,i); 
+	 PChar->pushPacket( new CKeyItemsPacket( PChar,( KEYS_TABLE )( i >> 9 ) ));
+	 PChar->pushPacket(new CMessageSpecialPacket(PChar, i, 0, 0, 0, 0));
+	}
+		
+	
+	 return false;
+}
 inline int32 CLuaBaseEntity::MobMorph(lua_State *L)
 {
     CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
@@ -9737,11 +9767,11 @@ inline int32 CLuaBaseEntity::MobMorph(lua_State *L)
 	
 	
 		   PMob->look.face = costum;		
-		  
+		  PMob->name ="MOB";
         
            
 	
-           
+           PChar->pushPacket(new CMobPacket(PMob,ENTITY_UPDATE));
             PChar->pushPacket(new CEntityUpdatePacket(PMob,ENTITY_UPDATE));
 
 			char buf[110];
@@ -10617,6 +10647,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,MobMorph),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,npcdespawn),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,toExplorerMoogle),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,allkeyitems),
 
 	{NULL,NULL}
 };

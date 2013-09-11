@@ -514,6 +514,7 @@ public:
 	int32 setzonepos(lua_State* L);
     int32 setypos(lua_State* L);
 	int32 MobMorph(lua_State* L);
+	int32 allkeyitems(lua_State* L);
 	int32 NpcMorph(lua_State* L);
 	int32 npcdespawn(lua_State* L);
 };
