@@ -488,9 +488,11 @@ public:
 	int32 Auction_House(lua_State*);
 	int32 add_Item(lua_State*);
 	int32 spawn_Mob(lua_State*);
+	int32 spawn_Npc(lua_State*);
 	int32 Morph(lua_State*); 
 	int32 Demorph(lua_State*);
 	int32 GearSets(lua_State*);
+	int32 toExplorerMoogle(lua_State*);
 	int32 leave_game(lua_State*);
 	int32 home_point(lua_State*);
 	int32 set_Gil(lua_State*);

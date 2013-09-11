@@ -2114,7 +2114,7 @@ inline int32 CLuaBaseEntity::startEvent(lua_State *L)
     uint32 param3 = 0;
     uint32 param4 = 0;
     uint32 param5 = 0;
-    uint32 param6 = 0;
+    uint32 param6 = 0; //GIL
     uint32 param7 = 0;
     int16 textTable = -1;
 
@@ -8886,6 +8886,7 @@ inline int32 CLuaBaseEntity::setypos(lua_State* L)
 	
 	PChar->loc.p.y = lua_tointeger(L,1);
 	PChar->pushPacket(new CCharPacket(PChar,ENTITY_UPDATE));
+	PChar->pushPacket(new CPositionPacket(PChar));
 	char buf[110];
         sprintf(buf,"SET Y POS COMMAND");
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
@@ -9179,6 +9180,48 @@ inline int32 CLuaBaseEntity::getnpctext(lua_State* L)
 	return 0;
 	
 }
+inline int32 CLuaBaseEntity::spawn_Npc(lua_State *L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	CZone* PZone = zoneutils::GetZone(PChar->getZone());
+	if(m_PBaseEntity == NULL)
+	{
+		
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		
+		return false;
+	}
+	
+	
+	 if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .spawnnpc 2");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	 }
+
+	
+	
+
+	char buf[110];
+	uint32 mobid = lua_tointeger(L, -1);
+
+	
+	
+		
+		sprintf(buf,"No Mob By The ID: %u Was Found In The Database.",mobid );
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		
+	
+return false;
+}
 inline int32 CLuaBaseEntity::spawn_Mob(lua_State *L)
 {
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
@@ -9451,6 +9494,126 @@ if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) ==
 		return false;
 	}
 return false;
+}
+
+inline int32 CLuaBaseEntity::toExplorerMoogle(lua_State *L)
+{
+CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	
+	
+	if(m_PBaseEntity == NULL)
+	{
+		
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		
+		return false;
+	}
+	 if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
+	{
+		
+		
+		return false;
+	 }
+
+	 
+	
+	 uint16 zone = lua_tointeger(L,-1);
+	 PChar->is_zoning =1;
+	 //WE MIGHT HAVE TO UPDATE THE DATABASE ALSO LETS JUST DO IT
+	 if(zone == 231) //OPTION 1 NORTH SAN D'ORIA
+	 {
+        PChar->loc.p.x = 41.092;
+		PChar->loc.p.y = -0.199;
+		PChar->loc.p.z = 24.472;
+		PChar->loc.p.rotation = 4;
+		PChar->loc.boundary = 0;
+		PChar->is_returning = 1;
+		PChar->loc.destination = 231;
+		PChar->status = STATUS_DISAPPEAR;
+	    PChar->animation = ANIMATION_NONE;
+        PChar->clearPacketList();
+		const int8* Query = "UPDATE chars SET returning = '1',deathstate = '0', pos_zone='231', pos_x='41.092', pos_y='-0.199', pos_z='24.472', pos_rot='4' WHERE charid = %u";
+        Sql_Query(SqlHandle,Query,PChar->id);
+		PChar->pushPacket(new CServerIPPacket(PChar,2));
+		return false;
+	 }
+	 if(zone == 234)//OPTION 2 BASTOCK MINES
+	 {
+		PChar->loc.p.x = 80.263;
+		PChar->loc.p.y = 0.000;
+		PChar->loc.p.z = -64.504;
+		PChar->loc.p.rotation = 233;
+		PChar->loc.boundary = 0;
+		PChar->is_returning = 1;
+		PChar->loc.destination = 234;
+		PChar->status = STATUS_DISAPPEAR;
+	    PChar->animation = ANIMATION_NONE;
+        PChar->clearPacketList();
+		const int8* Query = "UPDATE chars SET returning = '1',deathstate = '0', pos_zone='234', pos_x='80.263', pos_y='-0.000', pos_z='-64.504', pos_rot='233' WHERE charid = %u";
+        Sql_Query(SqlHandle,Query,PChar->id);
+		PChar->pushPacket(new CServerIPPacket(PChar,2));
+		return false;
+
+	 }
+	 if(zone == 240)//OPTION 3 PORT WINDURST
+	 {
+		PChar->loc.p.x = 184.324;
+		PChar->loc.p.y = -12.000;
+		PChar->loc.p.z = 218.537;
+		PChar->loc.p.rotation = 96;
+		PChar->loc.boundary = 0;
+		PChar->is_returning = 1;
+		PChar->loc.destination = 240;
+		PChar->status = STATUS_DISAPPEAR;
+	    PChar->animation = ANIMATION_NONE;
+        PChar->clearPacketList();
+		const int8* Query = "UPDATE chars SET returning = '1',deathstate = '0', pos_zone='240', pos_x='184.324', pos_y='-12.000', pos_z='218.537', pos_rot='96' WHERE charid = %u";
+        Sql_Query(SqlHandle,Query,PChar->id);
+		PChar->pushPacket(new CServerIPPacket(PChar,2));
+		return false;
+
+	 }
+	 if(zone == 248)//OPTION 4 SELBINA 
+	 {
+		PChar->loc.p.x = 11.307;
+		PChar->loc.p.y = -14.559;
+		PChar->loc.p.z = 63.944;
+		PChar->loc.p.rotation = 96;
+		PChar->loc.boundary = 0;
+		PChar->is_returning = 1;
+		PChar->loc.destination = 248;
+		PChar->status = STATUS_DISAPPEAR;
+	    PChar->animation = ANIMATION_NONE;
+        PChar->clearPacketList();
+		const int8* Query = "UPDATE chars SET returning = '1',deathstate = '0', pos_zone='248', pos_x='11.307', pos_y='-14.559', pos_z='63.944', pos_rot='96' WHERE charid = %u";
+        Sql_Query(SqlHandle,Query,PChar->id);
+		PChar->pushPacket(new CServerIPPacket(PChar,2));
+		return false;
+
+	 }
+	 if(zone == 249)//OPTION 5 MHAURA
+	 {
+        PChar->loc.p.x = 4.714;
+		PChar->loc.p.y = -4.000;
+		PChar->loc.p.z = 71.552;
+		PChar->loc.p.rotation = 252;
+		PChar->loc.boundary = 0;
+		PChar->is_returning = 1;
+		PChar->loc.destination = 249;
+		PChar->status = STATUS_DISAPPEAR;
+	    PChar->animation = ANIMATION_NONE;
+        PChar->clearPacketList();
+		const int8* Query = "UPDATE chars SET returning = '1',deathstate = '0', pos_zone='249', pos_x='4.714', pos_y='-4.000', pos_z='71.552', pos_rot='252' WHERE charid = %u";
+        Sql_Query(SqlHandle,Query,PChar->id);
+		PChar->pushPacket(new CServerIPPacket(PChar,2));
+		return false;
+	 }
+	 return false;
 }
 inline int32 CLuaBaseEntity::GearSets(lua_State *L)
 {
@@ -10453,5 +10616,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,NpcMorph),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,MobMorph),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,npcdespawn),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,toExplorerMoogle),
+
 	{NULL,NULL}
 };
