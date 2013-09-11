@@ -20,7 +20,7 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	RunElevator(22);
+	player:ELEVATOR__PALBOROUGH__MINES__ELVTR(22);
 end;
 
 -----------------------------------
