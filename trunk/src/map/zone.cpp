@@ -1336,9 +1336,12 @@ void CZone::SpawnMoogle(CCharEntity* PChar)
 
 		if(PCurrentNpc->look.face == 82)//MOGGLE FACE ID 82 == PChar->m_costume 
 		{
-			ShowDebug(CL_CYAN"SPAWNING MOGGLE: ELSE CHECK ZONE %u \n" CL_RESET,PChar->loc.zone);
+			ShowDebug(CL_CYAN"SPAWNING MOGGLE:BY FACE 82 == %u\n" CL_RESET,PCurrentNpc->look.face);
 			//PCurrentNpc->status = STATUS_NORMAL;
+			PCurrentNpc->loc.p = PChar->loc.p;
+			PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_SPAWN));
 			PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_UPDATE));
+			
 			//PCurrentNpc->status = STATUS_DISAPPEAR;
 			//return;
 		}
@@ -1347,16 +1350,14 @@ void CZone::SpawnMoogle(CCharEntity* PChar)
 		 
 			//SANDY ZONE 69719840 and TOWN ID 
 			//WINDY ZONE 69715664 and TOWN ID AND AL ZAHBI
-			ShowDebug(CL_CYAN"SPAWNING MOGGLE: ELSE CHECK NAME %s \n" CL_RESET,PCurrentNpc->GetName());
-			ShowDebug(CL_CYAN"SPAWNING MOGGLE: ELSE CHECK ZONE DESTINATION %u \n" CL_RESET,PCurrentNpc->loc.destination);
-			ShowDebug(CL_CYAN"SPAWNING MOGGLE: ELSE CHECK ZONE %u \n" CL_RESET,PChar->loc.zone);
-			if(PCurrentNpc->loc.destination == 0)
-			{
-				
-               ShowDebug(CL_CYAN"SPAWNING MOGGLE: HOLLY FUCK WTF IS THIS CLEAN UP %u \n" CL_RESET,PCurrentNpc->loc.destination);
-			}
+		
+				ShowDebug(CL_CYAN"SPAWNING MOGGLE:BY NAME Moggle == %s \n" CL_RESET,PCurrentNpc->name);
 			PCurrentNpc->loc.p = PChar->loc.p;
+			PCurrentNpc->loc.p.z = PChar->loc.p.z + 1.5;
+			PCurrentNpc->loc.p.rotation = PChar->loc.p.rotation / 2;
 			PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_SPAWN));
+			PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_UPDATE));
+			
 			//PCurrentNpc->status = STATUS_DISAPPEAR;
 			
 		}

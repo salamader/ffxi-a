@@ -940,6 +940,7 @@ int32 OnGameIn(CCharEntity* PChar)
 	uint8 inevent = 0;
 	int32 eventid = 0;
 	int32 Is_Public_0_Or_Private_1 = 0;
+	int32 security = 0;
 	int32 accountID = 0;
 	int deathtime = 0;
 	const char * Query = "SELECT first_login, inevent, eventid,shutdown,accid FROM chars WHERE charid = '%u';";
@@ -961,12 +962,14 @@ int32 OnGameIn(CCharEntity* PChar)
 				   
 				   PChar->accid = accountID;
 				   PChar->is_zoning = 1;
-				   Query = "SELECT server_type FROM accounts WHERE id = '%u';";
+				   Query = "SELECT server_type,security FROM accounts WHERE id = '%u';";
 	               ret3 = Sql_Query(SqlHandle,Query,PChar->accid);
 			       if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 	                {
 						Is_Public_0_Or_Private_1 =  Sql_GetUIntData(SqlHandle,0);
+						security =  Sql_GetUIntData(SqlHandle,1);
 				        PChar->Is_Public_0_Or_Private_1 = Is_Public_0_Or_Private_1;
+						PChar->Account_Level = security;
 				    }
 				   if(shutdown_status == 1)
 				   {

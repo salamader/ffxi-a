@@ -8816,6 +8816,129 @@ inline int32 CLuaBaseEntity::setnpcpos(lua_State* L)
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf8)));
 	return false;
 }
+inline int32 CLuaBaseEntity::npcdespawn(lua_State* L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	CNpcEntity* PNpc = (CNpcEntity*)PChar->loc.zone->GetEntity(PChar->m_TargID, TYPE_NPC);
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	if(PNpc != NULL)
+	{
+	if(PNpc->objtype == TYPE_NPC)
+	{
+	PNpc->status = STATUS_DISAPPEAR;
+	PChar->pushPacket(new CEntityUpdatePacket(PNpc, ENTITY_DESPAWN));
+	
+	char buf[110];
+        sprintf(buf,"NPC DESPAWN COMMAND");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	}
+	else
+	{
+		char buf8[110];
+        sprintf(buf8,"Npc Target Is Not type npc: %u",PNpc->objtype);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf8)));
+		return false;
+	}
+	
+	return false;
+	}
+	char buf8[110];
+        sprintf(buf8,"Wasn't Able To Find Npc Target");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf8)));
+	return false;
+}
+inline int32 CLuaBaseEntity::setypos(lua_State* L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	 if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .setypos 1");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		return false;
+	 }
+	 
+	
+	
+	PChar->loc.p.y = lua_tointeger(L,1);
+	PChar->pushPacket(new CCharPacket(PChar,ENTITY_UPDATE));
+	char buf[110];
+        sprintf(buf,"SET Y POS COMMAND");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		
+		char buf3[110];
+        sprintf(buf3,"Y = %0.3f",PChar->loc.p.y);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
+		
+		return false;
+
+	
+}
+inline int32 CLuaBaseEntity::setzonepos(lua_State* L)
+{
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+	
+	const char *Query = "UPDATE zonesystem SET x ='%0.3f',y='%0.3f',z='%0.3f',r='%u' WHERE zone = '%u'";
+        Sql_Query(SqlHandle,Query,PChar->loc.p.x,PChar->loc.p.y,PChar->loc.p.z,PChar->loc.p.rotation,PChar->loc.destination);
+	
+	char buf[110];
+        sprintf(buf,"SET ZONE POS COMMAND");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		char buf1[110];
+        sprintf(buf1,"Zone =%u",PChar->loc.destination);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+		char buf2[110];
+        sprintf(buf2,"X = %0.3f",PChar->loc.p.x);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf2)));
+		char buf3[110];
+        sprintf(buf3,"Y = %0.3f",PChar->loc.p.y);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
+		char buf4[110];
+        sprintf(buf4,"Z = %0.3f",PChar->loc.p.z);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
+		char buf5[110];
+        sprintf(buf5,"Rot = %u",PChar->loc.p.rotation);
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf5)));
+		return false;
+
+	
+}
 inline int32 CLuaBaseEntity::gettarget(lua_State* L)
 {
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
@@ -9653,7 +9776,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf4,".npcmove .npcmorph .mobmorph .setnpcpos .npclist .setmobpos .mobmove .wallhack .zone " );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	char buf5[110];
-	sprintf(buf5,".zonelist" );
+	sprintf(buf5,".setypos .setzonepos .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf5)));
 	return true;
 	}
@@ -9675,7 +9798,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf4,".npcmove .npcmorph .mobmorph .setnpcpos .npclist .setmobpos .mobmove .wallhack .zone " );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	char buf5[110];
-	sprintf(buf5,".zonelist" );
+	sprintf(buf5,".setypos .setzonepos .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf5)));
 	
 	return true;
@@ -10325,7 +10448,10 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,setmobpos),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,npcmove),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,setnpcpos),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,setzonepos),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,setypos),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,NpcMorph),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,MobMorph),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,npcdespawn),
 	{NULL,NULL}
 };
