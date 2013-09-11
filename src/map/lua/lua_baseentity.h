@@ -509,8 +509,11 @@ public:
 	int32 setmobpos(lua_State* L);
 	int32 npcmove(lua_State* L);
 	int32 setnpcpos(lua_State* L);
+	int32 setzonepos(lua_State* L);
+    int32 setypos(lua_State* L);
 	int32 MobMorph(lua_State* L);
 	int32 NpcMorph(lua_State* L);
+	int32 npcdespawn(lua_State* L);
 };
 
 #endif

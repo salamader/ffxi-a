@@ -39,10 +39,14 @@ CServerMessagePacket::CServerMessagePacket(const int8* message, int16 language)
 	WBUFB(data,(0x05)-4) = 0x01;
 	WBUFB(data,(0x06)-4) = 0x01;
 
-	if(language == 205) //French
+	if(language == 205)
+	{//French
 		WBUFB(data,(0x07)-4) = 0x04;
+	}
 	else
+	{
 		WBUFB(data,(0x07)-4) = 0x02;
+	}
 	
 	WBUFB(data,(0x08)-4) = 0x6A;
 	WBUFB(data,(0x09)-4) = 0x21;

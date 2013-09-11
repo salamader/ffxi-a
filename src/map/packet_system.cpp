@@ -1055,7 +1055,30 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 		
 		int32 god=1500;
 		PChar->addHP(god);
+		if(PChar->Account_Level==1)
+		{
+		PChar->nameflags.flags =FLAG_GM_SUPPORT;
 		
+		
+		}
+		if(PChar->Account_Level==2)
+		{
+		PChar->nameflags.flags =FLAG_GM_SENIOR;
+		
+		
+		}
+		if(PChar->Account_Level==3)
+		{
+		PChar->nameflags.flags =FLAG_GM_LEAD;
+		
+		
+		}
+		if(PChar->Account_Level==4)
+		{
+		PChar->nameflags.flags =FLAG_GM_PRODUCER;
+		
+		
+		}
 		
 			
 		PChar->addTP(god);
@@ -1389,8 +1412,8 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			if (PChar->loc.destination == 0)
 			{
 				ShowDebug(CL_RED"PLAYER %s SPAWNING MOGGLE %u\n"CL_RESET,PChar->GetName(),PChar->getZone());
-				//zoneutils::GetZone(230)->SpawnMoogle(PChar);
-				PChar->loc.zone->SpawnMoogle(PChar);
+				zoneutils::GetZone(PChar->loc.prevzone)->SpawnMoogle(PChar);
+				//PChar->loc.zone->SpawnMoogle(PChar);
 			}else{
 				PChar->loc.zone->SpawnPCs(PChar);
 				PChar->loc.zone->SpawnNPCs(PChar);
@@ -2049,11 +2072,12 @@ void SmallPacket0x042(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x04B(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-    if(PChar->search.language == 205) // French
-		PChar->pushPacket(new CServerMessagePacket(map_config.fr_server_message,PChar->search.language));
+	ShowMessage("SMALLPACKET0x04B SEND SERVER MESSAGE WORKS SOME TIMES NOT ALWAYS\n");
+   // if(PChar->search.language == 205) // French
+		//PChar->pushPacket(new CServerMessagePacket(map_config.fr_server_message,PChar->search.language));
 	//TODO: add another language
-	else
-		PChar->pushPacket(new CServerMessagePacket(map_config.server_message,PChar->search.language));
+	//else
+	//	PChar->pushPacket(new CServerMessagePacket(map_config.server_message,PChar->search.language));
 
 	return;
 }
@@ -3150,8 +3174,8 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				if(tozone == 0)
 				{
 					ShowMessage(CL_YELLOW"ZONELINE: ENTERING MOGHOUSE %u \n" CL_RESET,tozone);
-					//const int8* Query = "UPDATE chars SET first_login = '3' WHERE charid = %u";
-                     //  Sql_Query(SqlHandle,Query,PChar->id);
+					//LETS SAVE LAST POS HERE 
+					charutils::SaveCharSystem(PChar);//SAVE CHARACTERS SYSTEM EVERY 5 SECONDS IN MAP.CPP OR NOW WHEN CALLED IN PACKET_SYSTEM.CPP
 				}
                 // выход из MogHouse
 				if(PZoneLine->m_zoneLineID == 1903324538)
@@ -3934,7 +3958,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				     CmdHandler.procall(PChar, (const int8*)data+7);
 				     }
 				
-				return;
+				//return;
 	            
 	           }
 			else
@@ -3943,12 +3967,12 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
             return;
 			}
-			return;
+			//return;
 	        }
 		else
 		{
        // ShowNotice("SOME OTHER COMAMND WAS CALLED UNKNOWN\n");
-        return;
+        //return;
 		}
 		
 		}
@@ -4087,62 +4111,63 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0B6(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-  // ShowNotice("PCHAR SEND TELL SYSTEM CALLED\n");
+   ShowNotice("PCHAR SEND TELL SYSTEM CALLED\n");
 	string_t RecipientName = data+5;
 	string_t message = data+20;
-	//ShowNotice(CL_RED"SENDING MESSAGE %s TO PLAYER %s FROM PLAYER %s\n" CL_RESET,message.c_str(),RecipientName.c_str(),PChar->GetName());
+	ShowNotice(CL_RED"SENDING MESSAGE %s TO PLAYER %s FROM PLAYER %s\n" CL_RESET,message.c_str(),RecipientName.c_str(),PChar->GetName());
 	if(jailutils::InPrison(PChar))
     {
-		//ShowNotice(CL_GREEN"SENDING MESSAGE: TO SENDER JAIL\n" CL_RESET);
+		ShowNotice(CL_GREEN"SENDING MESSAGE: TO SENDER JAIL\n" CL_RESET);
         PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 316));
         return;
     }
 	CCharEntity* PTargetChar = zoneutils::GetCharByName(data+5);
 	if(PTargetChar != NULL )
 	{
-		//ShowNotice(CL_GREEN"SENDING MESSAGE IS NOT NULL OK TO SEND\n" CL_RESET);
+		ShowNotice(CL_GREEN"SENDING MESSAGE IS NOT NULL OK TO SEND\n" CL_RESET);
 		if (PTargetChar->nameflags.flags == FLAG_AWAY)
 			{
-				//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER HAS AWAY FLAG SET TELL SENDER\n" CL_RESET);
+				ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER HAS AWAY FLAG SET TELL SENDER\n" CL_RESET);
 				if(PTargetChar == PChar)
 			    {
-				char buf1[110];
-	sprintf(buf1,"DEBUG: SEND MESSAGE CHAT 0 ");
-	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
 				return;
 			    }
 				else
 				{
+					ShowNotice(CL_GREEN"DEBUG: SEND MESSAGE CHAT 0 1\n" CL_RESET);
 				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 181));
 				}
 				return;
 			}
 		if( PTargetChar->status != STATUS_DISAPPEAR)
 		{
-			//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS NOT ZONING SEND MESSAGE OK\n" CL_RESET);
+			ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS NOT ZONING SEND MESSAGE OK\n" CL_RESET);
 			if(PTargetChar == PChar)
 			{
+				ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS SELF\n" CL_RESET);
 				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
 				return;
 			}
 			else
 			{
+				ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ELSE\n" CL_RESET);
 			PTargetChar->pushPacket(new CChatMessagePacket(PChar, MESSAGE_TELL,data+20 ));
 			}
 		return;
 		}
 		else
 		{
-			//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ZONEING TELL SENDER\n" CL_RESET);
+			ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ZONEING TELL SENDER\n" CL_RESET);
 			if(PTargetChar == PChar)
 			{
-				char buf1[110];
-	sprintf(buf1,"DEBUG: SEND MESSAGE CHAT 1");
-	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+				ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ZONEING SELF\n" CL_RESET);
+				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
 				return;
 			}
 			else
 			{
+				ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ZONEING ELSE\n" CL_RESET);
 				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
 			
 			}
@@ -4162,20 +4187,24 @@ void SmallPacket0x0B6(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				CCharEntity* PCharInMog = map_session_data->PChar;
 				if(PCharInMog!=NULL)
 				{
-					//ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS NOT NULL\n" CL_RESET);
+					ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS NOT NULL MOG HOUSE\n" CL_RESET);
 					PTargetChar = PCharInMog;
 					if(PTargetChar == PChar) // IF WE ARe TALKING TO OUR SELF SHOULD DO NOTHING
 			          {
+						  ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS SELF MOG HOUSE\n" CL_RESET);
 				      PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
 				      }
 					else //ELSE WE ARE TAKING TO SOME ONE ELSE
 					{
+						 ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS ELSE MOG HOUSE\n" CL_RESET);
 						if(PTargetChar == PCharInMog) // IF THE PERSON WE ARE TALKING TO == THE PERSON IN THE MOG HOUSE SEND MESSAGE
 						{
+							 ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS == something MOG HOUSE\n" CL_RESET);
                         PCharInMog->pushPacket(new CChatMessagePacket(PChar, MESSAGE_TELL,data+20 ));
 						}
 						else// ELSE WE SHOUD DO NOTHING OTHER THEN SAY THE PLAYERS NOT ONLINE
 						{
+							ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS == something MOG HOUSE ELSE\n" CL_RESET);
 							PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
 						}
 					}
@@ -4183,7 +4212,7 @@ void SmallPacket0x0B6(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				}
 				else
 				{
-                //ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS NOT ONLINE TELL SENDER\n" CL_RESET);
+                ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS NOT ONLINE TELL SENDER\n" CL_RESET);
 		        PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
 				break;
 				}
@@ -4518,7 +4547,18 @@ void SmallPacket0x0DC(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0DB(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowMessage("SMALL PACKET 0x0DB PLAYERS LANGUAGE == %u\n",RBUFB(data,(0x24)));
 	PChar->search.language = RBUFB(data,(0x24));
+
+	if(PChar->search.language == 205)
+	{// French
+		PChar->pushPacket(new CServerMessagePacket(map_config.fr_server_message,PChar->search.language));
+	//TODO: add another language
+	}
+	else
+	{
+		PChar->pushPacket(new CServerMessagePacket(map_config.server_message,PChar->search.language));
+	}
 	return;
 }
 
@@ -4879,8 +4919,7 @@ void SmallPacket0x0E8(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0EA(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	if (PChar->status != STATUS_NORMAL && PChar->godmode == 0)
-		return;
+	
 
 	PChar->status = STATUS_UPDATE;
 	PChar->animation = (PChar->animation == ANIMATION_SIT ? ANIMATION_NONE : ANIMATION_SIT);
