@@ -959,7 +959,7 @@ int32 OnGameIn(CCharEntity* PChar)
 				   PChar->is_inevent =inevent;
 				   PChar->eventid =eventid;
 				   PChar->shutdown_status = shutdown_status;
-				   
+				   PChar->loc.zone =NULL;
 				   PChar->accid = accountID;
 				   PChar->is_zoning = 1;
 				   Query = "SELECT server_type,security FROM accounts WHERE id = '%u';";

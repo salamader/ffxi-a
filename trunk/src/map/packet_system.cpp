@@ -1027,6 +1027,7 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
 	//ShowMessage(CL_GREEN"UPDATE: PLAYER SHUTDOWN STATUS =%u \n"CL_RESET,PChar->shutdown_status);
 	if (PChar->shutdown_status == 0 && PChar->loc.zone != NULL)
+		//IT COULD ALSO MAYBE USE THE POINTER PCHAR->IS_ZONING = -1  meaning they are not zoning so its ok to update
 	{
 		//ShowMessage(CL_GREEN"UPDATE: IN =%u \n"CL_RESET,PChar->shutdown_status);
 		
@@ -1040,9 +1041,10 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 		PChar->loc.p.rotation = RBUFB(data,(0x14));
 
 		PChar->m_TargID = RBUFW(data,(0x16));
-		 const int8* Query = "UPDATE chars SET shutdown = '0' WHERE charid = %u";
+		 const int8* Query = "UPDATE chars SET online = '1',shutdown = '0' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,PChar->id);
-		
+		 Query = "UPDATE accounts SET online = '1' WHERE id = %u";
+                       Sql_Query(SqlHandle,Query,PChar->accid);
 			
             PChar->loc.zone->SpawnPCs(PChar);
 			PChar->loc.zone->SpawnNPCs(PChar);

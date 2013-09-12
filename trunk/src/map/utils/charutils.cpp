@@ -3761,8 +3761,12 @@ void LoadCharUnlockedWeapons(CCharEntity* PChar)
 
 void SaveCharPosition(CCharEntity* PChar)
 {
-	if(PChar->loc.destination == 0)
+	if(PChar->loc.destination == 0||PChar->loc.destination == 16
+		||PChar->loc.destination == 18)
 	{
+		//THIS IS THE ELSE PACKET ERORRS GETTING STUCK AT DOWNLOADING SCREEN ZONES
+		//SO WE WILL NEVER SAVE OUR CHARS IN THESE ZONES NOR WILL WE EVER ZONE TO THESE ZONE USING 
+		//COMMAND
 		return;
 	}
 	const int8* Query =

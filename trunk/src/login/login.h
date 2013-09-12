@@ -32,7 +32,7 @@
 #include "../common/socket.h"
 #include "../common/sql.h"
 #include "../common/mmo.h"
-
+#include "../common/taskmgr.h"
 #include "login_session.h"
 
 extern lan_config_t lan_config;
@@ -69,6 +69,7 @@ extern Sql_t *SqlHandle;
  * Login-Server Version Screen [venom]
  *------------------------------------------------------*/
 void login_helpscreen(int32 flag);
+int32 Check_Login_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask);
 /*======================================================
  * Login-Server Version Screen [venom]
  *------------------------------------------------------*/
