@@ -63,7 +63,7 @@ int32 time_server(uint32 tick,CTaskMgr::CTask* PTask)
 	        }
         }
 	}
-
 	CTransportHandler::getInstance()->TransportTimer();
+	
 	return 0;
 }

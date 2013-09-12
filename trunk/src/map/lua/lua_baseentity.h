@@ -500,7 +500,7 @@ public:
 	int32 add_Key_Item(lua_State*);	
 	int32 WallHack(lua_State*);	
 	int32 Get_Pos(lua_State*);
-	
+	int32 ELEVATOR__PALBOROUGH__MINES__ELVTR(lua_State* L);
 	int32 ElevatorUp(lua_State* L);
 	int32 ElevatorDown(lua_State* L);
 	int32 getnpctext(lua_State* L);

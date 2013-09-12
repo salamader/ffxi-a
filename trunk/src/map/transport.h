@@ -87,19 +87,19 @@ struct Elevator_t
 	uint8 id;
 	uint16 zone;
 
-	uint16 interval;
-	uint16 movetime;
-	uint8			animation;			// ????????
-	uint8			speed;		
+	//uint16 interval;
+	//uint16 movetime;
+	//uint8			animation;			// ????????
+	//uint8			speed;		
 
 	CNpcEntity * Elevator;
 	CNpcEntity * LowerDoor;
 	CNpcEntity * UpperDoor;
 	
 
-	bool isMoving;
-	bool isStarted;
-	bool isPermanent;
+	//bool isMoving;
+	//bool isStarted;
+	//bool isPermanent;
 };
 
 /************************************************************************
@@ -121,9 +121,12 @@ public:
 		return m_PBaseEntity;
 	}
 	static	CTransportHandler * getInstance();
-	
+	void InitializeTransport();
+	void InitializeElevators(CBaseEntity* PEntity);
 	void TransportTimer();
 	void ElevatorUp(int32 elevatorID, CBaseEntity* m_PBaseEntity);
+	void ELEVATOR__PALBOROUGH__MINES__ELVTR(int32 elevatorID, CBaseEntity* m_PBaseEntity);
+	void ELEVATOR__PALBOROUGH__MINES__ELVTR(Elevator_t * elevator , CBaseEntity* m_PBaseEntity);
     void ElevatorUp(Elevator_t *, CBaseEntity* m_PBaseEntity);
 	void ElevatorDown(int32 elevatorID, CBaseEntity* m_PBaseEntity);
     void ElevatorDown(Elevator_t *, CBaseEntity* m_PBaseEntity);
@@ -133,8 +136,7 @@ private:
 
 	CTransportHandler();
 
-    void InitializeTransport();
-	void InitializeElevators();
+    
 
 	
 	

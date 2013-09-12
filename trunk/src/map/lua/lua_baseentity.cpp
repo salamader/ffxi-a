@@ -10055,6 +10055,31 @@ inline int32 CLuaBaseEntity::add_Key_Item(lua_State *L)
 		return false;
 	
 }
+inline int32 CLuaBaseEntity::ELEVATOR__PALBOROUGH__MINES__ELVTR(lua_State* L)
+{
+    DSP_DEBUG_BREAK_IF(lua_isnil(L,-1) || !lua_isnumber(L,-1));
+//	DSP_DEBUG_BREAK_IF(lua_isnil(L,2) || !lua_isnumber(L,2));
+	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+
+	if(m_PBaseEntity == NULL)
+	{
+		
+		return false;
+	}
+	if(m_PBaseEntity->objtype != TYPE_PC)
+	{
+		
+		return false;
+	}
+
+	uint32 ElevatorID = (uint32)lua_tointeger(L, -1);
+	CTransportHandler::getInstance()->InitializeElevators(PChar);
+    CTransportHandler::getInstance()->ELEVATOR__PALBOROUGH__MINES__ELVTR(ElevatorID,PChar);
+	char buf1[110];
+	sprintf(buf1,"DEBUG ELEVATOR: PCHAR = %s ELEVATOR ID = %u UP",PChar->GetName(),ElevatorID );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+	return 0;
+}
 inline int32 CLuaBaseEntity::ElevatorUp(lua_State* L)
 {
     DSP_DEBUG_BREAK_IF(lua_isnil(L,-1) || !lua_isnumber(L,-1));
@@ -10630,6 +10655,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,WallHack),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,Get_Pos),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,ElevatorUp),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,ELEVATOR__PALBOROUGH__MINES__ELVTR),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,ElevatorDown),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,gotoNpc),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,NpcList),
