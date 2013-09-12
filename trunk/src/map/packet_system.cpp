@@ -1043,7 +1043,7 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 		PChar->m_TargID = RBUFW(data,(0x16));
 		 const int8* Query = "UPDATE chars SET online = '1',shutdown = '0' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,PChar->id);
-		 Query = "UPDATE accounts SET online = '1' WHERE id = %u";
+		 Query = "UPDATE accounts SET online = '1',on_map ='1' WHERE id = %u";
                        Sql_Query(SqlHandle,Query,PChar->accid);
 			
             PChar->loc.zone->SpawnPCs(PChar);

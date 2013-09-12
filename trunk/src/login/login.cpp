@@ -146,8 +146,8 @@ while(it != login_sd_list.end())
 				map_time =  Sql_GetUIntData(SqlHandle,0);
 				on_map =  Sql_GetUIntData(SqlHandle,1);
 				ShowMessage("LOBBY_TIME %u MAP_TIME %u\n",lobby_time,map_time);
-				const char* Query = "UPDATE accounts SET  lobby_time = '%u' WHERE id = %u";
-                Sql_Query(SqlHandle,Query,lobby_time,(*it)->accid);
+				//const char* Query = "UPDATE accounts SET  lobby_time = '%u' WHERE id = %u";
+                //Sql_Query(SqlHandle,Query,lobby_time,(*it)->accid);
 				if(lobby_time==map_time)
 				{
                 ShowMessage("LOBBY_TIME %u == MAP_TIME %u\n",lobby_time,map_time);
@@ -156,14 +156,16 @@ while(it != login_sd_list.end())
 				{
 				//lobby_time +=2;	
                 ShowMessage("on_map %u\n",on_map);
-				 Query = "UPDATE accounts SET online ='0', lobby_time = '0',map_time = '0',on_map='0' WHERE id = %u";
-                Sql_Query(SqlHandle,Query,lobby_time,(*it)->accid);
-				 Query = "UPDATE chars SET online = '0',shutdown='1' WHERE accid = %u";
-                Sql_Query(SqlHandle,Query,lobby_time,(*it)->accid);
-				//login_sd_list.erase(it);
+				const char* Query = "UPDATE accounts SET online ='0',on_map ='0' WHERE id = %u";
+                Sql_Query(SqlHandle,Query,(*it)->accid);
+				  Query = "UPDATE chars SET online = '0',shutdown='1' WHERE accid = %u";
+                Sql_Query(SqlHandle,Query,(*it)->accid);
+				
+				
 				}
 				return false;
 				}
+				
 			   }
 	++it;
 }
