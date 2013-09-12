@@ -962,6 +962,7 @@ void do_close_tcp(int32 fd)
 {
 	flush_fifo(fd);
 	do_close(fd);
+	
 	//if(session[fd])delete_session(fd);
 }
 

@@ -7658,6 +7658,12 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
 				   zone = 284;
 			
 		}
+		if(zone == 16 ||zone == 18 || zone == 30)
+		{
+			sprintf(buf,"This zone ID %d cause a player to get stuck at downloading:", zone);
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+		}
 		const char * Query = "SELECT x,y,z,r FROM zonesystem WHERE zone= '%u';";
 	          int32 ret3 = Sql_Query(SqlHandle,Query,zone);
 			

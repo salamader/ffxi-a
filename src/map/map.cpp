@@ -532,7 +532,8 @@ int32 recv_parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_da
 int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t* map_session_data)
 {
 	// начало обработки входящего пакета
-
+	uint32 map_time = CVanaTime::getInstance()->getSysSecond();
+	
 	int8* PacketData_Begin = &buff[FFXI_HEADER_SIZE];
 	int8* PacketData_End   = &buff[*buffsize];
 
@@ -553,7 +554,26 @@ int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t*
 		ShowMessage(CL_YELLOW"PACKET TYPE: %u\n" CL_RESET,SmallPD_Type);
 		}
 		
-      //  
+	     /* ShowMessage(CL_YELLOW"MAP_TIME %u \n" CL_RESET,map_time);
+		 
+			  
+			  uint32 lobby_time = 0;
+	
+	           const char * Query = "SELECT lobby_time FROM accounts WHERE sessions= '%u';";
+	           int32 ret3 = Sql_Query(SqlHandle,Query,map_session_data);
+			  if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)//START DATABASE SELECTION
+	          {
+				lobby_time =  Sql_GetUIntData(SqlHandle,0);
+				if(lobby_time == map_time)
+				{
+                ShowMessage(CL_YELLOW"LOBBY TIME %u == MAP_TIME\n" CL_RESET,lobby_time,map_time); 
+				}
+				ShowMessage(CL_YELLOW"LOBBY TIME %u \n" CL_RESET,lobby_time);
+			  }*/
+		 
+		      const char *Query = "UPDATE accounts SET  map_time = '%u', on_map='1' WHERE sessions = %u";
+                Sql_Query(SqlHandle,Query,map_time,map_session_data);
+	      
 		
 	}
     map_session_data->client_packet_id = SmallPD_Code;

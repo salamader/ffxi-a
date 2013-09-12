@@ -1833,7 +1833,7 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 		for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 				{
 					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-					if(PCurrentChar != NULL && PCurrentChar->loc.zone != NULL )
+					if(PCurrentChar != NULL && PCurrentChar->is_zoning ==-1 )
 					{
 
 						if(message_type == CHAR_INRANGE)
@@ -1874,8 +1874,8 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 					}
 		}
 	
-		
-	delete packet;
+		delete packet;
+	
 	}
 	}
 	else

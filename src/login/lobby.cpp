@@ -47,6 +47,7 @@ int32 login_lobbyview_fd;
 
 int32 connect_client_lobbydata(int32 listenfd)
 {
+	
 	int32 fd = 0;
 	struct sockaddr_in client_address;
 	if( ( fd = connect_client(listenfd,client_address) ) != -1 )
@@ -68,6 +69,7 @@ int32 connect_client_lobbydata(int32 listenfd)
 
 int32 lobbydata_parse(int32 fd)
 {
+	ShowMessage(CL_YELLOW"int32 lobbydata_parse(int32 fd)  \n"CL_RESET);
 	login_session_data_t* sd = (login_session_data_t*)session[fd]->session_data;
 
 	if( sd == NULL )
@@ -96,9 +98,24 @@ int32 lobbydata_parse(int32 fd)
 			if(online == 1)
 			{
             ShowMessage(CL_YELLOW"ACCID %u IS ONLINE \n"CL_RESET,accid);
-			do_close_lobbydata(sd,fd);
-			do_close_tcp(fd);
-			return 0;
+
+			//OK SO IF THE USER IS ON LINE WE DO NOT WANT OTHER 
+			//USERS IF THEY HAVE THE ACCOUNT USERNAME AND PASSWORD 
+			//TO BE ABLE TO LOGIN AND KICK THE OTHER USER OFF
+			//BUT WE DO WANT TO CLEAN THE CONNECTION SO WE DO NOT GET STUCK AT AUTICATED DATA
+
+			if( session_isActive(sd->login_lobbyview_fd) )
+		{
+			do_close_tcp(sd->login_lobbyview_fd);
+		}
+			
+		erase_loginsd_byaccid(sd->accid);
+		ShowMessage(CL_GREEN"CLOSED LOBBY DATA:\n"CL_RESET );
+		if( session[fd]->session_data )
+		aFree(session[fd]->session_data);
+		do_close_tcp(fd);
+		return 0;
+			
 			}
 			else
 			{
@@ -118,6 +135,7 @@ int32 lobbydata_parse(int32 fd)
 
         if( sd == NULL )
         {
+			ShowMessage(CL_GREEN"CHECK 1:\n"CL_RESET );
             do_close_tcp(fd);
             return -1;
         }
@@ -126,6 +144,7 @@ int32 lobbydata_parse(int32 fd)
 	
 	if( session[fd]->flag.eof )
 	{
+		ShowMessage(CL_GREEN"CHECK 2:\n"CL_RESET );
 		do_close_lobbydata(sd,fd);
 		return 0;
 	}
@@ -181,6 +200,7 @@ int32 lobbydata_parse(int32 fd)
 				int32 ret =  Sql_Query(SqlHandle,pfmtQuery,sd->accid);
 				if( ret == SQL_ERROR )
 				{
+					ShowMessage(CL_GREEN"CHECK 3:\n"CL_RESET );
 					do_close_lobbydata(sd,fd);
 					return -1;
 				}
@@ -265,6 +285,7 @@ int32 lobbydata_parse(int32 fd)
 					WFIFOSET(sd->login_lobbyview_fd,2272);
 					RFIFOSKIP(sd->login_lobbyview_fd,session[sd->login_lobbyview_fd]->rdata_size);
 					RFIFOFLUSH(sd->login_lobbyview_fd);
+					
 				}
 				else{ //cleanup
 					ShowWarning("lobbydata_parse: char:(%i) login data corrupt (0xA1). Disconnecting client.\n",sd->accid);
@@ -543,7 +564,7 @@ int32 do_close_lobbydata(login_session_data_t *loginsd,int32 fd)
 	}
 	else
 	{
-		
+		ShowMessage(CL_GREEN"CLOSED LOBBY DATA ELSE:\n"CL_RESET );
 		do_close_tcp(fd);
 		return 0;
 	}
@@ -559,6 +580,7 @@ int32 do_close_lobbydata(login_session_data_t *loginsd,int32 fd)
 
 int32 connect_client_lobbyview(int32 listenfd)
 {
+	
 	int32 fd = 0;
 	struct sockaddr_in client_address;
 	if( ( fd = connect_client(listenfd,client_address) ) != -1 )
@@ -578,6 +600,7 @@ int32 connect_client_lobbyview(int32 listenfd)
 
 int32 lobbyview_parse(int32 fd)
 {
+	ShowMessage(CL_YELLOW"int32 lobbyview_parse(int32 fd)  \n"CL_RESET);
 	login_session_data_t* sd = (login_session_data_t*)session[fd]->session_data;
 
 	if( sd == NULL )
@@ -740,6 +763,7 @@ int32 lobbyview_parse(int32 fd)
 			}
 		case 0x1F:
 			{
+				
 				if(session[sd->login_lobbydata_fd]==NULL){
 					ShowInfo("0x1F Null pointer: fd %i lobbydata fd %i lobbyview fd %i . Closing session. \n",
 						fd,sd->login_lobbydata_fd,sd->login_lobbyview_fd);
@@ -758,6 +782,7 @@ int32 lobbyview_parse(int32 fd)
 			break;
 		case 0x24:
 			{
+				
 				LOBBY_024_RESERVEPACKET(ReservePacket);
 				memcpy(ReservePacket+36, login_config.servername, dsp_cap(strlen(login_config.servername), 0, 15));
 
@@ -776,6 +801,7 @@ int32 lobbyview_parse(int32 fd)
 			break;
 		case 0x07:
 			{
+				
 				if(session[sd->login_lobbydata_fd]==NULL){
 					ShowInfo("0x07 Null pointer: fd %i lobbydata fd %i lobbyview fd %i . Closing session. \n",
 						fd,sd->login_lobbydata_fd,sd->login_lobbyview_fd);
@@ -795,6 +821,7 @@ int32 lobbyview_parse(int32 fd)
 			break;
 		case 0x21:
 			{
+				ShowMessage(CL_GREEN"CHECK 111:\n"CL_RESET );
 				
 				//creating new char
 				if( lobby_createchar(sd,(char*)session[fd]->rdata) == -1)

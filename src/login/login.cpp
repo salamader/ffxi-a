@@ -28,6 +28,11 @@
 #include "../common/version.h"
 #include "../common/strlib.h"
 #include "../common/utils.h"
+#include "../common/blowfish.h"
+#include "../common/malloc.h"
+#include "../common/md52.h"
+
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -108,7 +113,64 @@ int32 do_init(int32 argc,char** argv)
 	}
 	
 	ShowStatus("The login-server is " CL_GREEN"ready" CL_RESET" to work...\n");
+	CTaskMgr::getInstance()->AddTask("Check_Lobby_For_Player_Cleanup", gettick(), NULL, CTaskMgr::TASK_INTERVAL, Check_Login_For_Player_Cleanup, 700);
 	return 0;
+}
+uint32 getSysSecond()
+{
+	time_t now = time(0);
+	tm *ltm = localtime(&now);
+
+	return ltm->tm_sec;
+}
+int32 Check_Login_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
+{
+ if(!login_sd_list.size() != NULL)
+ {
+	 //ShowMessage("login_sd_list IS EMPTY\n");
+	 return false;
+ }
+uint32 lobby_time = getSysSecond()+5;
+
+
+login_sd_list_t::iterator it = login_sd_list.begin(); 
+while(it != login_sd_list.end())
+{
+	uint32 on_map = 0; /// 0 means no they are not on the map and 1 say they are on map
+	uint32 map_time = 0;
+	ShowMessage("LOBBY_TIME %u LOGIN LIST %u\n",lobby_time,(*it)->accid);
+	const char * Query = "SELECT map_time,on_map FROM accounts WHERE id= '%u';";
+	           int32 ret3 = Sql_Query(SqlHandle,Query,(*it)->accid);
+			   if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)//START DATABASE SELECTION
+	            {
+				map_time =  Sql_GetUIntData(SqlHandle,0);
+				on_map =  Sql_GetUIntData(SqlHandle,1);
+				ShowMessage("LOBBY_TIME %u MAP_TIME %u\n",lobby_time,map_time);
+				const char* Query = "UPDATE accounts SET  lobby_time = '%u' WHERE id = %u";
+                Sql_Query(SqlHandle,Query,lobby_time,(*it)->accid);
+				if(lobby_time==map_time)
+				{
+                ShowMessage("LOBBY_TIME %u == MAP_TIME %u\n",lobby_time,map_time);
+				//OK PLAYER IS FULLY LOGIN LETS UPDATE THE ACCOUTNS TABLE TO SAY ON MAP
+				if(on_map == 1)
+				{
+				//lobby_time +=2;	
+                ShowMessage("on_map %u\n",on_map);
+				 Query = "UPDATE accounts SET online ='0', lobby_time = '0',map_time = '0',on_map='0' WHERE id = %u";
+                Sql_Query(SqlHandle,Query,lobby_time,(*it)->accid);
+				 Query = "UPDATE chars SET online = '0',shutdown='1' WHERE accid = %u";
+                Sql_Query(SqlHandle,Query,lobby_time,(*it)->accid);
+				//login_sd_list.erase(it);
+				}
+				return false;
+				}
+			   }
+	++it;
+}
+		
+
+
+return false;
 }
 
 void do_final(void)
@@ -133,6 +195,7 @@ void set_server_type()
 
 int do_sockets(int next)
 {
+	
 	fd_set rfd;
 	struct timeval timeout;
 	int ret,i;
@@ -175,7 +238,7 @@ int do_sockets(int next)
 
 				if(!session[fd])
 					continue;
-
+				
 //				RFIFOFLUSH(fd);
 			}
 		}
