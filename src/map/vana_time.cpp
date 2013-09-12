@@ -51,6 +51,11 @@ CVanaTime* CVanaTime::getInstance()
 	}
 	return _instance;
 }
+CVanaTime* CVanaTime::getElevatorInstance()
+{
+	
+	return new CVanaTime();
+}
 
 uint32 CVanaTime::getDate()
 {
@@ -133,22 +138,23 @@ uint32 CVanaTime::getSysYearDay()
 	return ltm->tm_yday;
 }
 
-uint32 CVanaTime::getVanaMinute()
-{
-    time_t now = time(0);
-	tm *ltm = localtime(&now);
-	ShowDebug(CL_GREEN"TIME %u\n"CL_RESET,(uint32)(time(NULL) +ltm->tm_min * 2.4f) - 1009810800);
-	return  (uint32)(time(NULL) + ltm->tm_min * 2.4f) - 1009810800 ;
-	                                                          
-}
+
 
 uint32 CVanaTime::getVanaTime()
 {
     return getSysTime() - 1009810800;
 }
+uint32 CVanaTime::getVanaElevatorTime()
+{
+	time_t now = time(0);
+	tm *ltm = localtime(&now);
+	//_instance = NULL;
+    return now *2.4f - ltm->tm_hour;
+}
 
 int32 CVanaTime::getCustomOffset()
 {
+	
 	return m_customOffset;
 }
 

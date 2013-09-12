@@ -496,7 +496,7 @@ int32 VanadielMoonPhase(lua_State* L)
 int32 SetVanadielTimeOffset(lua_State* L)
 {
 	ShowWarning("16\n");
-    if( !lua_isnil(L,1) && lua_isnumber(L,1) )
+   /* if( !lua_isnil(L,1) && lua_isnumber(L,1) )
     {
         int32 offset = (int32)lua_tointeger(L,1);
 
@@ -505,7 +505,7 @@ int32 SetVanadielTimeOffset(lua_State* L)
         lua_pushboolean(L, true);
         return 1;
     }
-    lua_pushnil(L);
+    lua_pushnil(L);*/
     return 0;
 }
 

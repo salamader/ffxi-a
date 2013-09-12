@@ -1056,7 +1056,7 @@ void CAIMobDummy::ActionMagicStart()
 	if(status == STATESTATUS_START)
 	{
 		m_ActionType = ACTION_MAGIC_CASTING;
-
+		
 		m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE));
 	}
 	else

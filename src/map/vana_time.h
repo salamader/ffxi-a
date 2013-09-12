@@ -56,6 +56,7 @@ class CVanaTime
 public:
 
 	static	CVanaTime * getInstance();
+	static	CVanaTime *getElevatorInstance();
 
 	TIMETYPE SyncTime();
 	TIMETYPE GetCurrentTOTD();
@@ -75,13 +76,13 @@ public:
 	uint32	 getSysSecond();
 	uint32	 getSysWeekDay();						// Number of day since sunday
 	uint32	 getSysYearDay();						// Number of day since 1st january
-	uint32   getVanaMinute();
     uint32   getVanaTime();
+	uint32   getVanaElevatorTime();
 	int32	 getCustomOffset();
 
 	void	 setCustomOffset(int32 offset);
 
-private:
+//private:
 
 	static CVanaTime * _instance;
 

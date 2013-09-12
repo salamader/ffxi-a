@@ -515,7 +515,8 @@ int32 recv_parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_da
 		// don't need memcpy header
 		memcpy(buff+FFXI_HEADER_SIZE,PacketDataBuff,PacketDataSize);
 		*buffsize = FFXI_HEADER_SIZE+PacketDataSize;
-		ShowStatus("int32 recv_parse(ELSE)\n");
+		
+		//ShowStatus("int32 recv_parse(ELSE)\n");
 		aFree(PacketDataBuff);
 		return 0;
 	}
@@ -725,6 +726,7 @@ int32 Close_Session_Clean_Map(uint32 tick, CTaskMgr::CTask* PTask)
 
 int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 {
+	
 	uint32 checktime = CVanaTime::getInstance()->getSysSecond();
 	map_session_list_t::iterator it = map_session_list.begin();
 
@@ -746,6 +748,8 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 					if( PChar->is_zoning == -1)//-1 PLAYER IS NOT ZONING RIGHT NOW
 					   {
 						charutils::SaveCharSystem(PChar);//SAVE CHARACTERS SYSTEM EVERY 5 SECONDS
+						
+						
 					   }
 					
 							   
