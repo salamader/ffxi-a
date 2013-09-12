@@ -162,6 +162,8 @@ int32 do_init(int32 argc, int8** argv)
     Sql_Query(SqlHandle, "TRUNCATE TABLE accounts_sessions");
 	const char *Query = "UPDATE accounts SET online ='0' WHERE online = '1'";
         Sql_Query(SqlHandle,Query);
+		Query = "UPDATE accounts SET on_map ='0' WHERE on_map = '1'";
+        Sql_Query(SqlHandle,Query);
 		Query = "UPDATE chars SET online ='0' WHERE online = '1'";
         Sql_Query(SqlHandle,Query);
 		Query = "UPDATE chars SET shutdown ='1' WHERE shutdown = '0'";

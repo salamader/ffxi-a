@@ -99,7 +99,7 @@ int32 lobbydata_parse(int32 fd)
 			{
             ShowMessage(CL_YELLOW"ACCID %u IS ONLINE \n"CL_RESET,accid);
 
-			//OK SO IF THE USER IS ON LINE WE DO NOT WANT OTHER 
+			//OK SO IF THE USER IS ONLINE WE DO NOT WANT OTHER 
 			//USERS IF THEY HAVE THE ACCOUNT USERNAME AND PASSWORD 
 			//TO BE ABLE TO LOGIN AND KICK THE OTHER USER OFF
 			//BUT WE DO WANT TO CLEAN THE CONNECTION SO WE DO NOT GET STUCK AT AUTICATED DATA
@@ -108,11 +108,13 @@ int32 lobbydata_parse(int32 fd)
 		{
 			do_close_tcp(sd->login_lobbyview_fd);
 		}
-			
-		erase_loginsd_byaccid(sd->accid);
+			// we do not want to errace that yet, not here. 
+			//at leaset but tith it not being erraced we will get stack at auticated 
+			//until it is errased
+		//erase_loginsd_byaccid(sd->accid);
 		ShowMessage(CL_GREEN"CLOSED LOBBY DATA:\n"CL_RESET );
-		if( session[fd]->session_data )
-		aFree(session[fd]->session_data);
+		//if( session[fd]->session_data )
+		//aFree(session[fd]->session_data);
 		do_close_tcp(fd);
 		return 0;
 			
@@ -916,7 +918,7 @@ int32 lobbyview_parse(int32 fd)
 int32 do_close_lobbyview(login_session_data_t* sd, int32 fd)
 {
 	ShowInfo(CL_WHITE"lobbyview_parse" CL_RESET": " CL_WHITE"%s" CL_RESET" shutdown the socket\n",sd->login);
-	do_close_tcp(fd);
+	do_close_lobbydata(sd,fd);
 	return 0;
 }
 
