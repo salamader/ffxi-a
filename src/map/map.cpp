@@ -345,6 +345,7 @@ int32 do_sockets(int32 next)
 
 			if( recv_parse(g_PBuff,&size,&from,map_session_data) != -1 )
 			{
+				ShowStatus("SOCKET IS OK\n");
 				// если предыдущий пакет был потерян, то мы не собираем новый,
 				// а отправляем предыдущий пакет повторно
 				if (!parse(g_PBuff,&size,&from,map_session_data))
@@ -359,6 +360,10 @@ int32 do_sockets(int32 next)
 
 				map_session_data->server_packet_data = data;
 				map_session_data->server_packet_size = size;
+			}
+			else
+			{
+                ShowStatus("SOCKET IS NOT OK\n");
 			}
 		}
 	}

@@ -7658,7 +7658,9 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
 				   zone = 284;
 			
 		}
-		if(zone == 16 ||zone == 18 || zone == 30)
+		//NOTE THIS GETS A PACKET ERROR IF THE USER IS HOSTING THE SERVER PUBLIC IF ITS LOCAL 
+		//THESE ZONES WORK FINE.
+		if(zone == 16 ||zone == 18 || zone == 20 || zone == 22|| zone == 27 || zone == 28 || zone == 30)
 		{
 			sprintf(buf,"This zone ID %d cause a player to get stuck at downloading:", zone);
 	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
