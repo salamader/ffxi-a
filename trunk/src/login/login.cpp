@@ -130,7 +130,7 @@ int32 Check_Login_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 	 //ShowMessage("login_sd_list IS EMPTY\n");
 	 return false;
  }
-uint32 lobby_time = getSysSecond()+5;
+uint32 lobby_time = getSysSecond()+3;
 
 
 login_sd_list_t::iterator it = login_sd_list.begin(); 
@@ -148,6 +148,21 @@ while(it != login_sd_list.end())
 				ShowMessage("LOBBY_TIME %u MAP_TIME %u\n",lobby_time,map_time);
 				//const char* Query = "UPDATE accounts SET  lobby_time = '%u' WHERE id = %u";
                 //Sql_Query(SqlHandle,Query,lobby_time,(*it)->accid);
+				if(map_time == 0 
+					|| map_time == 1 
+					|| map_time == 2 
+					|| map_time == 3
+					|| map_time == 4
+					|| map_time == 5
+					|| map_time == 6
+					|| map_time == 7)
+					
+				{ 
+					map_time = lobby_time -7;
+					ShowMessage("MAP_TIME %u IS LESS THEN LOBBY COUNTER\n",map_time);
+                 const char* Query = "UPDATE accounts SET map_time ='%u' WHERE id = %u";
+                Sql_Query(SqlHandle,Query,map_time ,(*it)->accid);
+				}
 				if(lobby_time==map_time)
 				{
                 ShowMessage("LOBBY_TIME %u == MAP_TIME %u\n",lobby_time,map_time);
