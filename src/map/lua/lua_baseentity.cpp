@@ -7660,7 +7660,8 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
 		}
 		//NOTE THIS GETS A PACKET ERROR IF THE USER IS HOSTING THE SERVER PUBLIC IF ITS LOCAL 
 		//THESE ZONES WORK FINE.
-		if(zone == 16 ||zone == 18 || zone == 20 || zone == 22|| zone == 27 || zone == 28 || zone == 30)
+		if(zone == 16 ||zone == 18 || zone == 20 || zone == 22|| zone == 27 || zone == 28 || zone == 29 || zone == 30 
+			|| zone == 31)
 		{
 			sprintf(buf,"This zone ID %d cause a player to get stuck at downloading:", zone);
 	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
@@ -10304,15 +10305,41 @@ inline int32 CLuaBaseEntity::WallHack(lua_State *L)
 		
 		return false;
 	}
-	 
-	
-
-    PChar->nameflags.flags ^= (uint32)lua_tointeger(L,1);
-	char buf[110];
-        sprintf(buf,"Set WallHack");
+	if(lua_isnil(L,-1) || !lua_isnumber(L,-1))
+	{
+		
+		char buf[110];
+        sprintf(buf,"Command Example: .walhack 0 == OFF");
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
-    PChar->pushPacket(new CCharUpdatePacket(PChar));
-    return 0;
+		char buf1[110];
+        sprintf(buf1,"Command Example: .walhack 1 == ON");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
+		return false;
+	 }
+	 
+	uint32 on_off = lua_tointeger(L,1);
+	if(on_off == 1)//ON
+	{
+     PChar->nameflags.flags = 512;
+	 char buf[110];
+        sprintf(buf,"WallHack On");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		return false;
+	}
+	if(on_off == 0)//OFF
+	{
+    PChar->nameflags.flags = 0;
+	char buf[110];
+        sprintf(buf,"WallHack Off");
+	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		return false;
+	}
+    
+	
+    
+    return false;
 }
 //==========================================================//
 
