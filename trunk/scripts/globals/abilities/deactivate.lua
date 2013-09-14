@@ -1,5 +1,5 @@
 -----------------------------------
--- Ability: Deploy
+-- Ability: Deactivate
 -----------------------------------
 
 require("scripts/globals/settings");
@@ -14,5 +14,5 @@ function OnAbilityCheck(player,target,ability)
 end;
 
 function OnUseAbility(player, target, ability)
-	player:petAttack(target);
+	target:despawnPet();
 end;
