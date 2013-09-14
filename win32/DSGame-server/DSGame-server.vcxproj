@@ -228,6 +228,7 @@
     <ClInclude Include="..\..\src\map\commandhandler.h" />
     <ClInclude Include="..\..\src\map\conquest_system.h" />
     <ClInclude Include="..\..\src\map\enmity_container.h" />
+    <ClInclude Include="..\..\src\map\entities\automatonentity.h" />
     <ClInclude Include="..\..\src\map\entities\baseentity.h" />
     <ClInclude Include="..\..\src\map\entities\battleentity.h" />
     <ClInclude Include="..\..\src\map\entities\charentity.h" />
@@ -337,6 +338,7 @@
     <ClInclude Include="..\..\src\map\packets\message_standard.h" />
     <ClInclude Include="..\..\src\map\packets\message_system.h" />
     <ClInclude Include="..\..\src\map\packets\message_text.h" />
+    <ClInclude Include="..\..\src\map\packets\mob.h" />
     <ClInclude Include="..\..\src\map\packets\send_box.h" />
     <ClInclude Include="..\..\src\map\packets\trade_action.h" />
     <ClInclude Include="..\..\src\map\packets\trade_item.h" />
@@ -443,6 +445,7 @@
     <ClCompile Include="..\..\src\map\commandhandler.cpp" />
     <ClCompile Include="..\..\src\map\conquest_system.cpp" />
     <ClCompile Include="..\..\src\map\enmity_container.cpp" />
+    <ClCompile Include="..\..\src\map\entities\automatonentity.cpp" />
     <ClCompile Include="..\..\src\map\entities\baseentity.cpp" />
     <ClCompile Include="..\..\src\map\entities\battleentity.cpp" />
     <ClCompile Include="..\..\src\map\entities\charentity.cpp" />
@@ -548,6 +551,7 @@
     <ClCompile Include="..\..\src\map\packets\message_standard.cpp" />
     <ClCompile Include="..\..\src\map\packets\message_system.cpp" />
     <ClCompile Include="..\..\src\map\packets\message_text.cpp" />
+    <ClCompile Include="..\..\src\map\packets\mob.cpp" />
     <ClCompile Include="..\..\src\map\packets\send_box.cpp" />
     <ClCompile Include="..\..\src\map\packets\trade_action.cpp" />
     <ClCompile Include="..\..\src\map\packets\trade_item.cpp" />
