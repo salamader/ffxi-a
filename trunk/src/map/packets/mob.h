@@ -21,27 +21,26 @@
 ===========================================================================
 */
 
-#include "../../common/socket.h"
+#ifndef _CMOBPACKET_H
+#define _CMOBPACKET_H
 
-#include <string.h>
+#include "../../common/cbasetypes.h"
 
-#include "chat_message.h"
+#include "basic.h"
 
-#include "../entities/charentity.h"
+/************************************************************************
+*																		*
+*  																		*
+*																		*
+************************************************************************/
 
+class CMobEntity;
 
-CChatMessagePacket::CChatMessagePacket(CCharEntity* PChar, CHAT_MESSAGE_TYPE MessageType, int8* buff) 
+class CMobPacket : public CBasicPacket
 {
-	this->type = 0x17;
-	this->size = 32 + strlen(buff) + strlen(buff)%2;
+public:
 
-	if (PChar->godmode == 1)
-	{
-		WBUFB(data,(0x05)-4) = 0x01;
-	}
-	WBUFB(data,(0x04)-4) = MessageType;
-    WBUFW(data,(0x06)-4) = PChar->getZone();
+	CMobPacket(CMobEntity* PMob, ENTITYUPDATE type);
+};
 
-	memcpy(data+(0x08)-4, PChar->GetName(), PChar->name.size());
-	memcpy(data+(0x18)-4, buff, strlen(buff));
-}
+#endif

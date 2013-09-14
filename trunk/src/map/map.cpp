@@ -67,6 +67,7 @@
 #include "packets/char.h"
 #include "packets/server_ip.h"
 #include "packets/char_update.h"
+#include "packets/chat_message_string.h"
 
 const int8* MAP_CONF_FILENAME = NULL;
 
@@ -107,7 +108,7 @@ map_session_data_t* mapsession_createsession(uint32 ip, uint16 port)
 	map_session_data_t* map_session_data = new map_session_data_t;
 	memset(map_session_data, 0, sizeof(map_session_data_t));
 
-	CREATE(map_session_data->server_packet_data, int8, map_config.buffer_size + 20);
+	CREATE(map_session_data->server_packet_data, int8, 1800 + 20);
 
 	map_session_data->last_update = time(NULL);
 	map_session_data->client_addr = ip;
@@ -221,8 +222,8 @@ int32 do_init(int32 argc, int8** argv)
 	CTaskMgr::getInstance()->AddTask("Check_Map_For_Player_Cleanup", gettick(), NULL, CTaskMgr::TASK_INTERVAL, Check_Map_For_Player_Cleanup, 700);
 	
 
-	CREATE(g_PBuff,   int8, map_config.buffer_size + 20);
-    CREATE(PTempBuff, int8, map_config.buffer_size + 20);
+	CREATE(g_PBuff,   int8, 1800 + 20);
+    CREATE(PTempBuff, int8, 1800 + 20);
 	aFree((void*)map_config.mysql_login);
 	aFree((void*)map_config.mysql_password);
 	ShowStatus("The map-server is " CL_GREEN"ready" CL_RESET" to work...\n");
@@ -316,7 +317,7 @@ int32 do_sockets(int32 next)
 		struct sockaddr_in from;
 		socklen_t fromlen = sizeof(from);
 
-		int32 ret = recvudp(map_fd,g_PBuff,map_config.buffer_size,0,(struct sockaddr*)&from,&fromlen);
+		int32 ret = recvudp(map_fd,g_PBuff,1800,0,(struct sockaddr*)&from,&fromlen);
 		if( ret != -1)
 		{
 			// find player char
@@ -345,7 +346,7 @@ int32 do_sockets(int32 next)
 
 			if( recv_parse(g_PBuff,&size,&from,map_session_data) != -1 )
 			{
-				ShowStatus("SOCKET IS OK\n");
+				//ShowStatus("SOCKET IS OK\n");
 				// если предыдущий пакет был потерян, то мы не собираем новый,
 				// а отправляем предыдущий пакет повторно
 				if (!parse(g_PBuff,&size,&from,map_session_data))
@@ -465,7 +466,7 @@ int32 recv_parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_da
 			CCharEntity* PChar = new CCharEntity();
 
 			PChar->id = CharID;
-			PChar->PBattleAI = new CAICharNormal(PChar);
+			PChar->Check_Engagment = new CAICharNormal(PChar);
 
 			charutils::LoadChar(PChar);
 			charutils::LoadInventory(PChar);
@@ -510,12 +511,12 @@ int32 recv_parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_da
 		uint32 PacketDataSize = RBUFL(buff,*buffsize-sizeof(int32)-16);
 		// creating buffer for decompress data
 		int8* PacketDataBuff = NULL;
-		CREATE(PacketDataBuff,int8,map_config.buffer_size);
+		CREATE(PacketDataBuff,int8,1800);
 		// it's decompressing data and getting new size
 		PacketDataSize = zlib_decompress(buff+FFXI_HEADER_SIZE,
 										 PacketDataSize,
 										 PacketDataBuff,
-										 map_config.buffer_size,
+										 1800,
 										 zlib_decompress_table);
 
 		// it's making result buff
@@ -538,7 +539,16 @@ int32 recv_parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_da
 
 int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t* map_session_data)
 {
+	uint32 checktime = CVanaTime::getInstance()->getSysSecond();
+
+	
+	//ShowDebug(" BUFF SIZE IS  %u\n",*buffsize);
 	// начало обработки входящего пакета
+	if (*buffsize > 1800)
+	{
+		ShowDebug("BUFF SIZE IS TO LARGER WILL DC THE PLAYER SKIP SENDING %u\n",*buffsize);
+     return false;
+	}
 	uint32 map_time = CVanaTime::getInstance()->getSysSecond();
 	
 	int8* PacketData_Begin = &buff[FFXI_HEADER_SIZE];
@@ -552,6 +562,9 @@ int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t*
 
 	for(int8* SmallPD_ptr = PacketData_Begin;SmallPD_ptr + (RBUFB(SmallPD_ptr,1) & 0xFE)*2 <= PacketData_End && (RBUFB(SmallPD_ptr,1) & 0xFE);SmallPD_ptr = SmallPD_ptr + SmallPD_Size*2)
 	{
+		const char *Query = "UPDATE accounts SET  map_time = '%u', on_map='1' WHERE sessions = %u";
+                Sql_Query(SqlHandle,Query,map_time,map_session_data);
+		
 		SmallPD_Size = (RBUFB(SmallPD_ptr,1) & 0x0FE);
 		SmallPD_Type = (RBUFW(SmallPD_ptr,0) & 0x1FF);
 		
@@ -561,25 +574,9 @@ int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t*
 		ShowMessage(CL_YELLOW"PACKET TYPE: %u\n" CL_RESET,SmallPD_Type);
 		}
 		
-	     /* ShowMessage(CL_YELLOW"MAP_TIME %u \n" CL_RESET,map_time);
+	     
 		 
-			  
-			  uint32 lobby_time = 0;
-	
-	           const char * Query = "SELECT lobby_time FROM accounts WHERE sessions= '%u';";
-	           int32 ret3 = Sql_Query(SqlHandle,Query,map_session_data);
-			  if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)//START DATABASE SELECTION
-	          {
-				lobby_time =  Sql_GetUIntData(SqlHandle,0);
-				if(lobby_time == map_time)
-				{
-                ShowMessage(CL_YELLOW"LOBBY TIME %u == MAP_TIME\n" CL_RESET,lobby_time,map_time); 
-				}
-				ShowMessage(CL_YELLOW"LOBBY TIME %u \n" CL_RESET,lobby_time);
-			  }*/
-		 
-		      const char *Query = "UPDATE accounts SET  map_time = '%u', on_map='1' WHERE sessions = %u";
-                Sql_Query(SqlHandle,Query,map_time,map_session_data);
+		      
 	      
 		
 	}
@@ -605,15 +602,16 @@ int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t*
 	// увеличиваем номер отправленного пакета только в случае отправки новых данных
 
 	map_session_data->server_packet_id += 1;
-	//ShowDebug(CL_GREEN"PACKET CALL: SERVER CODE %u\n"CL_RESET,map_session_data->server_packet_id);
 
-	// собираем большой пакет, состоящий из нескольких маленьких
+	
+	
+	
 
 	CBasicPacket* PSmallPacket;
 
 	*buffsize = FFXI_HEADER_SIZE;
 
-	while(!PChar->isPacketListEmpty() && *buffsize + PChar->firstPacketSize()*2 < map_config.buffer_size )
+	while(!PChar->isPacketListEmpty() && *buffsize + PChar->firstPacketSize()*2 < 1800 )
 	{
 		PSmallPacket = PChar->popPacket();
 
@@ -623,6 +621,7 @@ int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t*
 		*buffsize += PSmallPacket->getSize()*2;
 
 		delete PSmallPacket;
+	
 	}
 	return 0;
 }
@@ -635,14 +634,15 @@ int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t*
 
 int32 send_parse(int8 *buff, size_t* buffsize, sockaddr_in* from, map_session_data_t* map_session_data)
 {
-
 	
-		//ShowWarning(CL_YELLOW"send_parse: packet is  <%u>\n" CL_RESET,*buffsize);
+	  if (*buffsize > 1800)
+	{
+		ShowWarning(CL_BG_RED"BUFF SIZE IS TO LARGE SKIP <%u>\n" CL_RESET,*buffsize);
+		
+		return 0;
+	}
 	
-	// Модификация заголовка исходящего пакета
-	// Суть преобразований:
-	//  - отправить клиенту номер последнего полученного от него пакета
-	//  - присвоить исходящему пакету номер последнего отправленного клиенту пакета +1
+		
 	//  - записать текущее время отправки пакета
     WBUFL(buff,8) = (uint32)time(NULL);
 	WBUFW(buff,0) = map_session_data->server_packet_id;
@@ -665,9 +665,10 @@ int32 send_parse(int8 *buff, size_t* buffsize, sockaddr_in* from, map_session_da
 	memcpy(PTempBuff+PacketSize, hash, 16);
 	PacketSize += 16;
 
-    if (PacketSize > map_config.buffer_size + 20)
+    if (PacketSize > 1800 + 20)
     {
         ShowFatalError(CL_RED"%Memory manager: PTempBuff is overflowed (%u)\n" CL_RESET, PacketSize);
+		return 0;
     }
 
 	//making total packet
@@ -682,27 +683,34 @@ int32 send_parse(int8 *buff, size_t* buffsize, sockaddr_in* from, map_session_da
 		blowfish_encipher((uint32*)(buff)+j+7, (uint32*)(buff)+j+8, pbfkey->P, pbfkey->S[0]);
 	}
 
-	// контролируем размер отправляемого пакета. в случае,
-	// если его размер превышает 1400 байт (размер данных + 42 байта IP заголовок),
-	// то клиент игнорирует пакет и возвращает сообщение о его потере
-
-	// в случае возникновения подобной ситуации выводим предупреждующее сообщение и
-	// уменьшаем размер BuffMaxSize с шагом в 4 байта до ее устранения (вручную)
-
-	*buffsize = PacketSize+FFXI_HEADER_SIZE;
-
-	if (*buffsize > 1350)
+	
+	if(PacketSize+FFXI_HEADER_SIZE > 1800)
 	{
-		//I NOTICED WHEN A PLAYER LOGS IN THERE ARE SOME CASES WHERE THEY ARE GETTING TO BIG OF A PACKET TO GAOL IS TO REDUCE THE PACKETS
-		//BEING SENT ON LOGIN, ONCE ONCE THIS REDUCTION IS DONE TEHN WE CAN START UP DATING OTHER PACKETS IT LOOKED LIKE THIS
-		//WAS CALLED BECASUE OF ALL THE SPELL CASTING FROM THE MOBS. SO THAT IS TURNED OFF RIGHT NOW
+		ShowWarning(CL_BG_RED"PACKET SIZE IS TO LARGE SKIP <%u>\n" CL_RESET,PacketSize+FFXI_HEADER_SIZE);
+		
+		return 0;
+	}
+	*buffsize = PacketSize+FFXI_HEADER_SIZE;
+	//ShowWarning(CL_BG_YELLOW"AFTER PACKET SIZE <%u>\n" CL_RESET,PacketSize+FFXI_HEADER_SIZE);
+	if (*buffsize > 1800)
+	{
+		//I NOTICED WHEN A PLAYER LOGS IN THERE ARE SOME CASES WHERE THEY ARE GETTING TO BIG OF A PACKET TO GOAL IS TO REDUCE THE PACKETS
+		//BEING SENT ON LOGIN AND ON ZONING MAYBE SLOW IT DOWN A BIT, ONCE THIS REDUCTION IS DONE TEHN WE CAN START UPDATING OTHER PACKETS IT LOOKED LIKE THIS
+		//WAS CALLED BECASUE OF ALL THE SPELL CASTING FROM THE MOBS. SO THAT IS TURNED OFF RIGHT NOW WHEN I HAD THE SPELLS TURN OFF FOR THE MOBS
+		//I NEVER ONCE GOT THIS PACKET SIZE PROBLEM FOR DCING PLAYERS NOW THAT I HAVE IT BAD ENABLED IM GETTTING IT ONCE AGAIN 
 		//AND I HAVENT BEEN GETTING THIS AT ALL
 		ShowWarning(CL_YELLOW"send_parse: packet is very big <%u>\n" CL_RESET,*buffsize);
 		ShowWarning(CL_YELLOW"GET SESSION<%u>\n" CL_RESET,map_session_data);
 	
+		//AS THIS HAPPESN WE NEED TO GET THEM OFF THE MAP 
+		const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE sessions = %u";
+                Sql_Query(SqlHandle,Query,map_session_data);
+		        Query = "UPDATE accounts SET  online = '0' WHERE sessions = %u";
+                Sql_Query(SqlHandle,Query,map_session_data);
 		 
 	}
 	return 0;
+	
 }
 
 /************************************************************************
@@ -723,7 +731,8 @@ int32 Close_Session_Clean_Map(uint32 tick, CTaskMgr::CTask* PTask)
 		Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE charid = %u",map_session_data->PChar->id);
         
 		//ShowMessage(CL_YELLOW"FINISHED MAP CLEAN FOR PLAYERS ACCOUNT ID = %u GET\n"CL_RESET,map_session_data->PChar->accid);
-		
+		const char *Query = "UPDATE accounts SET  on_map ='0' WHERE id = %u";
+                Sql_Query(SqlHandle,Query,map_session_data->PChar->id);
 		uint64 port64 = map_session_data->client_port;
 		uint64 ipp	  = map_session_data->client_addr;
 		ipp |= port64<<32;
@@ -755,6 +764,7 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 {
 	
 	uint32 checktime = CVanaTime::getInstance()->getSysSecond();
+	
 	map_session_list_t::iterator it = map_session_list.begin();
 
 	while(it != map_session_list.end())

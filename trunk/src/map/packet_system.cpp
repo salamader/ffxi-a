@@ -835,9 +835,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
  
 
  
-	//charutils::SaveCharPosition(PChar);
- 
-	//charutils::SaveZonesVisited(PChar);
+	
  
 
  
@@ -873,7 +871,7 @@ void SmallPacket0x00C(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		return;
 	}
 	PChar->pushPacket(new CInventorySizePacket(PChar));
-	PChar->pushPacket(new CMenuConfigPacket(PChar));
+	//PChar->pushPacket(new CMenuConfigPacket(PChar));
 	PChar->pushPacket(new CCharJobsPacket(PChar));
 	PChar->pushPacket(new CChocoboMusicPacket());
 
@@ -959,7 +957,7 @@ void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	
 
 	PChar->status = STATUS_DISAPPEAR;
-    PChar->PBattleAI->Reset();
+    PChar->Check_Engagment->Reset();
 	return;
 	}
 	else
@@ -1057,30 +1055,6 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 		
 		int32 god=1500;
 		PChar->addHP(god);
-		if(PChar->Account_Level==1)
-		{
-		PChar->nameflags.flags =FLAG_GM_SUPPORT;
-		
-		
-		}
-		if(PChar->Account_Level==2)
-		{
-		PChar->nameflags.flags =FLAG_GM_SENIOR;
-		
-		
-		}
-		if(PChar->Account_Level==3)
-		{
-		PChar->nameflags.flags =FLAG_GM_LEAD;
-		
-		
-		}
-		if(PChar->Account_Level==4)
-		{
-		PChar->nameflags.flags =FLAG_GM_PRODUCER;
-		
-		
-		}
 		
 			
 		PChar->addTP(god);
@@ -1111,6 +1085,7 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 		
 	}
 	}
+	
 	
 
 		if (PChar->PWideScanTarget != NULL)
@@ -1213,15 +1188,15 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		break;
 		case 0x02: // attack
 		{
-			PChar->PBattleAI->SetCurrentAction(ACTION_ENGAGE, TargID);
+			PChar->Check_Engagment->SetCurrentAction(ACTION_ENGAGE, TargID);
 
-            if (PChar->PBattleAI->GetCurrentAction() == ACTION_ENGAGE)
+            if (PChar->Check_Engagment->GetCurrentAction() == ACTION_ENGAGE)
             {
                 if (PChar->animation == ANIMATION_CHOCOBO)
                 {
                     PChar->StatusEffectContainer->DelStatusEffectSilent(EFFECT_CHOCOBO);
                 }
-                PChar->PBattleAI->CheckCurrentAction(gettick());
+                PChar->Check_Engagment->CheckCurrentAction(gettick());
             }
 		}
 		break;
@@ -1229,15 +1204,15 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		{
 			uint16 SpellID = RBUFW(data,(0x0C));
 			ShowWarning("SPELL CAST ID %u\n",SpellID);
-			PChar->PBattleAI->SetCurrentSpell(SpellID);
-			PChar->PBattleAI->SetCurrentAction(ACTION_MAGIC_START, TargID);
-			PChar->PBattleAI->CheckCurrentAction(gettick());
+			PChar->Check_Engagment->SetCurrentSpell(SpellID);
+			PChar->Check_Engagment->SetCurrentAction(ACTION_MAGIC_START, TargID);
+			PChar->Check_Engagment->CheckCurrentAction(gettick());
 		}
 		break;
 		case 0x04: // disengage
 		{
-			PChar->PBattleAI->SetCurrentAction(ACTION_DISENGAGE);
-			PChar->PBattleAI->CheckCurrentAction(gettick());
+			PChar->Check_Engagment->SetCurrentAction(ACTION_DISENGAGE);
+			PChar->Check_Engagment->CheckCurrentAction(gettick());
 		}
 		break;
 		case 0x05: // call for help
@@ -1247,7 +1222,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				CMobEntity* MOB = (CMobEntity*)it->second;
 
 				if (MOB->animation == ANIMATION_ATTACK &&
-					MOB->PBattleAI->GetBattleTarget() == PChar)
+					MOB->Check_Engagment->GetBattleTarget() == PChar)
 				{
 					MOB->m_CallForHelp = 0x20;
 					PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(PChar,PChar,0,0,19));
@@ -1261,17 +1236,17 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		case 0x07: // weaponskill
 		{
 			uint16 WSkillID = RBUFW(data,(0x0C));
-			PChar->PBattleAI->SetCurrentWeaponSkill(WSkillID);
-			PChar->PBattleAI->SetCurrentAction(ACTION_WEAPONSKILL_START, TargID);
-			PChar->PBattleAI->CheckCurrentAction(gettick());
+			PChar->Check_Engagment->SetCurrentWeaponSkill(WSkillID);
+			PChar->Check_Engagment->SetCurrentAction(ACTION_WEAPONSKILL_START, TargID);
+			PChar->Check_Engagment->CheckCurrentAction(gettick());
 		}
 		break;
 		case 0x09: // jobability
 		{
 			uint16 JobAbilityID = RBUFW(data,(0x0C));
-			PChar->PBattleAI->SetCurrentJobAbility(JobAbilityID-16);
-			PChar->PBattleAI->SetCurrentAction(ACTION_JOBABILITY_START, TargID);
-			PChar->PBattleAI->CheckCurrentAction(gettick());
+			PChar->Check_Engagment->SetCurrentJobAbility(JobAbilityID-16);
+			PChar->Check_Engagment->SetCurrentAction(ACTION_JOBABILITY_START, TargID);
+			PChar->Check_Engagment->CheckCurrentAction(gettick());
 		}
 		break;
 		case 0x0B: // homepoint
@@ -1340,8 +1315,8 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	    {
 			if(RBUFB(data,(0x0C)) == 0) //ACCEPTED RAISE
             {
-				PChar->PBattleAI->SetCurrentAction(ACTION_RAISE_MENU_SELECTION);
-				PChar->PBattleAI->CheckCurrentAction(gettick());
+				PChar->Check_Engagment->SetCurrentAction(ACTION_RAISE_MENU_SELECTION);
+				PChar->Check_Engagment->CheckCurrentAction(gettick());
 			}
             PChar->m_hasRaise = 0;
 	    }
@@ -1353,14 +1328,14 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		break;
 		case 0x0F: // смена цели во время боя
 		{
-			PChar->PBattleAI->SetCurrentAction(ACTION_CHANGE_TARGET, TargID);
-			PChar->PBattleAI->CheckCurrentAction(gettick());
+			PChar->Check_Engagment->SetCurrentAction(ACTION_CHANGE_TARGET, TargID);
+			PChar->Check_Engagment->CheckCurrentAction(gettick());
 		}
 		break;
 		case 0x10: // rangedattack
 		{
-			PChar->PBattleAI->SetCurrentAction(ACTION_RANGED_START, TargID);
-			PChar->PBattleAI->CheckCurrentAction(gettick());
+			PChar->Check_Engagment->SetCurrentAction(ACTION_RANGED_START, TargID);
+			PChar->Check_Engagment->CheckCurrentAction(gettick());
 		}
 		break;
 		case 0x11: // chocobo digging
@@ -1392,8 +1367,8 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		{
                 // по любому, это работает неправильно. проблемный код в комментарии
 
-			    PChar->PBattleAI->SetCurrentAction(ACTION_RAISE_MENU_SELECTION);
-			    PChar->PBattleAI->CheckCurrentAction(gettick());
+			    PChar->Check_Engagment->SetCurrentAction(ACTION_RAISE_MENU_SELECTION);
+			    PChar->Check_Engagment->CheckCurrentAction(gettick());
 
 			
 			if(RBUFB(data,(0x0C)) == 0)
@@ -1417,17 +1392,19 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				ShowDebug(CL_RED"PLAYER %s SPAWNING MOGGLE %u\n"CL_RESET,PChar->GetName(),PChar->getZone());
 				zoneutils::GetZone(PChar->loc.prevzone)->SpawnMoogle(PChar);
 				
-			}else{
+			}
+			else
+			{
 				PChar->loc.zone->SpawnPCs(PChar);
 				PChar->loc.zone->SpawnNPCs(PChar);
 				PChar->loc.zone->SpawnMOBs(PChar);
 			}
 			//charutils::SaveCharPosition(PChar);
-			if(PChar->godmode == 0)
-			{
-				PChar->nameflags.flags =0;
-				PChar->pushPacket(new CCharUpdatePacket(PChar));
-			}
+			//if(PChar->godmode == 0)
+			//{
+				//PChar->nameflags.flags =0;
+				//PChar->pushPacket(new CCharUpdatePacket(PChar));
+			//}
 			if(PChar->is_inevent != 0)//A CHECK SWITCH SAYING THE USER WAS IN A EVENT AND NOT IS SWITCH BACK TO NOT BEING IN IT BECASUE THEY ARE IN IT
 	            {
 				
@@ -1939,14 +1916,14 @@ void SmallPacket0x037(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			PChar->UContainer->SetType(UCONTAINER_USEITEM);
 			PChar->UContainer->SetItem(0, PItem);
 
-			PChar->PBattleAI->SetCurrentAction(ACTION_ITEM_START, TargetID);
+			PChar->Check_Engagment->SetCurrentAction(ACTION_ITEM_START, TargetID);
 
-			if (PChar->PBattleAI->GetCurrentAction() != ACTION_ITEM_START)
+			if (PChar->Check_Engagment->GetCurrentAction() != ACTION_ITEM_START)
 			{
 				PChar->UContainer->Clean();
                 return;
 			}
-            PChar->PBattleAI->CheckCurrentAction(gettick());
+            PChar->Check_Engagment->CheckCurrentAction(gettick());
 		}
 	}
 	return;
@@ -2075,7 +2052,7 @@ void SmallPacket0x042(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x04B(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	ShowMessage("SMALLPACKET0x04B SEND SERVER MESSAGE WORKS SOME TIMES NOT ALWAYS\n");
+	ShowMessage("SMALLPACKET0x04B\n");
    // if(PChar->search.language == 205) // French
 		//PChar->pushPacket(new CServerMessagePacket(map_config.fr_server_message,PChar->search.language));
 	//TODO: add another language
@@ -3941,26 +3918,31 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				     {
                  ////ShowNotice(CL_RED"COMMAND TRACER: Player called Command \n" CL_RESET);	
 				       CmdHandler.pcall(PChar, (const int8*)data+7);
+					   return;
 				     }
 				     if(PChar->Account_Level==1)
 				     {
                //  //ShowNotice(CL_RED"COMMAND TRACER: GM called Command \n" CL_RESET);	
 				     CmdHandler.gcall(PChar, (const int8*)data+7);
+					 return;
 				     }
 				    if(PChar->Account_Level==2)
 				     {
                 // //ShowNotice(CL_RED"COMMAND TRACER: Mod GM called Command \n" CL_RESET);	
 				     CmdHandler.mgcall(PChar, (const int8*)data+7);
+					 return;
 				     }
 				     if(PChar->Account_Level==3)
 				     {
                 // //ShowNotice(CL_RED"COMMAND TRACER: Admin GM called Command \n" CL_RESET);
 				     CmdHandler.agcall(PChar, (const int8*)data+7);
+					 return;
 				     }
 					 if(PChar->Account_Level==4)
 				     {
                 // //ShowNotice(CL_RED"COMMAND TRACER: Admin GM called Command \n" CL_RESET);
 				     CmdHandler.procall(PChar, (const int8*)data+7);
+					 return;
 				     }
 				
 				//return;
@@ -3974,11 +3956,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			}
 			//return;
 	        }
-		else
-		{
-       // ShowNotice("SOME OTHER COMAMND WAS CALLED UNKNOWN\n");
-        //return;
-		}
+		
 		
 		}
 		
@@ -3989,13 +3967,39 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	{
 		if(PChar->Account_Level==1 || PChar->Account_Level==2 || PChar->Account_Level==3 || PChar->Account_Level==4)
 		{
-            for (uint16 zone = 0; zone < MAX_ZONEID; ++zone)
+            for (uint16 zone = MIN_ZONEID; zone < MAX_ZONEID; ++zone)
             {
             zoneutils::GetZone(zone)->PushPacket(
                 PChar,
                 CHAR_INZONE,
                 new CChatMessagePacket(PChar, MESSAGE_SYSTEM_1, data+7));
+			ShowMessage("MESSAGE SENT TO  ZONE ID %u\n",zone);
+			
             }
+			PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SYSTEM_1,     data+6)); 
+			return;
+		}
+			
+          
+		
+	}
+	else if (RBUFB(data,(0x06)) == '@')
+	{
+		if(PChar->Account_Level==1 || PChar->Account_Level==2 || PChar->Account_Level==3 || PChar->Account_Level==4)
+		{
+            for (uint16 zone = MIN_ZONEID; zone < MAX_ZONEID; ++zone)
+            {
+            zoneutils::GetZone(zone)->PushPacket(
+                PChar,
+                CHAR_INZONE,
+                new CServerMessagePacket(data+7,PChar->search.language));
+			ShowMessage("MESSAGE SENT TO  ZONE ID %u\n",zone);
+			
+            }
+			PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CServerMessagePacket(data+6,PChar->search.language)); 
+			//UPDATE THE DATABASE WITH THE NEW MESSAGE
+			//PChar->pushPacket(new CServerMessagePacket(data+6,PChar->search.language));
+			return;
 		}
 			
           
@@ -4016,16 +4020,18 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			
 			
 		}
-            for (uint16 zone = 0; zone < MAX_ZONEID; ++zone)
+            for (uint16 zone = MIN_ZONEID; zone < MAX_ZONEID; ++zone)
             {
             zoneutils::GetZone(zone)->PushPacket(
                 PChar,
                 CHAR_INZONE,
                 new CChatMessagePacket(PChar, MESSAGE_SHOUT, data+7));
+			ShowMessage("MESSAGE SENT TO  ZONE ID %u\n",zone);
+			
             }
-		
-			//PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY, data+7));
-          
+		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SHOUT,     data+6)); 
+			
+          return;
 		
 	}
     else
@@ -4035,11 +4041,12 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
             if(RBUFB(data,(0x04)) == MESSAGE_SAY)
             {
                 PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY, data+6));
-				
+				return;
             }
             else
             {
                 PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 316));
+				return;
             }
         }
         else
@@ -4050,28 +4057,33 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					{
 						
 						PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY,     data+6)); 
+						break;
 					}
-					break;
+					
                 case MESSAGE_EMOTION:
 					{
 						PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_EMOTION, data+6));
+						break;
 					}
-					break;
+					
                 case MESSAGE_SHOUT:	
 					{
 						
-						PChar->loc.zone->PushPacket(PChar, CHAR_INSHOUT, new CChatMessagePacket(PChar, MESSAGE_SHOUT,   data+6)); 
+						PChar->loc.zone->PushPacket(PChar, CHAR_INSHOUT, new CChatMessagePacket(PChar, MESSAGE_SHOUT,   data+6));
+						break; 
 					}
-					break;
+					
                 case MESSAGE_LINKSHELL:
                 {
                     if (PChar->PLinkshell != NULL)
                     {
 						
                         PChar->PLinkshell->PushPacket(PChar, new CChatMessagePacket(PChar, MESSAGE_LINKSHELL, data+6));
+						break;
                     }
+					break;
                 }
-                break;
+                
 				case MESSAGE_PARTY:
                 {
                     if (PChar->PParty != NULL)
@@ -4080,26 +4092,30 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 						{
 							
 							PChar->PParty->PushPacket(PChar, 0, new CChatMessagePacket(PChar, MESSAGE_PARTY, data+6));
-
+							break;
 						}
 						else
 						{ //alliance party chat
 								for (uint8 i = 0; i < PChar->PParty->m_PAlliance->partyList.size(); ++i)
 								{
 									PChar->PParty->m_PAlliance->partyList.at(i)->PushPacket(PChar, 0, new CChatMessagePacket(PChar, MESSAGE_PARTY, data+6));
+									break;
 								}
-								
+								break;
 								
 						}
+						break;
 					}
+					break;
                 }
-                break;
+                
                 case MESSAGE_YELL:
 					{
 						
 						PChar->loc.zone->PushPacket(PChar, CHAR_INSHOUT, new CChatMessagePacket(PChar, MESSAGE_YELL,   data+6)); 
+						break;
 					}
-					break;
+					
             }
         }
 	}
@@ -4114,25 +4130,25 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 *																		*
 ************************************************************************/
 
-void SmallPacket0x0B6(map_session_data_t* session, CCharEntity* PChar, int8* data)
+void PCharTellSystem(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-   ShowNotice("PCHAR SEND TELL SYSTEM CALLED\n");
+  // ShowNotice("PCHAR SEND TELL SYSTEM CALLED\n");
 	string_t RecipientName = data+5;
 	string_t message = data+20;
-	ShowNotice(CL_RED"SENDING MESSAGE %s TO PLAYER %s FROM PLAYER %s\n" CL_RESET,message.c_str(),RecipientName.c_str(),PChar->GetName());
+	//ShowNotice(CL_RED"SENDING MESSAGE %s TO PLAYER %s FROM PLAYER %s\n" CL_RESET,message.c_str(),RecipientName.c_str(),PChar->GetName());
 	if(jailutils::InPrison(PChar))
     {
-		ShowNotice(CL_GREEN"SENDING MESSAGE: TO SENDER JAIL\n" CL_RESET);
+		//ShowNotice(CL_GREEN"SENDING MESSAGE: TO SENDER JAIL\n" CL_RESET);
         PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 316));
         return;
     }
 	CCharEntity* PTargetChar = zoneutils::GetCharByName(data+5);
 	if(PTargetChar != NULL )
 	{
-		ShowNotice(CL_GREEN"SENDING MESSAGE IS NOT NULL OK TO SEND\n" CL_RESET);
+		//ShowNotice(CL_GREEN"SENDING MESSAGE IS NOT NULL OK TO SEND\n" CL_RESET);
 		if (PTargetChar->nameflags.flags == FLAG_AWAY)
 			{
-				ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER HAS AWAY FLAG SET TELL SENDER\n" CL_RESET);
+				//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER HAS AWAY FLAG SET TELL SENDER\n" CL_RESET);
 				if(PTargetChar == PChar)
 			    {
 				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
@@ -4140,40 +4156,42 @@ void SmallPacket0x0B6(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			    }
 				else
 				{
-					ShowNotice(CL_GREEN"DEBUG: SEND MESSAGE CHAT 0 1\n" CL_RESET);
+					//ShowNotice(CL_GREEN"DEBUG: SEND MESSAGE CHAT 0 1\n" CL_RESET);
 				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 181));
 				}
 				return;
 			}
 		if( PTargetChar->status != STATUS_DISAPPEAR)
 		{
-			ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS NOT ZONING SEND MESSAGE OK\n" CL_RESET);
+			//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS NOT ZONING SEND MESSAGE OK\n" CL_RESET);
 			if(PTargetChar == PChar)
 			{
-				ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS SELF\n" CL_RESET);
+				//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS SELF\n" CL_RESET);
 				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
 				return;
 			}
 			else
 			{
-				ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ELSE\n" CL_RESET);
+				//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ELSE\n" CL_RESET);
 			PTargetChar->pushPacket(new CChatMessagePacket(PChar, MESSAGE_TELL,data+20 ));
+			return;
 			}
 		return;
 		}
 		else
 		{
-			ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ZONEING TELL SENDER\n" CL_RESET);
+			//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ZONEING TELL SENDER\n" CL_RESET);
 			if(PTargetChar == PChar)
 			{
-				ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ZONEING SELF\n" CL_RESET);
+				//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ZONEING SELF\n" CL_RESET);
 				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
 				return;
 			}
 			else
 			{
-				ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ZONEING ELSE\n" CL_RESET);
+				//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS ZONEING ELSE\n" CL_RESET);
 				PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
+				return;
 			
 			}
 			
@@ -4192,32 +4210,35 @@ void SmallPacket0x0B6(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				CCharEntity* PCharInMog = map_session_data->PChar;
 				if(PCharInMog!=NULL)
 				{
-					ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS NOT NULL MOG HOUSE\n" CL_RESET);
-					PTargetChar = PCharInMog;
+					//ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS NOT NULL MOG HOUSE\n" CL_RESET);
+					PTargetChar = PCharInMog; //PCHAR ID 1 IS TALKING TO PTARGETCHAR ID 2 ON FULL SEEP PTARGETCHAR ID 2 = PCHARINMOG ID 2 
 					if(PTargetChar == PChar) // IF WE ARe TALKING TO OUR SELF SHOULD DO NOTHING
 			          {
-						  ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS SELF MOG HOUSE\n" CL_RESET);
+						  //ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS SELF MOG HOUSE\n" CL_RESET);
 				      PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
+					  break;
 				      }
 					else //ELSE WE ARE TAKING TO SOME ONE ELSE
 					{
-						 ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS ELSE MOG HOUSE\n" CL_RESET);
+						// ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS ELSE MOG HOUSE\n" CL_RESET);
 						if(PTargetChar == PCharInMog) // IF THE PERSON WE ARE TALKING TO == THE PERSON IN THE MOG HOUSE SEND MESSAGE
 						{
-							 ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS == something MOG HOUSE\n" CL_RESET);
+							 //ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS == something MOG HOUSE\n" CL_RESET);
                         PCharInMog->pushPacket(new CChatMessagePacket(PChar, MESSAGE_TELL,data+20 ));
+						break;
 						}
 						else// ELSE WE SHOUD DO NOTHING OTHER THEN SAY THE PLAYERS NOT ONLINE
 						{
-							ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS == something MOG HOUSE ELSE\n" CL_RESET);
+							//ShowNotice(CL_GREEN"SENDING MESSAGE: PLAYER IS == something MOG HOUSE ELSE\n" CL_RESET);
 							PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
+							break;
 						}
 					}
 					break;
 				}
 				else
 				{
-                ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS NOT ONLINE TELL SENDER\n" CL_RESET);
+               // ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS NOT ONLINE TELL SENDER\n" CL_RESET);
 		        PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, 125));
 				break;
 				}
@@ -4390,7 +4411,7 @@ void SmallPacket0x0C4(map_session_data_t* session, CCharEntity* PChar, int8* dat
                     PItemLinkshell->setSubType(ITEM_UNLOCKED);
 
                     PChar->equip[SLOT_LINK] = 0;
-                    PChar->nameflags.flags &= ~FLAG_LINKSHELL;
+                   
 
                     PChar->pushPacket(new CInventoryAssignPacket(PItemLinkshell, INV_NORMAL));
                 }
@@ -4419,7 +4440,7 @@ void SmallPacket0x0C4(map_session_data_t* session, CCharEntity* PChar, int8* dat
                     PItemLinkshell->setSubType(ITEM_LOCKED);
 
                     PChar->equip[SLOT_LINK] = SlotID;
-                    PChar->nameflags.flags |= FLAG_LINKSHELL;
+                   // PChar->nameflags.flags = FLAG_LINKSHELL;
 
                     PChar->pushPacket(new CInventoryAssignPacket(PItemLinkshell, INV_LINKSHELL));
                 }
@@ -4501,88 +4522,139 @@ void SmallPacket0x0D3(map_session_data_t* session, CCharEntity* PChar, int8* dat
 *  флаги в help desk и т.д.												*
 *																		*
 ************************************************************************/
+/*
 
+    FLAG_INEVENT        = 0x00000002,
+    FLAG_CHOCOBO        = 0x00000040,
+    FLAG_WALLHACK       = 0x00000200,
+    FLAG_INVITE         = 0x00000800,
+    FLAG_ANON           = 0x00001000,
+    FLAG_UNKNOWN        = 0x00002000,
+    FLAG_AWAY           = 0x00004000,
+    FLAG_PLAYONLINE     = 0x00010000,
+    FLAG_LINKSHELL      = 0x00020000,
+    FLAG_DC             = 0x00040000,
+    FLAG_GM_SUPPORT     = 0x04000000,
+    FLAG_GM_SENIOR      = 0x05000000,
+    FLAG_GM_LEAD        = 0x06000000,
+    FLAG_GM_PRODUCER    = 0x07000000,
+    FLAG_BAZAAR         = 0x80000000,
+	FLAG_AUTOGROUP      = 0x00000015,
+    FLAG_NEWPLAYER      = 0x00000000,
+    FLAG_MENTOR         = 0x00000000,
+*/
+ enum NAMEFLAG_TRIGGER
+{
+	CANCEL_NEW_ADVENTRUE_STATUS_BTN = 0,
+	SEEK_PARTY_BTN        = 1,
+	ONLINE_BTN        = 2,
+   HAS_AUTO_TARGET =	16384,
+   AUTO_GROUP_BTN = 32768,
+   
+}; 
 void SmallPacket0x0DC(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	switch(RBUFW(data,(0x04)))
+	/*IN PLAYER UPDATE PACKET WILL DO THE CHECK IF THEY PLAYER IS IN PARTY OR HAS BLAZZAR OR LINKSHELL OR ANY OTERH FLAG TYPE SYSTEM*/
+
+	ShowDebug("IF BUTTON0 CLIECKED GET ID %u\n",RBUFW(data,(0)));
+	ShowDebug("IF BUTTON1 CLIECKED GET ID %u\n",RBUFW(data,(1)));
+	ShowDebug("IF BUTTON2 CLIECKED GET ID %u\n",RBUFW(data,(2)));
+	ShowDebug("IF BUTTON3 CLIECKED GET ID %u\n",RBUFW(data,(3)));
+	ShowDebug("IF BUTTON4 CLIECKED GET ID %u\n",RBUFW(data,(4)));
+	ShowDebug("IF BUTTON5 CLIECKED GET ID %u\n",RBUFW(data,(5)));
+	ShowDebug("IF BUTTON6 CLIECKED GET ID %u\n",RBUFW(data,(6)));
+	ShowDebug("IF BUTTON7 CLIECKED GET ID %u\n",RBUFW(data,(7)));
+	ShowDebug("IF BUTTON8 CLIECKED GET ID %u\n",RBUFW(data,(8)));
+	ShowDebug("IF BUTTON9 CLIECKED GET ID %u\n",RBUFW(data,(9)));
+	ShowDebug("IF BUTTON10 CLIECKED GET ID %u\n",RBUFW(data,(10)));
+	ShowDebug("IF BUTTON11 CLIECKED GET ID %u\n",RBUFW(data,(11)));
+	ShowDebug("IF BUTTON12 CLIECKED GET ID %u\n",RBUFW(data,(12)));
+	ShowDebug("IF BUTTON13 CLIECKED GET ID %u\n",RBUFW(data,(13)));
+	ShowDebug("IF BUTTON14 CLIECKED GET ID %u\n",RBUFW(data,(14)));
+	ShowDebug("IF BUTTON15 CLIECKED GET ID %u\n",RBUFW(data,(15)));
+	ShowDebug("IF BUTTON16 CLIECKED GET ID %u\n",RBUFW(data,(16)));
+	ShowDebug("IF BUTTON17 CLIECKED GET ID %u\n",RBUFW(data,(17)));
+	ShowDebug("IF BUTTON18 CLIECKED GET ID %u\n",RBUFW(data,(18)));
+
+	if(RBUFW(data,(0x04)) == CANCEL_NEW_ADVENTRUE_STATUS_BTN)
 	{
-		case 0x0001:
-			PChar->nameflags.flags ^= FLAG_INVITE;
-			break;
-		case 0x0002:
-			if(RBUFB(data,(0x10)) == 1)
-				PChar->nameflags.flags |=  FLAG_AWAY;
-			if(RBUFB(data,(0x10)) == 2)
-				PChar->nameflags.flags &= ~FLAG_AWAY;
-			break;
-		case 0x0004:
-			PChar->nameflags.flags ^= FLAG_ANON;
-			break;
-		case 0x4000:
-			if(RBUFB(data,(0x10)) == 1)
-                PChar->m_hasAutoTarget = false;
-			if(RBUFB(data,(0x10)) == 2)
-                PChar->m_hasAutoTarget = true;
-			break;
-		case 0x8000:
-			if(RBUFB(data,(0x10)) == 1)	// autogroup on
-			{
-				//todo add fuction
-
-			}
-			if(RBUFB(data,(0x10)) == 2)	// autogroup off
-			{
-				//todo add fuction
-			}
-			break;
+		ShowDebug("IF BUTTON0 CLIECKED WERE IN 1\n");
+		
+						
+		PChar->nameflags.flags ^= FLAG_NEWPLAYER;
+		PChar->pushPacket(new CMenuConfigPacket(PChar));
+		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		return;
 	}
-    //charutils::SaveCharStats(PChar);
+	if(RBUFW(data,(0x04)) == HAS_AUTO_TARGET)
+	{
+		ShowDebug("IF BUTTON0 CLIECKED WERE IN 1\n");
+		
+						
+		if(RBUFB(data,(0x10)) == 1)
+		{
+                PChar->m_hasAutoTarget = false;
+		}
+			if(RBUFB(data,(0x10)) == 2)
+			{
+                PChar->m_hasAutoTarget = true;
+			}
+		PChar->pushPacket(new CMenuConfigPacket(PChar));
+		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		return;
+	}
+	if(RBUFW(data,(0x04)) == ONLINE_BTN)
+	{
+		ShowDebug("IF BUTTON0 CLIECKED WERE IN 2\n");
 
-	PChar->status = STATUS_UPDATE;
-	PChar->pushPacket(new CMenuConfigPacket(PChar));
-	PChar->pushPacket(new CCharUpdatePacket(PChar));
+						
+		PChar->nameflags.flags ^= FLAG_PLAYONLINE;
+		PChar->status = STATUS_UPDATE;
+		PChar->pushPacket(new CMenuConfigPacket(PChar));
+		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		return;
+	}
+	if(RBUFW(data,(0x04)) == SEEK_PARTY_BTN)
+	{
+		ShowDebug("IF BUTTON0 CLIECKED WERE IN 3\n");
+		
+						
+		PChar->nameflags.flags ^= FLAG_INVITE;
+		PChar->status = STATUS_UPDATE;
+		PChar->pushPacket(new CMenuConfigPacket(PChar));
+		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		return;
+	}
+	if(RBUFW(data,(0x04)) == AUTO_GROUP_BTN)
+	{
+		ShowDebug("IF BUTTON0 CLIECKED WERE IN 4\n");
+		
+						
+		PChar->nameflags.flags ^= FLAG_AUTOGROUP;
+		PChar->status = STATUS_UPDATE;
+		PChar->pushPacket(new CMenuConfigPacket(PChar));
+		PChar->pushPacket(new CCharUpdatePacket(PChar));
+		return;
+	}
+		
 	return;
 }
 
-/************************************************************************
-*																		*
-*  Устанавливаем предпочтительный язык общения							*
-*																		*
-************************************************************************/
+
 
 void SmallPacket0x0DB(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	ShowMessage("SMALL PACKET 0x0DB PLAYERS LANGUAGE == %u\n",RBUFB(data,(0x24)));
-	PChar->search.language = RBUFB(data,(0x24));
+	//server_message server_message
 
-	if(PChar->search.language == 205)
-	{// French
-		PChar->pushPacket(new CServerMessagePacket(map_config.fr_server_message,PChar->search.language));
-	//TODO: add another language
-	}
-	else
-	{
-		PChar->pushPacket(new CServerMessagePacket(map_config.server_message,PChar->search.language));
-	}
+	char buf[110];
+    sprintf(buf,"THIS IS A TEST MESSAGE");
+	 
+	PChar->search.language = RBUFB(data,(0x24));
+	PChar->pushPacket(new CServerMessagePacket(("%s",buf),PChar->search.language));
 	return;
 }
 
-/************************************************************************
-*																		*
-*  Проверяем монстров или персонажей									*
-*																		*
-*  170 - <target> seems It seems to have high evasion and defense.		*
-*  171 - <target> seems It seems to have high evasion.					*
-*  172 - <target> seems It seems to have high evasion but low defense.	*
-*  173 - <target> seems It seems to have high defense.					*
-*  174 - <target> seems													*
-*  175 - <target> seems It seems to have low defense.					*
-*  176 - <target> seems It seems to have low evasion but high defense.	*
-*  177 - <target> seems It seems to have low evasion.					*
-*  178 - <target> seems It seems to have low evasion and defense.		*
-*																		*
-*																		*
-************************************************************************/
+
 
 void SmallPacket0x0DD(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
@@ -4893,13 +4965,13 @@ void SmallPacket0x0E8(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			   (PChar->PPet->m_EcoSystem != SYSTEM_AVATAR &&
 				PChar->PPet->m_EcoSystem != SYSTEM_ELEMENTAL))
 			{
-				switch (PChar->PBattleAI->GetCurrentAction())
+				switch (PChar->Check_Engagment->GetCurrentAction())
 				{
-					case ACTION_ITEM_USING:		PChar->PBattleAI->SetCurrentAction(ACTION_ITEM_INTERRUPT);	break;
-					case ACTION_MAGIC_CASTING:	PChar->PBattleAI->SetCurrentAction(ACTION_MAGIC_INTERRUPT);	break;
+					case ACTION_ITEM_USING:		PChar->Check_Engagment->SetCurrentAction(ACTION_ITEM_INTERRUPT);	break;
+					case ACTION_MAGIC_CASTING:	PChar->Check_Engagment->SetCurrentAction(ACTION_MAGIC_INTERRUPT);	break;
 				}
 				PChar->status = STATUS_UPDATE;
-				PChar->PBattleAI->CheckCurrentAction(gettick());
+				PChar->Check_Engagment->CheckCurrentAction(gettick());
 				PChar->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_HEALING,0,0,10,0));
 				return;
 			}
@@ -5360,7 +5432,7 @@ void SmallPacket0x105(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
     CCharEntity* PTarget = (CCharEntity*)PChar->loc.zone->GetEntity(PChar->m_TargID, TYPE_PC);
 
-    if (PTarget != NULL && PTarget->id == charid && (PTarget->nameflags.flags & FLAG_BAZAAR))
+    if (PTarget != NULL && PTarget->id == charid && (PTarget->nameflags.flags == FLAG_BAZAAR))
 	{
         PChar->BazaarID.id = PTarget->id;
         PChar->BazaarID.targid = PTarget->targid;
@@ -5473,7 +5545,7 @@ void SmallPacket0x106(map_session_data_t* session, CCharEntity* PChar, int8* dat
         if (BazaarIsEmpty)
         {
             PTarget->status = STATUS_UPDATE;
-		    PTarget->nameflags.flags &= ~FLAG_BAZAAR;
+		    
 		    PTarget->pushPacket(new CCharUpdatePacket(PTarget));
 	    }
         return;
@@ -5499,7 +5571,7 @@ void SmallPacket0x109(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		if ((PItem != NULL) && (PItem->getCharPrice() != 0))
 		{
             PChar->status = STATUS_UPDATE;
-			PChar->nameflags.flags |= FLAG_BAZAAR;
+			
 			PChar->pushPacket(new CCharUpdatePacket(PChar));
 			return;
 		}
@@ -5541,6 +5613,7 @@ void SmallPacket0x10A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x10B(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+
     for (uint32 i = 0; i < PChar->BazaarCustomers.size(); ++i)
     {
         CCharEntity* PCustomer = (CCharEntity*)PChar->loc.zone->GetEntity(PChar->BazaarCustomers[i].targid, TYPE_PC);
@@ -5553,7 +5626,7 @@ void SmallPacket0x10B(map_session_data_t* session, CCharEntity* PChar, int8* dat
     PChar->BazaarCustomers.clear();
 
     PChar->status = STATUS_UPDATE;
-	PChar->nameflags.flags &= ~FLAG_BAZAAR;
+	
 	PChar->pushPacket(new CCharUpdatePacket(PChar));
 	return;
 }
@@ -5576,7 +5649,7 @@ void PacketParserInitialize()
     PacketSize[0x00D] = 0x04; PacketParser[0x00D] = &SmallPacket0x00D;
     PacketSize[0x00F] = 0x00; PacketParser[0x00F] = &SmallPacket0x00F;
     PacketSize[0x011] = 0x00; PacketParser[0x011] = &SmallPacket0x011;
-    PacketSize[0x015] = 0x10; PacketParser[0x015] = &Player_Update;
+    PacketSize[0x015] = 0x10; PacketParser[0x015] = &Player_Update; //PLAYER UPDATE
     PacketSize[0x016] = 0x04; PacketParser[0x016] = &SmallPacket0x016;
     PacketSize[0x017] = 0x00; PacketParser[0x017] = &SmallPacket0x017;
     PacketSize[0x01A] = 0x08; PacketParser[0x01A] = &SmallPacket0x01A;
@@ -5628,7 +5701,7 @@ void PacketParserInitialize()
     PacketSize[0x0AC] = 0x00; PacketParser[0x0AC] = &SmallPacket0x0AC;
     PacketSize[0x0AD] = 0x00; PacketParser[0x0AD] = &SmallPacket0x0AD;
     PacketSize[0x0B5] = 0x00; PacketParser[0x0B5] = &SmallPacket0x0B5;
-    PacketSize[0x0B6] = 0x00; PacketParser[0x0B6] = &SmallPacket0x0B6;
+    PacketSize[0x0B6] = 0x00; PacketParser[0x0B6] = &PCharTellSystem; // PLAYER TELL SYSTEM
     PacketSize[0x0BE] = 0x00; PacketParser[0x0BE] = &SmallPacket0x0BE;	//  merit packet
     PacketSize[0x0C3] = 0x00; PacketParser[0x0C3] = &SmallPacket0x0C3;
     PacketSize[0x0C4] = 0x0C; PacketParser[0x0C4] = &SmallPacket0x0C4;

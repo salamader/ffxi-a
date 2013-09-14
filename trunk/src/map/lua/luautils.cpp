@@ -586,22 +586,22 @@ int32 SpawnMob(lua_State* L)
             {
                 PMob->m_RespawnTime = (uint32)lua_tointeger(L,3) * 1000;
                 PMob->m_AllowRespawn = true;
-                PMob->PBattleAI->SetLastActionTime(gettick());
-                if (PMob->PBattleAI->GetCurrentAction() == ACTION_NONE)
+                PMob->Check_Engagment->SetLastActionTime(gettick());
+                if (PMob->Check_Engagment->GetCurrentAction() == ACTION_NONE)
                 {
-                    PMob->PBattleAI->SetCurrentAction(ACTION_SPAWN);
+                    PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
                 }
             } else {
-                if (PMob->PBattleAI->GetCurrentAction() == ACTION_NONE ||
-                    PMob->PBattleAI->GetCurrentAction() == ACTION_SPAWN)
+                if (PMob->Check_Engagment->GetCurrentAction() == ACTION_NONE ||
+                    PMob->Check_Engagment->GetCurrentAction() == ACTION_SPAWN)
                 {
-	                PMob->PBattleAI->SetLastActionTime(0);
-                    PMob->PBattleAI->SetCurrentAction(ACTION_SPAWN);
+	                PMob->Check_Engagment->SetLastActionTime(0);
+                    PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
                 } else {
                     ShowDebug(CL_CYAN"SpawnMob: <%s> is alredy spawned\n" CL_RESET, PMob->GetName());
                 }
             }
-            PMob->PBattleAI->CheckCurrentAction(gettick());
+            PMob->Check_Engagment->CheckCurrentAction(gettick());
 		    lua_pushstring(L,CLuaBaseEntity::className);
 		    lua_gettable(L,LUA_GLOBALSINDEX);
 		    lua_pushstring(L,"new");
@@ -641,8 +641,8 @@ int32 DespawnMob(lua_State* L)
 			}
 			else
 			{
-			PMob->PBattleAI->SetLastActionTime(gettick() - 12500);
-			PMob->PBattleAI->SetCurrentAction(ACTION_DEATH);
+			PMob->Check_Engagment->SetLastActionTime(gettick() - 12500);
+			PMob->Check_Engagment->SetCurrentAction(ACTION_DEATH);
 		}
 		}
 		return 0;
@@ -669,7 +669,7 @@ int32 setMobPos(lua_State *L)
         if (PMob != NULL)
         {
 			//if mob is in battle, do not warp it
-			if (PMob->m_OwnerID.id == 0 && PMob->PBattleAI->GetCurrentAction() != ACTION_ATTACK)
+			if (PMob->m_OwnerID.id == 0 && PMob->Check_Engagment->GetCurrentAction() != ACTION_ATTACK)
 			{
 				if( !lua_isnil(L,2) && lua_isnumber(L,2) )
 					PMob->loc.p.x = (float) lua_tonumber(L,2);
@@ -745,7 +745,7 @@ int32 GetMobAction(lua_State* L)
     CMobEntity* PMob = (CMobEntity*)zoneutils::GetEntity(mobid, TYPE_MOB);
     if (PMob != NULL)
     {
-        int32 CurrentAction = (int32)PMob->PBattleAI->GetCurrentAction();
+        int32 CurrentAction = (int32)PMob->Check_Engagment->GetCurrentAction();
         lua_pushinteger(L, CurrentAction);
         return 1;
     }
@@ -2057,10 +2057,11 @@ int32 OnSpellCast(CBattleEntity* PCaster, CBattleEntity* PTarget, CSpell* PSpell
 {
 	if(PCaster == NULL || PTarget == NULL)
 	{
+		ShowMessage("WTF IM AN NULL CASTER %u TRAGET %u\n",PCaster,PTarget);
 		return false;
 	}
 	if(PSpell->getSpellGroup() == SPELLGROUP_SONG){
-		EFFECT effectId = (EFFECT)battleutils::SingSong(PCaster,PTarget,PCaster->PBattleAI->GetCurrentSpell());
+		EFFECT effectId = (EFFECT)battleutils::SingSong(PCaster,PTarget,PCaster->Check_Engagment->GetCurrentSpell());
         if(effectId != EFFECT_NONE){
             return effectId;
         }
@@ -2070,7 +2071,7 @@ int32 OnSpellCast(CBattleEntity* PCaster, CBattleEntity* PTarget, CSpell* PSpell
     memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
 
-    lua_pushnil(LuaHandle);
+     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onSpellCast");
 
     DSP_DEBUG_BREAK_IF(PSpell == NULL);
@@ -2695,6 +2696,7 @@ int32 OnMobDeath(CBaseEntity* PMob, CBaseEntity* PKiller)
 	DSP_DEBUG_BREAK_IF(PKiller == NULL || PMob == NULL);
 
     CCharEntity* PChar = (CCharEntity*)PKiller;
+	
 
 	CLuaBaseEntity LuaMobEntity(PMob);
 	CLuaBaseEntity LuaKillerEntity(PKiller);
@@ -3345,7 +3347,7 @@ int32 OnUseWeaponSkill(CCharEntity* PChar, CBaseEntity* PMob, uint16* tpHitsLand
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "OnUseWeaponSkill");
 
-	CWeaponSkill* wskill = PChar->PBattleAI->GetCurrentWeaponSkill();
+	CWeaponSkill* wskill = PChar->Check_Engagment->GetCurrentWeaponSkill();
 
 	snprintf(File, sizeof(File), "scripts/globals/weaponskills/%s.lua", wskill->getName());
 

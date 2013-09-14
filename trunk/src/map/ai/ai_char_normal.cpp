@@ -89,7 +89,6 @@ void CAICharNormal::CheckCurrentAction(uint32 tick)
     {
         m_PChar->pushPacket(new CCharAppearancePacket(m_PChar));
         m_PChar->pushPacket(new CCharUpdatePacket(m_PChar));
-		ShowDebug("BUILDING CHAR SKILL TABLE 2\n");
         charutils::BuildingCharSkillsTable(m_PChar);
         charutils::CalculateStats(m_PChar);
 
@@ -384,13 +383,10 @@ void CAICharNormal::ActionFall()
 
 	m_PChar->animation = ANIMATION_DEATH;
 	m_PChar->pushPacket(new CCharUpdatePacket(m_PChar));
-   // m_PChar->pushPacket(new CRaiseTractorMenuPacket(m_PChar,TYPE_HOMEPOINT));
+    m_PChar->pushPacket(new CRaiseTractorMenuPacket(m_PChar,TYPE_HOMEPOINT));
 
 	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CCharPacket(m_PChar,ENTITY_UPDATE));
-	ShowDebug(CL_BG_GREEN"ACTION FALL UPDATE DATABASE TO DEATH STATE\n"CL_RESET);
-	const int8* Query = "UPDATE chars SET death_zone = '%u', death_rot = '%u', death_x = '%.3f', death_y = '%.3f', death_z = '%.3f',deathstate = '1' WHERE charid = %u;";
-    Sql_Query(SqlHandle, Query,m_PChar->getZone(),m_PChar->loc.p.rotation,m_PChar->loc.p.x, m_PChar->loc.p.y,m_PChar->loc.p.z,m_PChar->id);
-				m_PChar->is_dead = 1;
+
 	//influence for conquest system
 	conquest::LoseInfluencePoints(m_PChar);
 
@@ -398,7 +394,7 @@ void CAICharNormal::ActionFall()
 		charutils::DelExperiencePoints(m_PChar,map_config.exp_retain);
 
 
-	//charutils::SaveDeathTime(m_PChar);
+	charutils::SaveDeathTime(m_PChar);
 
 }
 
@@ -435,7 +431,7 @@ void CAICharNormal::ActionDeath()
     {
         m_LastActionTime = m_Tick;
         m_ActionType = ACTION_NONE;
-      //  m_PChar->pushPacket(new CRaiseTractorMenuPacket(m_PChar, TYPE_RAISE));
+        m_PChar->pushPacket(new CRaiseTractorMenuPacket(m_PChar, TYPE_RAISE));
     }
 }
 
@@ -511,7 +507,7 @@ void CAICharNormal::ActionItemStart()
 
 	m_PChar->m_ActionList.push_back(Action);
 	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
+
 	m_ActionType = ACTION_ITEM_USING;
 }
 
@@ -603,7 +599,7 @@ void CAICharNormal::ActionItemUsing()
 		m_PChar->m_ActionList.push_back(Action);
 
 		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
+
 		ActionItemFinish();
 	}
 }
@@ -624,7 +620,6 @@ void CAICharNormal::ActionItemFinish()
 	{
         if(battleutils::IsParalised(m_PChar)){
             m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_IS_PARALYZED));
-			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_IS_PARALYZED));
         } else {
 
             m_PChar->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_INVISIBLE);
@@ -862,7 +857,7 @@ void CAICharNormal::ActionRangedStart()
 	m_PChar->m_ActionList.push_back(Action);
 
 	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
+
 	m_ActionType = ACTION_RANGED_FINISH;
 }
 
@@ -1091,7 +1086,6 @@ void CAICharNormal::ActionRangedFinish()
             Action.messageID  = 0;
             Action.reaction   = REACTION_EVADE;
             m_PBattleSubTarget->loc.zone->PushPacket(m_PBattleSubTarget,CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PBattleSubTarget,m_PBattleSubTarget,0,shadowsTaken, MSGBASIC_SHADOW_ABSORB));
-			 m_PBattleSubTarget->loc.zone->PushPacket(m_PBattleSubTarget,CHAR_INRANGE, new CMessageBasicPacket(m_PBattleSubTarget,m_PBattleSubTarget,0,shadowsTaken, MSGBASIC_SHADOW_ABSORB));
 
             battleutils::ClaimMob(m_PBattleSubTarget, m_PChar);
         }
@@ -1101,7 +1095,7 @@ void CAICharNormal::ActionRangedFinish()
 
         m_PChar->m_ActionList.push_back(Action);
 		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
+
         // TODO: что это ? ....
         // если не ошибаюсь, то TREASURE_HUNTER работает лишь при последнем ударе
 
@@ -1178,7 +1172,7 @@ void CAICharNormal::ActionRangedInterrupt()
 	m_PChar->m_ActionList.push_back(Action);
 
 	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
+
 	TransitionBack();
 }
 
@@ -1195,17 +1189,11 @@ void CAICharNormal::ActionMagicStart()
     // keeping this for legacy
     // m_PSpell will eventually be refactored out
     // needed for packets
-    if(m_PSpell == NULL)
-	{
-		ShowWarning("THIS SPELL IS NULL NEEDS WROTE \n");
-        MagicStartError();
-		return;
-	}
+    DSP_DEBUG_BREAK_IF(m_PSpell == NULL);
 	DSP_DEBUG_BREAK_IF(m_ActionTargetID == 0);
 
     if(m_PMagicState->IsOnCoolDown(m_Tick))
     {
-		ShowWarning("SET CURRENT ACTION ActionMagicStar ERROR \n");
         MagicStartError();
         return;
     }
@@ -1221,7 +1209,6 @@ void CAICharNormal::ActionMagicStart()
     }
     else
     {
-		ShowWarning("SET CURRENT ACTION ActionMagicStar ERROR 1 \n");
         MagicStartError();
     }
 }
@@ -1484,6 +1471,12 @@ void CAICharNormal::ActionJobAbilityFinish()
         if (m_PChar->StatusEffectContainer->HasStatusEffect(EFFECT_TABULA_RASA))
             RecastTime = 0;
     }
+    else if ( m_PJobAbility->getID() == ABILITY_DEACTIVATE && m_PChar->PAutomaton && m_PChar->PAutomaton->health.hp == m_PChar->PAutomaton->GetMaxHP())
+    {
+        CAbility* PAbility = ability::GetAbility(ABILITY_ACTIVATE);
+        if (PAbility)
+            m_PChar->PRecastContainer->Del(RECAST_ABILITY, PAbility->getRecastId());
+    }
     else if( m_PJobAbility->getID() >= ABILITY_HEALING_RUBY)
     {
         if(m_PChar->getMod(MOD_BP_DELAY) > 15){
@@ -1497,7 +1490,6 @@ void CAICharNormal::ActionJobAbilityFinish()
     if(battleutils::IsParalised(m_PChar)){
         // display paralyzed
         m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_IS_PARALYZED));
-		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_IS_PARALYZED));
     } else {
 
         // remove invisible if aggresive
@@ -1709,11 +1701,11 @@ void CAICharNormal::ActionJobAbilityFinish()
     				m_PChar->addMP(-m_PJobAbility->getAnimationID()); // TODO: ...
     			}
     			m_PChar->m_ActionList.push_back(Action);
-    			m_PChar->PPet->PBattleAI->SetBattleSubTarget(m_PBattleSubTarget);
+    			m_PChar->PPet->Check_Engagment->SetBattleSubTarget(m_PBattleSubTarget);
 
-    			((CAIPetDummy*)m_PChar->PPet->PBattleAI)->m_MasterCommand = m_PJobAbility->getID(); // TODO: не допустимый подход
+    			((CAIPetDummy*)m_PChar->PPet->Check_Engagment)->m_MasterCommand = m_PJobAbility->getID(); // TODO: не допустимый подход
 
-    			m_PChar->PPet->PBattleAI->SetCurrentAction(ACTION_MOBABILITY_START);
+    			m_PChar->PPet->Check_Engagment->SetCurrentAction(ACTION_MOBABILITY_START);
     			charutils::UpdateHealth(m_PChar);
     		}
     	}
@@ -1780,7 +1772,6 @@ void CAICharNormal::ActionJobAbilityFinish()
                     Action.param = 1;
                     Action.reaction   = REACTION_EVADE;
                     m_PBattleSubTarget->loc.zone->PushPacket(m_PBattleSubTarget,CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PBattleSubTarget,m_PBattleSubTarget,0,1, MSGBASIC_SHADOW_ABSORB));
-					m_PBattleSubTarget->loc.zone->PushPacket(m_PBattleSubTarget,CHAR_INRANGE, new CMessageBasicPacket(m_PBattleSubTarget,m_PBattleSubTarget,0,1, MSGBASIC_SHADOW_ABSORB));
 
                     battleutils::ClaimMob(m_PBattleSubTarget, m_PChar);
                 } else {
@@ -1897,9 +1888,7 @@ void CAICharNormal::ActionJobAbilityFinish()
     			{
     				Action.messageID = 0;
     				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_BUT_MISSES));
-    				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_BUT_MISSES));
-    			
-				}
+    			}
 				else if (Action.param >= m_PBattleSubTarget->health.hp)
 				{
 					m_PChar->setWeaponSkillKill(true);
@@ -1913,9 +1902,7 @@ void CAICharNormal::ActionJobAbilityFinish()
     			{
     				Action.messageID = 0;
     				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_BUT_MISSES));
-    			    m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_BUT_MISSES));
-    			
-				}
+    			}
 				else if (Action.param >= m_PBattleSubTarget->health.hp)
 				{
 					m_PChar->setWeaponSkillKill(true);
@@ -1927,15 +1914,13 @@ void CAICharNormal::ActionJobAbilityFinish()
     			battleutils::jumpAbility(m_PChar, m_PBattleSubTarget, 3);
     			Action.messageID = 0;
     			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_JA));
-    			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_JA));
-    		
-			}
+    		}
 
     		// handle enmity transfer abilities
     		if (m_PJobAbility->getID() == ABILITY_ACCOMPLICE)
-    			battleutils::TransferEnmity(m_PChar, m_PBattleSubTarget, (CMobEntity*)m_PBattleSubTarget->PBattleAI->GetBattleTarget(), 50);
+    			battleutils::TransferEnmity(m_PChar, m_PBattleSubTarget, (CMobEntity*)m_PBattleSubTarget->Check_Engagment->GetBattleTarget(), 50);
     		else if (m_PJobAbility->getID() == ABILITY_COLLABORATOR)
-    			battleutils::TransferEnmity(m_PChar, m_PBattleSubTarget, (CMobEntity*)m_PBattleSubTarget->PBattleAI->GetBattleTarget(), 25);
+    			battleutils::TransferEnmity(m_PChar, m_PBattleSubTarget, (CMobEntity*)m_PBattleSubTarget->Check_Engagment->GetBattleTarget(), 25);
 
 
     		m_PChar->m_ActionList.push_back(Action);
@@ -1943,7 +1928,7 @@ void CAICharNormal::ActionJobAbilityFinish()
     		if (m_PJobAbility->getID() == ABILITY_SNARL)
     		{
     			//Snarl
-    			CBattleEntity* PTarget = (CBattleEntity*)m_PBattleSubTarget->PBattleAI->GetBattleTarget();
+    			CBattleEntity* PTarget = (CBattleEntity*)m_PBattleSubTarget->Check_Engagment->GetBattleTarget();
 
     			if (PTarget != NULL)
     			{
@@ -1952,16 +1937,14 @@ void CAICharNormal::ActionJobAbilityFinish()
     				case TYPE_MOB:
     					((CMobEntity*)PTarget)->PEnmityContainer->LowerEnmityByPercent(m_PChar, 100, m_PBattleSubTarget);
     					m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, 528));  //528 - The <player> uses .. Enmity is transferred to the <player>'s pet.
-    					m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, 528));  //528 - The <player> uses .. Enmity is transferred to the <player>'s pet.
-    					
-						break;
+    					break;
 
     				case TYPE_PET:
     					// pets have no emnity container
     					break;
 
     				case TYPE_PC:
-    					PTarget->PBattleAI->SetBattleTarget(m_PBattleSubTarget); //Change target. in prevision of future PvP
+    					PTarget->Check_Engagment->SetBattleTarget(m_PBattleSubTarget); //Change target. in prevision of future PvP
     					break;
     				}
     			}
@@ -1995,10 +1978,9 @@ void CAICharNormal::ActionJobAbilityFinish()
     		{
     			m_PChar->PPet->UpdateHealth();
     			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, value, MSGBASIC_USES_RECOVERS_HP));
-				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, value, MSGBASIC_USES_RECOVERS_HP));
 
     			//Reward gives enmity to the pet and not the Beastmaster.
-    			CBattleEntity* PTarget = m_PChar->PPet->PBattleAI->GetBattleTarget();
+    			CBattleEntity* PTarget = m_PChar->PPet->Check_Engagment->GetBattleTarget();
     			if(PTarget != NULL && PTarget->objtype == TYPE_MOB)
     			{
     				((CMobEntity*)PTarget)->PEnmityContainer->UpdateEnmityFromCure(m_PChar->PPet,m_PChar->PPet->GetMLevel(), value, false);
@@ -2049,7 +2031,7 @@ void CAICharNormal::ActionJobAbilityFinish()
 
     	if(m_PJobAbility->getID() == ABILITY_SIC && m_PChar->PPet != NULL){//Sic
 
-    		CAIPetDummy* PPetAI = (CAIPetDummy*)m_PChar->PPet->PBattleAI;
+    		CAIPetDummy* PPetAI = (CAIPetDummy*)m_PChar->PPet->Check_Engagment;
 
     		if(m_PChar->PPet->health.tp >= 100)
     		{
@@ -2064,7 +2046,7 @@ void CAICharNormal::ActionJobAbilityFinish()
     	}
 
     	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
+
     	// Message "player uses..."  for most abilities
         // TODO: all abilities should display their own messages!
     	if(m_PJobAbility->getID() < ABILITY_HEALING_RUBY &&
@@ -2077,9 +2059,7 @@ void CAICharNormal::ActionJobAbilityFinish()
     	{
     		if (m_PJobAbility->getMessage() == 0)
     			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PChar, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_JA));
-    			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PChar, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_JA));
-    	
-		}
+    	}
 
     } // end paralysis if
 
@@ -2426,8 +2406,8 @@ void CAICharNormal::ActionWeaponSkillFinish()
 
 	if (m_PChar->PPet != NULL && ((CPetEntity*)m_PChar->PPet)->getPetType() == PETTYPE_WYVERN)
 	{
-		((CAIPetDummy*)m_PChar->PPet->PBattleAI)->m_MasterCommand = MASTERCOMMAND_ELEMENTAL_BREATH;
-		m_PChar->PPet->PBattleAI->SetCurrentAction(ACTION_MOBABILITY_START);
+		((CAIPetDummy*)m_PChar->PPet->Check_Engagment)->m_MasterCommand = MASTERCOMMAND_ELEMENTAL_BREATH;
+		m_PChar->PPet->Check_Engagment->SetCurrentAction(ACTION_MOBABILITY_START);
 	}
 
 	apAction_t Action;
@@ -2581,7 +2561,7 @@ void CAICharNormal::ActionWeaponSkillFinish()
 	charutils::UpdateHealth(m_PChar);
 
 	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
+
 	if (Action.param >= m_PBattleSubTarget->health.hp)
 	{
 		m_PChar->setWeaponSkillKill(true);
@@ -2628,14 +2608,14 @@ void CAICharNormal::ActionAttack()
 	//disengage if player has charmed the mob
 	if (m_PChar->PPet != NULL && m_PChar->PPet == m_PBattleTarget)
 	{
-		m_PChar->PBattleAI->SetCurrentAction(ACTION_DISENGAGE);
+		m_PChar->Check_Engagment->SetCurrentAction(ACTION_DISENGAGE);
 		return;
 	}
 
 	//disengage if another player has charmed the mob
 	if (m_PBattleTarget->objtype == TYPE_MOB && m_PBattleTarget->PMaster != NULL && m_PBattleTarget->PMaster->objtype == TYPE_PC)
 	{
-		m_PChar->PBattleAI->SetCurrentAction(ACTION_DISENGAGE);
+		m_PChar->Check_Engagment->SetCurrentAction(ACTION_DISENGAGE);
 		return;
 	}
 
@@ -2681,7 +2661,7 @@ void CAICharNormal::ActionAttack()
 								for (uint8 i = 0; i < m_PChar->PParty->m_PAlliance->partyList.at(a)->members.size(); ++i)
 								{
 									if (PTarget->m_OwnerID.id == m_PChar->PParty->m_PAlliance->partyList.at(a)->members[i]->id ||
-										(PTarget->m_OwnerID.id == 0 && PTarget->PBattleAI->GetBattleTarget() == m_PChar->PParty->m_PAlliance->partyList.at(a)->members[i]))
+										(PTarget->m_OwnerID.id == 0 && PTarget->Check_Engagment->GetBattleTarget() == m_PChar->PParty->m_PAlliance->partyList.at(a)->members[i]))
 									{
 
 				                    	if(!PTarget->isCharmed)
@@ -2699,7 +2679,7 @@ void CAICharNormal::ActionAttack()
 		                    for (uint8 i = 0; i < m_PChar->PParty->members.size(); ++i)
 		                    {
 			                    if (PTarget->m_OwnerID.id == m_PChar->PParty->members[i]->id ||
-                                   (PTarget->m_OwnerID.id == 0 && PTarget->PBattleAI->GetBattleTarget() == m_PChar->PParty->members[i]))
+                                   (PTarget->m_OwnerID.id == 0 && PTarget->Check_Engagment->GetBattleTarget() == m_PChar->PParty->members[i]))
 			                    {
 
 			                    	if(!PTarget->isCharmed)
@@ -2713,7 +2693,7 @@ void CAICharNormal::ActionAttack()
                         }
 	                }
                     else if (PTarget->m_OwnerID.id == m_PChar->id ||
-                            (PTarget->m_OwnerID.id == 0 && PTarget->PBattleAI->GetBattleTarget() == m_PChar))
+                            (PTarget->m_OwnerID.id == 0 && PTarget->Check_Engagment->GetBattleTarget() == m_PChar))
                     {
 						// lock on to the new, if its not charmed
                     	if(!PTarget->isCharmed)
@@ -2779,12 +2759,10 @@ void CAICharNormal::ActionAttack()
 		if (battleutils::IsParalised(m_PChar))
 		{
 			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleTarget,0,0,MSGBASIC_IS_PARALYZED));
-			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar,m_PBattleTarget,0,0,MSGBASIC_IS_PARALYZED));
 		}
 		else if (battleutils::IsIntimidated(m_PChar, m_PBattleTarget))
 		{
 			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleTarget,0,0,MSGBASIC_IS_INTIMIDATED));
-			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar,m_PBattleTarget,0,0,MSGBASIC_IS_INTIMIDATED));
 		}
 		else
 		{
@@ -2909,8 +2887,6 @@ void CAICharNormal::ActionAttack()
                         Action.messageID = 0;
                         Action.reaction = REACTION_EVADE;
                         m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,1,31));
-						     m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,1,31));
-                   
                     }
                     else
                     {
@@ -3058,7 +3034,6 @@ void CAICharNormal::ActionAttack()
 
 			m_PChar->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_ATTACK | EFFECTFLAG_DETECTABLE);
 			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
 		}
 	}
 }

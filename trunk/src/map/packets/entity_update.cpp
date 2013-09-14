@@ -115,7 +115,7 @@ CEntityUpdatePacket::CEntityUpdatePacket(CBaseEntity* PEntity, ENTITYUPDATE type
 						//charmed mob
 						if(PMob->PMaster->objtype = TYPE_PC)
 						{
-							if(PMob->PBattleAI->GetCurrentAction()==ACTION_FALL)
+							if(PMob->Check_Engagment->GetCurrentAction()==ACTION_FALL)
 							{
 									WBUFB(data,(0x0A)-4) = 0x07;
 									WBUFB (data,(0x21)-4) = 0x99;
@@ -154,7 +154,7 @@ CEntityUpdatePacket::CEntityUpdatePacket(CBaseEntity* PEntity, ENTITYUPDATE type
 				break;
 				case TYPE_PET:
 				{
-					if(((CPetEntity*)PEntity)->PBattleAI->GetCurrentAction()==ACTION_FALL){
+					if(((CPetEntity*)PEntity)->Check_Engagment->GetCurrentAction()==ACTION_FALL){
 						WBUFB(data,(0x0A)-4) = 0x07;
 						WBUFB(data,(0x21)-4) = 0x99;
 					  //WBUFB(data,(0x27)-4) = 0x28;
@@ -177,7 +177,7 @@ CEntityUpdatePacket::CEntityUpdatePacket(CBaseEntity* PEntity, ENTITYUPDATE type
 			{
 				case MODEL_STANDARD:
 				case MODEL_UNK_5:
-				case MODEL_UNK_6:
+				case MODEL_AUTOMATON:
 				{
 					WBUFB(data,(0x0A)-4) = 0x0F;
 					WBUFL(data,(0x30)-4) = RBUFL(&PEntity->look,0);

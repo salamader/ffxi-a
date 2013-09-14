@@ -223,7 +223,7 @@ void CLinkshell::RemoveMemberByName(int8* MemberName)
                 PItemLinkshell->setSubType(ITEM_UNLOCKED);
 
                 PMember->equip[SLOT_LINK] = 0;
-                PMember->nameflags.flags &= ~FLAG_LINKSHELL;
+                PMember->nameflags.flags = FLAG_LINKSHELL;
 
                 PMember->pushPacket(new CInventoryAssignPacket(PItemLinkshell, INV_NORMAL));
                 PMember->pushPacket(new CLinkshellEquipPacket(PMember));

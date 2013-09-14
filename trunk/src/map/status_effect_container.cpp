@@ -983,7 +983,7 @@ void CStatusEffectContainer::SetEffectParams(CStatusEffect* StatusEffect)
                 StatusEffect->SetIcon(EFFECT_SLEEP);
             }
 
-    		m_POwner->PBattleAI->SetCurrentAction(ACTION_SLEEP);
+    		m_POwner->Check_Engagment->SetCurrentAction(ACTION_SLEEP);
     	}
     }
 }
@@ -1110,7 +1110,7 @@ void CStatusEffectContainer::CheckEffects(uint32 tick)
 				PStatusEffect->GetLastTick() + PStatusEffect->GetTickTime() <= tick)
 			{
 				PStatusEffect->SetLastTick(tick);
-				luautils::OnEffectTick(m_POwner,PStatusEffect);
+				//luautils::OnEffectTick(m_POwner,PStatusEffect);
 			}
 
 			if (PStatusEffect->GetDuration() != 0 &&

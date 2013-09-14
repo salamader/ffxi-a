@@ -291,14 +291,14 @@ void CParty::AddMember(CBattleEntity* PEntity)
 	    ReloadParty();
 	    ReloadTreasurePool(PChar);
 
-	    if (PChar->nameflags.flags & FLAG_INVITE)
+	    if (PChar->nameflags.flags == FLAG_INVITE)
 	    {
-            PChar->nameflags.flags ^= FLAG_INVITE;
+            PChar->nameflags.flags = 0;
 
             //charutils::SaveCharStats(PChar);
 
 		    PChar->status = STATUS_UPDATE;
-		    PChar->pushPacket(new CMenuConfigPacket(PChar));
+		  // PChar->pushPacket(new CMenuConfigPacket(PChar));
 		    PChar->pushPacket(new CCharUpdatePacket(PChar));
 		    PChar->pushPacket(new CCharSyncPacket(PChar));
 	    }
@@ -310,7 +310,7 @@ void CParty::AddMember(CBattleEntity* PEntity)
 
 /************************************************************************
 *																		*
-*  Получаем уникальный ID группы										*
+*  Получаем уникальный ID группы									*	
 *																		*
 ************************************************************************/
 

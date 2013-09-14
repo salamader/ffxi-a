@@ -43,10 +43,11 @@ CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar)
 	WBUFL(data,(0x24)-4) = PChar->id;
 	WBUFB(data,(0x2A)-4) = PChar->GetHPP();
 
-	WBUFB(data,(0x28)-4) = (PChar->nameflags.byte2 << 1);
-	WBUFB(data,(0x2B)-4) = (PChar->nameflags.byte4 << 5) + PChar->nameflags.byte3;
-	WBUFB(data,(0x2F)-4) = (PChar->nameflags.byte4 >> 2);
-
+	WBUFB(data,(0x28)-4) = (PChar->nameflags.byte2 << 1);//FLAG ABOVE YOUR HEAD
+	WBUFB(data,(0x2B)-4) = (PChar->nameflags.byte4 << 5) + PChar->nameflags.byte3;//NAME COLOR
+    WBUFB(data,(0x2F)-4) = (PChar->nameflags.byte4 >> 2); //CHANGE VISIBLE 
+	
+	
 	if (PChar->StatusEffectContainer->HasStatusEffectByFlag(EFFECTFLAG_INVISIBLE))
 	{
 		WBUFB(data,(0x2D)-4) = 0x80;

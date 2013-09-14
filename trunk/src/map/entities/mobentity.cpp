@@ -341,17 +341,17 @@ bool CMobEntity::CanDetectTarget(CBattleEntity* PTarget, bool forceSight)
         return true;
     }
 
-    if ((m_Behaviour & BEHAVIOUR_AGGRO_MAGIC) && PTarget->PBattleAI->GetCurrentAction() == ACTION_MAGIC_CASTING && PTarget->PBattleAI->GetCurrentSpell()->hasMPCost())
+    if ((m_Behaviour & BEHAVIOUR_AGGRO_MAGIC) && PTarget->Check_Engagment->GetCurrentAction() == ACTION_MAGIC_CASTING && PTarget->Check_Engagment->GetCurrentSpell()->hasMPCost())
     {
         return true;
     }
 
-    if ((m_Behaviour & BEHAVIOUR_AGGRO_WEAPONSKILL) && PTarget->PBattleAI->GetCurrentAction() == ACTION_WEAPONSKILL_FINISH)
+    if ((m_Behaviour & BEHAVIOUR_AGGRO_WEAPONSKILL) && PTarget->Check_Engagment->GetCurrentAction() == ACTION_WEAPONSKILL_FINISH)
     {
         return true;
     }
 
-    if ((m_Behaviour & BEHAVIOUR_AGGRO_JOBABILITY) && PTarget->PBattleAI->GetCurrentAction() == ACTION_JOBABILITY_FINISH)
+    if ((m_Behaviour & BEHAVIOUR_AGGRO_JOBABILITY) && PTarget->Check_Engagment->GetCurrentAction() == ACTION_JOBABILITY_FINISH)
     {
         return true;
     }

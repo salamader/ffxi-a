@@ -116,7 +116,7 @@ CCheckPacket::CCheckPacket(CCharEntity* PChar, CCharEntity* PTarget)
 	        memcpy(data+(0x14)-4, PLinkshell->getSignature(), dsp_cap(strlen(PLinkshell->getSignature()), 0, 15));
         }
     }
-	if ((PChar->godmode == 1) || !(PTarget->nameflags.flags & FLAG_ANON)) 
+	if ((PChar->godmode == 1) || PTarget->nameflags.flags == FLAG_ANON) 
 	{
 		WBUFB(data,(0x12)-4) = PTarget->GetMJob();
 		WBUFB(data,(0x13)-4) = PTarget->GetSJob();

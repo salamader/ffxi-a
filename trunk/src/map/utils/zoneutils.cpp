@@ -136,7 +136,10 @@ CZone* GetZoneByChar(uint16 ZoneID, CCharEntity* PChar)
 		return false;
 	}
 	//ShowDebug(CL_CYAN "GET ZONE %u BY CHAR %s \n"CL_RESET,ZoneID,PChar->GetName());
-    DSP_DEBUG_BREAK_IF(ZoneID >= MAX_ZONEID);
+    if(ZoneID >= MAX_ZONEID)
+		{
+			return false;
+	}
 	
 	//ShowDebug(CL_CYAN "GET IN EVENT ID %u BY CHAR %s\n"CL_RESET,PChar->is_inevent,PChar->GetName());
 	//ShowDebug(CL_CYAN "GET EVENT ID %u BY CHAR %s \n"CL_RESET,PChar->eventid,PChar->GetName());
@@ -402,8 +405,8 @@ void LoadNPCList(CZone* PZone)
 			}
 			else
 			{
-				PNpc->PBattleAI = new CAINpcDummy(PNpc);
-				PNpc->PBattleAI->SetCurrentAction(ACTION_SPAWN);
+				PNpc->Check_Engagment = new CAINpcDummy(PNpc);
+				PNpc->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
 			}
 		}
 	}
@@ -535,11 +538,11 @@ void LoadMOBList(CZone* PZone)
 			PMob->HPscale = Sql_GetFloatData(SqlHandle,51);
 			PMob->MPscale = Sql_GetFloatData(SqlHandle,52);
 
-			PMob->PBattleAI = new CAIMobDummy(PMob);
+			PMob->Check_Engagment = new CAIMobDummy(PMob);
 
 			if (PMob->m_AllowRespawn = PMob->m_SpawnType == SPAWNTYPE_NORMAL)
 			{
-				PMob->PBattleAI->SetCurrentAction(ACTION_SPAWN);
+				PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
 			}
 
 			// Check if we should be looking up scripts for this mob
@@ -595,7 +598,7 @@ void LoadMOBList(CZone* PZone)
 				// pet is always spawned by master
 				PPet->m_AllowRespawn = false;
 				PPet->m_SpawnType = SPAWNTYPE_SCRIPTED;
-				PPet->PBattleAI->SetCurrentAction(ACTION_NONE);
+				PPet->Check_Engagment->SetCurrentAction(ACTION_NONE);
 				PPet->SetDespawnTimer(0);
 
 				PMaster->PPet = PPet;
@@ -727,11 +730,11 @@ CZone* LoadPlayerMOBList(uint16 ZoneID,uint16 MobID)//function to reload moblist
 			PMob->HPscale = Sql_GetFloatData(SqlHandle,51);
 			PMob->MPscale = Sql_GetFloatData(SqlHandle,52);
 
-			PMob->PBattleAI = new CAIMobDummy(PMob);
+			PMob->Check_Engagment = new CAIMobDummy(PMob);
 
 			if (PMob->m_AllowRespawn = PMob->m_SpawnType == SPAWNTYPE_NORMAL)
 			{
-				PMob->PBattleAI->SetCurrentAction(ACTION_SPAWN);
+				PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
 			}
 
 			// Check if we should be looking up scripts for this mob
@@ -787,7 +790,7 @@ CZone* LoadPlayerMOBList(uint16 ZoneID,uint16 MobID)//function to reload moblist
 				// pet is always spawned by master
 				PPet->m_AllowRespawn = false;
 				PPet->m_SpawnType = SPAWNTYPE_SCRIPTED;
-				PPet->PBattleAI->SetCurrentAction(ACTION_NONE);
+				PPet->Check_Engagment->SetCurrentAction(ACTION_NONE);
 				PPet->SetDespawnTimer(0);
 
 				PMaster->PPet = PPet;

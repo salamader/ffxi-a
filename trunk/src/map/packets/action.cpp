@@ -54,7 +54,7 @@ CActionPacket::CActionPacket(CBattleEntity * PEntity)
 
 	WBUFL(data,(0x05)-4) = PEntity->id;
 
-	ACTIONTYPE ActionType = PEntity->PBattleAI->GetCurrentAction();
+	ACTIONTYPE ActionType = PEntity->Check_Engagment->GetCurrentAction();
 
 	switch (ActionType)
 	{
@@ -69,12 +69,12 @@ CActionPacket::CActionPacket(CBattleEntity * PEntity)
 			break;
 		case ACTION_WEAPONSKILL_START:
 		{
-			packBitsBE(data, PEntity->PBattleAI->GetCurrentWeaponSkill()->getID(), 54, 10);
+			packBitsBE(data, PEntity->Check_Engagment->GetCurrentWeaponSkill()->getID(), 54, 10);
 		}
 			break;
 		case ACTION_WEAPONSKILL_FINISH:
 		{
-			packBitsBE(data, PEntity->PBattleAI->GetCurrentWeaponSkill()->getID(), 54, 10);
+			packBitsBE(data, PEntity->Check_Engagment->GetCurrentWeaponSkill()->getID(), 54, 10);
 		}
 			break;
 		case ACTION_JOBABILITY_START:
@@ -84,13 +84,13 @@ CActionPacket::CActionPacket(CBattleEntity * PEntity)
 			break;
 		case ACTION_JOBABILITY_FINISH:
 		{
-			if (PEntity->PBattleAI->GetCurrentJobAbility()->getID() == ABILITY_DOUBLE_UP)
+			if (PEntity->Check_Engagment->GetCurrentJobAbility()->getID() == ABILITY_DOUBLE_UP)
 			{
-				packBitsBE(data, PEntity->PBattleAI->GetLastCorsairRoll() + 16, 54, 10);
+				packBitsBE(data, PEntity->Check_Engagment->GetLastCorsairRoll() + 16, 54, 10);
 			} else {
-				packBitsBE(data, PEntity->PBattleAI->GetCurrentJobAbility()->getID() + 16, 54, 10);
+				packBitsBE(data, PEntity->Check_Engagment->GetCurrentJobAbility()->getID() + 16, 54, 10);
 			}
-			packBitsBE(data, PEntity->PBattleAI->GetCurrentJobAbility()->getRecastTime(), 86, 10);
+			packBitsBE(data, PEntity->Check_Engagment->GetCurrentJobAbility()->getRecastTime(), 86, 10);
 		}
 			break;
         case ACTION_MOBABILITY_START:
@@ -115,7 +115,7 @@ CActionPacket::CActionPacket(CBattleEntity * PEntity)
 			break;
 		case ACTION_MOBABILITY_FINISH:
 		{
-			uint16 id = PEntity->PBattleAI->GetCurrentMobSkill()->getMsgForAction();
+			uint16 id = PEntity->Check_Engagment->GetCurrentMobSkill()->getMsgForAction();
 
 			//higher number of bits than anything else that we know of. CAP OF 4095 (2300ish is abyssea tp moves)!
 			packBitsBE(data, id, 54, 12);
@@ -182,7 +182,7 @@ CActionPacket::CActionPacket(CBattleEntity * PEntity)
 			WBUFB(data,(0x0A)-4) = 0xE0;
 			WBUFB(data,(0x0B)-4) = 0x58;
 
-			switch (PEntity->PBattleAI->GetCurrentSpell()->getSpellGroup())
+			switch (PEntity->Check_Engagment->GetCurrentSpell()->getSpellGroup())
 			{
 				case SPELLGROUP_WHITE:
 				{
@@ -231,9 +231,9 @@ CActionPacket::CActionPacket(CBattleEntity * PEntity)
 			break;
 		case ACTION_MAGIC_FINISH:
 		{
-			packBitsBE(data, PEntity->PBattleAI->GetCurrentSpell()->getID(), 54, 10);
+			packBitsBE(data, PEntity->Check_Engagment->GetCurrentSpell()->getID(), 54, 10);
 			//either this way or enumerate all recast timers and compare the spell id.
-			packBitsBE(data, PEntity->PBattleAI->GetCurrentSpell()->getModifiedRecast() / 1000, 86, 10);
+			packBitsBE(data, PEntity->Check_Engagment->GetCurrentSpell()->getModifiedRecast() / 1000, 86, 10);
 		}
 			break;
 		case ACTION_MAGIC_INTERRUPT:
@@ -241,7 +241,7 @@ CActionPacket::CActionPacket(CBattleEntity * PEntity)
 			WBUFB(data,(0x0A)-4) = 0xE0;
 			WBUFB(data,(0x0B)-4) = 0x1C;
 
-			switch (PEntity->PBattleAI->GetCurrentSpell()->getSpellGroup())
+			switch (PEntity->Check_Engagment->GetCurrentSpell()->getSpellGroup())
 			{
 				case SPELLGROUP_WHITE:
 				{
@@ -304,7 +304,7 @@ CActionPacket::CActionPacket(CBattleEntity * PEntity)
 	//override ability animations,
 	if (ActionType == ACTION_JOBABILITY_FINISH)
 	{
-		switch (PEntity->PBattleAI->GetCurrentJobAbility()->getID())
+		switch (PEntity->Check_Engagment->GetCurrentJobAbility()->getID())
 		{
 			//WS animations
 			case 10:    // Eagle Eye Shot
@@ -361,7 +361,7 @@ CActionPacket::CActionPacket(CBattleEntity * PEntity)
 	}
 	else if (ActionType == ACTION_MOBABILITY_FINISH)
 	{
-		if (PEntity->PBattleAI->GetCurrentMobSkill()->getFlag() == SKILLFLAG_WS)
+		if (PEntity->Check_Engagment->GetCurrentMobSkill()->getFlag() == SKILLFLAG_WS)
 		{
 			ActionTypeNumber -= 8;
 		}

@@ -299,7 +299,7 @@ void CAIPetDummy::preparePetAbility(CBattleEntity* PTarg){
 		m_ActionType = ACTION_MOBABILITY_USING;
 	}
 	else{
-		//ShowWarning("ai_pet_dummy::ActionAbilityFinish Pet skill is null \n");
+		ShowWarning("ai_pet_dummy::ActionAbilityFinish Pet skill is null \n");
 		TransitionBack(true);
 	}
 }
@@ -553,8 +553,8 @@ void CAIPetDummy::ActionRoaming()
 	//wyvern behaviour
 	if(m_PPet->getPetType()==PETTYPE_WYVERN){
 		//see if master is engaged on something, if so, help attack
-		if(m_PPet->PMaster->PBattleAI->GetBattleTarget()!=NULL){
-			m_PBattleTarget = m_PPet->PMaster->PBattleAI->GetBattleTarget();
+		if(m_PPet->PMaster->Check_Engagment->GetBattleTarget()!=NULL){
+			m_PBattleTarget = m_PPet->PMaster->Check_Engagment->GetBattleTarget();
 		}
 		if(WyvernIsHealing()){
 			m_PPathFind->LookAt(m_PPet->PMaster->loc.p);
@@ -689,7 +689,7 @@ void CAIPetDummy::ActionAttack()
 
 
 	//wyvern behaviour
-	if(m_PPet->getPetType()==PETTYPE_WYVERN && m_PPet->PMaster->PBattleAI->GetBattleTarget()==NULL){
+	if(m_PPet->getPetType()==PETTYPE_WYVERN && m_PPet->PMaster->Check_Engagment->GetBattleTarget()==NULL){
 		m_PBattleTarget = NULL;
 	}
 
@@ -773,8 +773,6 @@ void CAIPetDummy::ActionAttack()
 	                        Action.messageID = 0;
 	                        Action.reaction = REACTION_EVADE;
 	                        m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,1,31));
-						    m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,1,31));
-						
 						}
 						else
 						{
@@ -919,8 +917,9 @@ void CAIPetDummy::ActionDeath()
 			m_PPet->PMaster->setModifier(MOD_AVATAR_PERPETUATION, 0);
 		}
 
-
-		m_PPet->PMaster = NULL;
+        if (m_PPet->getPetType() != PETTYPE_AUTOMATON){
+		    m_PPet->PMaster = NULL;
+        }
 		m_ActionType = ACTION_NONE;
 	}
 }

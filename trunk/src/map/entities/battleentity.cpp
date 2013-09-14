@@ -96,7 +96,7 @@ bool CBattleEntity::hasImmunity(uint32 imID)
 
 bool CBattleEntity::isAsleep()
 {
-	return (PBattleAI->GetCurrentAction() == ACTION_SLEEP);
+	return (Check_Engagment->GetCurrentAction() == ACTION_SLEEP);
 }
 
 /************************************************************************
@@ -404,7 +404,7 @@ int32 CBattleEntity::addHP(int32 hp)
 		{
 			StatusEffectContainer->DelStatusEffectSilent(EFFECT_CHOCOBO);
 		}
-		PBattleAI->SetCurrentAction(ACTION_FALL);
+		Check_Engagment->SetCurrentAction(ACTION_FALL);
 	}
 	return abs(hp);
 }

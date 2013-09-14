@@ -123,8 +123,6 @@ void CAIMobDummy::CheckCurrentAction(uint32 tick)
 
 void CAIMobDummy::ActionRoaming()
 {
-	uint32 checktime = CVanaTime::getInstance()->getSysSecond();
-	
 	// If there's someone on our enmity list, go from roaming -> engaging
 	if (m_PMob->PEnmityContainer->GetHighestEnmity() != NULL && !(m_PMob->m_roamFlags & ROAMFLAG_IGNORE))
 	{
@@ -148,13 +146,12 @@ void CAIMobDummy::ActionRoaming()
 	else if (m_PMob->GetDespawnTimer() > 0 && m_PMob->GetDespawnTimer() < m_Tick)
 	{
 		m_LastActionTime = m_Tick - 12000;
-		m_PMob->PBattleAI->SetCurrentAction(ACTION_DEATH);
+		m_PMob->Check_Engagment->SetCurrentAction(ACTION_DEATH);
 		return;
 	}
 
 	// wait my time
 	if(m_Tick - m_LastWaitTime < m_WaitTime){
-		
 		m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
 		return;
 	}
@@ -235,7 +232,14 @@ void CAIMobDummy::ActionRoaming()
 
 				m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
 			}
-			
+			else if(m_PMob->m_roamFlags & ROAMFLAG_EVENT)
+			{
+				// allow custom event action
+				luautils::OnMobRoamAction(m_PMob);
+				m_LastActionTime = m_Tick;
+
+				m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
+			}
 			else if(m_PMob->CanRoam() && m_PPathFind->RoamAround(m_PMob->m_SpawnPoint, m_PMob->m_roamFlags))
 			{
 
@@ -264,18 +268,12 @@ void CAIMobDummy::ActionRoaming()
 		}
 
 	}
-	
-	if(checktime == 10|| checktime == 30 || checktime == 50)
-	{
-	//ShowMessage(CL_YELLOW"ROAMING CHECK TIME %u\n" CL_RESET, checktime);
-	 	luautils::OnMobRoam(m_PMob);
-		luautils::OnMobRoamAction(m_PMob);
-		
-		
-		
-		m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
-	}
-	
+
+	// this is called way too often and consumes too many resources
+	// if ((m_Tick - m_SpawnTime) % 3000 <= 400)
+	// {
+	// 	luautils::OnMobRoam(m_PMob);
+	// }
 }
 
 /************************************************************************
@@ -370,7 +368,7 @@ void CAIMobDummy::ActionFall()
 	if(m_PMob->PPet != NULL && !m_PMob->PPet->isDead() && m_PMob->GetMJob() == JOB_SMN)
 	{
 		m_PMob->PPet->health.hp = 0;
-		m_PMob->PPet->PBattleAI->SetCurrentAction(ACTION_FALL);
+		m_PMob->PPet->Check_Engagment->SetCurrentAction(ACTION_FALL);
 	}
 
 	m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
@@ -545,8 +543,8 @@ void CAIMobDummy::ActionFadeOut()
 		// reset pet cast time to now
 		if(m_PMob->PMaster != NULL && m_PMob->PMaster->objtype == TYPE_MOB)
 		{
-			CAIMobDummy* PBattleAI = (CAIMobDummy*)m_PMob->PMaster->PBattleAI;
-			PBattleAI->m_LastSpecialTime = m_Tick - rand()%10000;
+			CAIMobDummy* Check_Engagment = (CAIMobDummy*)m_PMob->PMaster->Check_Engagment;
+			Check_Engagment->m_LastSpecialTime = m_Tick - rand()%10000;
 		}
 
 		m_LastActionTime = m_Tick;
@@ -680,7 +678,7 @@ void CAIMobDummy::ActionAbilityStart()
 	// We don't have any skills we can use, so let's go back to attacking
     if (MobSkills.size() == 0)
     {
-    	//ShowWarning("CAIMobDummy::ActionAbilityStart No TP moves found for family (%d)\n", m_PMob->m_Family);
+    	ShowWarning("CAIMobDummy::ActionAbilityStart No TP moves found for family (%d)\n", m_PMob->m_Family);
         m_PMob->health.tp = 0;
         TransitionBack(true);
 		return;
@@ -958,8 +956,8 @@ void CAIMobDummy::ActionAbilityFinish()
 	else
 	{
 		// increase magic / ranged timer so its not used right after
-		m_LastMagicTime += m_PMobSkill->getAnimationTime() + 4000;
-		m_LastSpecialTime += m_PMobSkill->getAnimationTime() + 4000;
+		m_LastMagicTime += m_PMobSkill->getAnimationTime() + 5000;
+		m_LastSpecialTime += m_PMobSkill->getAnimationTime() + 5000;
 
 		m_ActionType = ACTION_ATTACK;
 	}
@@ -1056,7 +1054,7 @@ void CAIMobDummy::ActionMagicStart()
 	if(status == STATESTATUS_START)
 	{
 		m_ActionType = ACTION_MAGIC_CASTING;
-		
+
 		m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE));
 	}
 	else
@@ -1346,8 +1344,6 @@ void CAIMobDummy::ActionAttack()
 						{
 							Action.messageID = 0;
 							m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,1, MSGBASIC_SHADOW_ABSORB));
-							m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,1, MSGBASIC_SHADOW_ABSORB));
-						
 						}
 						else if (battleutils::IsAnticipated(m_PBattleTarget,false,false))
 						{
@@ -1565,14 +1561,13 @@ bool CAIMobDummy::TryDeaggro()
 	if(m_PMob->m_Behaviour & BEHAVIOUR_SCENT)
 	{
 		// if mob is in water it will instant aggro if target cannot be detected
-		if(m_PPathFind->InWater())
+		if(m_PPathFind->InWater() || m_PBattleTarget->StatusEffectContainer->HasStatusEffect(EFFECT_DEODORIZE))
 		{
 			tryDetectDeaggro = true;
 		}
 
 		// certain weather / deodorize will turn on time deaggro
-		tryTimeDeaggro = m_PMob->m_disableScent ||
-			m_PBattleTarget->StatusEffectContainer->HasStatusEffect(EFFECT_DEODORIZE);
+		tryTimeDeaggro = m_PMob->m_disableScent;
 	}
 
 	if(tryTimeDeaggro && m_Tick - m_DeaggroTime >= MOB_DEAGGRO_TIME && m_PMob->CanDeaggro())
@@ -1598,14 +1593,14 @@ void CAIMobDummy::TryLink()
 
 	//handle pet behaviour on the targets behalf (faster than in ai_pet_dummy)
 	// Avatars defend masters by attacking mobs if the avatar isn't attacking anything currently (bodyguard behaviour)
-	if(m_PBattleTarget->PPet != NULL && m_PBattleTarget->PPet->PBattleAI->GetBattleTarget()==NULL) {
+	if(m_PBattleTarget->PPet != NULL && m_PBattleTarget->PPet->Check_Engagment->GetBattleTarget()==NULL) {
 		if(((CPetEntity*)m_PBattleTarget->PPet)->getPetType()==PETTYPE_AVATAR) {
-			m_PBattleTarget->PPet->PBattleAI->SetBattleTarget(m_PMob);
+			m_PBattleTarget->PPet->Check_Engagment->SetBattleTarget(m_PMob);
 		}
 	}
 
     // my pet should help as well
-	if(m_PMob->PPet != NULL && m_PMob->PPet->PBattleAI->GetCurrentAction() == ACTION_ROAMING)
+	if(m_PMob->PPet != NULL && m_PMob->PPet->Check_Engagment->GetCurrentAction() == ACTION_ROAMING)
 	{
 		((CMobEntity*)m_PMob->PPet)->PEnmityContainer->AddLinkEnmity(m_PBattleTarget);
 	}
@@ -1617,24 +1612,24 @@ void CAIMobDummy::TryLink()
         {
             CMobEntity* PPartyMember = (CMobEntity*)m_PMob->PParty->members[i];
 
-            if(PPartyMember->PBattleAI->GetCurrentAction() == ACTION_ROAMING && PPartyMember->CanLink(&m_PMob->loc.p, m_PMob->getMobMod(MOBMOD_SUPERLINK))){
+            if(PPartyMember->Check_Engagment->GetCurrentAction() == ACTION_ROAMING && PPartyMember->CanLink(&m_PMob->loc.p, m_PMob->getMobMod(MOBMOD_SUPERLINK))){
 		        PPartyMember->PEnmityContainer->AddLinkEnmity(m_PBattleTarget);
 
 		        if(PPartyMember->m_roamFlags & ROAMFLAG_IGNORE)
 		        {
 		        	// force into attack action
-					PPartyMember->PBattleAI->SetCurrentAction(ACTION_ENGAGE);
+					PPartyMember->Check_Engagment->SetCurrentAction(ACTION_ENGAGE);
 		        }
             }
         }
     }
 
     // ask my master for help
-    if(m_PMob->PMaster != NULL && m_PMob->PMaster->PBattleAI->GetCurrentAction() == ACTION_ROAMING)
+    if(m_PMob->PMaster != NULL && m_PMob->PMaster->Check_Engagment->GetCurrentAction() == ACTION_ROAMING)
     {
     	CMobEntity* PMaster = (CMobEntity*)m_PMob->PMaster;
 
-        if(PMaster->PBattleAI->GetCurrentAction() == ACTION_ROAMING && PMaster->CanLink(&m_PMob->loc.p, m_PMob->getMobMod(MOBMOD_SUPERLINK))){
+        if(PMaster->Check_Engagment->GetCurrentAction() == ACTION_ROAMING && PMaster->CanLink(&m_PMob->loc.p, m_PMob->getMobMod(MOBMOD_SUPERLINK))){
 	        PMaster->PEnmityContainer->AddLinkEnmity(m_PBattleTarget);
         }
     }
@@ -1775,7 +1770,7 @@ void CAIMobDummy::CastSpell(uint16 spellId, CBattleEntity* PTarget)
 	m_PSpell = spell::GetSpell(spellId);
 
 	if(m_PSpell == NULL){
-		//ShowWarning(CL_YELLOW"ai_mob_dummy::CastSpell: SpellId <%i> is not found\n" CL_RESET, spellId);
+		ShowWarning(CL_YELLOW"ai_mob_dummy::CastSpell: SpellId <%i> is not found\n" CL_RESET, spellId);
 	} else {
 
 		if(PTarget == NULL)
@@ -1877,13 +1872,13 @@ void CAIMobDummy::FollowPath()
 	{
 
 		CBattleEntity* PPet = m_PMob->PPet;
-		if(PPet != NULL && PPet->PBattleAI->GetCurrentAction() == ACTION_ROAMING)
+		if(PPet != NULL && PPet->Check_Engagment->GetCurrentAction() == ACTION_ROAMING)
 		{
 
 			// pet should follow me if roaming
 	        position_t targetPoint = nearPosition(m_PMob->loc.p, 2.1f, M_PI);
 
-	        PPet->PBattleAI->MoveTo(&targetPoint);
+	        PPet->Check_Engagment->MoveTo(&targetPoint);
 
 			PPet->loc.zone->PushPacket(PPet,CHAR_INRANGE, new CEntityUpdatePacket(PPet,ENTITY_UPDATE));
 		}

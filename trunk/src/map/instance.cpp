@@ -231,7 +231,7 @@ bool CInstance::delPlayerFromBcnm(CCharEntity* PChar){
 			PChar->StatusEffectContainer->DelStatusEffectSilent(EFFECT_SJ_RESTRICTION);
 			PChar->StatusEffectContainer->DelStatusEffectSilent(EFFECT_BATTLEFIELD);
 			PChar->StatusEffectContainer->DelStatusEffectSilent(EFFECT_LEVEL_RESTRICTION);
-			PChar->PBattleAI->SetCurrentAction(ACTION_DISENGAGE);
+			PChar->Check_Engagment->SetCurrentAction(ACTION_DISENGAGE);
 			clearPlayerEnmity(PChar);
 			m_PlayerList.erase(m_PlayerList.begin()+i);
 			return true;
@@ -313,7 +313,7 @@ void CInstance::addNpc(CBaseEntity* PNpc){
 bool CInstance::allEnemiesDefeated(){
 	bool allDefeated = true;
 	for(int i=0; i<m_EnemyVictoryList.size(); i++){
-		if(m_EnemyVictoryList.at(i).MobEntity->PBattleAI->GetCurrentAction() >= 20 && m_EnemyVictoryList.at(i).MobEntity->PBattleAI->GetCurrentAction() <= 23){
+		if(m_EnemyVictoryList.at(i).MobEntity->Check_Engagment->GetCurrentAction() >= 20 && m_EnemyVictoryList.at(i).MobEntity->Check_Engagment->GetCurrentAction() <= 23){
 			m_EnemyVictoryList.at(i).killed = true;
 		}
 		if(m_EnemyVictoryList.at(i).killed == false){
@@ -341,7 +341,7 @@ void CInstance::cleanup(){
 	//ShowDebug("bcnm cleanup id:%i inst:%i \n",this->getID(),this->getInstanceNumber());
 	//wipe enmity from all mobs in list if needed
 	for(int i=0; i<m_EnemyList.size(); i++){
-		m_EnemyList.at(i)->PBattleAI->SetCurrentAction(ACTION_DESPAWN);
+		m_EnemyList.at(i)->Check_Engagment->SetCurrentAction(ACTION_DESPAWN);
 	}
 	//wipe mob list
 	m_EnemyList.clear();
@@ -485,7 +485,7 @@ void CInstance::cleanupDynamis(){
 			CMobEntity* PMob = (CMobEntity*)zoneutils::GetEntity(mobid, TYPE_MOB);
 
 			if(PMob != NULL)
-				PMob->PBattleAI->SetCurrentAction(ACTION_FADE_OUT);
+				PMob->Check_Engagment->SetCurrentAction(ACTION_FADE_OUT);
 		}
 	}
 
@@ -506,7 +506,7 @@ bool CInstance::delPlayerFromDynamis(CCharEntity* PChar){
 		if(m_PlayerList.at(i)->id == PChar->id){
 			PChar->m_insideBCNM = false;
 			PChar->StatusEffectContainer->DelStatusEffectSilent(EFFECT_DYNAMIS);
-			PChar->PBattleAI->SetCurrentAction(ACTION_DISENGAGE);
+			PChar->Check_Engagment->SetCurrentAction(ACTION_DISENGAGE);
 			m_PlayerList.erase(m_PlayerList.begin()+i);
 			return true;
 		}
