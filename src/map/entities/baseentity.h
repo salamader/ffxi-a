@@ -137,7 +137,7 @@ public:
 	void			HideName(bool hide); // hide / show name
 	bool			IsNameHidden();		// checks if name is hidden
 
-    CAIGeneral*     PBattleAI;          // интеллект любой сущности
+    CAIGeneral*     Check_Engagment;          // интеллект любой сущности
 
     CBaseEntity();						// конструктор
     virtual ~CBaseEntity();						// деструктор

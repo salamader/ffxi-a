@@ -148,6 +148,39 @@ while(it != login_sd_list.end())
 				ShowMessage("LOBBY_TIME %u MAP_TIME %u\n",lobby_time,map_time);
 				//const char* Query = "UPDATE accounts SET  lobby_time = '%u' WHERE id = %u";
                 //Sql_Query(SqlHandle,Query,lobby_time,(*it)->accid);
+				if(on_map == 1)
+				{
+					//lobby_session  accounts_sessions accid
+                ShowMessage("THIS PLAYER IS ON MAP SO LETS COUNT OUT TARGET %u\n",it);
+				/*
+				orderby lobby session list and update targetid by 1 for each user.
+				const char* Query = "UPDATE accounts_sessions SET lobby_session ='%u' WHERE accid = %u";
+                Sql_Query(SqlHandle,Query,map_time ,(*it)->accid);
+				const int8* fmtQuery = "SELECT max(targid) FROM accounts_sessions";
+
+	                  if( Sql_Query(SqlHandle,fmtQuery) == SQL_ERROR )
+	                    {
+		                 return;
+	                    }
+
+	                  uint32 targid = 0;
+
+	                  if( Sql_NumRows(SqlHandle) != 0 )
+	                    {
+		                Sql_NextRow(SqlHandle);
+		
+		                targid = Sql_GetUIntData(SqlHandle,0) + 1;
+						ShowMessage("MAX TARGETID COUNT %u \n" CL_RESET,targid);
+						if(targid == 1)
+						{
+							targid = 1024;
+							ShowMessage("MAX TARGETID NEW COUNT %u \n" CL_RESET,targid);
+						}
+                         PChar->targid = targid;
+					  }
+
+				*/
+				}
 				if(map_time == 0 
 					|| map_time == 1 
 					|| map_time == 2 

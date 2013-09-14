@@ -45,7 +45,7 @@ namespace jailutils
 
     bool InPrison(CCharEntity* PChar)
     {
-        if(!(PChar->nameflags.flags & FLAG_GM_SUPPORT ||PChar->nameflags.flags & FLAG_GM_SENIOR ||PChar->nameflags.flags & FLAG_GM_LEAD  ||PChar->nameflags.flags & FLAG_GM_PRODUCER) && PChar->getZone() == ZONE_MORDION_GAOL)
+        if(!PChar->godmode == 1 && PChar->getZone() == ZONE_MORDION_GAOL)
         {
             return true;
         }
@@ -60,8 +60,8 @@ namespace jailutils
 
     void Add(CCharEntity* PChar)
     {
-        delete PChar->PBattleAI;
-        PChar->PBattleAI = new CAICharPrisoner(PChar);
+        delete PChar->Check_Engagment;
+        PChar->Check_Engagment = new CAICharPrisoner(PChar);
 
         // TODO:
     }
@@ -74,8 +74,8 @@ namespace jailutils
 
     void Del(CCharEntity* PChar)
     {
-        delete PChar->PBattleAI;
-        PChar->PBattleAI = new CAICharNormal(PChar);
+        delete PChar->Check_Engagment;
+        PChar->Check_Engagment = new CAICharNormal(PChar);
 
         // TODO:
     }

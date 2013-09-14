@@ -51,6 +51,19 @@ int32   zlib_compress_sub(char * output,ppuint32 var1,ppuint32 cume, char * look
 
 int32   zlib_compress(char * input,ppuint32 var1, char * output, ppuint32 var2, ppuint32 * lookup)
 {
+	//ShowDebug("VAR 1 BUFF SIZE %u\n",var1);
+	if (var1 > 1800)
+	{
+		ShowDebug("VAR 1 BUFF SIZE IS TO LARGER WILL DC THE PLAYER SKIP SENDING %u\n",var1);
+     return false;
+	}
+	if (var2 > 1800)
+	{
+		ShowDebug("VAR 2 BUFF SIZE IS TO LARGER WILL DC THE PLAYER SKIP SENDING %u\n",var2);
+     return false;
+	}
+
+	//MIGHT WORK IF THE SIZE IS TO LARGE RETURN HERE NOTHING SO IT DONT GO THAT FAR MAYBE
 	unsigned int i, cume = 0, tmp;
 	unsigned long * ptr;
 
@@ -75,6 +88,17 @@ int32   zlib_compress(char * input,ppuint32 var1, char * output, ppuint32 var2, 
 
 ppuint32 zlib_decompress(char *in,ppuint32 inSize, char *out, ppuint32 outSize, char **table)
 {
+	if (inSize > 1800)
+	{
+		ShowDebug("inSize BUFF SIZE IS TO LARGER WILL DC THE PLAYER SKIP SENDING %u\n",inSize);
+     return false;
+	}
+	if (outSize > 1800)
+	{
+		ShowDebug("outSize BUFF SIZE IS TO LARGER WILL DC THE PLAYER SKIP SENDING %u\n",outSize);
+     return false;
+	}
+
 	unsigned int ** follow = (unsigned int **)table[0];
 	unsigned long i, j=0;
 

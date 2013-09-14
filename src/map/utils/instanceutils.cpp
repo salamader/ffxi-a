@@ -104,15 +104,15 @@ namespace instanceutils{
 					if (condition & CONDITION_SPAWNED_AT_START)
 					{
 						// This condition is needed for some mob at dynamis, else he don't pop
-						if(PMob->PBattleAI->GetCurrentAction() == ACTION_FADE_OUT){
-							PMob->PBattleAI->SetLastActionTime(0);
-							PMob->PBattleAI->SetCurrentAction(ACTION_NONE);
+						if(PMob->Check_Engagment->GetCurrentAction() == ACTION_FADE_OUT){
+							PMob->Check_Engagment->SetLastActionTime(0);
+							PMob->Check_Engagment->SetCurrentAction(ACTION_NONE);
 						}
-						if (PMob->PBattleAI->GetCurrentAction() == ACTION_NONE ||
-							PMob->PBattleAI->GetCurrentAction() == ACTION_SPAWN)
+						if (PMob->Check_Engagment->GetCurrentAction() == ACTION_NONE ||
+							PMob->Check_Engagment->GetCurrentAction() == ACTION_SPAWN)
 						{
-							PMob->PBattleAI->SetLastActionTime(0);
-							PMob->PBattleAI->SetCurrentAction(ACTION_SPAWN);
+							PMob->Check_Engagment->SetLastActionTime(0);
+							PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
 
 							if(strcmp(PMob->GetName(),"Maat")==0){
 								mobutils::SetupMaat(PMob, (JOBTYPE)instance->getPlayerMainJob());
@@ -412,11 +412,11 @@ namespace instanceutils{
 				CMobEntity* PMob = (CMobEntity*)zoneutils::GetEntity(mobid, TYPE_MOB);
 				if (PMob != NULL)
 				{
-				    if (PMob->PBattleAI->GetCurrentAction() == ACTION_NONE ||
-				        PMob->PBattleAI->GetCurrentAction() == ACTION_SPAWN)
+				    if (PMob->Check_Engagment->GetCurrentAction() == ACTION_NONE ||
+				        PMob->Check_Engagment->GetCurrentAction() == ACTION_SPAWN)
 				    {
-				        PMob->PBattleAI->SetLastActionTime(0);
-				        PMob->PBattleAI->SetCurrentAction(ACTION_SPAWN);
+				        PMob->Check_Engagment->SetLastActionTime(0);
+				        PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
 
 						PMob->m_instanceID = instance->getInstanceNumber();
 

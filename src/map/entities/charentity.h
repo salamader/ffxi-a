@@ -35,6 +35,7 @@
 #include "../item_container.h"
 #include "../linkshell.h"
 #include "petentity.h"
+#include "automatonentity.h"
 
 #include "../recast_container.h"
 #include "../latent_effect_container.h"
@@ -291,6 +292,7 @@ public:
 	bool			  isWeaponUnlocked(uint16 indexid);					// return if weapon is broken
 	bool			  addWsPoints(uint8 points, uint16 WeaponIndex);	// return if weapon is broken
 	UnlockedWeapons_t unlockedWeapons[MAX_UNLOCKABLE_WEAPONS];			// chars unlocked weapon status
+	CAutomatonEntity*       PAutomaton;                     // Automaton statistics
 
 	uint16 addTP(float tp);
 	int32 addHP(int32 hp);

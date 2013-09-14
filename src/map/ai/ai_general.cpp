@@ -125,7 +125,6 @@ uint32 CAIGeneral::GetBattleTime()
 
 void CAIGeneral::SetCurrentAction(ACTIONTYPE Action, uint16 TargetID)
 {
-	//ShowWarning("SET CURRENT ACTION SPELL CAST ACTION ID %u\n",Action);
 	DSP_DEBUG_BREAK_IF(m_ActionTargetID != 0);
 
 	switch (Action)
@@ -275,7 +274,6 @@ void CAIGeneral::SetBattleSubTarget(CBattleEntity* PEntity)
 
 void CAIGeneral::SetCurrentSpell(uint16 SpellID)
 {
-	ShowWarning("SET SPELL CAST ID %u\n",SpellID);
 	if (m_ActionType != ACTION_MAGIC_START   &&
 		m_ActionType != ACTION_MAGIC_CASTING &&
 		m_ActionType != ACTION_MAGIC_FINISH  &&

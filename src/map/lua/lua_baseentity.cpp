@@ -4667,9 +4667,12 @@ inline int32 CLuaBaseEntity::setFlag(lua_State *L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-    DSP_DEBUG_BREAK_IF(lua_isnil(L,1) || !lua_isnumber(L,1));
+    if(lua_isnil(L,1) || !lua_isnumber(L,1))
+	{
+		return false;
+	}
 
-    ((CCharEntity*)m_PBaseEntity)->nameflags.flags ^= (uint32)lua_tointeger(L,1);
+    ((CCharEntity*)m_PBaseEntity)->nameflags.flags = (uint32)lua_tointeger(L,1);
     ((CCharEntity*)m_PBaseEntity)->pushPacket(new CCharUpdatePacket((CCharEntity*)m_PBaseEntity));
     return 0;
 }
@@ -4982,7 +4985,7 @@ inline int32 CLuaBaseEntity::spawnPet(lua_State *L)
 		PPet->m_SpawnPoint = nearPosition(PMob->loc.p, 2.2f, M_PI);
 
 		// setup AI
-		PPet->PBattleAI->SetCurrentAction(ACTION_SPAWN);
+		PPet->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
 
 	}
 	return 0;
@@ -5116,7 +5119,7 @@ inline int32 CLuaBaseEntity::getBattleTime(lua_State *L)
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
 
-    lua_pushinteger(L, ((CBattleEntity*)m_PBaseEntity)->PBattleAI->GetBattleTime());
+    lua_pushinteger(L, ((CBattleEntity*)m_PBaseEntity)->Check_Engagment->GetBattleTime());
     return 1;
 }
 
@@ -5205,7 +5208,10 @@ inline int32 CLuaBaseEntity::isMobType(lua_State *L)
 inline int32 CLuaBaseEntity::changeSkin(lua_State *L)
 {
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
-	DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_MOB);
+	if(m_PBaseEntity->objtype == TYPE_MOB)
+	{
+		return false;
+	}
 
     DSP_DEBUG_BREAK_IF(lua_isnil(L,1) || !lua_isnumber(L,1));
 
@@ -6077,10 +6083,10 @@ inline int32 CLuaBaseEntity::setRespawnTime(lua_State* L)
 	{
 		PMob->m_RespawnTime = lua_tointeger(L, 1) * 1000;
 
-	    PMob->PBattleAI->SetLastActionTime(gettick());
-        if (PMob->PBattleAI->GetCurrentAction() == ACTION_NONE)
+	    PMob->Check_Engagment->SetLastActionTime(gettick());
+        if (PMob->Check_Engagment->GetCurrentAction() == ACTION_NONE)
         {
-            PMob->PBattleAI->SetCurrentAction(ACTION_SPAWN);
+            PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
         }
 	}
 	else
@@ -6285,7 +6291,7 @@ inline int32 CLuaBaseEntity::injectActionPacket(lua_State* L) {
 
 	// If you use ACTION_MOBABILITY_FINISH, the first param = anim, the second param = skill id.
 	if (actiontype == ACTION_MOBABILITY_FINISH) {
-		CBattleEntity* PTarget = PChar->PBattleAI->GetBattleTarget();
+		CBattleEntity* PTarget = PChar->Check_Engagment->GetBattleTarget();
 		if (PTarget == NULL) {
 			ShowError("Cannot use MOBABILITY_FINISH on a null battle target! Engage a mob! \n");
 			return 0;
@@ -6297,30 +6303,30 @@ inline int32 CLuaBaseEntity::injectActionPacket(lua_State* L) {
 		CMobEntity* PMob = (CMobEntity*)PTarget;
 		PMob->m_ActionList.clear();
 
-		ACTIONTYPE oldAction = PMob->PBattleAI->GetCurrentAction();
-		PMob->PBattleAI->SetCurrentAction(actiontype);
+		ACTIONTYPE oldAction = PMob->Check_Engagment->GetCurrentAction();
+		PMob->Check_Engagment->SetCurrentAction(actiontype);
 		// we have to make a fake mob skill for this to work.
 		CMobSkill* skill = new CMobSkill(anim);
 		skill->setAnimationID(anim);
 		Action.animation = anim;
 		skill->setMsg(185); // takes damage default msg
 		Action.messageID = 185;
-		PMob->PBattleAI->SetCurrentMobSkill(skill);
+		PMob->Check_Engagment->SetCurrentMobSkill(skill);
 		PMob->m_ActionList.push_back(Action);
 		PMob->loc.zone->PushPacket(PMob, CHAR_INRANGE, new CActionPacket(PMob));
-		PMob->PBattleAI->SetCurrentAction(oldAction);
-		PMob->PBattleAI->SetCurrentMobSkill(NULL);
+		PMob->Check_Engagment->SetCurrentAction(oldAction);
+		PMob->Check_Engagment->SetCurrentMobSkill(NULL);
 		delete skill;
 		skill = NULL;
 		return 0;
 	}
 
-	ACTIONTYPE oldAction = PChar->PBattleAI->GetCurrentAction();
-	PChar->PBattleAI->SetCurrentSpell(1);
-	PChar->PBattleAI->SetCurrentAction(actiontype);
+	ACTIONTYPE oldAction = PChar->Check_Engagment->GetCurrentAction();
+	PChar->Check_Engagment->SetCurrentSpell(1);
+	PChar->Check_Engagment->SetCurrentAction(actiontype);
     PChar->m_ActionList.push_back(Action);
 	PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CActionPacket(PChar));
-	PChar->PBattleAI->SetCurrentAction(oldAction);
+	PChar->Check_Engagment->SetCurrentAction(oldAction);
 
 	return 0;
 }
@@ -6826,10 +6832,10 @@ inline int32 CLuaBaseEntity::castSpell(lua_State* L)
 
 	if (lua_isnumber(L,1))
 	{
-		((CMobEntity*)m_PBaseEntity)->PBattleAI->SetCurrentSpell(lua_tointeger(L, 1));
-		((CMobEntity*)m_PBaseEntity)->PBattleAI->SetCurrentAction(ACTION_MAGIC_START);
+		((CMobEntity*)m_PBaseEntity)->Check_Engagment->SetCurrentSpell(lua_tointeger(L, 1));
+		((CMobEntity*)m_PBaseEntity)->Check_Engagment->SetCurrentAction(ACTION_MAGIC_START);
 	} else {
-		((CMobEntity*)m_PBaseEntity)->PBattleAI->SetLastMagicTime(0);
+		((CMobEntity*)m_PBaseEntity)->Check_Engagment->SetLastMagicTime(0);
 	}
 	return 0;
 }
@@ -6840,20 +6846,20 @@ inline int32 CLuaBaseEntity::useMobAbility(lua_State* L)
 
 	if (lua_isnumber(L,1))
 	{
-		if (((CMobEntity*)m_PBaseEntity)->PBattleAI->GetBattleTarget() != NULL)
+		if (((CMobEntity*)m_PBaseEntity)->Check_Engagment->GetBattleTarget() != NULL)
 		{
 			uint16 mobskillId = lua_tointeger(L, 1);
 			CMobSkill* mobskill = battleutils::GetMobSkill(mobskillId);
 
 			if(mobskill != NULL)
 			{
-				((CMobEntity*)m_PBaseEntity)->PBattleAI->SetCurrentMobSkill(mobskill);
+				((CMobEntity*)m_PBaseEntity)->Check_Engagment->SetCurrentMobSkill(mobskill);
 				if( mobskill->getActivationTime() != 0)
 				{
 					apAction_t Action;
 					((CMobEntity*)m_PBaseEntity)->m_ActionList.clear();
 					if(mobskill->getValidTargets() == TARGET_ENEMY){ //enemy
-						Action.ActionTarget = ((CMobEntity*)m_PBaseEntity)->PBattleAI->GetBattleTarget();
+						Action.ActionTarget = ((CMobEntity*)m_PBaseEntity)->Check_Engagment->GetBattleTarget();
 					}
 					else if(mobskill->getValidTargets() == TARGET_SELF){ //self
 						Action.ActionTarget = ((CMobEntity*)m_PBaseEntity);
@@ -6867,8 +6873,8 @@ inline int32 CLuaBaseEntity::useMobAbility(lua_State* L)
 					((CMobEntity*)m_PBaseEntity)->m_ActionList.push_back(Action);
 					((CMobEntity*)m_PBaseEntity)->loc.zone->PushPacket(((CMobEntity*)m_PBaseEntity), CHAR_INRANGE, new CActionPacket((CMobEntity*)m_PBaseEntity));
 				}
-				((CMobEntity*)m_PBaseEntity)->PBattleAI->SetBattleSubTarget(((CMobEntity*)m_PBaseEntity)->PBattleAI->GetBattleTarget());
-				((CMobEntity*)m_PBaseEntity)->PBattleAI->SetCurrentAction(ACTION_MOBABILITY_USING);
+				((CMobEntity*)m_PBaseEntity)->Check_Engagment->SetBattleSubTarget(((CMobEntity*)m_PBaseEntity)->Check_Engagment->GetBattleTarget());
+				((CMobEntity*)m_PBaseEntity)->Check_Engagment->SetCurrentAction(ACTION_MOBABILITY_USING);
 			}
 			else
 			{
@@ -6876,7 +6882,7 @@ inline int32 CLuaBaseEntity::useMobAbility(lua_State* L)
 			}
 		}
 	} else {
-		((CMobEntity*)m_PBaseEntity)->PBattleAI->SetCurrentAction(ACTION_MOBABILITY_START);
+		((CMobEntity*)m_PBaseEntity)->Check_Engagment->SetCurrentAction(ACTION_MOBABILITY_START);
 	}
 	return 0;
 }
@@ -6886,7 +6892,7 @@ inline int32 CLuaBaseEntity::SetAutoAttackEnabled(lua_State* L)
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
 	DSP_DEBUG_BREAK_IF(lua_isnil(L,1) || !lua_isboolean(L, 1));
 
-	((CBattleEntity*)m_PBaseEntity)->PBattleAI->SetAutoAttackEnabled(lua_toboolean(L, 1));
+	((CBattleEntity*)m_PBaseEntity)->Check_Engagment->SetAutoAttackEnabled(lua_toboolean(L, 1));
 
 	return 0;
 }
@@ -6896,7 +6902,7 @@ inline int32 CLuaBaseEntity::SetMagicCastingEnabled(lua_State* L)
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
 	DSP_DEBUG_BREAK_IF(lua_isnil(L,1) || !lua_isboolean(L, 1));
 
-	((CBattleEntity*)m_PBaseEntity)->PBattleAI->SetMagicCastingEnabled(lua_toboolean(L, 1));
+	((CBattleEntity*)m_PBaseEntity)->Check_Engagment->SetMagicCastingEnabled(lua_toboolean(L, 1));
 
 	return 0;
 }
@@ -6906,7 +6912,7 @@ inline int32 CLuaBaseEntity::SetMobAbilityEnabled(lua_State* L)
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
 	DSP_DEBUG_BREAK_IF(lua_isnil(L,1) || !lua_isboolean(L, 1));
 
-	((CBattleEntity*)m_PBaseEntity)->PBattleAI->SetMobAbilityEnabled(lua_toboolean(L, 1));
+	((CBattleEntity*)m_PBaseEntity)->Check_Engagment->SetMobAbilityEnabled(lua_toboolean(L, 1));
 
 	return 0;
 }
@@ -6916,7 +6922,7 @@ inline int32 CLuaBaseEntity::updateTarget(lua_State* L)
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
 
-	((CMobEntity*)m_PBaseEntity)->PBattleAI->SetBattleTarget(((CMobEntity*)m_PBaseEntity)->PEnmityContainer->GetHighestEnmity());
+	((CMobEntity*)m_PBaseEntity)->Check_Engagment->SetBattleTarget(((CMobEntity*)m_PBaseEntity)->PEnmityContainer->GetHighestEnmity());
 
 	return 0;
 }
@@ -7048,7 +7054,7 @@ inline int32 CLuaBaseEntity::hasTarget(lua_State* L)
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
 
-	lua_pushboolean(L,((CBattleEntity*)m_PBaseEntity)->PBattleAI->GetBattleTarget() != NULL);
+	lua_pushboolean(L,((CBattleEntity*)m_PBaseEntity)->Check_Engagment->GetBattleTarget() != NULL);
 	return 1;
 }
 
@@ -7060,7 +7066,7 @@ inline int32 CLuaBaseEntity::setBattleSubTarget(lua_State* L)
 	CLuaBaseEntity* PLuaBaseEntity = Lunar<CLuaBaseEntity>::check(L,1);
 	CBattleEntity* PTarget = (CBattleEntity*)PLuaBaseEntity->GetBaseEntity();
 
-	((CBattleEntity*)m_PBaseEntity)->PBattleAI->SetBattleSubTarget(PTarget);
+	((CBattleEntity*)m_PBaseEntity)->Check_Engagment->SetBattleSubTarget(PTarget);
 
 	return 0;
 }
@@ -7260,9 +7266,9 @@ inline int32 CLuaBaseEntity::pathThrough(lua_State* L)
 
 	CBattleEntity* PBattle = (CBattleEntity*)m_PBaseEntity;
 
-	if(PBattle->PBattleAI->m_PPathFind->PathThrough(points, pos, flags))
+	if(PBattle->Check_Engagment->m_PPathFind->PathThrough(points, pos, flags))
 	{
-		PBattle->PBattleAI->SetCurrentAction(ACTION_ROAMING);
+		PBattle->Check_Engagment->SetCurrentAction(ACTION_ROAMING);
 		lua_pushboolean(L, true);
 	}
 	else
@@ -7377,9 +7383,9 @@ inline int32 CLuaBaseEntity::isFollowingPath(lua_State* L)
 
 	CBattleEntity* PBattle = (CBattleEntity*)m_PBaseEntity;
 
-	lua_pushboolean(L, PBattle->PBattleAI != NULL &&
-		PBattle->PBattleAI->m_PPathFind != NULL &&
-		PBattle->PBattleAI->m_PPathFind->IsFollowingPath());
+	lua_pushboolean(L, PBattle->Check_Engagment != NULL &&
+		PBattle->Check_Engagment->m_PPathFind != NULL &&
+		PBattle->Check_Engagment->m_PPathFind->IsFollowingPath());
 
 	return 1;
 }
@@ -7390,11 +7396,11 @@ Clears the current path and stops moving.
 inline int32 CLuaBaseEntity::clearPath(lua_State* L)
 {
 	CBattleEntity* PBattle = (CBattleEntity*)m_PBaseEntity;
-	DSP_DEBUG_BREAK_IF(PBattle->PBattleAI == NULL);
+	DSP_DEBUG_BREAK_IF(PBattle->Check_Engagment == NULL);
 
-	if(PBattle->PBattleAI->m_PPathFind != NULL)
+	if(PBattle->Check_Engagment->m_PPathFind != NULL)
 	{
-		PBattle->PBattleAI->m_PPathFind->Clear();
+		PBattle->Check_Engagment->m_PPathFind->Clear();
 	}
 
 	return 0;
@@ -7413,7 +7419,7 @@ inline int32 CLuaBaseEntity::wait(lua_State* L)
 
 	CBattleEntity* PBattle = (CBattleEntity*)m_PBaseEntity;
 
-	DSP_DEBUG_BREAK_IF(PBattle->PBattleAI == NULL);
+	DSP_DEBUG_BREAK_IF(PBattle->Check_Engagment == NULL);
 
 	int32 waitTime = 4000;
 
@@ -7421,7 +7427,7 @@ inline int32 CLuaBaseEntity::wait(lua_State* L)
 		waitTime = lua_tonumber(L, 1);
 	}
 
-	PBattle->PBattleAI->Wait(waitTime);
+	PBattle->Check_Engagment->Wait(waitTime);
 
 	return 1;
 }
@@ -7486,7 +7492,49 @@ inline int32 CLuaBaseEntity::gotoNpc(lua_State *L)
 				    zone =  Sql_GetUIntData(SqlHandle,4);
 					ShowMessage(CL_YELLOW"TO ZONE %u \n"CL_RESET,to_rot);
 					ShowMessage(CL_YELLOW"PCHAR %s ID %u \n"CL_RESET,PChar->GetName(),PChar->id);
-                   
+                   if(zone == 0 || zone == 49 || zone == 133 || zone == 199 || zone == 210 || zone == 219 )
+		{
+			sprintf(buf,"This zone ID %d is unkowned area:", zone);
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			
+		}
+		if(zone == 229)
+		{
+			sprintf(buf,"This zone ID %d cause a blackout skipping to 230:", zone);
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+				   zone = 230;
+			
+		}
+		if(zone == 267)
+		{
+			sprintf(buf,"This zone ID %d cause a blackout skipping to 268:", zone);
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+				   zone = 268;
+			
+		}
+		if(zone == 273 ||zone == 274||zone == 275||zone == 276||zone == 277||zone == 278 ||zone == 279)
+		{
+			sprintf(buf,"This zone ID %d cause a blackout skipping to 280:", zone);
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+				   zone = 280;
+			
+		}
+		if(zone == 281 ||zone == 282||zone == 283)
+		{
+			sprintf(buf,"This zone ID %d cause a build 100 error skipping to 284:", zone);
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+				   zone = 284;
+			
+		}
+		//NOTE THIS GETS A PACKET ERROR IF THE USER IS HOSTING THE SERVER PUBLIC IF ITS LOCAL 
+		//THESE ZONES WORK FINE.
+		if(zone == 16 ||zone == 18 || zone == 20 || zone == 22|| zone == 27 || zone == 28 || zone == 29 || zone == 30 
+			|| zone == 31)
+		{
+			sprintf(buf,"This zone ID %d cause a player to get stuck at downloading:", zone);
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+			return false;
+		}
 				   PChar->loc.p.x = to_x;
 				   PChar->loc.p.y = to_y;
 				   PChar->loc.p.z = to_z;
@@ -8518,25 +8566,25 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 		PChar->godmode=1;
 		if(PChar->Account_Level==1)
 		{
-		PChar->nameflags.flags =FLAG_GM_SUPPORT;
+		PChar->nameflags.flags ^=FLAG_GM_SUPPORT;
 		
 		
 		}
 		if(PChar->Account_Level==2)
 		{
-		PChar->nameflags.flags =FLAG_GM_SENIOR;
+		PChar->nameflags.flags ^=FLAG_GM_SENIOR;
 		
 		
 		}
 		if(PChar->Account_Level==3)
 		{
-		PChar->nameflags.flags =FLAG_GM_LEAD;
+		PChar->nameflags.flags ^=FLAG_GM_LEAD;
 		
 		
 		}
 		if(PChar->Account_Level==4)
 		{
-		PChar->nameflags.flags =FLAG_GM_PRODUCER;
+		PChar->nameflags.flags ^=FLAG_GM_PRODUCER;
 		
 		
 		}
@@ -8562,8 +8610,33 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 	}
 	else
 	{
+		//need a prevuis nameflag
 
-		PChar->nameflags.flags =0;
+		if(PChar->Account_Level==1)
+		{
+		PChar->nameflags.flags ^=FLAG_GM_SUPPORT;
+		
+		
+		}
+		if(PChar->Account_Level==2)
+		{
+		PChar->nameflags.flags ^=FLAG_GM_SENIOR;
+		
+		
+		}
+		if(PChar->Account_Level==3)
+		{
+		PChar->nameflags.flags ^=FLAG_GM_LEAD;
+		
+		
+		}
+		if(PChar->Account_Level==4)
+		{
+		PChar->nameflags.flags ^=FLAG_GM_PRODUCER;
+		
+		
+		}
+		
 		PChar->godmode=0;
 		
 		
@@ -8575,8 +8648,8 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 		const int8* Query = "UPDATE chars SET godmode = '0' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,PChar->id);
-					   Query = "UPDATE char_stats SET nameflags = '0',dex = '%u', vit= '%u', agi= '%u', ini= '%u', mnd= '%u', chr= '%u',str ='%u' WHERE charid = %u";
-                       Sql_Query(SqlHandle,Query,PChar->stats.DEX,PChar->stats.VIT,PChar->stats.AGI,PChar->stats.INT,PChar->stats.MND,PChar->stats.CHR,PChar->stats.STR,PChar->id);
+					   Query = "UPDATE char_stats SET nameflags = '%u',dex = '%u', vit= '%u', agi= '%u', ini= '%u', mnd= '%u', chr= '%u',str ='%u' WHERE charid = %u";
+                       Sql_Query(SqlHandle,Query,PChar->nameflags.flags,PChar->stats.DEX,PChar->stats.VIT,PChar->stats.AGI,PChar->stats.INT,PChar->stats.MND,PChar->stats.CHR,PChar->stats.STR,PChar->id);
 					   charutils::BuildingCharWeaponSkills(PChar);
 		return false;
 	}
@@ -9406,10 +9479,10 @@ if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) ==
       PMob->HPscale = Sql_GetFloatData(SqlHandle,47);
       PMob->MPscale = Sql_GetFloatData(SqlHandle,48);
 
-			PMob->PBattleAI = new CAIMobDummy(PMob);
+			PMob->Check_Engagment = new CAIMobDummy(PMob);
 
 			
-          PMob->PBattleAI->SetCurrentAction(ACTION_SPAWN);
+          PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
     
 
 			// Check if we should be looking up scripts for this mob
@@ -9779,7 +9852,7 @@ inline int32 CLuaBaseEntity::MobMorph(lua_State *L)
 		  PMob->name ="MOB";
         
            
-	
+	//EXTRA MOB PACKET SO I CAN KEEP DARKSTARS WORK LOOKING FOR THINGS ONLY PRINT OUT NOT IN USE
            PChar->pushPacket(new CMobPacket(PMob,ENTITY_UPDATE));
             PChar->pushPacket(new CEntityUpdatePacket(PMob,ENTITY_UPDATE));
 

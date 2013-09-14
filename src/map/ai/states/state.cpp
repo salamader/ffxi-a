@@ -37,7 +37,6 @@ void CState::PushMessage(MSGBASIC_ID msgID, int32 param, int32 value)
 	}
 
 	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PEntity,PTarget,param,value,msgID));
-	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE, new CMessageBasicPacket(m_PEntity,PTarget,param,value,msgID));
 }
 
 void CState::PushError(MSGBASIC_ID msgID, int32 param, int32 value)
@@ -70,7 +69,6 @@ STATESTATUS CState::Update(uint32 tick)
 
 bool CState::CheckValidTarget(CBattleEntity* PTarget)
 {
-	
 	if(PTarget == NULL)
 	{
 		return false;
@@ -86,7 +84,6 @@ bool CState::CheckValidTarget(CBattleEntity* PTarget)
     // pc only checks
     if(m_PEntity->objtype == TYPE_PC)
     {
-		ShowWarning("CheckValidTarget  SPELL TARGET %u \n",PTarget);
         // assert you cannot target pets for anything
         if(PTarget->PMaster != NULL && PTarget->PMaster->objtype == TYPE_PC)
         {

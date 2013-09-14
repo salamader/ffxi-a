@@ -269,7 +269,7 @@ void CPathFind::StepTo(position_t* pos, bool run)
 
   if(speed == 0)
   {
-    //ShowWarning("CPathFind::StepTo Mob (%d) speed is zero and its trying to move\n", m_PTarget->id);
+    ShowWarning("CPathFind::StepTo Mob (%d) speed is zero and its trying to move\n", m_PTarget->id);
   }
 
   int8 mode = 1;
@@ -325,7 +325,7 @@ bool CPathFind::FindPath(position_t* start, position_t* end)
 
   if(m_pathLength <= 0)
   {
-   // ShowError("CPathFind::FindPath Entity (%d) could not find path", m_PTarget->id);
+    ShowError("CPathFind::FindPath Entity (%d) could not find path", m_PTarget->id);
     return false;
   }
 
@@ -339,7 +339,7 @@ bool CPathFind::FindRandomPath(position_t* start, float maxRadius)
 
   if(m_pathLength <= 0)
   {
-   // ShowError("CPathFind::FindRandomPath Entity (%d) could not find path\n", m_PTarget->id);
+    ShowError("CPathFind::FindRandomPath Entity (%d) could not find path\n", m_PTarget->id);
     return false;
   }
 
@@ -437,7 +437,7 @@ void CPathFind::AddPoints(position_t* points, uint8 totalPoints, bool reverse)
 
   if(totalPoints > MAX_PATH_POINTS)
   {
-    //ShowWarning("CPathFind::AddPoints Given too many points (%d). Limiting to max (%d)\n", totalPoints, MAX_PATH_POINTS);
+    ShowWarning("CPathFind::AddPoints Given too many points (%d). Limiting to max (%d)\n", totalPoints, MAX_PATH_POINTS);
     m_pathLength = MAX_PATH_POINTS;
   }
 

@@ -795,7 +795,7 @@ void CZone::SetWeather(WEATHER weather)
 	for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
 	{
 		CMobEntity* PCurrentMob = (CMobEntity*)it->second;
-    PCurrentMob->PBattleAI->WeatherChange(weather, Element[weather]);
+    PCurrentMob->Check_Engagment->WeatherChange(weather, Element[weather]);
 	}
 
     m_Weather = weather;
@@ -842,7 +842,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 		}
 		// It may have been nulled by DespawnPet
 		if(PChar->PPet != NULL) {
-			PChar->PPet->PBattleAI->SetCurrentAction(ACTION_NONE);
+			PChar->PPet->Check_Engagment->SetCurrentAction(ACTION_NONE);
 			DeletePET(PChar->PPet);//remove the TID for this pet
 
 			for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
@@ -1034,7 +1034,7 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 			PChar->targid++;
 			//ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid);
 			const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
-            Sql_Query(SqlHandle,fmtQuery,PChar->targid,PChar->id);
+            Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
             break;
         }
         PChar->targid++;
@@ -1151,14 +1151,14 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 				PChar->pushPacket(new CEntityUpdatePacket(PCurrentMob, ENTITY_SPAWN));
 			}
 
-			if (PChar->isDead() || PChar->nameflags.flags & FLAG_GM_SUPPORT ||PChar->nameflags.flags & FLAG_GM_SENIOR ||PChar->nameflags.flags & FLAG_GM_LEAD  ||PChar->nameflags.flags & FLAG_GM_PRODUCER|| PCurrentMob->PMaster != NULL)
+			if (PChar->isDead() || PChar->godmode==1 || PCurrentMob->PMaster != NULL)
 				continue;
 
         // проверка ночного/дневного сна монстров уже учтена в проверке CurrentAction, т.к. во сне монстры не ходят ^^
 
         uint16 expGain = (uint16)charutils::GetRealExp(PChar->GetMLevel(),PCurrentMob->GetMLevel());
 
-        CAIMobDummy* PAIMob = (CAIMobDummy*)PCurrentMob->PBattleAI;
+        CAIMobDummy* PAIMob = (CAIMobDummy*)PCurrentMob->Check_Engagment;
 
         bool validAggro = expGain > 50 || PChar->animation == ANIMATION_HEALING || PCurrentMob->getMobMod(MOBMOD_ALWAYS_AGGRO);
 
@@ -1279,6 +1279,11 @@ void CZone::SpawnNPCs(CCharEntity* PChar)
 
 void CZone::SpawnPCs(CCharEntity* PChar)
 {
+	if(!m_charList.size() != NULL)
+	{
+		ShowDebug(CL_RED"IS THE PLAYER LIST SIZE NULL??\n"CL_RESET);
+		return;
+	}
 	for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 	{
 	CCharEntity* PCurrentChar = (CCharEntity*)it->second;
@@ -1329,242 +1334,7 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 
 int32 CZone::SpawnMoogle(CCharEntity* PChar)
 {
-	/*
 	
-	
-	
-	
-
-	
-	
-
-	char buf[110];
-	
-
-	uint8 mjob = 0;
-	uint8 sjob = 0;
-	string_t mobname = "";
-	uint32 Model_ID = 0;
-	char CharName[15];
-	const int8* Query =
-        "SELECT mobid, name, respawn_time, spawn_type, dropid, hp_mod, mp_mod, min_level, max_level, \
-			look, main_job, sub_job, skill_type, set_delay, behaviour, link, type, immunity, \
-			ecosystem, size, speed, \
-			str, dex,vit, agi, `itn`, mnd, chr, eva, def, \
-			mod_slash, mod_pierce, mod_hth, mod_impact, \
-			mod_fire, mod_ice, mod_wind, mod_earth, mod_thunder, mod_water, mod_light, mod_dark, element, \
-			family, name_prefix, unk, animationsub, \
-			(hp_scale / 100), (mp_scale / 100), spell_script, spell_list, att, acc,modelid \
-			FROM mog_list \
-			LEFT JOIN npc_models ON mog_list.look = npc_models.lookid \
-			WHERE test = '3';";
-
-	
-
-    int32 ret = Sql_Query(SqlHandle, Query);
-
-			 if( ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0)
-	{
-		while(Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-		{
-						//IF MOB IS IN DATABASE RUN THIS LINE
-						
-						CMobEntity* PMob = new CMobEntity;
-						 PMob->name=Sql_GetData(SqlHandle,1);
-						 PMob->name.insert(0, PMob->name.c_str());
-					memcpy(PMob->charname,PMob->name.c_str(),sizeof(PMob->charname));	 
-			memset(PMob->charname,0,sizeof(PMob->charname));
-				
-						memcpy(PMob->charname,PMob->name.c_str(),15);
-						
-						
-			PMob->id = Sql_GetUIntData(SqlHandle,0);
-			
-			PMob->targid = 1;
-			mobname=Sql_GetData(SqlHandle,1);
-			ShowDebug("SHOW NAME %s\n",mobname.c_str());
-			ShowDebug("SHOW MOG NAME %s\n",PMob->name);
-			ShowDebug("SHOW SET MOG NAME %s\n",PMob->charname);
-			memcpy(&PMob->name, PMob->name.c_str(),(PMob->name.size() > 15 ? 15 : PMob->name.size()));
-
-			PMob->m_SpawnPoint.rotation = PChar->loc.p.rotation;
-			PMob->m_SpawnPoint.x = PChar->loc.p.x;
-			PMob->m_SpawnPoint.y = PChar->loc.p.y;
-			PMob->m_SpawnPoint.z = PChar->loc.p.z;
-			
-
-			Model_ID = Sql_GetIntData(SqlHandle,9);
-			
-			
-
-			PMob->m_RespawnTime = Sql_GetUIntData(SqlHandle,2) * 1000;
-			PMob->m_SpawnType   = (SPAWNTYPE)Sql_GetUIntData(SqlHandle,3);
-			PMob->m_DropID		= Sql_GetUIntData(SqlHandle,4);
-			PMob->HPmodifier = (uint32)Sql_GetIntData(SqlHandle,5);
-			PMob->MPmodifier = (uint32)Sql_GetIntData(SqlHandle,6);
-			
-			
-			
-			PMob->m_minLevel = (uint8)Sql_GetIntData(SqlHandle,7);
-			PMob->m_maxLevel = (uint8)Sql_GetIntData(SqlHandle,8);
-		
-			
-			PMob->SetMJob(Sql_GetIntData(SqlHandle,10));
-			PMob->SetSJob(Sql_GetIntData(SqlHandle,11));
-
-			
-			
-
-			PMob->m_Weapons[SLOT_MAIN]->setMaxHit(1);
-			PMob->m_Weapons[SLOT_MAIN]->setSkillType(Sql_GetIntData(SqlHandle,12));
-			PMob->m_Weapons[SLOT_MAIN]->setDelay((Sql_GetIntData(SqlHandle,13) * 1000)/60);
-			PMob->m_Weapons[SLOT_MAIN]->setBaseDelay((Sql_GetIntData(SqlHandle,13) * 1000)/60);
-
-			
-
-			PMob->m_Behaviour  = (uint16)Sql_GetIntData(SqlHandle,14);
-            PMob->m_Link       = (uint8)Sql_GetIntData(SqlHandle,15);
-			PMob->m_Type       = (uint8)Sql_GetIntData(SqlHandle,16);
-			PMob->m_Immunity   = (IMMUNITY)Sql_GetIntData(SqlHandle,17);
-			PMob->m_EcoSystem  = (ECOSYSTEM)Sql_GetIntData(SqlHandle,18);
-			PMob->m_ModelSize += (uint8)Sql_GetIntData(SqlHandle,19);
-
-			
-
-			PMob->speed    = (uint8)Sql_GetIntData(SqlHandle,20);
-			PMob->speedsub = (uint8)Sql_GetIntData(SqlHandle,20);
-
-			PMob->strRank = (uint8)Sql_GetIntData(SqlHandle,21);
-            PMob->dexRank = (uint8)Sql_GetIntData(SqlHandle,22);
-            PMob->vitRank = (uint8)Sql_GetIntData(SqlHandle,23);
-            PMob->agiRank = (uint8)Sql_GetIntData(SqlHandle,24);
-            PMob->intRank = (uint8)Sql_GetIntData(SqlHandle,25);
-            PMob->mndRank = (uint8)Sql_GetIntData(SqlHandle,26);
-            PMob->chrRank = (uint8)Sql_GetIntData(SqlHandle,27);
-            PMob->evaRank = (uint8)Sql_GetIntData(SqlHandle,28);
-            PMob->defRank = (uint8)Sql_GetIntData(SqlHandle,29);
-
-			PMob->attRank = (uint8)Sql_GetIntData(SqlHandle,51);
-            PMob->accRank = (uint8)Sql_GetIntData(SqlHandle,52);
-            
-
-			PMob->setModifier(MOD_SLASHRES, (uint16)(Sql_GetFloatData(SqlHandle,30) * 1000));
-			PMob->setModifier(MOD_PIERCERES,(uint16)(Sql_GetFloatData(SqlHandle,31) * 1000));
-			PMob->setModifier(MOD_HTHRES,   (uint16)(Sql_GetFloatData(SqlHandle,32) * 1000));
-			PMob->setModifier(MOD_IMPACTRES,(uint16)(Sql_GetFloatData(SqlHandle,33) * 1000));
-
-            PMob->setModifier(MOD_FIREDEF,    (int16)((Sql_GetFloatData(SqlHandle, 34) - 1) * -1000)); // These are stored as floating percentages
-            PMob->setModifier(MOD_ICEDEF,     (int16)((Sql_GetFloatData(SqlHandle, 35) - 1) * -1000)); // and need to be adjusted into modifier units.
-            PMob->setModifier(MOD_WINDDEF,    (int16)((Sql_GetFloatData(SqlHandle, 36) - 1) * -1000)); // Higher DEF = lower damage.
-            PMob->setModifier(MOD_EARTHDEF,   (int16)((Sql_GetFloatData(SqlHandle, 37) - 1) * -1000)); // Negatives signify increased damage.
-            PMob->setModifier(MOD_THUNDERDEF, (int16)((Sql_GetFloatData(SqlHandle, 38) - 1) * -1000)); // Positives signify reduced damage.
-            PMob->setModifier(MOD_WATERDEF,   (int16)((Sql_GetFloatData(SqlHandle, 39) - 1) * -1000)); // Ex: 125% damage would be 1.25, 50% damage would be 0.50
-            PMob->setModifier(MOD_LIGHTDEF,   (int16)((Sql_GetFloatData(SqlHandle, 40) - 1) * -1000)); // (1.25 - 1) * -1000 = -250 DEF
-            PMob->setModifier(MOD_DARKDEF,    (int16)((Sql_GetFloatData(SqlHandle, 41) - 1) * -1000)); // (0.50 - 1) * -1000 = 500 DEF
-
-            PMob->setModifier(MOD_FIRERES,    (int16)((Sql_GetFloatData(SqlHandle, 34) - 1) * -100)); // These are stored as floating percentages
-            PMob->setModifier(MOD_ICERES,     (int16)((Sql_GetFloatData(SqlHandle, 35) - 1) * -100)); // and need to be adjusted into modifier units.
-            PMob->setModifier(MOD_WINDRES,    (int16)((Sql_GetFloatData(SqlHandle, 36) - 1) * -100)); // Higher RES = lower damage.
-            PMob->setModifier(MOD_EARTHRES,   (int16)((Sql_GetFloatData(SqlHandle, 37) - 1) * -100)); // Negatives signify lower resist chance.
-            PMob->setModifier(MOD_THUNDERRES, (int16)((Sql_GetFloatData(SqlHandle, 38) - 1) * -100)); // Positives signify increased resist chance.
-            PMob->setModifier(MOD_WATERRES,   (int16)((Sql_GetFloatData(SqlHandle, 39) - 1) * -100));
-            PMob->setModifier(MOD_LIGHTRES,   (int16)((Sql_GetFloatData(SqlHandle, 40) - 1) * -100));
-            PMob->setModifier(MOD_DARKRES,    (int16)((Sql_GetFloatData(SqlHandle, 41) - 1) * -100));
-
-			PMob->m_Element = (uint8)Sql_GetIntData(SqlHandle,42);
-			PMob->m_Family = (uint16)Sql_GetIntData(SqlHandle,43);
-			PMob->m_name_prefix = (uint8)Sql_GetIntData(SqlHandle,44);
-			PMob->m_unknown = (uint32)Sql_GetIntData(SqlHandle,45);
-
-			
-			PMob->animationsub = (uint32)Sql_GetIntData(SqlHandle,46);
-
-     
-      PMob->HPscale = Sql_GetFloatData(SqlHandle,47);
-      PMob->MPscale = Sql_GetFloatData(SqlHandle,48);
-
-			//PMob->PBattleAI = new CAIMobDummy(PMob);
-
-			
-          //5PMob->PBattleAI->SetCurrentAction(ACTION_SPAWN);
-    
-
-			
-			PMob->m_HasSpellScript = (uint8)Sql_GetIntData(SqlHandle,49);
-
-			PMob->m_SpellListContainer = mobSpellList::GetMobSpellList(Sql_GetIntData(SqlHandle,50));
-			
-
-		
-    
-		
-			ShowDebug("MODEL ID %u\n",Model_ID);
-
-			
-		memcpy(&PMob->look,Sql_GetData(SqlHandle,53),23);
-		PMob->m_NewSkin = true;
-		PMob->m_SkinID = Model_ID;
-		
-		
-
-	PMob->objtype =TYPE_NPC;
-    PMob->loc.zone = PChar->loc.zone;
-
-   
-		m_npcList[PMob->id] = PMob;
-	
-	PMob->loc.p = PChar->loc.p;
-			PChar->pushPacket(new CEntityUpdatePacket(PMob,ENTITY_SPAWN));
-			PChar->pushPacket(new CEntityUpdatePacket(PMob,ENTITY_UPDATE));
-		}
-			return false;
-	}
-
-return false;*/
-	//SPAWN MOGGLE IS SEARCHING THE WHOLE LIST OF THE LAST ZONE THE USERS WAS IN FOR THE NPC THAT HAS THE FACE OF 82
-	//TO SPAWN IN THE MOGHOUSE ZONE, THE LIST MIGHT BE LARGE IT MIGHT NOT FOR EXAMPLE LAST ZONE IS 230 HAS 300 NPCS 
-	//IN THE LIST USING A FOR LOOP TO LOAD ALL 300 NPCS BUT ONLY  LOAD THE ONE FULLY INTO THE MOG ZONE
-	//IT HINK IT WOULD BE BETTER TO JUST GET THE MOG ID FOR EACH MOGHOUSE AND LOAD ONL THE ONE OR 10
-
-//NOT TO SELF PMOB IS A GOOD SYSTEM FOR OBJECT AND NPCS AND MOBS HAS ALOT OF POINTERS AND HAS ALOT OF OPTIONS
-	/*if(PChar->profile.nation == 0) //WE WANT TO GET THE PLAYERS NATION FOR THE PLAYERS MOGGLE BECASUE THE MOGGLE IS A PERSONAL MOGGLE NOT A PUBLIC 
-	{
-		//BASTOK
-		//THIS MAY BE THE KEY FOR EACH MOGGLE IT MAY NOT 
-	}
-	if(PChar->profile.nation == 1) //WE WANT TO GET THE PLAYERS NATION FOR THE PLAYERS MOGGLE BECASUE THE MOGGLE IS A PERSONAL MOGGLE NOT A PUBLIC 
-	{
-		//SANDY
-		//THIS MAY BE THE KEY FOR EACH MOGGLE IT MAY NOT 
-	}
-	if(PChar->profile.nation == 2) //WE WANT TO GET THE PLAYERS NATION FOR THE PLAYERS MOGGLE BECASUE THE MOGGLE IS A PERSONAL MOGGLE NOT A PUBLIC 
-	{
-		//WINDY
-		//WE COULD JUST BUILD THE MOGGLE COMPLEATLY AS A NPC
-		//PERSONAL NOTE TO SELF IF LOOKS CAN BEE LOOPED AS I DID THEN CAN NAMES BE LOOPS AS WELL?
-		//WERE THE WHOLE SYSTEM READS DUMMY MOBS NPC OBJECTS
-		//UNKOWN HAVE TO CHECK THIS IDEA LATER
-
-
-		//THIS MAY BE THE KEY FOR EACH MOGGLE IT MAY NOT 
-	}
-	for (EntityList_t::const_iterator it = m_npcList.begin() ; it != m_npcList.end() ; ++it)
-	{
-		CNpcEntity* PCurrentNpc = (CNpcEntity*)it->second;
-
-		if(PCurrentNpc->look.face == 82)//MOGGLE FACE ID 82 == PChar->m_costume 
-		{
-			ShowDebug(CL_CYAN"SPAWNING MOGGLE:BY FACE 82 == %u\n" CL_RESET,PCurrentNpc->look.face);
-			//PCurrentNpc->status = STATUS_NORMAL;
-			PCurrentNpc->loc.p = PChar->loc.p;
-			PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_SPAWN));
-			PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_UPDATE));
-			
-			//PCurrentNpc->status = STATUS_DISAPPEAR;
-			//return;
-		}
-		
-	}*/
 	for (EntityList_t::const_iterator it = m_npcList.begin() ; it != m_npcList.end() ; ++it)
 	{
 		CNpcEntity* PCurrentNpc = (CNpcEntity*)it->second;
@@ -1691,7 +1461,7 @@ void CZone::TOTDChange(TIMETYPE TOTD)
 				{
                     PMob->SetDespawnTimer(0);
                     PMob->m_AllowRespawn = true;
-                    PMob->PBattleAI->SetCurrentAction(ACTION_SPAWN);
+                    PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
 				}
 			}
         }
@@ -1759,7 +1529,7 @@ void CZone::TOTDChange(TIMETYPE TOTD)
 				{
                     PMob->SetDespawnTimer(0);
                     PMob->m_AllowRespawn = true;
-					PMob->PBattleAI->SetCurrentAction(ACTION_SPAWN);
+					PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
 				}
 			}
 		}
@@ -1774,7 +1544,7 @@ void CZone::TOTDChange(TIMETYPE TOTD)
 				{
                     PMob->SetDespawnTimer(0);
                     PMob->m_AllowRespawn = true;
-					PMob->PBattleAI->SetCurrentAction(ACTION_SPAWN);
+					PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
 				}
 			}
 		}
@@ -1824,6 +1594,9 @@ CCharEntity* CZone::GetCharByName(int8* name)
 
 void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, CBasicPacket* packet)
 {
+
+
+	
 	//ShowDebug(CL_CYAN"PACKETS %u \n" CL_RESET,packet);
 	if(PEntity != NULL)
 	{
@@ -1843,6 +1616,8 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 						          if(distance(PEntity->loc.p, PCurrentChar->loc.p) < 50)
 						            {
 							         PCurrentChar->pushPacket(new CBasicPacket(*packet));
+									 delete packet;
+									 break;
 						            }
 						        }
 						}
@@ -1851,6 +1626,8 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
                              if (PEntity->objtype == TYPE_PC)
 				                {
 					                 ((CCharEntity*)PEntity)->pushPacket(new CBasicPacket(*packet));
+									 delete packet;
+									 break;
 				                }
 						}
 						if(message_type == CHAR_INSHOUT)
@@ -1860,6 +1637,8 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 						          if(distance(PEntity->loc.p, PCurrentChar->loc.p) < 180)
 						            {
 							         PCurrentChar->pushPacket(new CBasicPacket(*packet));
+									 delete packet;
+									 break;
 						            }
 						
 					            }
@@ -1869,19 +1648,23 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
                              if (PEntity != PCurrentChar)
 					            {
 						       PCurrentChar->pushPacket(new CBasicPacket(*packet));
+							   delete packet;
+							   break;
 					            }
 						}
 					}
 		}
 	
-		delete packet;
+//		delete packet; CAN NOT DELETE WHAS ALREADY BEEN DELETED
+		return;
 	
 	}
 	}
 	else
 	{
       // ShowDebug(CL_CYAN"A PACKET WAS CALLED WITH NO PENTITY %u\n" CL_RESET,packet);
-	  // delete packet;
+	   delete packet;
+	   return;
 	}
 }
 
@@ -1928,6 +1711,8 @@ void CZone::WideScan(CCharEntity* PChar, uint16 radius)
 
 void CZone::ZoneServer(uint32 tick)
 {
+	if(!m_charList.empty())
+    {
 	 for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
     {
         CCharEntity* PChar = (CCharEntity*)it->second;
@@ -1949,9 +1734,9 @@ void CZone::ZoneServer(uint32 tick)
 				{
             PChar->StatusEffectContainer->CheckEffects(tick);
 				}
-				if(PChar->PBattleAI != NULL)
+				if(PChar->Check_Engagment != NULL)
 				{
-            PChar->PBattleAI->CheckCurrentAction(tick);
+            PChar->Check_Engagment->CheckCurrentAction(tick);
 				}
 				if(PChar->PTreasurePool != NULL)
 				{
@@ -1965,22 +1750,34 @@ void CZone::ZoneServer(uint32 tick)
 			
         }
     }
+	}
 	for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end() ; ++it)
 	{
 		CMobEntity* PMob = (CMobEntity*)it->second;
 
+		if(!m_charList.empty())
+    {
+
+
+		for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
+        {
+        CCharEntity* PChar = (CCharEntity*)it->second;
+		}
+	}
+		
 		PMob->StatusEffectContainer->CheckEffects(tick);
-		PMob->PBattleAI->CheckCurrentAction(tick);
+		PMob->Check_Engagment->CheckCurrentAction(tick);
 		PMob->StatusEffectContainer->CheckRegen(tick);
+		
 	}
 
   for (EntityList_t::const_iterator it = m_npcList.begin(); it != m_npcList.end() ; ++it)
   {
     CNpcEntity* PNpc = (CNpcEntity*)it->second;
 
-    if(PNpc->PBattleAI != NULL)
+    if(PNpc->Check_Engagment != NULL)//EVEN THOUGH THIS IS NOT ALWASY A BATTEL ITS MOT OF THE FACT OF IS ENGAGED WITH
     {
-      PNpc->PBattleAI->CheckCurrentAction(tick);
+      PNpc->Check_Engagment->CheckCurrentAction(tick);
     }
   }
 
@@ -1989,7 +1786,7 @@ void CZone::ZoneServer(uint32 tick)
 	{
 		CPetEntity* PPet = (CPetEntity*)pit->second;
 		PPet->StatusEffectContainer->CheckEffects(tick);
-		PPet->PBattleAI->CheckCurrentAction(tick);
+		PPet->Check_Engagment->CheckCurrentAction(tick);
 		PPet->StatusEffectContainer->CheckRegen(tick);
 		if(PPet->status==STATUS_DISAPPEAR){
 			m_petList.erase(pit++);
@@ -2023,7 +1820,7 @@ void CZone::ZoneServerRegion(uint32 tick)
 		CMobEntity* PMob = (CMobEntity*)it->second;
 
 		PMob->StatusEffectContainer->CheckEffects(tick);
-		PMob->PBattleAI->CheckCurrentAction(tick);
+		PMob->Check_Engagment->CheckCurrentAction(tick);
 	}
 
 	for (EntityList_t::const_iterator it = m_petList.begin() ; it != m_petList.end() ; ++it)
@@ -2031,9 +1828,10 @@ void CZone::ZoneServerRegion(uint32 tick)
 		CPetEntity* PPet = (CPetEntity*)it->second;
 
 		PPet->StatusEffectContainer->CheckEffects(tick);
-		PPet->PBattleAI->CheckCurrentAction(tick);
+		PPet->Check_Engagment->CheckCurrentAction(tick);
 	}
-
+	if(!m_charList.empty())
+    {
     for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
     {
         CCharEntity* PChar = (CCharEntity*)it->second;
@@ -2055,9 +1853,9 @@ void CZone::ZoneServerRegion(uint32 tick)
 				{
             PChar->StatusEffectContainer->CheckEffects(tick);
 				}
-				if( PChar->PBattleAI != NULL)
+				if( PChar->Check_Engagment != NULL)
 				{
-            PChar->PBattleAI->CheckCurrentAction(tick);
+            PChar->Check_Engagment->CheckCurrentAction(tick);
 				}
 				if( PChar->PTreasurePool != NULL)
 				{
@@ -2087,6 +1885,7 @@ void CZone::ZoneServerRegion(uint32 tick)
         }
 	  }
 	}
+  }
 }
 
 EntityList_t CZone::GetCharList()

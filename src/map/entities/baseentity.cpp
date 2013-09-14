@@ -31,7 +31,7 @@ CBaseEntity::CBaseEntity()
 	m_TargID = 0;
 	namevis = 1;
 
-    PBattleAI = NULL;
+    Check_Engagment = NULL;
 
 	speed    = 40 + map_config.speed_mod;
 	speedsub = 40 + map_config.speed_mod;
@@ -47,9 +47,9 @@ CBaseEntity::CBaseEntity()
 
 CBaseEntity::~CBaseEntity()
 {
-	if(PBattleAI != NULL)
+	if(Check_Engagment != NULL)
 	{
-	    delete PBattleAI;
+	    delete Check_Engagment;
 	}
 }
 

@@ -43,12 +43,10 @@ CMagicState::CMagicState(CBattleEntity* PEntity, CTargetFind* PTargetFind, float
 
 STATESTATUS CMagicState::CastSpell(CSpell* PSpell, CBattleEntity* PTarget, uint8 flags)
 {
-	//ShowWarning("CastSpell  SPELL %u TARGET %u FlAG %u\n",PSpell ,PTarget,flags);
-	//if(!CanCastSpell(PSpell, PTarget, flags))
-	//{
-	//	ShowWarning("CastSpell  SPELL %u TARGET %u FlAG %u ERROR\n",PSpell ,PTarget,flags);
-	//	return STATESTATUS_ERROR;
-	//}
+	if(!CanCastSpell(PSpell, PTarget, flags))
+	{
+		return STATESTATUS_ERROR;
+	}
 
 	Clear();
 
@@ -71,18 +69,16 @@ STATESTATUS CMagicState::CastSpell(CSpell* PSpell, CBattleEntity* PTarget, uint8
     m_PEntity->m_ActionList.clear();
 	m_PEntity->m_ActionList.push_back(action);
 	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE_SELF, new CActionPacket(m_PEntity));
-	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE, new CActionPacket(m_PEntity));
+
 	return STATESTATUS_START;
 }
 
 bool CMagicState::CanCastSpell(CSpell* PSpell, CBattleEntity* PTarget, uint8 flags)
 {
-	//ShowWarning("CanCastSpell  SPELL %u TARGET %u FlAG %u\n",PSpell ,PTarget,flags);
 	if(PSpell == NULL) return false;
 
 	if(!ValidCast(PSpell, PTarget))
 	{
-		ShowWarning("CanCastSpell  SPELL %u TARGET %u FlAG %u ERRER\n",PSpell ,PTarget,flags);
 		return false;
 	}
 
@@ -218,7 +214,7 @@ int16 CMagicState::CalculateMPCost(CSpell* PSpell)
 {
     if(PSpell == NULL)
     {
-        //ShowWarning("CMagicState::CalculateMPCost Spell is NULL\n");
+        ShowWarning("CMagicState::CalculateMPCost Spell is NULL\n");
         return 0;
     }
 
@@ -398,12 +394,7 @@ bool CMagicState::CheckInterrupt()
 
 bool CMagicState::ValidCast(CSpell* PSpell, CBattleEntity* PTarget)
 {
-		//ShowWarning("ValidCast  SPELL %u TARGET %u \n",PSpell ,PTarget);
-    if(!CheckValidTarget(PTarget))
-		{
-			ShowWarning("ValidCast  SPELL %u TARGET ERROR%u \n",PSpell ,PTarget);
-			return false;
-	}
+    if(!CheckValidTarget(PTarget)) return false;
 
 	if(!m_enableCasting ||
 		m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_SILENCE) ||
@@ -426,7 +417,7 @@ bool CMagicState::ValidCast(CSpell* PSpell, CBattleEntity* PTarget)
     {
         if(m_PEntity->objtype == TYPE_MOB && m_PEntity->health.maxmp == 0)
         {
-            //ShowWarning("CMagicState::ValidCast Mob (%u) tried to cast magic with no mp!\n", m_PEntity->id);
+            ShowWarning("CMagicState::ValidCast Mob (%u) tried to cast magic with no mp!\n", m_PEntity->id);
         }
         PushError(MSGBASIC_NOT_ENOUGH_MP, PSpell->getID());
         return false;
@@ -448,7 +439,7 @@ bool CMagicState::ValidCast(CSpell* PSpell, CBattleEntity* PTarget)
 void CMagicState::InterruptSpell()
 {
     DSP_DEBUG_BREAK_IF(m_PSpell == NULL);
-    DSP_DEBUG_BREAK_IF(m_PEntity->PBattleAI->GetCurrentAction() != ACTION_MAGIC_INTERRUPT);
+    DSP_DEBUG_BREAK_IF(m_PEntity->Check_Engagment->GetCurrentAction() != ACTION_MAGIC_INTERRUPT);
 
     apAction_t action;
     action.ActionTarget = m_PEntity;
@@ -462,14 +453,13 @@ void CMagicState::InterruptSpell()
     m_PEntity->m_ActionList.push_back(action);
 
     m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE_SELF, new CActionPacket(m_PEntity));
-	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE, new CActionPacket(m_PEntity));
     Clear();
 }
 
 void CMagicState::FinishSpell()
 {
     DSP_DEBUG_BREAK_IF(m_PSpell == NULL);
-	DSP_DEBUG_BREAK_IF(m_PEntity->PBattleAI->GetCurrentAction() != ACTION_MAGIC_FINISH);
+	DSP_DEBUG_BREAK_IF(m_PEntity->Check_Engagment->GetCurrentAction() != ACTION_MAGIC_FINISH);
 
     SpendCost(m_PSpell);
     SetRecast(m_PSpell);
@@ -598,9 +588,9 @@ void CMagicState::FinishSpell()
 
     m_PEntity->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_MAGIC_END);
 
-    DSP_DEBUG_BREAK_IF(m_PEntity->PBattleAI->GetCurrentAction() != ACTION_MAGIC_FINISH);
+    DSP_DEBUG_BREAK_IF(m_PEntity->Check_Engagment->GetCurrentAction() != ACTION_MAGIC_FINISH);
 	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE_SELF, new CActionPacket(m_PEntity));
-	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE, new CActionPacket(m_PEntity));
+
 	Clear();
 }
 
@@ -695,8 +685,8 @@ void CMagicState::CharAfterFinish()
     // make wyvern use breath
     if(PChar->PPet!=NULL && ((CPetEntity*)PChar->PPet)->getPetType() == PETTYPE_WYVERN)
     {
-        ((CAIPetDummy*)PChar->PPet->PBattleAI)->m_MasterCommand = MASTERCOMMAND_HEALING_BREATH;
-        PChar->PPet->PBattleAI->SetCurrentAction(ACTION_MOBABILITY_START);
+        ((CAIPetDummy*)PChar->PPet->Check_Engagment)->m_MasterCommand = MASTERCOMMAND_HEALING_BREATH;
+        PChar->PPet->Check_Engagment->SetCurrentAction(ACTION_MOBABILITY_START);
     }
 
     SetHiPCLvl(m_PTarget, PChar->GetMLevel());
@@ -710,7 +700,13 @@ bool CMagicState::TryHitInterrupt(CBattleEntity* PAttacker)
     	return false;
     }
 
-    return battleutils::TryInterruptSpell(PAttacker, m_PEntity);
+    if(battleutils::TryInterruptSpell(PAttacker, m_PEntity))
+    {
+        ForceInterrupt();
+        return true;
+    }
+
+    return false;
 }
 
 bool CMagicState::IsCasting()
@@ -768,9 +764,23 @@ void CMagicState::SpendCost(CSpell* PSpell)
     else if (PSpell->hasMPCost() && !m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_MANAFONT) && !(m_flags & MAGICFLAGS_IGNORE_MP))
     {
         int16 cost = CalculateMPCost(PSpell);
+
+        // conserve mp
+        int16 rate = m_PEntity->getMod(MOD_CONSERVE_MP);
+
+        if(rand()%100 < rate)
+        {
+            cost = ConserveMP(cost);
+        }
+
         m_PEntity->addMP(-cost);
     }
 
+}
+
+int16 CMagicState::ConserveMP(int16 cost)
+{
+    return cost * ( (float)(rand()%8 + 8.0f) / 16.0f );
 }
 
 void CMagicState::SetRecast(CSpell* PSpell)

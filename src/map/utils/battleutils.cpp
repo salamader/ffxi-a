@@ -302,6 +302,10 @@ uint16 GetMaxSkill(SKILLTYPE SkillID, JOBTYPE JobID, uint8 level)
 {
 	return g_SkillTable[level][g_SkillRanks[SkillID][JobID]];
 }
+uint16 GetMaxSkill(uint8 rank, uint8 level)
+{
+    return g_SkillTable[level][rank];
+}
 
 bool isValidSelfTargetWeaponskill(int wsid){
 	switch(wsid){
@@ -1802,17 +1806,17 @@ bool TryInterruptSpell(CBattleEntity* PAttacker, CBattleEntity* PDefender){
 	if(PDefender->objtype==TYPE_PC) { //Check player's skill.
 		//For mobs, we can assume their skill is capped at their level, so this term is 1 anyway.
 		CCharEntity* PChar = (CCharEntity*)PDefender;
-		float skill = PChar->GetSkill(PChar->PBattleAI->GetCurrentSpell()->getSkillType());
+		float skill = PChar->GetSkill(PChar->Check_Engagment->GetCurrentSpell()->getSkillType());
 		if(skill <= 0) {
 			skill = 1;
 		}
 
-		float cap = GetMaxSkill((SKILLTYPE)PChar->PBattleAI->GetCurrentSpell()->getSkillType(), PChar->GetMJob(), PChar->GetMLevel());
+		float cap = GetMaxSkill((SKILLTYPE)PChar->Check_Engagment->GetCurrentSpell()->getSkillType(), PChar->GetMJob(), PChar->GetMLevel());
 
 		//if cap is 0 then player is using a spell from their subjob
 		if (cap == 0)
 		{
-			cap = GetMaxSkill((SKILLTYPE)PChar->PBattleAI->GetCurrentSpell()->getSkillType(), PChar->GetSJob(),
+			cap = GetMaxSkill((SKILLTYPE)PChar->Check_Engagment->GetCurrentSpell()->getSkillType(), PChar->GetSJob(),
 				PChar->GetSLevel()); // << this might be GetMLevel, however this leaves no chance of avoiding interuption
 		}
 
@@ -2119,17 +2123,17 @@ uint16 TakePhysicalDamage(CBattleEntity* PAttacker, CBattleEntity* PDefender, in
     {
 
     	// try to interrupt spell
-    	if(PDefender->PBattleAI->m_PMagicState != NULL)
+    	if(PDefender->Check_Engagment->m_PMagicState != NULL)
     	{
     		// use new method
-	    	PDefender->PBattleAI->m_PMagicState->TryHitInterrupt(PAttacker);
+	    	PDefender->Check_Engagment->m_PMagicState->TryHitInterrupt(PAttacker);
     	}
-    	else if (PDefender->PBattleAI->GetCurrentAction() == ACTION_MAGIC_CASTING &&
-            PDefender->PBattleAI->GetCurrentSpell()->getSpellGroup() != SPELLGROUP_SONG)
+    	else if (PDefender->Check_Engagment->GetCurrentAction() == ACTION_MAGIC_CASTING &&
+            PDefender->Check_Engagment->GetCurrentSpell()->getSpellGroup() != SPELLGROUP_SONG)
         { //try to interrupt the spell
-            if (!PDefender->PBattleAI->m_interruptSpell && TryInterruptSpell(PAttacker, PDefender))
+            if (!PDefender->Check_Engagment->m_interruptSpell && TryInterruptSpell(PAttacker, PDefender))
             {
-            	PDefender->PBattleAI->m_interruptSpell = true;
+            	PDefender->Check_Engagment->m_interruptSpell = true;
             }
         }
 
@@ -3288,8 +3292,8 @@ bool IsEngauged(CBattleEntity* PEntity)
     DSP_DEBUG_BREAK_IF(PEntity == NULL);
 
     return (PEntity->animation != ANIMATION_HEALING &&
-            PEntity->PBattleAI != NULL &&
-            PEntity->PBattleAI->GetBattleTarget() != NULL);
+            PEntity->Check_Engagment != NULL &&
+            PEntity->Check_Engagment->GetBattleTarget() != NULL);
 }
 
 /************************************************************************
@@ -3965,19 +3969,19 @@ void tryToCharm(CBattleEntity* PCharmer, CBattleEntity* PVictim)
 	if (PVictim->objtype == TYPE_MOB)
 	{
 		//make the mob disengage
-		if(PCharmer->PPet->PBattleAI != NULL && PCharmer->PPet->PBattleAI->GetCurrentAction() == ACTION_ENGAGE){
-			PCharmer->PPet->PBattleAI->SetCurrentAction(ACTION_DISENGAGE);
+		if(PCharmer->PPet->Check_Engagment != NULL && PCharmer->PPet->Check_Engagment->GetCurrentAction() == ACTION_ENGAGE){
+			PCharmer->PPet->Check_Engagment->SetCurrentAction(ACTION_DISENGAGE);
 		}
 
 		//clear the victims emnity list
 		((CMobEntity*)PVictim)->PEnmityContainer->Clear();
 
 		//cancel the mobs mobBattle ai
-        delete PCharmer->PPet->PBattleAI;
+        delete PCharmer->PPet->Check_Engagment;
 
 		//set the mobs ai to petAi
-		PCharmer->PPet->PBattleAI = new CAIPetDummy((CPetEntity*)PVictim);
-		PCharmer->PPet->PBattleAI->SetLastActionTime(gettick());
+		PCharmer->PPet->Check_Engagment = new CAIPetDummy((CPetEntity*)PVictim);
+		PCharmer->PPet->Check_Engagment->SetLastActionTime(gettick());
 		PCharmer->PPet->charmTime = gettick() + CharmTime;
 
 		// this will make him transition back to roaming if sleeping
@@ -3986,7 +3990,7 @@ void tryToCharm(CBattleEntity* PCharmer, CBattleEntity* PVictim)
 		// only move to roaming action if not asleep
 		if(!PCharmer->PPet->StatusEffectContainer->HasPreventActionEffect())
 		{
-			PCharmer->PPet->PBattleAI->SetCurrentAction(ACTION_ROAMING);
+			PCharmer->PPet->Check_Engagment->SetCurrentAction(ACTION_ROAMING);
 		}
 
 		charutils::BuildingCharPetAbilityTable((CCharEntity*)PCharmer,(CPetEntity*)PVictim,PVictim->id);

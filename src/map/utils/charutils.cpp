@@ -991,7 +991,7 @@ void SendInventory(CCharEntity* PChar)
         {
             PItem->setSubType(ITEM_LOCKED);
 
-            PChar->nameflags.flags |= FLAG_LINKSHELL;
+            PChar->nameflags.flags = FLAG_LINKSHELL;
             PChar->pushPacket(new CInventoryItemPacket(PItem, LOC_INVENTORY, PChar->equip[SLOT_LINK]));
 		    PChar->pushPacket(new CInventoryAssignPacket(PItem, INV_LINKSHELL));
             PChar->pushPacket(new CLinkshellEquipPacket(PChar));
@@ -1400,7 +1400,7 @@ void UnequipItem(CCharEntity* PChar, uint8 equipSlotID)
 				{
 					PChar->look.ranged = 0;
 				}
-				PChar->PBattleAI->SetCurrentAction(ACTION_RANGED_INTERRUPT);
+				PChar->Check_Engagment->SetCurrentAction(ACTION_RANGED_INTERRUPT);
 			}
 			break;
 			case SLOT_RANGED:
@@ -1409,7 +1409,7 @@ void UnequipItem(CCharEntity* PChar, uint8 equipSlotID)
 				{
 					PChar->look.ranged = 0;
 				}
-				PChar->PBattleAI->SetCurrentAction(ACTION_RANGED_INTERRUPT);
+				PChar->Check_Engagment->SetCurrentAction(ACTION_RANGED_INTERRUPT);
 				PChar->health.tp = 0;
 				BuildingCharWeaponSkills(PChar);
 			}
@@ -1431,9 +1431,9 @@ void UnequipItem(CCharEntity* PChar, uint8 equipSlotID)
 					UnequipItem(PChar, SLOT_SUB);
 				}
 
-				if (PChar->PBattleAI->GetCurrentAction() == ACTION_ATTACK)
+				if (PChar->Check_Engagment->GetCurrentAction() == ACTION_ATTACK)
 				{
-					PChar->PBattleAI->SetLastActionTime(gettick());
+					PChar->Check_Engagment->SetLastActionTime(gettick());
 				}
 
 				// If main hand is empty, figure out which UnarmedItem to give the player.
@@ -1511,9 +1511,9 @@ bool EquipArmor(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID)
 						}
 						break;
 					}
-					if (PChar->PBattleAI->GetCurrentAction() == ACTION_ATTACK)
+					if (PChar->Check_Engagment->GetCurrentAction() == ACTION_ATTACK)
 					{
-						PChar->PBattleAI->SetLastActionTime(gettick());
+						PChar->Check_Engagment->SetLastActionTime(gettick());
 					}
                     PChar->m_Weapons[SLOT_MAIN] = (CItemWeapon*)PItem;
 
@@ -3761,8 +3761,12 @@ void LoadCharUnlockedWeapons(CCharEntity* PChar)
 
 void SaveCharPosition(CCharEntity* PChar)
 {
-	if(PChar->loc.destination == 0||PChar->loc.destination == 16
-		||PChar->loc.destination == 18)
+	
+     if(PChar->loc.destination == 0|| PChar->loc.destination == 16 ||
+			PChar->loc.destination == 18 || PChar->loc.destination == 20 || 
+			PChar->loc.destination == 22|| PChar->loc.destination == 27 || 
+			PChar->loc.destination == 28 || PChar->loc.destination == 29 || 
+			PChar->loc.destination == 30 || PChar->loc.destination == 31)
 	{
 		//THIS IS THE ELSE PACKET ERORRS GETTING STUCK AT DOWNLOADING SCREEN ZONES
 		//SO WE WILL NEVER SAVE OUR CHARS IN THESE ZONES NOR WILL WE EVER ZONE TO THESE ZONE USING 

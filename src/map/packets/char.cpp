@@ -61,7 +61,7 @@ CCharPacket::CCharPacket(CCharEntity * PChar, ENTITYUPDATE type)
 			WBUFB(data,(0x1D)-4) = PChar->speedsub;
 			WBUFB(data,(0x1E)-4) = PChar->GetHPP();
 			WBUFB(data,(0x1F)-4) = PChar->animation;
-
+			
 			WBUFL(data,(0x20)-4) = PChar->nameflags.flags;
 			WBUFB(data,(0x21)-4)|= PChar->GetGender() * 128 + (1 << PChar->look.size);
 
