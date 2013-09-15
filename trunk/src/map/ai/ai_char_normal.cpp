@@ -1189,7 +1189,12 @@ void CAICharNormal::ActionMagicStart()
     // keeping this for legacy
     // m_PSpell will eventually be refactored out
     // needed for packets
-    DSP_DEBUG_BREAK_IF(m_PSpell == NULL);
+    if(m_PSpell == NULL)
+	{
+		ShowDebug("Spell ID %u IS NULL\n",m_PSpell);
+		  MagicStartError();
+		return;
+	}
 	DSP_DEBUG_BREAK_IF(m_ActionTargetID == 0);
 
     if(m_PMagicState->IsOnCoolDown(m_Tick))
