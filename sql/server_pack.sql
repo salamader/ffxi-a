@@ -4,7 +4,7 @@ Source Host: localhost
 Source Database: database
 Target Host: localhost
 Target Database: database
-Date: 9/14/2013 11:03:02 PM
+Date: 9/15/2013 12:37:28 AM
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -13,7 +13,8 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 CREATE TABLE `server_message` (
   `server_message` varchar(80) CHARACTER SET utf8 NOT NULL DEFAULT 'Welcome To FFXI-A Alpha Development Server!',
-  PRIMARY KEY (`server_message`)
+  `id` int(1) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`server_message`,`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -28,6 +29,7 @@ CREATE TABLE `server_variables` (
 -- ----------------------------
 -- Records 
 -- ----------------------------
+INSERT INTO `server_message` VALUES ('Welcome To FFXI-A Alpha Development Server!', '1');
 INSERT INTO `server_variables` VALUES ('[BF]Save_The_Children_record', '14');
 INSERT INTO `server_variables` VALUES ('[BF]The_Holy_Crest_record', '600');
 INSERT INTO `server_variables` VALUES ('[BF]Mission_2-3_Horlais_Peak_record', '600');
@@ -57,7 +59,7 @@ INSERT INTO `server_variables` VALUES ('[POP]Mee_Deggi_the_Punisher', '137841067
 INSERT INTO `server_variables` VALUES ('[POP]Aspidochelone', '1378126575');
 INSERT INTO `server_variables` VALUES ('correctcoffer', '17002512');
 INSERT INTO `server_variables` VALUES ('[PH]Jaggedy_Eared_Jack', '17187042');
-INSERT INTO `server_variables` VALUES ('Bastok8-1LastClear', '1379164510');
+INSERT INTO `server_variables` VALUES ('Bastok8-1LastClear', '1379219098');
 INSERT INTO `server_variables` VALUES ('[TEMP]Respawn_qm1_for_curtana', '0');
 INSERT INTO `server_variables` VALUES ('[TEMP]Respawn_qm1_for_rattle', '0');
 INSERT INTO `server_variables` VALUES ('[TEMP]Respawn_qm2_for_offering', '0');
@@ -80,13 +82,3 @@ INSERT INTO `server_variables` VALUES ('[POP]Quu_Domi_the_Gallant', '1378436461'
 INSERT INTO `server_variables` VALUES ('[DynaValkurm]UniqueID', '5947');
 INSERT INTO `server_variables` VALUES ('[DynaValkurm]Already_Received', '16');
 INSERT INTO `server_variables` VALUES ('[POP]King_Behemoth', '1379451293');
-INSERT INTO `server_variables` VALUES ('Main-to-Seiryu-BlueTeleport', '0');
-INSERT INTO `server_variables` VALUES ('Seiryu-to-Genbu-BlueTeleport', '0');
-INSERT INTO `server_variables` VALUES ('Genbu-to-Byakko-BlueTeleport', '0');
-INSERT INTO `server_variables` VALUES ('Byakko-to-Suzaku-BlueTeleport', '0');
-INSERT INTO `server_variables` VALUES ('Suzaku-to-Main-BlueTeleport', '0');
-INSERT INTO `server_variables` VALUES ('Main-to-Suzaku-BlueTeleport', '0');
-INSERT INTO `server_variables` VALUES ('Suzaku-to-Byakko-BlueTeleport', '0');
-INSERT INTO `server_variables` VALUES ('Byakko-to-Genbu-BlueTeleport', '0');
-INSERT INTO `server_variables` VALUES ('Genbu-to-Seiryu-BlueTeleport', '0');
-INSERT INTO `server_variables` VALUES ('Seiryu-to-Main-BlueTeleport', '0');
