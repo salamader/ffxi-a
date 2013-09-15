@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Blizzard
+-- Spell: Blizzard II
 -- Deals ice damage to an enemy.
 -----------------------------------------
 

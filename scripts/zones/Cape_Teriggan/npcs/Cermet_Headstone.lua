@@ -1,12 +1,16 @@
 -----------------------------------
 -- Area: Cape Teriggan
 -- NPC:  Cermet Headstone
--- Involved in Mission: ZM5 Headstone Pilgrimage (Wind Headstone)
--- @pos -107 -8 450 113
+-- Involved in Mission: ZM5 
+-- Headstone Pilgrimage (Wind Frag.)
+-- Quests: Wandering Souls
+-- @zone 113
+-- @pos -107 -8 450
 -----------------------------------
 package.loaded["scripts/zones/Cape_Teriggan/TextIDs"] = nil;
 -----------------------------------
 
+require("scripts/globals/quests");
 require("scripts/globals/keyitems");
 require("scripts/globals/titles");
 require("scripts/globals/missions");
@@ -17,6 +21,15 @@ require("scripts/zones/Cape_Teriggan/TextIDs");
 -----------------------------------
 
 function onTrade(player,npc,trade)
+	local count = trade:getItemCount();
+	local RainLily  = trade:hasItemQty(949,1);
+	if(player:getQuestStatus(OUTLANDS,WANDERING_SOULS) == QUEST_AVALIABLE and player:getCurrentMission(ZILART) >= HEADSTONE_PILGRIMAGE) then
+		if(RainLily == true and count == 1) then
+			player:addQuest(OUTLANDS,WANDERING_SOULS);
+			player:tradeComplete();
+			player:startEvent(0x00CA);
+		end
+	end
 end; 
 
 -----------------------------------
@@ -70,7 +83,13 @@ function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
 	
-	if(csid == 0x00C8 and option == 1) then
+	if(csid == 0x00CA) then
+		player:addItem(13248);
+		player:messageSpecial(ITEM_OBTAINED,13248);
+		player:completeQuest(OUTLANDS,WANDERING_SOULS);
+		player:addFame(OUTLANDS,30);
+		player:addTitle(281);	
+	elseif(csid == 0x00C8 and option == 1) then
 		SpawnMob(17240414,300):updateEnmity(player); -- Axesarion the Wanderer
 		SetServerVariable("[ZM4]Wind_Headstone_Active",0);
 	end

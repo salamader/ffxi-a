@@ -1,9 +1,9 @@
 -----------------------------------
 -- Area: Apollyon CS
--- NPC:  Na_Qba_Chirurgeon
-
+-- NPC:  Na Qba Chirurgeon
 -----------------------------------
 package.loaded["scripts/zones/Apollyon/TextIDs"] = nil;
+
 -----------------------------------
 require("scripts/globals/limbus");
 require("scripts/zones/Apollyon/TextIDs");

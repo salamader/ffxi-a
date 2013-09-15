@@ -38,7 +38,58 @@ function OnUseWeaponSkill(player, target, wsID)
 		if(target:hasStatusEffect(EFFECT_ACCURACY_DOWN) == false) then
 			target:addStatusEffect(EFFECT_ACCURACY_DOWN, 20, 0, duration);
 		end
-	end	
+	end
+	
+	local main = player:getEquipID(SLOT_MAIN);
+	local sub = player:getEquipID(SLOT_SUB);
+	local aftermath = 0;
+	local tp = player:getTP();
+	local duration = 0;
+	local zone = player:getZone();
+	
+	if (main == 18288 or sub == 18288) then
+		aftermath = 1;
+	elseif (main == 18289 or sub == 18289) then
+		aftermath = 1;
+	elseif (main == 18641 or sub == 18641) then
+		aftermath = 1;
+	elseif (main == 18655 or sub == 18655) then
+		aftermath = 1;
+	elseif (main == 18669 or sub == 18669) then
+		aftermath = 1;
+	elseif (main == 19750 or sub == 19750) then
+		aftermath = 1;
+	elseif (main == 19843 or sub == 19843) then
+		aftermath = 1;
+	elseif ((main == 18287 or sub == 18287) and (zone == 39 or zone == 40 or zone == 41 or zone == 42 or zone == 134 or 
+		zone ==135 or zone == 185 or zone == 186 or zone == 187 or zone == 188)) then
+		aftermath = 1;
+	end
+		
+	if (aftermath == 1) then
+		if (tp == 300) then
+			duration = 60;
+			player:delStatusEffect(EFFECT_AFTERMATH_LV1);
+			player:delStatusEffect(EFFECT_AFTERMATH_LV2);
+			player:delStatusEffect(EFFECT_AFTERMATH_LV3);
+			player:addStatusEffect(EFFECT_AFTERMATH_LV3,5,0,duration);
+		elseif (tp >= 200) then
+			duration = 40;
+			if (player:hasStatusEffect(EFFECT_AFTERMATH_LV3) == false) then
+				player:delStatusEffect(EFFECT_AFTERMATH_LV1);
+				player:delStatusEffect(EFFECT_AFTERMATH_LV2);
+				player:addStatusEffect(EFFECT_AFTERMATH_LV2,5,0,duration);
+			end
+		else
+			duration = 20;
+			if (player:hasStatusEffect(EFFECT_AFTERMATH_LV3) == false) then
+				if (player:hasStatusEffect(EFFECT_AFTERMATH_LV2) == false) then
+					player:delStatusEffect(EFFECT_AFTERMATH_LV1);
+					player:addStatusEffect(EFFECT_AFTERMATH_LV1,5,0,duration);
+				end
+			end
+		end
+	end
 	
 	return tpHits, extraHits, criticalHit, damage;
 	

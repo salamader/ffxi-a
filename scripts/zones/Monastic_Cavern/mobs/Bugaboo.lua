@@ -1,21 +1,42 @@
 -----------------------------------
--- Area: Monastic Cavern
--- NPC:  Bugaboo
+--  Area: Monastic Cavern (150)
+--   Mob: Bugaboo
 -----------------------------------
 
-require("scripts/globals/titles");
+-- require("scripts/zones/Monastic_Cavern/MobIDs");
 
 -----------------------------------
--- onMobSpawn Action
+-- onMobInitialize
 -----------------------------------
 
-function OnMobSpawn(mob)
+function onMobInitialize(mob)	
+end;
+
+-----------------------------------
+-- onMobSpawn
+-----------------------------------
+
+function onMobSpawn(mob)	
+end;
+
+-----------------------------------
+-- onMobEngaged
+-----------------------------------
+
+function onMobEngaged(mob,target)	
+end;
+
+-----------------------------------
+-- onMobFight
+-----------------------------------
+
+function onMobFight(mob,target)	
 end;
 
 -----------------------------------
 -- onMobDeath
 -----------------------------------
 
-function onMobDeath(mob, killer)
-   killer:setVar("circleTime",8); -- Set flag so that final CS will show when you interact with alter again
+function onMobDeath(mob,killer)	
 end;
+

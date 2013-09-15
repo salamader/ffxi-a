@@ -1,5 +1,6 @@
 -----------------------------------
 -- Ability: Deactivate
+-- Deactivates your automaton.
 -----------------------------------
 
 require("scripts/globals/settings");

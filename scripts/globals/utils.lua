@@ -10,6 +10,41 @@ function utils.clamp(input, min_val, max_val)
     return input;
 end;
 
+function utils.manawall(target, dmg)
+    --handling mana wall
+    wall = target:getMP();
+    if(wall > 0) then
+        if(wall > ((dmg / 2) - (dmg * (target:getMod(MOD_MANA_WALL_DMG) / 100)))) then --absorb full half damage
+            target:delMP(dmg / 2);
+            return 0;
+        else --absorbs some damage based on MP
+            target:delMP(wall);
+			target:delStatusEffect(EFFECT_MANA_WALL);
+            return (((dmg / 2) - (dmg * (target:getMod(MOD_MANA_WALL_DMG) / 100))) - wall);
+        end
+		updateEnmity(target,-180,0);
+    end
+
+    return dmg;
+end;
+
+function utils.sacrosanctityDmg(target, dmg)
+
+    dmg = dmg * .25;
+
+    return dmg;
+end;
+
+function utils.scarletDelirium(target, dmg)
+	if (dmg > 0) then
+		scarletDeliriumBonus = ((dmg / target:getMaxHP()) / 2) * 100;
+		target:delStatusEffect(EFFECT_SCARLET_DELIRIUM_I);
+		target:addStatusEffect(EFFECT_SCARLET_DELIRIUM_II,scarletDeliriumBonus,0,60);
+	end
+
+    return;
+end;
+
 function utils.stoneskin(target, dmg)
     --handling stoneskin
     skin = target:getMod(MOD_STONESKIN);
@@ -110,6 +145,66 @@ function utils.dmgTaken(target, dmg)
     return dmg * resist;
 end;
 
+function utils.absorbMagicDmg(target, dmg) -- Elemental Sachets
+	target:addHP(dmg);
+    if(dmg > 0) then
+		target:messageBasic(24,0,dmg);
+	end
+	dmg = 0;
+	return dmg;
+end;
+
+function utils.dmgToMP(target, dmg)
+
+    if(target:getObjType() == TYPE_PC) then
+		local etherealMP = 0;
+		local percentMP = 0;
+    	if(target:getEquipID(SLOT_EAR1) == 15965 or target:getEquipID(SLOT_EAR2) == 15965) then -- Ethereal Earring
+    		percentMP = percentMP + .03;
+		end
+    	if(target:getEquipID(SLOT_HEAD) == 11170) then -- Creed Armet +1
+    		percentMP = percentMP + .03;
+		end
+    	if(target:getEquipID(SLOT_HEAD) == 11070) then -- Creed Armet +2
+    		percentMP = percentMP + .03;
+		end
+		etherealMP = math.floor(dmg * percentMP);
+		target:addMP(etherealMP);
+    	if(etherealMP > 0) then
+			target:messageBasic(25,0,etherealMP);
+		end
+		-- printf("MP Gained %u",etherealMP);
+    end
+	
+end;
+
+function utils.dmgToTP(target, dmg)
+
+    if(target:getObjType() == TYPE_PC) then
+		local dmgTP = 0;
+		local percentTP = 0;
+    	if(target:getEquipID(SLOT_SUB) == 28671) then -- Butznard Shield
+    		percentTP = percentTP + .005;
+		end
+    	if(target:getEquipID(SLOT_SUB) == 28669) then -- Butznard Shield +1
+    		percentTP = percentTP + .006;
+		end
+		if(target:getEquipID(SLOT_BODY) == 11868) then -- Mekira Meikogai
+    		percentTP = percentTP + .014;
+		end
+		if(target:getEquipID(SLOT_BODY) == 11865) then -- Mekira Toshugai
+    		percentTP = percentTP + .01;
+		end
+		if(target:getEquipID(SLOT_BODY) == 11871) then -- Mekira Toshugai +1
+    		percentTP = percentTP + .012;
+		end
+		dmgTP = math.floor(dmg * percentTP);
+		target:addTP(dmgTP);
+		-- printf("TP Gained %u",dmgTP);
+    end
+	
+end;
+
 function utils.breathDmgTaken(target, breathDmg)
 
     local resist = 1 + (target:getMod(MOD_UDMGBREATH) / 100);
@@ -127,6 +222,8 @@ end;
 
 function utils.magicDmgTaken(target, magicDmg)
 
+	local ring1 = target:getEquipID(SLOT_RING1);
+	local ring2 = target:getEquipID(SLOT_RING2);
     -- MDT is stored in amount/256
     local resist = ((256 + target:getMod(MOD_UDMGMAGIC))/256);
 
@@ -137,6 +234,20 @@ function utils.magicDmgTaken(target, magicDmg)
     if(resist < 0.5) then
         resist = 0.5;
     end
+	
+	if(target:getObjType() == TYPE_PC) then
+		if(((ring1 == 14646) or (ring2 == 14646)) -- Shadow Ring
+		and (math.random(100) <= 13)) then
+			magicDmg = 0;
+		end
+	
+		if((((magicDmg * resist) / target:getMaxHP()) * 100) > 50) then
+			if(((ring1 == 11647) or (ring2 == 11647)) -- Archon Ring
+			and (math.random(100) <= 5)) then
+				magicDmg = 0;
+			end
+		end
+	end
 
     return magicDmg * resist;
 end;
@@ -152,6 +263,21 @@ function utils.physicalDmgTaken(target, dmg)
     if(resist < 0.5) then
         resist = 0.5;
     end
+	
+	if(target:getObjType() == TYPE_PC) then
+		if(target:getEquipID(SLOT_HEAD) == 14646 and (math.random(100) <= 5)) then -- Nocturnus Helm
+			target:addHP(dmg);
+			if(dmg > 0) then
+				target:messageBasic(24,0,dmg);
+			end
+			dmg = 0;
+		end
+		if((((dmg * resist) / target:getMaxHP()) * 100) > 50) then
+			if(target:getEquipID(SLOT_BACK) == 14646 and (math.random(100) <= 5)) then -- Archon Cape
+				dmg = 0;
+			end
+		end
+	end
 
     return dmg * resist;
 end;

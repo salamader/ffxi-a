@@ -19,7 +19,7 @@ GAME_TIE = 3;
 function onTrade(player,npc,trade)
 
 	if (npcUtil.tradeHas(trade, nil, 5)) then
-    player:tradeComplete();
+	   player:tradeComplete();
 	   vdie1 = math.random(1,6);
   	   vdie2 = math.random(1,6);
   	   vtotal = vdie1 + vdie2;
@@ -77,18 +77,18 @@ function onEventFinish(player,csid,option)
 	npc = player:getEventTarget();
 
 	if (csid == 519) then
-          if (option == GAME_WON) then
-            npc.giveGil(player, 10, {rate=false});
-        if (exitTheGambler == QUEST_ACCEPTED) then
-          player:completeQuest(SANDORIA,EXIT_THE_GAMBLER);
-          player:showText(npc,7629);
-        end
-          elseif (option == GAME_TIE) then
-            npc.giveGil(player, 5, {rate=false});
-  	    player:showText(npc,7622);
-          else
-            player:showText(npc,7620);
-          end
-        end
+		if (option == GAME_WON) then
+			npc.giveGil(player, 10, {rate=false});
+			if (exitTheGambler == QUEST_ACCEPTED) then
+				player:completeQuest(SANDORIA,EXIT_THE_GAMBLER);
+				player:showText(npc,7629);
+			end
+		elseif (option == GAME_TIE) then
+			npc.giveGil(player, 5, {rate=false});
+			player:showText(npc,7622);
+		else
+			player:showText(npc,7620);
+		end
+	end
 end;
 

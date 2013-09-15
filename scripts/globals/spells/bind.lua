@@ -1,8 +1,10 @@
 -----------------------------------------
 -- Spell: Bind
 -----------------------------------------
+
 require("scripts/globals/status");
 require("scripts/globals/magic");
+
 -----------------------------------------
 -- OnSpellCast
 -----------------------------------------
@@ -24,6 +26,16 @@ function onSpellCast(caster,target,spell)
 	local resist = applyResistance(caster,spell,target,dINT,35,bonus);
 
 	if(100 * math.random() >= target:getMod(MOD_BINDRES)) then
+
+		local body = caster:getEquipID(SLOT_BODY);
+		if (body == 11088) then -- Estoquers Sayon +2
+			resist = resist + (resist * .1);
+		end
+
+		if (caster:hasStatusEffect(EFFECT_SABOTEUR) == true) then
+			duration = duration + (duration * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
+			caster:delStatusEffect(EFFECT_SABOTEUR);
+		end
 		if(resist >= 0.5) then --Do it!
 			--Try to erase a weaker bind.
 			if(target:addStatusEffect(EFFECT_BIND,target:speed(),0,duration*resist)) then
@@ -37,7 +49,6 @@ function onSpellCast(caster,target,spell)
 	else
         spell:setMsg(284);
 	end
-
 
 	return EFFECT_BIND;
 

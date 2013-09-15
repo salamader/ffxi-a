@@ -44,7 +44,7 @@ function onMobDeath(mob, killer)
 	for i = 1, table.getn(Rose_Garden_PH_Table), 1 do
 		if (Rose_Garden_PH_Table[i] ~= nil) then
 			if (Overgrown_Rose == Rose_Garden_PH_Table[i]) then
-				GetMobByID(Rose_Garden):setExtraVar(os.time() + math.random((36000), (37800)));
+				GetMobByID(Rose_Garden):setExtraVar(os.time() + math.random((3600),(14400)));
 			end
 		end
 	end

@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4451
--- Item: silver_shark
--- Food Effect: 5Min, Mithra only
+-- Item: Silver Shark
+-- Food Effect: 5 Min, Mithra only
 -----------------------------------------
 -- Dexterity 4
 -- Mind -6

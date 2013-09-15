@@ -10,8 +10,8 @@
 function onMobDeath(mob,killer)	
 
     -- Set Dune_Widow's Window Open Time
-    wait = math.random((1),(5)) * 3600
-    SetServerVariable("[POP]Dune_Widow", os.time(t) + wait); -- 1-5 hours
+    wait = math.random((3600),(14400))
+    SetServerVariable("[POP]Dune_Widow", os.time(t) + wait); -- 24min-1hr
     DeterMob(mob:getID(), true);
     
     -- Set PH back to normal, then set to respawn spawn

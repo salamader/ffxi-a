@@ -1,4 +1,3 @@
-
 -----------------------------------
 -- Area: Ship_bound_for_Selbina
 -- NPC:  Map

@@ -29,7 +29,13 @@ function onTrigger(player,npc)
 		else
 			player:startEvent(0x00c9);
 		end
-		
+	elseif(player:getCurrentMission(BASTOK) == ENTER_THE_TALEKEEPER and player:getVar("bastok82")==0)then 
+		player:startEvent(0x00ca);
+		player:setVar("bastok82",1);
+	elseif(player:getCurrentMission(BASTOK) == ENTER_THE_TALEKEEPER and player:getVar("bastok82")==1)then 
+		player:startEvent(0x00cb);
+	elseif(player:getCurrentMission(BASTOK) == ENTER_THE_TALEKEEPER and player:getVar("bastok82")==6)then 
+		player:startEvent(0x00cc,1);
 	else
 		player:startEvent(0x006c);
 	end
@@ -57,6 +63,9 @@ function onEventFinish(player,csid,option)
 	
 	if(csid == 0x00c8) then
 		player:setVar("MissionStatus",2);
+	elseif(csid == 0x00cc) then
+		player:setVar("bastok82",7);
+		player:setPos(-185,-8,-21,1,234);
 	end
 	
 end;

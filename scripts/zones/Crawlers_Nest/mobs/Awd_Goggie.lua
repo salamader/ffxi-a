@@ -1,9 +1,8 @@
 -----------------------------------
--- Area: 
--- NPC:  Awd_Goggie
 -- Area: Crawler's Nest
 -- NPC:  Awd Goggie
--- @pos -253.026 -1.867 253.055 197
+-- @zone 197
+-- @pos -253.026, -1.867, 253.055
 -----------------------------------
 
 require("scripts/globals/titles");

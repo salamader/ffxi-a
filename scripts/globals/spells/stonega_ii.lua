@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Stonega 2
+-- Spell: Stonega II
 -- Deals earth damage to an enemy.
 -----------------------------------------
 

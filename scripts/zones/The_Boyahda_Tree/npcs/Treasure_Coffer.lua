@@ -23,7 +23,7 @@ local TreasureMinLvL = 43;
 
 function onTrade(player,npc,trade)
 
-	-- trade:hasItemQty(1052,1); 		-- Treasure Key
+	-- trade:hasItemQty(1052,1); 			-- Treasure Key
 	-- trade:hasItemQty(1115,1);			-- Skeleton Key
 	-- trade:hasItemQty(1023,1);			-- Living Key
 	-- trade:hasItemQty(1022,1);			-- Thief's Tools

@@ -7,7 +7,8 @@ ITEM_CANNOT_BE_OBTAINED = 6539; -- You cannot obtain the item <item> come back a
        KEYITEM_OBTAINED = 6543; -- Obtained key item: <keyitem>
  FISHING_MESSAGE_OFFSET = 7166; -- You can't fish here
   ALREADY_OBTAINED_TELE = 7258; -- You already possess the gate crystal for this telepoint.
-
+    TELEPOINT_SHATTERED = 7420; -- The telepoint has been shattered into a thousand pieces...
+  TELEPOINT_DISAPPEARED = 7249; -- The telepoint has disappeared...
 -- Mining
 MINING_IS_POSSIBLE_HERE = 7357; -- Mining is possible here if you have <item>
 

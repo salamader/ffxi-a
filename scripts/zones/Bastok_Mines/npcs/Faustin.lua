@@ -1,13 +1,18 @@
 -----------------------------------
 -- Area: Bastok_Mines
 -- NPC: Faustin
--- Only sells when Bastok controlls Ronfaure Region
+-- Type: Regional Merchant NPC
+-- Only sells when Bastok
+-- controlls Ronfaure Region.
+-- @zone 234
+-- @pos 61.968, 0.000, -96.017
+-----------------------------------
+package.loaded["scripts/zones/Bastok_Mines/TextIDs"] = nil;
 -----------------------------------
 
 require("scripts/globals/harvest_festivals");
 require("scripts/globals/shop");
 require("scripts/globals/conquest");
-package.loaded["scripts/zones/Bastok_Mines/TextIDs"] = nil;
 require("scripts/zones/Bastok_Mines/TextIDs");
 
 -----------------------------------
@@ -23,17 +28,17 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-    RegionOwner = GetRegionOwner(RONFAURE);
+    local RegionOwner = GetRegionOwner(RONFAURE);
     if (RegionOwner ~= BASTOK) then
-        player:showText(npc,FAUSTIN_CLOSED_DIALOG);
+		player:showText(npc,FAUSTIN_CLOSED_DIALOG);
     else
-        player:showText(npc,FAUSTIN_OPEN_DIALOG);
+		player:showText(npc,FAUSTIN_OPEN_DIALOG);
 
-        stock = {
-            0x027F,   110,   --Chestnut
-            0x1125,    29,   --San d'Orian Carrot
-            0x0262,    55,    --San d'Orian Flour
-            0x114F,    69,   --San d'Orian Grape
+        local stock = {
+            0x027F,   110,	--Chestnut
+            0x1125,    29,	--San d'Orian Carrot
+            0x0262,    55,	--San d'Orian Flour
+            0x114F,    69	--San d'Orian Grape
         };
         showShop(player,BASTOK,stock);
 

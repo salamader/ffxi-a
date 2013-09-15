@@ -108,8 +108,10 @@ function onTrigger(player,npc)
 		end
 	elseif(BlueRibbonBlues == QUEST_AVAILABLE and player:getQuestStatus(WINDURST,WATER_WAY_TO_GO) == QUEST_COMPLETED and player:getFameLevel(WINDURST) >= 5) then
 		player:startEvent(0x0165);
-		
-		
+	elseif(player:getCurrentMission(WINDURST) == AWAKENING_OF_THE_GODS and player:getVar("WINDURST72") ==1)then
+		player:startEvent(0x02E0);
+	elseif(player:getCurrentMission(WINDURST) == AWAKENING_OF_THE_GODS and player:getVar("WINDURST72") ==0)then
+		player:startEvent(0x02E1);
 	elseif(FoodForThought == QUEST_AVAILABLE) then
 		if(OhbiruFood == 1 and KerutotoFood ~= 256) then -- Player knows the researchers are hungry and quest not refused
 			player:startEvent(0x0139,0,4371); -- Offered Quest 1 (Including Order ifYES)
@@ -173,6 +175,8 @@ function onEventFinish(player,csid,option)
 		end		
 	elseif(csid == 0x0165) then
 		player:addQuest(WINDURST,BLUE_RIBBON_BLUES);
+	elseif(csid == 0x02e0)then
+		player:setVar("WINDURST72",2);
 	elseif(csid == 0x0166 or csid == 0x016d) then
 		player:tradeComplete();
 		player:setVar("BlueRibbonBluesProg",2);

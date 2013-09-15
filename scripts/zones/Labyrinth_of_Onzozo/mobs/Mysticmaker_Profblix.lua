@@ -9,8 +9,8 @@
 	
 function onMobDeath(mob,killer)	
   
-    -- Set Mysticmaker's spawnpoint and respawn time (2-2.5 hours)
+    -- Set Mysticmaker's spawnpoint and respawn time (1-2 hours)
     UpdateNMSpawnPoint(mob:getID());
-    mob:setRespawnTime(math.random((7200),(9000)));
+    mob:setRespawnTime(math.random((3600),(7200)));
   
 end;

@@ -16,8 +16,8 @@ function onMobDeath(mob,killer)
 		killer:setVar("EVERYONES_GRUDGE_KILLS",kills + 1);
 	end
     
-    -- Set Bisque-heeled Sunberry's spawnpoint and respawn time (1-2 hours)
+    -- Set Bisque-heeled Sunberry's spawnpoint and respawn time (24min-1hr)
     UpdateNMSpawnPoint(mob:getID());
-    mob:setRespawnTime(math.random((3600),(7200)));
+    mob:setRespawnTime(math.random((1440),(3600)));
     
 end;	

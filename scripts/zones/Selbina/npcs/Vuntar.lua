@@ -3,7 +3,7 @@
 -- NPC:  Vuntar
 -- Starts and Finishes Quest: Cargo (R)
 -- @zone 248
--- @pos 7 -2 -15
+-- @pos 7, -2, -15
 -----------------------------------
 
 require("scripts/globals/settings");
@@ -74,20 +74,17 @@ function onEventFinish(player,csid,option)
 			player:addFame(OTHER_AREAS,30);
 		end
 		if(option == 1) then 
-			player:addGil(800);
-			player:messageSpecial(TextID_Selbina.GIL_OBTAINED,800);
+			player:addGil(800*GIL_RATE);
+			player:messageSpecial(TextID_Selbina.GIL_OBTAINED,800*GIL_RATE);
 			player:tradeComplete();
 		elseif(option == 2) then 
-			player:addGil(2000);
-			player:messageSpecial(TextID_Selbina.GIL_OBTAINED,2000);
+			player:addGil(2000*GIL_RATE);
+			player:messageSpecial(TextID_Selbina.GIL_OBTAINED,2000*GIL_RATE);
 			player:tradeComplete();
 		elseif(option == 3) then 
-			player:addGil(3000);
-			player:messageSpecial(TextID_Selbina.GIL_OBTAINED,3000);
+			player:addGil(3000*GIL_RATE);
+			player:messageSpecial(TextID_Selbina.GIL_OBTAINED,3000*GIL_RATE);
 			player:tradeComplete();
 		end
 	end
 end;
-
-
-

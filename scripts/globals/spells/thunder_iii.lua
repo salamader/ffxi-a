@@ -1,6 +1,6 @@
 -----------------------------------------
--- Spell: Fire
--- Deals fire damage to an enemy.
+-- Spell: Thunder III
+-- Deals lightning damage to an enemy.
 -----------------------------------------
 
 require("scripts/globals/magic");

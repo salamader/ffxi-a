@@ -1,7 +1,8 @@
 -----------------------------------
---      Area: Southern San d'Oria
---      NPC: Pourette
---      Only sells when San d'Oria controlls Derfland Region
+--  Area: Southern San d'Oria
+--  NPC: Pourette
+--  Only sells when San d'Oria
+--  controlls Derfland Region.
 -----------------------------------
 package.loaded["scripts/zones/Southern_San_dOria/TextIDs"] = nil;
 -----------------------------------
@@ -42,11 +43,11 @@ function onTrigger(player,npc)
                 player:showText(npc,POURETTE_OPEN_DIALOG);
                
                 stock = {0x1100,128,  --Derfland Pear
-                                 0x0269,142,  --Ginger
-                                 0x11c1,62,       --Gysahl Greens
-                                 0x0584,1656, --Olive Flower
-                                 0x0279,14,       --Olive Oil
-                                 0x03b7,110}  --Wijnruit
+                         0x0269,142,  --Ginger
+                         0x11c1,62,   --Gysahl Greens
+                         0x0584,1656, --Olive Flower
+                         0x0279,14,   --Olive Oil
+                         0x03b7,110}  --Wijnruit
 
                 showShop(player,SANDORIA,stock);
         end

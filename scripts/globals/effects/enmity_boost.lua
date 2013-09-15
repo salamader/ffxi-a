@@ -1,7 +1,7 @@
 -----------------------------------
 --
---
---
+--	EFFECT_ENMITY_BOOST
+--	Increases enmity
 -----------------------------------
 
 require("scripts/globals/status");

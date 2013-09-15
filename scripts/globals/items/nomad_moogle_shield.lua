@@ -1,7 +1,7 @@
 -----------------------------------------
 --	ID: 16183
 --	Nomad Moogle Shield
---	Enchantment: 60Min, Costume - Moogle
+--	Enchantment: 60Min, Enhancement - Moogle Jaspery
 -----------------------------------------
 
 require("scripts/globals/status");

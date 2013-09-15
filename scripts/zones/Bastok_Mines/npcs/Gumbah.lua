@@ -26,7 +26,7 @@ function onTrigger(player,npc)
 
 	local bladeDarkness = player:getQuestStatus(BASTOK, BLADE_OF_DARKNESS);
 
-	if (player:getMainLvl() >= ADVANCED_JOB_LEVEL and  bladeDarkness == QUEST_AVAILABLE) then
+	if (player:getMainLvl() >= ADVANCED_JOB_LEVEL and bladeDarkness == QUEST_AVAILABLE) then
 		--DARK KNIGHT QUEST
 		player:startEvent(0x0063);
 	elseif(bladeDarkness == QUEST_COMPLETED and player:getQuestStatus(BASTOK,BLADE_OF_DEATH) == QUEST_AVAILABLE) then	
@@ -35,6 +35,8 @@ function onTrigger(player,npc)
 	or ((player:getCurrentMission(BASTOK) == ON_MY_WAY) and (player:getVar("MissionStatus") == 3)))
 		and (player:getVar("[B7-2]Werei") == 0) then
 		player:startEvent(0x00b1);
+	elseif(player:hasCompletedMission(BASTOK,ENTER_THE_TALEKEEPER) == true and player:getVar("optionalcsG") == 0)then
+		player:startEvent(0x00b7); 
 	else 
 		--DEFAULT 
 		player:startEvent(0x0034);
@@ -64,6 +66,8 @@ function onEventFinish(player,csid,option)
 		player:addQuest(BASTOK, BLADE_OF_DEATH);
 		player:addKeyItem(LETTER_FROM_ZEID);
 		player:messageSpecial(KEYITEM_OBTAINED,LETTER_FROM_ZEID);
+	elseif(csid ==0x00b7)then
+		player:setVar("optionalcsG",1);	
 	elseif(csid == 0x00b1) then
 		player:setVar("[B7-2]Werei", 1);
 	end

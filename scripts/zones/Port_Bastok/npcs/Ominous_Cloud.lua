@@ -4,8 +4,6 @@
 --  Type: Traveling Merchant NPC
 -- @zone: 236
 --  @pos: 146.962 7.499 -63.316
---
--- Auto-Script: Requires Verification (Verified by Brawndo)
 -----------------------------------
 package.loaded["scripts/zones/Port_Bastok/TextIDs"] = nil;
 -----------------------------------
@@ -19,23 +17,23 @@ require("scripts/zones/Port_Bastok/TextIDs");
 function onTrade(player,npc,trade)
 
 	local wijinruit 	=	trade:getItemQty(951)
-	local uchitake 	= 	(trade:getItemQty(1161) / 99)
-	local tsurara 	= 	(trade:getItemQty(1164) / 99)
-	local kawahori 	= 	(trade:getItemQty(1167) / 99)
+	local uchitake 		= 	(trade:getItemQty(1161) / 99)
+	local tsurara 		= 	(trade:getItemQty(1164) / 99)
+	local kawahori 		= 	(trade:getItemQty(1167) / 99)
 	local makibishi 	= 	(trade:getItemQty(1170) / 99)
 	local hiraishin 	= 	(trade:getItemQty(1173) / 99)
-	local mizu 		= 	(trade:getItemQty(1176) / 99)
+	local mizu 			= 	(trade:getItemQty(1176) / 99)
 	local shihei 		= 	(trade:getItemQty(1179) / 99)
-	local jusatsu 	=	(trade:getItemQty(1182) / 99)
-	local kaginawa	=	(trade:getItemQty(1185) / 99)
+	local jusatsu 		=	(trade:getItemQty(1182) / 99)
+	local kaginawa		=	(trade:getItemQty(1185) / 99)
 	local sairui 		=	(trade:getItemQty(1188) / 99)
 	local kodoku 		=	(trade:getItemQty(1191) / 99)
-	local shinobi 	=	(trade:getItemQty(1194) / 99)
+	local shinobi 		=	(trade:getItemQty(1194) / 99)
 	local sanjaku		=	(trade:getItemQty(2553) / 99)
 	local soushi 		=	(trade:getItemQty(2555) / 99)
-	local kabenro 	= 	(trade:getItemQty(2642) / 99)
+	local kabenro 		= 	(trade:getItemQty(2642) / 99)
 	local jinko 		= 	(trade:getItemQty(2643) / 99)
-	local mokujin 	= 	(trade:getItemQty(2970) / 99)
+	local mokujin 		= 	(trade:getItemQty(2970) / 99)
 	local inoshi 		= 	(trade:getItemQty(2971) / 99)
 	local shikan 		= 	(trade:getItemQty(2972) / 99)
 	local chono 		= 	(trade:getItemQty(2973) / 99)

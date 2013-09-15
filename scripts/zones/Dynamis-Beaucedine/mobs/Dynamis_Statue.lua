@@ -1,23 +1,42 @@
 -----------------------------------
--- Area: Dynamis Beaucedine
--- NPC:  Dynamis Statue
--- Trigger for Poison Pukis respawn
+--  Area: Dynamis - Beaucedine (134)
+--   Mob: Dynamis_Statue
 -----------------------------------
+
+-- require("scripts/zones/Dynamis-Beaucedine/MobIDs");
+
+-----------------------------------
+-- onMobInitialize
+-----------------------------------
+
+function onMobInitialize(mob)	
+end;
+
+-----------------------------------
+-- onMobSpawn
+-----------------------------------
+
+function onMobSpawn(mob)	
+end;
 
 -----------------------------------
 -- onMobEngaged
 -----------------------------------
 
-function onMobEngaged(mob,target)
-	SpawnMob(17326458):updateEnmity(target);
-	SpawnMob(17326446):updateEnmity(target);
-	SpawnMob(17326374):updateEnmity(target);
-	SpawnMob(17326415):updateEnmity(target);
+function onMobEngaged(mob,target)	
+end;
+
+-----------------------------------
+-- onMobFight
+-----------------------------------
+
+function onMobFight(mob,target)	
 end;
 
 -----------------------------------
 -- onMobDeath
 -----------------------------------
 
-function onMobDeath(mob,killer)
+function onMobDeath(mob,killer)	
 end;
+

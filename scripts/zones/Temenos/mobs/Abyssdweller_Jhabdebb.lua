@@ -1,10 +1,10 @@
 -----------------------------------
 -- Area: Temenos 	
--- NPC: 
-
+-- NPC: Abyssdweller Jhabdebb
 -----------------------------------
 package.loaded["scripts/zones/Temenos/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Temenos/TextIDs");
 

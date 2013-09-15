@@ -1,6 +1,6 @@
 -----------------------------------
 -- Area: Dynamis Buburimu
--- NPC:  Warchief_Tombstone
+-- NPC:  Warchief Tombstone
 -----------------------------------
 
 require("scripts/globals/titles");

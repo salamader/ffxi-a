@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Blizzaga 3
+-- Spell: Blizzaga III
 -- Deals ice damage to an enemy.
 -----------------------------------------
 

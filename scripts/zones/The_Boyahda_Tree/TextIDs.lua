@@ -16,3 +16,7 @@ CHEST_UNLOCKED = 7103; -- You unlock the chest!
   CHEST_MOOGLE = 7108; -- You cannot open the chest while participating in the moogle event.
 CHEST_ILLUSION = 7109; -- The chest was but an illusion...
   CHEST_LOCKED = 7110; -- The chest appears to be locked.
+-- Searching for the Right Words Quest Dialog
+        CAN_SEE_SKY = 7106; -- You can see the sky from here.
+SOMETHING_NOT_RIGHT = 7107; -- Something is not right!
+    CANNOT_SEE_MOON = 7108; -- You cannot see the moon right now.

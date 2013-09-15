@@ -2,7 +2,13 @@
 -- Area: Norg
 -- NPC: Magephaud
 -- Standard Info NPC
+-- Quests: Everyone's Grudge
+-- @zone 252
+-- @pos 13.041, -0.076, 4.903
 -----------------------------------
+
+require("scripts/zones/Norg/TextIDs");
+require("scripts/globals/titles");
 
 -----------------------------------
 -- onTrade Action

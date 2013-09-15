@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4359
--- Item: slice_of_dhalmel_meat
--- Food Effect: 5Min, Galka only
+-- Item: Slice of Dhalmel Meat
+-- Food Effect: 5 Min, Galka only
 -----------------------------------------
 -- Strength 3
 -- Intelligence -5

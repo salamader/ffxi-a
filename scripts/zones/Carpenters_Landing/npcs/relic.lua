@@ -1,10 +1,13 @@
 -----------------------------------
 -- Area: Carpenter's Landing
 -- NPC:  <this space intentionally left blank>
+-- @zone 2
 -- @pos -99 -0 -514 2
+-- Relic Shield to Aegis 
 -----------------------------------
 package.loaded["scripts/zones/Carpenters_Landing/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/zones/Carpenters_Landing/TextIDs");
 
 -----------------------------------

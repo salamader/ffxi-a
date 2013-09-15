@@ -1,14 +1,18 @@
 -----------------------------------
 -- Area: Southern San d'Oria
--- NPC:  Sobane
--- Starts and Finishes Quest: Signed in Blood
--- Involved in quest: Sharpening the Sword, Riding on the Clouds
+-- NPC: Sobane
+-- Type:  Standard Info NPC
+-- Involved in Quests: Signed in
+-- Blood, Tea with a Tonberry?,
+-- Riding on the Clouds, Sharpening
+-- the Sword
 -- @zone 230
--- @pos -190 -3 97
--- csid: 0x0034  0x02dc  0x02dd  0x02de  0x02df  0x02e0  0x02e1  0x02e2  0x02e3  0x02e4  0x02e5 
+-- @pos -189.033, -2.949, 99.154
+-- cutscenes 0x0034  0x02dc  0x02dd  0x02de  0x02df  0x02e0  0x02e1  0x02e2  0x02e3  0x02e4  0x02e5
 -------------------------------------
 package.loaded["scripts/zones/Southern_San_dOria/TextIDs"] = nil;
 -------------------------------------
+
 require("scripts/globals/player");
 require("scripts/globals/settings");
 require("scripts/globals/keyitems");
@@ -34,8 +38,8 @@ function onTrade(player,npc,trade)
 			player:startEvent(0x02DE,0,1662);
 			
 		end
-		
--- RIDING ON THE CLOUDS QUEST --
+
+	-- RIDING ON THE CLOUDS QUEST --
 	elseif(player:getQuestStatus(JEUNO,RIDING_ON_THE_CLOUDS) == QUEST_ACCEPTED and player:getVar("ridingOnTheClouds_1") == 2) then
 		if(trade:hasItemQty(1127,1) and count == 1) then -- Trade Kindred seal
 			player:setVar("ridingOnTheClouds_1",0);
@@ -55,21 +59,25 @@ function onTrigger(player,npc)
 	local bloodProg = player:getVar("SIGNED_IN_BLOOD_Prog");
 	if (blood == QUEST_AVAILABLE and player:getFameLevel(SANDORIA) >= 3) then
 		player:startEvent(0x02dc,0,1662); -- Start Quest
-	
+
 	elseif(blood == QUEST_ACCEPTED and bloodProg < 1) then
 		player:startEvent(0x02dd,0,1662); -- after
-	
+
 	elseif (bloodProg == 3 and blood == QUEST_ACCEPTED) then
 		player:startEvent(0x02E0); -- complete
-	
+
 	elseif (bloodProg >= 1 and blood == QUEST_ACCEPTED) then
 		player:startEvent(0x02df);
 
 	elseif(player:getVar("sharpeningTheSwordCS") >= 2) then
 		player:startEvent(0x0034);
+
+	else
+		player:showText(npc,SOBANE_DIALOG);
 	end
-	
+
 end;
+
 -----------------------------------
 -- onEventUpdate
 -----------------------------------
@@ -86,10 +94,9 @@ end;
 function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
-	
 	if(csid == 0x02dc and option == 1) then
 		player:addQuest(SANDORIA,SIGNED_IN_BLOOD);
-	
+
 	elseif (csid == 0x02E0) then
 		if(player:getFreeSlotsCount() >= 1) then
 			player:delKeyItem(TORN_OUT_PAGES);
@@ -109,7 +116,4 @@ function onEventFinish(player,csid,option)
 	elseif(csid == 0x02DE) then
 		player:setVar("SIGNED_IN_BLOOD_Prog",1);
 	end
-	
-
-	
 end;

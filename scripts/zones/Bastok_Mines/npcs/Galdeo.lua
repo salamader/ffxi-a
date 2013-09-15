@@ -1,7 +1,8 @@
 -----------------------------------
 -- Area: Bastok Mines
 -- NPC: Galdeo
--- Only sells when Bastok controlls Li'Telor Region
+-- Only sells when Bastok controlls
+-- Li'Telor Region
 -----------------------------------
 
 require("scripts/globals/shop");

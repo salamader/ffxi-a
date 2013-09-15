@@ -1,10 +1,10 @@
 -----------------------------------
 -- Area: Apollyon CS
--- NPC:  Dee_Wapa_the_Desolator
-
+-- NPC:  Dee Wapa the Desolator
 -----------------------------------
 package.loaded["scripts/zones/Apollyon/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Apollyon/TextIDs");
 

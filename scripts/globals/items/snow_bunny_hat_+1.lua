@@ -1,7 +1,8 @@
 -----------------------------------------
 --	ID: 11491
 --	Snow bunny Hat +1
---	Enchantment: 60Min, Costume - White Rarab
+--	Enchantment: Costume - White Rarab
+--	Durration: 60 Mins
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -20,4 +21,18 @@ end;
 
 function onItemUse(target)
 	target:addStatusEffect(EFFECT_COSTUME,270,0,3600);
+end;
+
+-----------------------------------
+-- onEffectGain Action
+-----------------------------------
+
+function onEffectGain(target,effect)
+end;
+
+-----------------------------------
+-- onEffectLose Action
+-----------------------------------
+
+function onEffectLose(target,effect)
 end;

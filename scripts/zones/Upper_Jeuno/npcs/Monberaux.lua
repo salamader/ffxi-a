@@ -1,9 +1,13 @@
 -----------------------------------
 -- Area: Upper Jeuno
 -- NPC: Monberaux
--- Starts and Finishes Quest: The Lost Cardian (finish), The kind cardian (start)
--- Involved in Quests: Save the Clock Tower
--- @pos -43 0 -1 244
+-- Starts and Finishes Quest: The
+-- Lost Cardian (finish), The kind
+-- cardian (start)
+-- Involved in Quests: Save the
+-- Clock Tower
+-- @zone 244
+-- @pos -43, 0, -1
 -----------------------------------
 package.loaded["scripts/zones/Upper_Jeuno/TextIDs"] = nil;
 -----------------------------------
@@ -49,9 +53,9 @@ function onTrigger(player,npc)
 	elseif(player:getCurrentMission(COP) == DARKNESS_NAMED  and  player:getVar("PromathiaStatus") == 3) then
 		player:startEvent(0x004B); --75
 	elseif(player:getCurrentMission(COP) == THREE_PATHS  and  player:getVar("COP_Tenzen_s_Path") == 2) then
-	    player:startEvent(0x004A); --74
+		player:startEvent(0x004A); --74
 	elseif(player:getCurrentMission(COP) == THREE_PATHS  and  player:getVar("COP_Tenzen_s_Path") == 4) then
-	    player:startEvent(0x0006);  
+		player:startEvent(0x0006);  
 	elseif(CooksPride == QUEST_COMPLETED and TheLostCardien == QUEST_AVAILABLE and player:getVar("theLostCardianVar") == 2) then 
 		player:startEvent(0x0021); -- Long CS & Finish Quest "The Lost Cardian" 33
 	elseif(CooksPride == QUEST_COMPLETED and TheLostCardien == QUEST_AVAILABLE and player:getVar("theLostCardianVar") == 3) then 
@@ -99,22 +103,22 @@ end;
 function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
-    if(csid == 0x0006)then
-	    player:setVar("COP_Tenzen_s_Path",5);	
+	if(csid == 0x0006)then
+		player:setVar("COP_Tenzen_s_Path",5);	
 	elseif(csid == 0x004a)then
-	    player:setVar("COP_Tenzen_s_Path",3);
+		player:setVar("COP_Tenzen_s_Path",3);
 		player:addKeyItem(ENVELOPE_FROM_MONBERAUX);
 		player:messageSpecial(KEYITEM_OBTAINED,ENVELOPE_FROM_MONBERAUX);
-    elseif(csid == 0x000a)then
+	elseif(csid == 0x000a)then
 		player:setVar("PromathiaStatus",0);
 		player:addKeyItem(MYSTERIOUS_AMULET_DRAINED);
 		player:completeMission(COP,THE_RITES_OF_LIFE);
 		player:addMission(COP,BELOW_THE_ARKS); -- start the mission 1-2
 		player:startEvent(0x00cf);  --207
 	elseif(csid == 0x0052) then
-        player:setVar("PromathiaStatus",1);
+		player:setVar("PromathiaStatus",1);
 	elseif(csid == 0x004B) then	
-        player:setVar("PromathiaStatus",0);
+		player:setVar("PromathiaStatus",0);
 		player:completeMission(COP,DARKNESS_NAMED);
 		player:addMission(COP,SHELTERING_DOUBT);
 	elseif(csid == 0x005b) then 

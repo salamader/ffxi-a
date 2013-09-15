@@ -1,7 +1,6 @@
 -----------------------------------
---
--- 	EFFECT_NONE
---
+--	EFFECT_ELEGY
+-- Reduces an enemy's attack speed
 -----------------------------------
 
 require("scripts/globals/status");

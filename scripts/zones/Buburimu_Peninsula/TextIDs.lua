@@ -10,6 +10,9 @@ ITEM_CANNOT_BE_OBTAINED = 6378; -- You cannot obtain the item <item> come back a
 -- Conquest
 CONQUEST = 7326; -- You've earned conquest points!
 
+-- Quest Items
+POETIC_PARCHMENT = 634; -- 
+	   PARCHMENT = 917; -- 
 -- Logging
 LOGGING_IS_POSSIBLE_HERE = 7310; -- Logging is possible here if you have <item>
 

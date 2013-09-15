@@ -5,9 +5,11 @@
 -----------------------------------
 package.loaded["scripts/zones/Upper_Jeuno/TextIDs"] = nil;
 -----------------------------------
-
+require("scripts/globals/settings");	
 require("scripts/globals/missions");
 require("scripts/zones/Upper_Jeuno/TextIDs");
+require("scripts/globals/settings");
+require("scripts/globals/missions");
 
 -----------------------------------
 -- onInitialize
@@ -24,7 +26,7 @@ function onZoneIn(player,prevZone)
 cs = -1;
 
 	-- COP mission 1-1
-	if(player:getCurrentMission(COP) == THE_RITES_OF_LIFE and player:getVar("PromathiaStatus") == 0) then
+	if(player:getVar("COP1") == 1) then
 		cs = 0x0002;
 	-- MOG HOUSE EXIT
 	elseif((player:getXPos() == 0) and (player:getYPos() == 0) and (player:getZPos() == 0)) then
@@ -66,6 +68,7 @@ function onEventFinish(player,csid,option)
 		player:setHomePoint();
 		player:messageSpecial(HOMEPOINT_SET);
 	elseif(csid == 0x0002) then
+		player:setVar("COP1",2);
 		player:setVar("PromathiaStatus",1);
 	end
 	

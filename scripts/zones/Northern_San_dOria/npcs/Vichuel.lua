@@ -1,7 +1,8 @@
 -----------------------------------
---      Area: Northern San d'Oria
---      NPC: Vichuel
---      Only sells when San d'Oria controlls Fauregandi Region
+--  Area: Northern San d'Oria
+--  NPC: Vichuel
+--  Only sells when San d'Oria
+--  controlls Fauregandi Region.
 -----------------------------------
 package.loaded["scripts/zones/Northern_San_dOria/TextIDs"] = nil;
 -----------------------------------
@@ -66,6 +67,3 @@ function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
 end;
-
-
-

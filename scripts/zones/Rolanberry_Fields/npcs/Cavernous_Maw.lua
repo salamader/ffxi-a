@@ -1,7 +1,10 @@
 -----------------------------------
--- Cavernous Maw
--- Teleports Players to Rolanberry_Fields_S
--- @pos -198 8 361 110
+-- Area: Rolanberrry Fields
+-- Name: Cavernous Maw
+-- Teleports Players to Rolanberry
+-- Fields S
+-- @zone 110
+-- @pos -198, 8, 361
 -----------------------------------
 package.loaded["scripts/zones/Rolanberry_Fields/TextIDs"] = nil;
 -----------------------------------
@@ -26,7 +29,7 @@ end;
 
 function onTrigger(player,npc)
 	
-	if(ENABLE_WOTG == 1 and player:hasKeyItem(PURE_WHITE_FEATHER) == false) then
+	if(ENABLE_WOTG == 1 and (player:hasKeyItem(PURE_WHITE_FEATHER) == false) )then
 		player:startEvent(0x01f4,1);
 	elseif(ENABLE_WOTG == 1 and hasMawActivated(player,1)) then
 		player:startEvent(0x0388);
@@ -57,9 +60,9 @@ function onEventFinish(player,csid,option)
 		r = math.random(1,3);
 		player:addKeyItem(PURE_WHITE_FEATHER);
 		player:messageSpecial(KEYITEM_OBTAINED,PURE_WHITE_FEATHER);
-		player:completeMission(WOTG,CAVERNOUS_MAWS);
-		player:addMission(WOTG,BACK_TO_THE_BEGINNING);
+		player:setVar("WotgStatus",1);
 		if(r == 1) then
+			player:setVar("csmaw",1);
 			player:addNationTeleport(MAW,1);
 			toMaw(player,1); -- go to Batallia_Downs[S]
 		elseif(r == 2) then

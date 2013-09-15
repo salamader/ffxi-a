@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Haste
+-- Spell: Hastega
 -- Composure increases duration 3x
 -----------------------------------------
 
@@ -21,7 +21,16 @@ function onSpellCast(caster,target,spell)
 	   duration = duration * 3;
 	end
 
-	local power = 150; -- 150/1024
+	if (caster:getEquipID(SLOT_FEET) == 11148) then -- Estoqueurs Houseaux +2
+		duration = duration * 1.2;
+	elseif(caster:getEquipID(SLOT_FEET) == 11248) then -- Estoqueurs Houseaux +1
+		duration = duration * 1.1;
+	end
+	if (caster:getEquipID(SLOT_BACK) == 16204) then -- Estoqueurs Cape
+		duration = duration * 1.1;
+	end
+	
+	local power = 150;
 
 	if(target:addStatusEffect(EFFECT_HASTE,power,0,duration) == false) then
 		spell:setMsg(75);

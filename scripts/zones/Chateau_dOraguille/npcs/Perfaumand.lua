@@ -1,8 +1,11 @@
 -----------------------------------
 -- Area: Chateau d'Oraguille
 -- NPC:  Perfaumand
--- Involved in Quest: Lure of the Wildcat (San d'Oria)
--- @pos -39 -3 69 233
+-- Type: Quest Giver
+-- Involved in Quest: Lure of the
+-- Wildcat (San d'Oria)
+-- @zone 233
+-- @pos -39, -3, 69
 -----------------------------------
 package.loaded["scripts/zones/Chateau_dOraguille/TextIDs"] = nil;
 -----------------------------------

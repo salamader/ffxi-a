@@ -1,12 +1,16 @@
 -----------------------------------
 -- Area: Yuhtunga Jungle
 -- NPC:  Cermet Headstone
--- Involved in Mission: ZM5 Headstone Pilgrimage (Fire Fragment)
--- @pos 491 20 301 123
+-- Involved in Mission: ZM5 
+-- Headstone Pilgrimage (Fire Frag.)
+-- Quests: Wrath of the Opo Opo's
+-- @zone 123
+-- @pos 491 20 301
 -----------------------------------
 package.loaded["scripts/zones/Yuhtunga_Jungle/TextIDs"] = nil;
 -----------------------------------
 
+require("scripts/globals/quests");
 require("scripts/globals/keyitems");
 require("scripts/globals/titles");
 require("scripts/globals/missions");
@@ -17,6 +21,15 @@ require("scripts/zones/Yuhtunga_Jungle/TextIDs");
 -----------------------------------
 
 function onTrade(player,npc,trade)
+	local count = trade:getItemCount();
+	local Garnet  = trade:hasItemQty(790,1);
+	if(player:getQuestStatus(OUTLANDS,WRATH_OF_THE_OPO_OPOS) == QUEST_AVALIABLE and player:getCurrentMission(ZILART) >= HEADSTONE_PILGRIMAGE) then
+		if(Garnet == true and count == 1) then
+			player:addQuest(OUTLANDS,WRATH_OF_THE_OPO_OPOS);
+			player:tradeComplete();
+			player:startEvent(0x00CA);
+		end
+	end
 end; 
 
 -----------------------------------
@@ -25,7 +38,6 @@ end;
 
 function onTrigger(player,npc)
 
-	printf("zilart: %i",player:getCurrentMission(ZILART));
 	if(player:getCurrentMission(ZILART) == HEADSTONE_PILGRIMAGE) then
 		-- if requirements are met and 15 mins have passed since mobs were last defeated, spawn them
 		if(player:hasKeyItem(FIRE_FRAGMENT) == false and GetServerVariable("[ZM4]Fire_Headstone_Active") < os.time()) then
@@ -71,7 +83,13 @@ function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
 	
-	if(csid == 0x00C8 and option == 1) then
+	if(csid == 0x00CA) then
+		player:addItem(13143);
+		player:messageSpecial(ITEM_OBTAINED,13143);
+		player:completeQuest(OUTLANDS,WRATH_OF_THE_OPO_OPOS);
+		player:addFame(OUTLANDS,30);
+		player:addTitle(282);
+	elseif(csid == 0x00C8 and option == 1) then
 		SpawnMob(17281031,300):updateEnmity(player); -- Carthi
 		SpawnMob(17281030,300):updateEnmity(player); -- Tipha
 		SetServerVariable("[ZM4]Fire_Headstone_Active",0);

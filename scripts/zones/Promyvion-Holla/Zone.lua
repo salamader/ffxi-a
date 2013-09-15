@@ -171,8 +171,11 @@ end;
 -----------------------------------	
 
 function onEventUpdate(player,csid,option)	
---printf("CSID: %u",csid);
---printf("RESULT: %u",option);
+	--printf("CSID: %u",csid);
+	--printf("RESULT: %u",option);
+	if (csid == 0x002E) then
+		player:setPos(-260,0,280,0,0x0E) -- back to Hall of Transference
+	end
 end;	
 
 -----------------------------------	

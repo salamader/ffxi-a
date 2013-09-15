@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 5797
--- Item: gold_lobster
--- Food Effect: 5Min, Mithra only
+-- Item: Gold Lobster
+-- Food Effect: 5 Min, Mithra only
 -----------------------------------------
 -- Dexterity -5
 -- Vitality 3

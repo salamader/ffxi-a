@@ -10,6 +10,7 @@ package.loaded["scripts/zones/Ordelles_Caves/TextIDs"] = nil;
 
 require("scripts/globals/settings");
 require("scripts/globals/keyitems");
+require("scripts/globals/teleports");
 require("scripts/zones/Ordelles_Caves/TextIDs");
 
 ----------------------------------- 
@@ -24,13 +25,15 @@ end;
 -----------------------------------
  
 function onTrigger(player,npc) 
+	local HasDew = player:hasKeyItem(STALACTITE_DEW);
 
-	if(os.time() - player:getVar("SquiresTestII") <= 60 and player:hasKeyItem(STALACTITE_DEW) == false) then
+	if(os.time() - player:getVar("SquiresTestII") <= 60 and HasDew == false) then
 		player:messageSpecial(A_SQUIRE_S_TEST_II_DIALOG_II);
 		player:addKeyItem(STALACTITE_DEW);
 		player:messageSpecial(KEYITEM_OBTAINED, STALACTITE_DEW);
 		player:setVar("SquiresTestII",0);
-	elseif(player:hasKeyItem(STALACTITE_DEW))then
+		debugTeleport(player,17719359); -- Balasiel, zone 230, -138 x
+	elseif(HasDew)then
 		player:messageSpecial(A_SQUIRE_S_TEST_II_DIALOG_III);
 	else
 		player:messageSpecial(NOTHING_OUT_OF_ORDINARY);

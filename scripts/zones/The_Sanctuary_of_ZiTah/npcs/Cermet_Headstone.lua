@@ -1,12 +1,16 @@
 -----------------------------------
 -- Area: The Sanctuary of Zi'Tah
 -- NPC:  Cermet Headstone
--- Involved in Mission: ZM5 Headstone Pilgrimage (Light Headstone)
--- @pos 235 0 280 121
+-- Involved in Mission: ZM5
+-- Headstone Pilgrimage (Light Frag.)
+-- Quests: Soul Searching
+-- @zone 121
+-- @pos 235 0 280
 -----------------------------------
 package.loaded["scripts/zones/The_Sanctuary_of_ZiTah/TextIDs"] = nil;
 -----------------------------------
 
+require("scripts/globals/quests");
 require("scripts/globals/keyitems");
 require("scripts/globals/titles");
 require("scripts/globals/missions");
@@ -45,6 +49,9 @@ function onTrigger(player,npc)
 		else
 			player:messageSpecial(ALREADY_OBTAINED_FRAG,LIGHT_FRAGMENT);
 		end
+	elseif(player:hasCompletedMission(ZILART,THE_CHAMBER_OF_ORACLES) and player:getQuestStatus(OUTLANDS,SOUL_SEARCHING) == QUEST_AVALIABLE) then
+		player:addQuest(OUTLANDS,SOUL_SEARCHING);
+		player:startEvent(0x00CA)
 	elseif(player:hasCompletedMission(ZILART,HEADSTONE_PILGRIMAGE)) then
 		player:messageSpecial(ZILART_MONUMENT);
 	else
@@ -69,8 +76,17 @@ end;
 function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
-	
-	if(csid == 0x00C8 and option == 1) then
+	if(csid == 0x00CA) then
+		if (player:getFreeSlotsCount() == 0) then
+			player:messageSpecial(ITEM_CANNOT_BE_OBTAINED,13416);
+		else
+			player:addItem(13416);
+			player:messageSpecial(ITEM_OBTAINED,13416);
+			player:completeQuest(OUTLANDS,SOUL_SEARCHING);
+			player:addFame(OUTLANDS,30);
+			player:addTitle(280);
+		end
+	elseif(csid == 0x00C8 and option == 1) then
 		SpawnMob(17272839,300):updateEnmity(player); -- Doomed Pilgrims
 		SetServerVariable("[ZM4]Light_Headstone_Active",0);
 	end

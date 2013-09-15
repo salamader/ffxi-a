@@ -9,12 +9,14 @@ package.loaded["scripts/zones/Windurst_Woods/TextIDs"] = nil;
 -----------------------------------
 require("scripts/globals/settings");
 require("scripts/zones/Windurst_Woods/TextIDs");
+require("scripts/globals/festivals");
 
 -----------------------------------
 -- onTrade Action
 -----------------------------------
 
 function onTrade(player,npc,trade)
+	onHalloweenTrade(player,trade,npc);
 end;
 
 -----------------------------------

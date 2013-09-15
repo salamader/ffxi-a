@@ -40,6 +40,10 @@ function onTrigger(player,npc)
 		player:startEvent(0x00D6);
 	elseif(CurrentMission == THE_SHADOW_AWAITS and player:hasKeyItem(SHADOW_FRAGMENT)) then
 		player:startEvent(0x00D8);
+	elseif(player:getCurrentMission(WINDURST) == SAINTLY_INVITATION and player:getVar("WINDURST62") == 0)then
+		player:startEvent(0x0136);
+	elseif(player:getCurrentMission(WINDURST) == SAINTLY_INVITATION and player:getVar("WINDURST62") == 3)then
+		player:startEvent(0x0138);
 	else
 		player:startEvent(0x009A);
 	end
@@ -69,6 +73,11 @@ printf("RESULT: %u",option);
 		player:delKeyItem(STAR_CRESTED_SUMMONS);
 		player:addKeyItem(LETTER_TO_THE_AMBASSADOR);
 		player:messageSpecial(KEYITEM_OBTAINED,LETTER_TO_THE_AMBASSADOR);
+	elseif(csid == 0x0136)then
+		player:setVar("WINDURST62",1);
+		player:addTitle(HERO_ON_BEHALF_OF_WINDURST);
+		player:addKeyItem(HOLY_ONES_INVITATION);
+		player:messageSpecial(KEYITEM_OBTAINED,HOLY_ONES_INVITATION);
 	elseif(csid == 0x00A6 or csid == 0x00BE) then
 		if(option == 0) then
 			player:addMission(WINDURST,THE_FINAL_SEAL);
@@ -83,6 +92,13 @@ printf("RESULT: %u",option);
 		player:addTitle(STARORDAINED_WARRIOR);
 	elseif(csid == 0x00C0 or csid == 0x00D8) then
 		finishMissionTimeline(player,1,csid,option);
+	elseif(csid == 0x0138)then
+		player:setVar("WINDURST62",0);
+		player:delKeyItem(HOLY_ONES_OATH);
+		player:completeMission(WINDURST,SAINTLY_INVITATION);
+		player:setRank(7);
+		player:addGil(GIL_RATE*40000);
+		player:setRankPoints(0);
 	end
 	
 end;

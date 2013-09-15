@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Tornado 2
+-- Spell: Tornado II
 -- Deals wind damage to an enemy.
 -----------------------------------------
 

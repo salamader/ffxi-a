@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Aeroga
+-- Spell: Aeroga II
 -- Deals wind damage to an enemy.
 -----------------------------------------
 

@@ -1,8 +1,9 @@
 -----------------------------------
 -- Area: Beadeaux
--- NPC:  ???
+-- NPC:  The Mute
 -- @zone 147
 -- @pos -166.230 -1 -73.685
+-- @pos <many>
 -----------------------------------
 package.loaded["scripts/zones/Beadeaux/TextIDs"] = nil;
 -----------------------------------

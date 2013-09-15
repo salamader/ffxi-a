@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Barsleepra
+-- Spell: Barsleep
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -27,7 +27,20 @@ function onSpellCast(caster,target,spell)
         duration = duration * 3;
     end
 
+	-- Estoqueurs Bonus
+	duration = duration + (duration * caster:getMod(MOD_ENHANCING_DUR));
+	
+	local extraBarspellEffect = 0;
+	local body = caster:getEquipID(SLOT_BODY);
 
-    target:addStatusEffect(EFFECT_BARSLEEP,power,0,duration,0,1);
+	if(caster:hasStatusEffect(EFFECT_AFFLATUS_SOLACE) == true) then
+		if(body == 11186) then -- Orison Bliaud +1
+			extraBarspellEffect = extraBarspellEffect + 5;
+		elseif(body == 11086) then -- Orison Bliaud +2
+			extraBarspellEffect = extraBarspellEffect + 10;
+		end
+	end
+
+    target:addStatusEffect(EFFECT_BARSLEEP,power,0,duration,0,1,extraBarspellEffect);
     return EFFECT_BARSLEEP;
 end;

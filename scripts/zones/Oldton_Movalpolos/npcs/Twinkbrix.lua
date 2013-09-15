@@ -1,11 +1,9 @@
 -----------------------------------
 --  Area: Oldton Movalpolos
---   NPC: Twinkbrix
+--  NPC: Twinkbrix
 --  Type: Warp NPC
--- @zone: 11
+--  @zone: 11
 --  @pos: -292.779 6.999 -263.153
--- 
--- Auto-Script: Requires Verification (Verified by Brawndo)
 -----------------------------------
 package.loaded["scripts/zones/Oldton_Movalpolos/TextIDs"] = nil;
 -----------------------------------

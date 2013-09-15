@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 5791
--- Item: shining_trout
--- Food Effect: 5Min, Mithra only
+-- Item: Shining Trout
+-- Food Effect: 5 Min, Mithra only
 -----------------------------------------
 -- Dexterity 2
 -- Mind -4

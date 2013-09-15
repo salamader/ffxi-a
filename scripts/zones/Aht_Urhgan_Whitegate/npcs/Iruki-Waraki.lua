@@ -1,19 +1,20 @@
 -----------------------------------
 --  Area: Aht Urhgan Whitegate
---   NPC: Iruki-Waraki
+--  NPC: Iruki-Waraki
 --  Type: Standard NPC
--- Involved in quest: No Strings Attached
--- @zone: 50
+--  Involved in quest: No Strings
+--  Attached
+--  @zone: 50
 --  @pos: 101.329 -6.999 -29.042
--- 
--- Auto-Script: Requires Verification (Verified by Brawndo)
 -----------------------------------
 package.loaded["scripts/zones/Aht_Urhgan_Whitegate/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/settings");
 require("scripts/globals/quests");
 require("scripts/globals/titles");
 require("scripts/zones/Aht_Urhgan_Whitegate/TextIDs");
+
 -----------------------------------
 -- onTrade Action
 -----------------------------------

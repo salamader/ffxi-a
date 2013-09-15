@@ -10,7 +10,7 @@
 function onMobDeath(mob,killer)	
   
     -- Set Goblinsavior Heronox's Window Open Time
-    wait = math.random((10800),(18000));  -- 3-5 hours
+    wait = math.random((3600),(14400));  -- 1-4 hours
     SetServerVariable("[POP]Goblinsavior_Heronox", os.time(t) + wait);
     DeterMob(mob:getID(), true);
     

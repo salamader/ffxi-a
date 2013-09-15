@@ -1,9 +1,10 @@
 -----------------------------------
 -- Area: Southern San d'Oria
 -- NPC:  Femitte
--- Involved in Quest: Lure of the Wildcat (San d'Oria)
--- @pos -17 2 10 230
---  Involved in Quest: Distant Loyalties
+-- Quest: Lure of the Wildcat(Sand.)
+-- @zone 230
+-- @pos -17 2 10
+-- Quest: Distant Loyalties
 -------------------------------------
 package.loaded["scripts/zones/Southern_San_dOria/TextIDs"] = nil;
 -----------------------------------

@@ -52,15 +52,16 @@ end;
 function onEventFinish(player,csid,option)
 --print("CSID:",csid);
 --print("OPTION:",option);
-
+    local durationMod = 0;
+    durationMod = player:getMod(MOD_CHOCOBO_TIME) * 60;
     local price = 100;
 
 	if (csid == 0x0258 and option == 0) then
         if (player:delGil(price)) then
             if (player:getMainLvl() >= 20) then
-                player:addStatusEffectEx(EFFECT_CHOCOBO,EFFECT_CHOCOBO,1,0,1800,true);
+                player:addStatusEffectEx(EFFECT_CHOCOBO,EFFECT_CHOCOBO,1,0,(1800 + durationMod),true);
             else
-                player:addStatusEffectEx(EFFECT_CHOCOBO,EFFECT_CHOCOBO,1,0,900,true);
+                player:addStatusEffectEx(EFFECT_CHOCOBO,EFFECT_CHOCOBO,1,0,(900 + durationMod),true);
             end
             player:setPos(-126,-62,274,0x65,0x64);
         end

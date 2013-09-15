@@ -43,6 +43,10 @@ function onZoneIn(player,prevZone)
 			player:setVar("PlayerMainJob",0);	
 		end		
 	end			
+
+	--if (player:getVar("ABYSSEA_A_JOURNEY_BEGINS") == 0) then
+	--	cs = 0x0144;
+	--end
 	return cs;			
 end;				
 
@@ -89,5 +93,9 @@ function onEventFinish(player,csid,option)
 	elseif (csid == 0x7534 and option == 0) then	
 		player:setHomePoint();
 		player:messageSpecial(HOMEPOINT_SET);
-	end	
+	elseif (csid == 0x0144) then
+		player:completeQuest(ABYSSEA,A_JOURNEY_BEGINS);
+		player:addQuest(ABYSSEA,THE_TRUTH_BECKONS);
+		player:setVar("ABYSSEA_A_JOURNEY_BEGINS",1);
+	end
 end;		

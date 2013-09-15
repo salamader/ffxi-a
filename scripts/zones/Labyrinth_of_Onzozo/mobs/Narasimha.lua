@@ -10,7 +10,7 @@
 function onMobDeath(mob,killer)
 
     -- Set Narasimha's Window Open Time
-    wait = math.random((21600),(36000)); -- 6-10 hours
+    wait = math.random((3600),(14400)); -- 1-4 hours
     DeterMob(mob:getID(), true);
 
     -- Set PH back to normal, then set to respawn spawn

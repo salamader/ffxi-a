@@ -1,6 +1,7 @@
 -----------------------------------
---  Area: Jugner Forest (104)
---   Mob: Fraelissa
+-- Area: Jugner Forest (104)
+-- Mob: Fraelissa
+-- @zone 104
 -- @pos 9.320 -0.493 -371.654 104
 -----------------------------------
 

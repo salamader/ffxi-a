@@ -3,14 +3,16 @@
 -- Zone: Northern_San_dOria (231)
 --
 -----------------------------------
-
 package.loaded["scripts/zones/Northern_San_dOria/TextIDs"] = nil;
+-----------------------------------
+
 require("scripts/globals/server");
 require("scripts/globals/settings");
 require("scripts/globals/titles");
 require("scripts/globals/quests");
 require("scripts/zones/Northern_San_dOria/TextIDs");
 require("scripts/globals/missions");
+
 -----------------------------------
 -- onInitialize
 -----------------------------------
@@ -47,6 +49,8 @@ function onZoneIn(player,prevZone)
 	elseif(player:getCurrentMission(COP) == THE_ROAD_FORKS and player:getVar("EMERALD_WATERS_Status") == 1)then --EMERALD_WATERS-- COP 3-3A: San d'Oria Route
 		player:setVar("EMERALD_WATERS_Status",2);
 		cs = 0x000E;
+	elseif(player:hasCompletedMission(SANDORIA,COMING_OF_AGE) and tonumber(os.date("%j")) == player:getVar("Wait1DayM8-1_date")) then
+		cs = 0x0010;
 	end		
 	return cs;	
 end;		
@@ -106,6 +110,9 @@ function onEventFinish(player,csid,option)
 		player:messageSpecial(ITEM_OBTAINED, 12513); -- Warlock's Chapeau
 		player:setVar("peaceForTheSpiritCS",0);
 		player:addFame(SANDORIA,AF3_FAME);
-		player:completeQuest(SANDORIA,PEACE_FOR_THE_SPIRIT);	 
+		player:completeQuest(SANDORIA,PEACE_FOR_THE_SPIRIT);	
+	elseif(csid == 0x0010) then
+		player:setVar("Wait1DayM8-1_date",0);
+		player:setVar("Mission8-1Completed",1);
 	end	
 end;		

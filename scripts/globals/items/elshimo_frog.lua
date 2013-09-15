@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4290
--- Item: elshimo_frog
--- Food Effect: 5Min, Mithra only
+-- Item: Elshimo Frog
+-- Food Effect: 5 Min, Mithra only
 -----------------------------------------
 -- Dexterity 2
 -- Agility 2

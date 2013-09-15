@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4288
 -- Item: Zebra Eel
--- Food Effect: 5Min, Mithra only
+-- Food Effect: 5 Min, Mithra only
 -----------------------------------------
 -- Dexterity 2
 -- Mind -4

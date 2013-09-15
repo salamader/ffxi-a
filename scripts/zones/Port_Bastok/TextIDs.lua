@@ -22,12 +22,17 @@ CONQUEST =  7796; --You've earned conquest points!
 -- Dialog Texts
 POWHATAN_DIALOG_1 =  7065; --I'm sick and tired of entertaining guests.
    RONAN_DIALOG_1 =  7251; --Do something! Isn't there anything you can do to make him come out of his shell?
+  DAHJAL_DIALOG_1 =  7376; --You guys must've worked real hard. Bastok is a much nicer place now than when I left it. I wish I could go back to bashing monsters again, like in the old days.<Prompt>
+   MOKOP_SANKOP_1 =  7380; --The food here's terrrible! C'mon, Windurrrstians, work harder! I miss Windurstian cuisine!<Prompt>
+    CHEH_RAIHAH_1 =  7381; --Like to see my new knife trrrick? Good, but keep your distance if you value your various extremities and bodily protrusions!<Prompt>
+   NALTA_DIALOG_1 =  7383; --... (I'm a mime.)<Prompt>
  PAUJEAN_DIALOG_1 =  7442; --Where can you find them? If you're the kind of adventurer I think you are, you should have a pretty good idea.
      UNLOCK_NINJA =  8223; --You can now become a ninja.
    TITAN_UNLOCKED =  8328; --You are now able to summon <<<Multiple Choice (Parameter 2)>>>
 
 -- Shop Texts
   TENSHODO_SHOP_OPEN_DIALOG =  6641; --Ah, one of our members.\nWelcome to the Tenshodo shop.
+TENSHODO_SHOP_CLOSED_DIALOG =  6637; --I have nothing to sell you.<Prompt>
   
        EVELYN_CLOSED_DIALOG =  7370; --I'm trying to start a business selling goods from Gustaberg,
      ROSSWALD_CLOSED_DIALOG =  7371; --I'm trying to start a business selling goods from Zulkheim,

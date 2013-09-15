@@ -48,7 +48,6 @@ end;
 function onEventFinish(player,csid,option)
 -- printf("CSID: %u",csid);
 -- printf("RESULT: %u",option);
-
 	if(csid == 0x0390) then
 		player:setVar("PromathiaStatus",2);
 		player:setPos(-267.194, -40.634, -280.019, 0, 14); -- teleport to zone 14

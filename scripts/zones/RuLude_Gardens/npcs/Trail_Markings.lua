@@ -4,13 +4,13 @@
 -- Dynamis-Jeuno Enter
 -- @pos 35 9 -51 243
 -----------------------------------
-package.loaded["scripts/zones/Rulude_Gardens/TextIDs"] = nil;
+package.loaded["scripts/zones/RuLude_Gardens/TextIDs"] = nil;
 -----------------------------------
 
 require("scripts/globals/settings");
 require("scripts/globals/keyitems");
 require("scripts/globals/dynamis");
-require("scripts/zones/Rulude_Gardens/TextIDs");
+require("scripts/zones/RuLude_Gardens/TextIDs");
 
 -----------------------------------
 -- onTrade Action
@@ -29,7 +29,7 @@ function onTrigger(player,npc)
 		player:startEvent(0x2720); -- cs with Cornelia
 	elseif(player:getVar("DynaJeuno_Win") == 1) then
 		player:startEvent(0x272a,HYDRA_CORPS_TACTICAL_MAP); -- Win CS
-	elseif(player:hasKeyItem(VIAL_OF_SHROUDED_SAND)) then
+	elseif(player:hasKeyItem(VIAL_OF_SHROUDED_SAND)) then -- and player:hasKeyItem(PRISMATIC_HOURGLASS)) then
 		local firstDyna = 0;
 		local realDay = os.time();
 		local dynaWaitxDay = player:getVar("dynaWaitxDay");

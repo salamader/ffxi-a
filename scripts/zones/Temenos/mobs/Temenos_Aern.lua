@@ -1,9 +1,10 @@
 -----------------------------------
 -- Area: Temenos	
--- NPC: Temenos_Aern
+-- NPC: Temenos Aern
 -----------------------------------
 package.loaded["scripts/zones/Temenos/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Temenos/TextIDs");
 

@@ -3,7 +3,7 @@
 -- Zone: Mine_Shaft_2716 (13)
 --
 -----------------------------------
-
+-- BCNM area -39 0 -98 253
 package.loaded["scripts/zones/Mine_Shaft_2716/TextIDs"] = nil;
 require("scripts/globals/settings");
 require("scripts/zones/Mine_Shaft_2716/TextIDs");

@@ -7,6 +7,7 @@ package.loaded["scripts/zones/Qufim_Island/TextIDs"] = nil;
 -----------------------------------
 
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Qufim_Island/TextIDs");
 
 -----------------------------------
@@ -21,9 +22,9 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-
-	currentTime = VanadielHour();
-
+	
+	local currentTime = VanadielHour();
+	
 	if(currentTime >= 22 or currentTime <= 6) then
 		if(player:getQuestStatus(JEUNO,SAVE_MY_SON) == QUEST_ACCEPTED and player:getVar("SaveMySon_Event") == 0) then
 			player:startEvent(0x0000);
@@ -55,6 +56,7 @@ function onEventFinish(player,csid,option)
 
 	if(csid == 0x0000) then
 		player:setVar("SaveMySon_Event",1);
+		debugTeleport(player,17780840); -- _6t2
 	end
-
+	
 end;

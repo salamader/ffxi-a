@@ -2,8 +2,7 @@
 -- Ability: Eagle Eye Shot
 -----------------------------------
 
-require("scripts/globals/settings");
-require("scripts/globals/status");
+-- NOTE: THIS SCRIPT IS CURRENTLY IGNORED.  See ai_char_normal:ActionJobAbilityStart()
 
 -----------------------------------
 -- OnUseAbility

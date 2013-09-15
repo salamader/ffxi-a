@@ -1,10 +1,10 @@
 -----------------------------------
 -- Area: Temenos N T	
--- NPC:  Kindred_Warrior
-
+-- NPC:  Kindred Warrior
 -----------------------------------
 package.loaded["scripts/zones/Temenos/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Temenos/TextIDs");
 

@@ -1,6 +1,6 @@
 -----------------------------------
--- Area:  Misareaux Coast
---   Boggelmann
+-- Area:  Misareaux Coast (25)
+-- Mob: Boggelmann
 -----------------------------------
 
 -----------------------------------

@@ -32,10 +32,6 @@ event  = 0x014e;
 	player:startEvent(event,player:getZone(),0,accept);
 end;
 
-function toExplorerMoogle(player,zone)
-player:toExplorerMoogle(zone);
-end;
-
 -----------------------------------
 -- onEventUpdate
 -----------------------------------

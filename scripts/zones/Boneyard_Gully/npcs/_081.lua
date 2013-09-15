@@ -1,6 +1,7 @@
 -----------------------------------
 -- Area: Boneyard_Gully
 -- NPC:  Dark Miasma
+-- @pos -616 -1 503
 -----------------------------------
 package.loaded["scripts/zones/Boneyard_Gully/TextIDs"] = nil;
 -----------------------------------

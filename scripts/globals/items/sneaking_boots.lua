@@ -1,7 +1,8 @@
 -----------------------------------------
 --  ID: 15320
---  Powder Boots
---  Enchantment: "Flee"
+--  Item: Sneaking Boots
+--  Enchantment: Sneak
+--  Charges: 15  Recast: 60 Mins
 -----------------------------------------
 
 -----------------------------------------
@@ -16,6 +17,8 @@ end;
 -----------------------------------------
 
 function onItemUse(target)
-    target:delStatusEffect(EFFECT_SNEAK);
-    target:addStatusEffect(EFFECT_SNEAK,1,0,180);
+	local duration = 180;
+	duration = duration + (duration * target:getMod(MOD_SNEAK_DUR));
+	target:delStatusEffect(EFFECT_SNEAK);
+	target:addStatusEffect(EFFECT_SNEAK,1,0,duration);
 end;

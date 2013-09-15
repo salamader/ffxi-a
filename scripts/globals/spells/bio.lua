@@ -1,6 +1,8 @@
 -----------------------------------------
 -- Spell: Bio
--- Deals dark damage that weakens an enemy's attacks and gruadually reduces its HP.
+-- Deals dark damage that weakens an 
+-- enemy's attacks and gruadually reduces
+-- its HP.
 -----------------------------------------
 
 require("scripts/globals/settings");
@@ -21,9 +23,9 @@ function onSpellCast(caster,target,spell)
 	local basedmg = caster:getSkillLevel(DARK_MAGIC_SKILL) / 4;
 	local dmg = calculateMagicDamage(basedmg,1,caster,spell,target,DARK_MAGIC_SKILL,MOD_INT,false);
 
-	-- Softcaps at 15, should always do at least 1
-	if(dmg > 15) then
-		dmg = 15;
+	-- Softcaps at 10, should always do at least 1
+	if(dmg > 10) then
+		dmg = 10;
 	end
 	if(dmg < 1) then
 		dmg = 1;

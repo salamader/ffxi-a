@@ -34,7 +34,6 @@ end;
 
 function onMobDeath(mob,killer)
 	
-	if(alreadyReceived(killer,8) == false) then
 		addDynamisList(killer,128);
 		
 		killer:addTitle(DYNAMISSAN_DORIA_INTERLOPER); -- Add title
@@ -44,6 +43,5 @@ function onMobDeath(mob,killer)
 		npc:setStatus(0);
 		
 		killer:launchDynamisSecondPart(); -- Spawn dynamis second part
-	end
 	
 end;

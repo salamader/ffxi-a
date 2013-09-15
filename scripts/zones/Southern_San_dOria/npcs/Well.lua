@@ -32,7 +32,8 @@ end;
 -- onTrigger Action 
 -----------------------------------
  
-function onTrigger(player,npc) 
+function onTrigger(player,npc)
+	player:showText(player,NOTHING_OUT_OF_ORDINARY);
 end; 
 
 -----------------------------------

@@ -19,7 +19,7 @@ end;
 function onMobDeath(mob, killer)
     killer:addTitle(DRAGON_ASHER);
     
-    -- Set ASh Dragon's spawnpoint and respawn time (3-5 Days)
+    -- Set ASh Dragon's spawnpoint and respawn time (4-8 hours)
     UpdateNMSpawnPoint(mob:getID());
-    mob:setRespawnTime(math.random((259200),(432000)));
+    mob:setRespawnTime(math.random((14400),(28800)));
 end;

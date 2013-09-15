@@ -1,23 +1,42 @@
 -----------------------------------
--- Area: Dynamis Beaucedine
--- NPC:  Dynamis Tombstone
--- Trigger for Fire Pukis respawn
+--  Area: Dynamis - Beaucedine (134)
+--   Mob: Dynamis_Tombstone
 -----------------------------------
+
+-- require("scripts/zones/Dynamis-Beaucedine/MobIDs");
+
+-----------------------------------
+-- onMobInitialize
+-----------------------------------
+
+function onMobInitialize(mob)	
+end;
+
+-----------------------------------
+-- onMobSpawn
+-----------------------------------
+
+function onMobSpawn(mob)	
+end;
 
 -----------------------------------
 -- onMobEngaged
 -----------------------------------
 
-function onMobEngaged(mob,target)
-	SpawnMob(17326273):updateEnmity(target);
-	SpawnMob(17326255):updateEnmity(target);
-	SpawnMob(17326212):updateEnmity(target);
-	SpawnMob(17326237):updateEnmity(target);
+function onMobEngaged(mob,target)	
+end;
+
+-----------------------------------
+-- onMobFight
+-----------------------------------
+
+function onMobFight(mob,target)	
 end;
 
 -----------------------------------
 -- onMobDeath
 -----------------------------------
 
-function onMobDeath(mob,killer)
+function onMobDeath(mob,killer)	
 end;
+

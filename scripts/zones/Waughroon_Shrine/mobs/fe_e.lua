@@ -1,19 +1,42 @@
 -----------------------------------
--- Area: Waughroon Shrine
--- NPC:  fe_e
+--  Area: Waughroon Shrine (144)
+--   Mob: Fe_e
 -----------------------------------
 
+-- require("scripts/zones/Waughroon_Shrine/MobIDs");
 
 -----------------------------------
--- onMobSpawn Action
+-- onMobInitialize
 -----------------------------------
 
-function OnMobSpawn(mob)
+function onMobInitialize(mob)	
 end;
 
 -----------------------------------
--- onMobDeath Action
+-- onMobSpawn
 -----------------------------------
 
-function onMobDeath(mob,killer)
+function onMobSpawn(mob)	
 end;
+
+-----------------------------------
+-- onMobEngaged
+-----------------------------------
+
+function onMobEngaged(mob,target)	
+end;
+
+-----------------------------------
+-- onMobFight
+-----------------------------------
+
+function onMobFight(mob,target)	
+end;
+
+-----------------------------------
+-- onMobDeath
+-----------------------------------
+
+function onMobDeath(mob,killer)	
+end;
+

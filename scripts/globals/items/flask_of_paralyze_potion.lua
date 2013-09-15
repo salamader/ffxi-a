@@ -1,7 +1,7 @@
 -----------------------------------------
--- ID: 4162
--- Item: Silencing Potion
--- Item Effect: This potion induces silence.
+-- ID: 4159
+-- Item: Flask of Paralyze Potion
+-- Item Effect: This potion induces paralysis.
 -----------------------------------------
 
 require("scripts/globals/status");

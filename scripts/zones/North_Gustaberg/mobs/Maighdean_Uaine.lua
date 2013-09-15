@@ -12,8 +12,8 @@ require("/scripts/globals/fieldsofvalor");
 function onMobDeath(mob,killer)	
 
     -- Set Maighdean_Uaine's Window Open Time
-    wait = math.random((900),(10800))
-    SetServerVariable("[POP]Maighdean_Uaine", os.time(t) + wait); -- 15-180 minutes
+    wait = math.random((1440),(3600))
+    SetServerVariable("[POP]Maighdean_Uaine", os.time(t) + wait); -- 24min-1hr
     DeterMob(mob:getID(), true);
 
     -- Set PH back to normal, then set to respawn spawn

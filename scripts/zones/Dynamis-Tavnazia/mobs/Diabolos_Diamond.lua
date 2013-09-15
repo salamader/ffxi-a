@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: 
--- NPC:  Diabolos_Diamond
+-- Area: Dynamis Tavnazia
+-- NPC:  Diabolos Diamond
 -----------------------------------
 -----------------------------------
 

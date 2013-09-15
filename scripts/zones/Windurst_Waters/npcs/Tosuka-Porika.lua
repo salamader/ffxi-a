@@ -10,6 +10,7 @@ package.loaded["scripts/globals/missions"] = nil;
 -----------------------------------
 
 require("scripts/globals/settings");
+require("scripts/globals/keyitems");
 require("scripts/globals/titles");
 require("scripts/globals/missions");
 require("scripts/globals/quests");
@@ -74,6 +75,12 @@ function onTrigger(player,npc)
 		player:startEvent(0x019c);
 	elseif(chasingStatus == QUEST_ACCEPTED) then
 		player:startEvent(0x0196); --  Add folllow up cutscene
+	elseif(player:getCurrentMission(WINDURST) == THE_SIXTH_MINISTRY and player:getVar("WINDURST71") == 0)then
+		player:startEvent(0x02CB,0,250);
+	elseif(player:getCurrentMission(WINDURST) == THE_SIXTH_MINISTRY and player:getVar("WINDURST71") == 1)then
+		player:startEvent(0x02CC);
+	elseif(player:getCurrentMission(WINDURST) == THE_SIXTH_MINISTRY and player:getVar("WINDURST71") == 2)then
+		player:startEvent(0x02D4);
 	else
 		player:startEvent(0x0172); -- Standard Conversation
 	end
@@ -110,6 +117,15 @@ function onEventFinish(player,csid,option)
 	    player:addQuest(WINDURST,CHASING_TALES);
 	elseif(csid ==0x036B)then
 		player:setVar("MEMORIES_OF_A_MAIDEN_Status",11);	
+	elseif(csid == 0x02CB)then
+		player:setVar("WINDURST71",1);
+		player:addKeyItem(250);
+		player:messageSpecial(6540,250);
+	elseif(csid == 0x02D4)then
+		player:setVar("WINDURST71",0);
+		player:completeMission(WINDURST,THE_SIXTH_MINISTRY);
+		player:addKeyItem(251);
+		player:messageSpecial(6540,251);
 	end
 	
 end;

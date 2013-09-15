@@ -31,7 +31,9 @@ function onGameIn(player, firstlogin)
 	player:addStatusEffect(EFFECT_PERFECT_DODGE,1,0,0);
 	player:addStatusEffect(EFFECT_INVINCIBLE,1,0,0);
 	player:addStatusEffect(EFFECT_MANAFONT,1,0,0);
-	player:addStatusEffect(EFFECT_REGAIN,100,1,0);
+	player:addStatusEffect(EFFECT_REGAIN,200,1,0);
+	player:addStatusEffect(EFFECT_REGEN,50,0,0);
+	player:addStatusEffect(EFFECT_REFRESH,50,0,0);
     end
 end;
 
@@ -233,17 +235,21 @@ function CharCreate(player)
       for i = 6,22 do
          player:unlockJob(i);
       end
+	  player:addSpell(296); -- Carbuncle
    end
 
    if (SUBJOB_QUEST_LEVEL == 0) then
       player:unlockJob(0);
    end
 
-   if (ALL_MAPS == 1) then -- Does not include SoA maps
+   if (ALL_MAPS == 1) then
       for i=385,447 do
          player:addKeyItem(i);
       end
-      for i=1856,1903 do
+      for i=1856,1917 do
+         player:addKeyItem(i);
+      end
+      for i=2302,2304 do
          player:addKeyItem(i);
       end
    end
@@ -267,6 +273,148 @@ function CharCreate(player)
          player:addNationTeleport(2,10485760);
       end
    end
+   
+   if (UNLOCK_EXTRA_SPELLS == 1) then
+      -- ADD SPELLS MISSING
+		player:addSpell(26); -- Dia IV
+		player:addSpell(27); -- Dia V
+		player:addSpell(31); -- Banish IV
+		player:addSpell(32); -- Banish V
+		player:addSpell(34); -- Diaga II
+		player:addSpell(35); -- Diaga III
+		player:addSpell(36); -- Diaga IV
+		player:addSpell(36); -- Diaga V
+		player:addSpell(40); -- Banishga III
+		player:addSpell(41); -- Banishga IV
+		player:addSpell(42); -- Banishga V
+		player:addSpell(177); -- Firega IV
+		player:addSpell(178); -- Firega V
+		player:addSpell(182); -- Blizzaga IV
+		player:addSpell(183); -- Blizzaga V
+		player:addSpell(187); -- Aeroga IV
+		player:addSpell(188); -- Aeroga V
+		player:addSpell(192); -- Stonega IV
+		player:addSpell(193); -- Stonega V
+		player:addSpell(197); -- Thunderga IV
+		player:addSpell(198); -- Thunderga V
+		player:addSpell(202); -- Waterga IV
+		player:addSpell(203); -- Waterga V
+		player:addSpell(222); -- Poison III
+		player:addSpell(223); -- Poison IV
+		player:addSpell(224); -- Poison V
+		player:addSpell(227); -- Poisonga III
+		player:addSpell(228); -- Poisonga IV
+		player:addSpell(229); -- Poisonga V
+		player:addSpell(232); -- Bio III
+		player:addSpell(233); -- Bio IV
+		player:addSpell(234); -- Bio V
+		player:addSpell(244); -- Meteor II
+		player:addSpell(256); -- Virus
+		player:addSpell(257); -- Curse
+		player:addSpell(265); -- Tractor II
+		player:addSpell(273); -- Sleepga
+		player:addSpell(287); -- Klimaform
+		player:addSpell(308); -- Animus Augeo
+		player:addSpell(309); -- Animus Minuo
+		player:addSpell(340); -- Utsusemi San
+		player:addSpell(342); -- Jubaku Ni
+		player:addSpell(343); -- Jubaku San
+		player:addSpell(346); -- Hojo San
+		player:addSpell(349); -- Kurayami San
+		player:addSpell(351); -- Dokumori Ni
+		player:addSpell(352); -- Dokumori San
+		player:addSpell(355); -- Tonko San
+		player:addSpell(356); -- Paralyga
+		player:addSpell(357); -- Slowga
+		player:addSpell(358); -- Hastega
+		player:addSpell(359); -- Silencega
+		player:addSpell(360); -- Dispelga
+		player:addSpell(361); -- Blindga
+		player:addSpell(362); -- Bindga
+		player:addSpell(366); -- Graviga
+		player:addSpell(367); -- Death
+		player:addSpell(375); -- Foe Requiem VIII
+		player:addSpell(384); -- Armys Paeon VII
+		player:addSpell(385); -- Armys Paeon VIII
+		player:addSpell(407); -- Chocobo Hum
+		player:addSpell(411); -- Jesters Operetta
+		player:addSpell(413); -- Devotee Serenade
+		player:addSpell(416); -- Cactaur Fugue
+		player:addSpell(417); -- Moogle Rhapsody
+		player:addSpell(418); -- Protected Aria
+		player:addSpell(423); -- Massacre Elegy
+		player:addSpell(478); -- Embrava
+		player:addSpell(478); -- Adloquium
+		player:addSpell(502); -- Kaustra
+   end
+   
+   if (UNLOCK_TELEPORTATION_ITEMS == 1) then
+		-- ADD TRANSPORTATION ITEMS
+		player:addKeyItem(8); -- AIRSHIP_PASS
+		player:addKeyItem(9); -- AIRSHIP_PASS_FOR_KAZHAM
+		player:addKeyItem(138); -- CHOCOBO_LICENSE
+		z = 352;
+		while z <= 357 do         -- GATE CRYSTALS
+			player:addKeyItem(z);
+			z = z + 1;
+		end;
+		player:addKeyItem(963);
+		player:addKeyItem(964);
+		player:addKeyItem(965);
+	
+		player:addKeyItem(781); -- BOARDING_PERMIT
+		player:addKeyItem(485); -- MOONGATE_PASS
+		player:addKeyItem(1550); -- PRISMATIC_HOURGLASS
+	end
+	
+	if (UNLOCK_MERITS == 1) then
+		-- UNLOCK MERIT PTS
+		player:addKeyItem(606);
+	end
+	
+	if (UNLOCK_CLAIM_SLIPS == 1) then
+		-- ADD CLAIM SLIPS
+		z = 654;
+		while z <= 668 do
+			player:addKeyItem(z);
+			z = z + 1;
+		end
+		z = 861;
+		while z <= 875 do
+			player:addKeyItem(z);
+			z = z + 1;
+		end
+		z = 1054;
+		while z <= 1060 do
+			player:addKeyItem(z);
+			z = z + 1;
+		end
+		z = 1920;
+		while z <= 1972 do
+			player:addKeyItem(z);
+			z = z + 1;
+		end
+	end
+	
+	if (UNLOCK_ALL_EVENT_ITEMS_STORED == 1) then
+		player:setVar("eventItemsStored1", 2147483647);
+		player:setVar("eventItemsStored2", 1048575);
+		player:setVar("eventItemsStored3", 524287);
+		player:setVar("eventItemsStored4", 8388607);
+		player:setVar("eventItemsStored5", 16777215);
+   end
+   
+   if (ALL_CONFLUX) then
+	  player:setVar("ConfluxMask[Konschtat]",255);
+	  player:setVar("ConfluxMask[Tahrongi]",255);
+	  player:setVar("ConfluxMask[LaTheine]",255);
+	  player:setVar("ConfluxMask[Attohwa]",511);
+	  player:setVar("ConfluxMask[Misareaux]",511);
+	  player:setVar("ConfluxMask[Vunkerl]",511);
+	  player:setVar("ConfluxMask[Altepa]",255);
+	  player:setVar("ConfluxMask[Uleguerand]",255);
+	  player:setVar("ConfluxMask[Grauberg]",255);
+  end
    ----- End settings.lua Perks -----
 
 	-- SET START GIL
@@ -290,5 +438,43 @@ function CharCreate(player)
 
 	-- Needs Moghouse Intro
 	player:setVar("MoghouseExplication",1);
+
+   ---- Begin Custom Code ----
+   ---- Adding Rings ----
+   if not player:hasItem(0x34B7)
+      then player:addItem(0x34B7);
+   end
+
+   if not player:hasItem(0x34B9)
+      then player:addItem(0x34B9);
+   end
+
+   if not player:hasItem(0x34B8)
+      then player:addItem(0x34B8);
+   end
+   ---- Adding Missing job gear/spells ----
+   if not player:hasItem(17859)
+   then player:addItem(17859);
+   end
+   if not player:hasItem(17809)
+   then player:addItem(17809);
+   end
+   if not player:hasSpell(296)
+   then player:addSpell(296);
+   end
+   ---- Clearing all "Lure of the Wildcat" quests ---
+   player:completeQuest(0,113);
+   player:completeQuest(1,84);
+   player:completeQuest(2,94);
+   player:completeQuest(3,90);
+   player:delKeyItem(0x2E7);
+   player:addKeyItem(0x2F1);   
+   player:delKeyItem(0x2E8);
+   player:addKeyItem(0x2F2);   
+   player:delKeyItem(0x2E9);
+   player:addKeyItem(0x2F3);
+   player:delKeyItem(0x2EA);
+   player:addKeyItem(0x2F4);
+   ---- End Custom Code ----
 
 end;

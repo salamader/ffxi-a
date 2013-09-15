@@ -3,12 +3,11 @@
 --   NPC: Kurando
 --  Type: Quest Giver
 -- @zone: 236
---  @pos: -23.887 3.898 0.870
---
--- Auto-Script: Requires Verification (Verified by Brawndo)
+--  @pos: -23.887, 3.898, 0.870
 -----------------------------------
 package.loaded["scripts/zones/Port_Bastok/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/zones/Port_Bastok/TextIDs");
 require("scripts/globals/quests");
 require("scripts/globals/titles");

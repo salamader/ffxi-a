@@ -1,7 +1,9 @@
 -----------------------------------
 -- Area: Northern San d'Oria
 -- NPC:  Grilau
--- @pos -241.987 6.999 57.887 231
+-- Type: Mission Starter
+-- @zone 231
+-- @pos -241.987, 6.999, 57.887
 -----------------------------------
 package.loaded["scripts/zones/Northern_San_dOria/TextIDs"] = nil;
 -----------------------------------
@@ -51,6 +53,8 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
+
+local PresOfPapsqueCompleted = player:hasCompletedMission(SANDORIA,PRESTIGE_OF_THE_PAPSQUE);
 	
 	if(player:getNation() ~= SANDORIA) then
 		player:startEvent(0x03f3); -- for Non-San d'Orians
@@ -76,8 +80,18 @@ function onTrigger(player,npc)
 		    player:startEvent(0x040f);
 		elseif(CurrentMission == RANPERRE_S_FINAL_REST and player:getVar("MissionStatus") == 9) then
 		    player:startEvent(0x0409);
+		elseif(pRank == 7 and player:getVar("SecretWeapon") == 0 and player:hasCompletedMission(0,18) == true) then
+		    player:startEvent(0x0411);
+		elseif(CurrentMission ~= THE_SECRET_WEAPON and pRank == 7 and PresOfPapsqueCompleted == true and getMissionRankPoints(player,19) == 1 and player:getVar("SecretWeaponStatus") == 0) then
+			player:startEvent(0x0034);
+		elseif(CurrentMission == THE_SECRET_WEAPON and player:getVar("SecretWeaponStatus") == 3) then
+			player:startEvent(0x0413);
 		elseif(CurrentMission ~= 255) then
 			player:startEvent(0x03e9); -- Have mission already activated
+		elseif(player:getCurrentMission(0,19) and player:getVar("MissionStatus") == 1) then
+		    player:startEvent(0x0413);
+		elseif(player:hasCompletedMission(0,20) and tonumber(os.date("%j")) == player:getVar("Wait1DayForM8-1_date")) then 
+            player:startEvent(0x0415);
 		else
 			mission_mask, repeat_mask = getMissionMask(player);
 			player:startEvent(0x03f1,mission_mask, 0, 0 ,0 ,0 ,repeat_mask); -- Mission List
@@ -113,7 +127,15 @@ function onEventFinish(player,csid,option)
 	elseif(csid == 0x040f) then
 	   player:setVar("MissionStatus",7);
 	   player:setVar("Wait1DayForRanperre_date",0);
-	elseif(csid == 0x0409) then
+	elseif(csid == 0x0411) then
+	   player:setVar("SecretWeapon",1);
+	elseif(csid == 0x0415) then
+	   player:setVar("WaitCS8-1",1);
+	elseif(csid == 0x0409 or csid == 0x0413) then
 	   finishMissionTimeline(player,2,csid,option);
+	elseif(csid == 0x0034) then
+		player:setVar("SecretWeaponStatus",1);
+	elseif(csid == 0x0413) then
+		finishMissionTimeline(player,2,csid,option);
 	end
 end;

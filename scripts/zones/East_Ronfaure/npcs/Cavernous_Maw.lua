@@ -1,7 +1,10 @@
 -----------------------------------
--- Cavernous Maw
--- Teleports Players to East Ronfaure [S]
--- @pos 322 -59 503 101
+-- Area: East Ronfaure
+-- Name: Cavernous Maw
+-- Teleports Players to East
+-- Ronfaure [S]
+-- @zone 101
+-- @pos 322, -59, 503
 -----------------------------------
 package.loaded["scripts/zones/East_Ronfaure/TextIDs"] = nil;
 -----------------------------------
@@ -24,13 +27,11 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	
 	if(ENABLE_WOTG == 1 and player:hasKeyItem(PURE_WHITE_FEATHER) and hasMawActivated(player,6)) then
 		player:startEvent(0x0388);
 	else
 		player:messageSpecial(NOTHING_HAPPENS);
 	end
-	
 end;
 
 -----------------------------------
@@ -49,9 +50,7 @@ end;
 function onEventFinish(player,csid,option)
 --print("CSID:",csid);
 --print("RESULT:",option);
-	
 	if(csid == 0x0388 and option == 1) then
 		toMaw(player,9);
 	end
-	
 end;

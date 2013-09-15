@@ -13,6 +13,7 @@ require("scripts/zones/Sauromugue_Champaign_[S]/TextIDs");
 -----------------------------------
 
 function onInitialize(zone)
+zone:registerRegion(1,361,5,-228,382,14,-223);
 end;
 
 -----------------------------------		
@@ -32,6 +33,9 @@ end;
 -----------------------------------		
 
 function onRegionEnter(player,region)	
+	if(player:getVar("WotgStatus") == 1)then
+		player:startEvent(0x02BC,2);
+	end
 end;	
 
 -----------------------------------	
@@ -41,6 +45,7 @@ end;
 function onEventUpdate(player,csid,option)	
 	--printf("CSID: %u",csid);
 	--printf("RESULT: %u",option);
+
 end;	
 
 -----------------------------------	
@@ -50,4 +55,9 @@ end;
 function onEventFinish(player,csid,option)	
 	--printf("CSID: %u",csid);
 	--printf("RESULT: %u",option);
+	if(csid ==0x02BC)then
+		player:completeMission(WOTG,CAVERNOUS_MAWS);
+		player:addMission(WOTG,BACK_TO_THE_BEGINNING);
+		player:setVar("WotgStatus",0);
+	end
 end;	

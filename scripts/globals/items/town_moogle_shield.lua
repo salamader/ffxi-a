@@ -4,6 +4,7 @@
 --	Enchantment: 60Min, Costume - Moogle
 -----------------------------------------
 
+require("scripts/globals/settings");
 require("scripts/globals/status");
 
 -----------------------------------------

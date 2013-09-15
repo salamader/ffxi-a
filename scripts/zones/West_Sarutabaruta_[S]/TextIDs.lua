@@ -9,3 +9,9 @@ ITEM_CANNOT_BE_OBTAINED = 6375; -- You cannot obtain the item <item> come back a
  
 -- Harvesting
 HARVESTING_IS_POSSIBLE_HERE = 7013; -- Harvesting is possible here if you have <item>
+
+--Quest Dialog
+REPAIR_0 = 7373;
+REPAIR_1 = 7371;
+REPAIR_2 = 7374;
+REPAIR_3 = 7372;

@@ -1,10 +1,10 @@
 -----------------------------------
 -- Area: Temenos E T	
--- NPC: Light_Elemental
-
+-- NPC: Light Elemental
 -----------------------------------
 package.loaded["scripts/zones/Temenos/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Temenos/TextIDs");
 

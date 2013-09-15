@@ -7,6 +7,9 @@
 package.loaded["scripts/zones/Alzadaal_Undersea_Ruins/TextIDs"] = nil;	
 require("scripts/globals/settings");	
 require("scripts/zones/Alzadaal_Undersea_Ruins/TextIDs");	
+require("scripts/globals/titles");
+require("scripts/globals/keyitems");
+require("scripts/globals/missions");
 
 -----------------------------------	
 -- onInitialize	
@@ -35,6 +38,8 @@ function onInitialize(zone)
 	zone:registerRegion(20, 550, -2, 522, 557, 0, 529);  -- map 11 west porter (white)	
 	zone:registerRegion(21,-556, -2,-489,-550, 0,-483);  -- map 12 east porter (white)	
 	zone:registerRegion(22,-610, -2,-489,-603, 0,-483);  -- map 12 west porter (blue)	
+	zone:registerRegion(23,382, -1,-582,399, 1,-572); --mission 9 TOAU
+
 end;		
 
 -----------------------------------		
@@ -44,7 +49,7 @@ end;
 function onZoneIn(player,prevZone)		
 	cs = -1;	
 	if ((player:getXPos() == 0) and (player:getYPos() == 0) and (player:getZPos() == 0)) then	
-		player:setPos(325,-6.5,-620,0);
+		player:setPos(223,0,19,127);
 	end	
 	return cs;
 end;	
@@ -122,6 +127,12 @@ function onRegionEnter(player,region)
 	[22] = function (x)
 	player:startEvent(0x00D2);
 	end,
+	[23] = function (x)
+	if(player:getCurrentMission(TOAU) == UNDERSEA_SCOUTING and player:getVar("TOAUM9") ==1)then
+		player:startEvent(0x0001);
+	end
+	end,
+
 	}
 end;	
 
@@ -148,4 +159,11 @@ end;
 function onEventFinish(player,csid,option)	
 	--printf("CSID: %u",csid);
 	--printf("RESULT: %u",option);
+	if(csid ==0x0001)then
+		player:addKeyItem(ASTRAL_COMPASS);
+		player:messageSpecial(KEYITEM_OBTAINED,ASTRAL_COMPASS);
+		player:setVar("TOAUM9",0);
+		player:completeMission(TOAU,UNDERSEA_SCOUTING);
+		player:addMission(TOAU,ASTRAL_WAVES);
+	end
 end;	

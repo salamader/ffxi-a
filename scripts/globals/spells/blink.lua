@@ -18,6 +18,9 @@ function onSpellCast(caster,target,spell)
 		duration = duration * 3;
 	end
 
+	-- Estoqueurs Bonus
+	duration = duration + (duration * caster:getMod(MOD_ENHANCING_DUR));
+	
 	if(target:addStatusEffect(EFFECT_BLINK, BLINK_SHADOWS, 0, duration)) then
 		spell:setMsg(230);
 	else

@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Gravity
+-- Spell: Graviga
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -19,6 +19,11 @@ function onSpellCast(caster,target,spell)
     local dINT = (caster:getStat(MOD_INT) - target:getStat(MOD_INT));
     local bonus = AffinityBonus(caster, spell:getElement());
     local power = 50; -- 50% reduction
+    
+    local body = caster:getEquipID(SLOT_BODY);
+    if (body == 11088) then -- Estoquers Sayon +2
+    	power = power * 1.1;		
+    end
 
     -- Duration, including resistance.  Unconfirmed.
     local duration = 120 * applyResistance(caster,spell,target,dINT,35,bonus);

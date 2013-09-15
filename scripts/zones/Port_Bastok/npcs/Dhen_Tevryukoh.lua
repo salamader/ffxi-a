@@ -2,8 +2,8 @@
 -- Area: Port Bastok
 -- NPC:  Dhen Tevryukoh
 -- Only sells when Bastok controlls Elshimo Uplands
---   @zone 236
---   @pos 35 -2 2 
+-- @zone 236
+-- @pos 35 -2 2 
 -- Confirmed shop stock, August 2013
 -----------------------------------
 package.loaded["scripts/zones/Port_Bastok/TextIDs"] = nil;

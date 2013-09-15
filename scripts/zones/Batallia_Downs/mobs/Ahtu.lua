@@ -9,9 +9,9 @@
 
 function onMobDeath(mob,killer)	
 
-    -- Set Ahtu's spawnpoint and respawn time (2-4 hours)
+    -- Set Ahtu's spawnpoint and respawn time (24 min to 1 hour)
     UpdateNMSpawnPoint(mob:getID());
-    mob:setRespawnTime(math.random((7200),(14400)));
+    mob:setRespawnTime(math.random((1440),(3600)));
 
 end;
 

@@ -44,8 +44,8 @@ function onMobDeath(mob, killer)
     killer:addTitle(ASPIDOCHELONE_SINKER);
 
     -- Set Aspidochelone's Window Open Time
-    wait = 72 * 3600
-    SetServerVariable("[POP]Aspidochelone", os.time(t) + wait); -- 3 days
+    wait = 8 * 3600
+    SetServerVariable("[POP]Aspidochelone", os.time(t) + wait); -- 8hrs
     DeterMob(mob:getID(), true);
 
     -- Set Adamantoise's spawnpoint and respawn time (21-24 hours)
@@ -53,6 +53,6 @@ function onMobDeath(mob, killer)
     SetServerVariable("[PH]Aspidochelone", 0);
     DeterMob(Adamantoise, false);
     UpdateNMSpawnPoint(Adamantoise);
-    GetMobByID(Adamantoise):setRespawnTime(math.random((75600),(86400)));
+    GetMobByID(Adamantoise):setRespawnTime(math.random((3600),(14400)));
     
 end;

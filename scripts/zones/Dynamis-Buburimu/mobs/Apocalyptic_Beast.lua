@@ -1,6 +1,6 @@
 -----------------------------------
 -- Area: Dynamis Buburimu
--- NPC:  Apocalyptic_Beast
+-- NPC:  Apocalyptic Beast
 
 -----------------------------------
 package.loaded["scripts/zones/Dynamis-Buburimu/TextIDs"] = nil;

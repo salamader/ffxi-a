@@ -13,6 +13,7 @@ require("scripts/globals/settings");
 require("scripts/globals/keyitems");
 require("scripts/globals/shop");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Lower_Jeuno/TextIDs");
 
 -----------------------------------
@@ -32,8 +33,8 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	PainfulMemory = player:getQuestStatus(JEUNO,PAINFUL_MEMORY);
-	TheRequiem = player:getQuestStatus(JEUNO,THE_REQUIEM);
+	local PainfulMemory = player:getQuestStatus(JEUNO,PAINFUL_MEMORY);
+	local TheRequiem = player:getQuestStatus(JEUNO,THE_REQUIEM);
 	
 	if(player:getVar("TheOldMonument_Event") == 1) then
 		player:startEvent(0x00b5); -- For the quest "The Old Monument"
@@ -81,9 +82,11 @@ function onEventFinish(player,csid,option)
 --printf("RESULT: %u",option);
 	
 	if(csid == 0x00b5) then
-	   	player:setVar("TheOldMonument_Event",2);
+		player:setVar("TheOldMonument_Event",2);
+		debugTeleport(player,17261130); -- Song_Runes, zone 118
 	elseif(csid == 0x00b6 and option == 0) then
 		player:setVar("PathOfTheBard_Event",1);
+		debugTeleport(player,17199689); -- Song_Runes, zone 103
 	elseif(csid == 0x0091 and option == 1 or csid == 0x0094 and option == 1) then 
 		player:addQuest(JEUNO,THE_REQUIEM);
 		player:setVar("TheRequiemCS",2);

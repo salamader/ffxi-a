@@ -1,5 +1,5 @@
 -----------------------------------------
---  Spell: Poison
+--  Spell: Poison III
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -28,16 +28,22 @@ function onSpellCast(caster,target,spell)
 			power = 25;
 		end
 
-        local bonus = AffinityBonus(caster, spell:getElement());
-        local resist = applyResistance(caster,spell,target,dINT,ENFEEBLING_MAGIC_SKILL,bonus);
-        if(resist == 1 or resist == 0.5) then -- effect taken
+    		if (caster:hasStatusEffect(EFFECT_SABOTEUR) == true) then
+    			duration = duration + (duration * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
+    			power = power * 2;
+    			caster:delStatusEffect(EFFECT_SABOTEUR);
+    		end
+    	
+		local bonus = AffinityBonus(caster, spell:getElement());
+		local resist = applyResistance(caster,spell,target,dINT,ENFEEBLING_MAGIC_SKILL,bonus);
+		if(resist == 1 or resist == 0.5) then -- effect taken
             duration = duration * resist;
 
             if(target:addStatusEffect(effect,power,3,duration)) then
-                spell:setMsg(236);
-            else
-                spell:setMsg(75);
-            end
+				spell:setMsg(236);
+			else
+				spell:setMsg(75);
+			end
 
         else -- resist entirely.
                 spell:setMsg(85);

@@ -1,55 +1,42 @@
 -----------------------------------
--- Area: bibiki bay
--- NPC:  Shen
+--  Area: Bibiki Bay (4)
+--   Mob: Shen
 -----------------------------------
 
+-- require("scripts/zones/Bibiki_Bay/MobIDs");
+
 -----------------------------------
--- onMobSpawn Action
+-- onMobInitialize
 -----------------------------------
 
-function OnMobSpawn(mob)
+function onMobInitialize(mob)	
 end;
 
 -----------------------------------
--- onMobFight Action
+-- onMobSpawn
 -----------------------------------
 
-function onMobFight(mob,target)
-	
-	if(mob:getBattleTime() % 45 == 0) then
-		if(GetMobAction(16793860) == 0) then
-			SpawnMob(16793860,300):updateEnmity(target);
-		elseif(GetMobAction(16793861) == 0) then
-			SpawnMob(16793861,300):updateEnmity(target);
-		end
-	end
-	
+function onMobSpawn(mob)	
+end;
+
+-----------------------------------
+-- onMobEngaged
+-----------------------------------
+
+function onMobEngaged(mob,target)	
+end;
+
+-----------------------------------
+-- onMobFight
+-----------------------------------
+
+function onMobFight(mob,target)	
 end;
 
 -----------------------------------
 -- onMobDeath
 -----------------------------------
 
-function onMobDeath(mob, killer)
+function onMobDeath(mob,killer)	
 end;
 
------------------------------------
--- onMonsterMagicPrepare
------------------------------------
-
-function onMonsterMagicPrepare(mob,target)
-    
-	-- casts Water IV, Waterga III, Flood, Drown 
-    rnd = math.random();
-    
-    if (rnd < 0.5) then
-        return 201; -- waterga 3
-    elseif (rnd < 0.7) then
-         return 172; -- water 4
-    elseif (rnd < 0.9) then
-        return 214; -- flood
-    else
-        return 240; -- drown
-    end
-    
-end;

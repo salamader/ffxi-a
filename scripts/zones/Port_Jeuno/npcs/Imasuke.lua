@@ -1,9 +1,10 @@
 -----------------------------------
 -- Area: Port Jeuno
 -- NPC: Imasuke
--- Starts and Finishes Quest: The Antique Collector
+-- Starts and Finishes Quest: The
+-- Antique Collector
 -- @zone 246
--- @pos -165 11 94
+-- @pos -165, 11, 94
 -----------------------------------
 package.loaded["scripts/zones/Port_Jeuno/TextIDs"] = nil;
 -----------------------------------
@@ -30,7 +31,7 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	TheAntiqueCollector = player:getQuestStatus(JEUNO,THE_ANTIQUE_COLLECTOR);
+	local TheAntiqueCollector = player:getQuestStatus(JEUNO,THE_ANTIQUE_COLLECTOR);
 	local circleOfTime = player:getQuestStatus(JEUNO,THE_CIRCLE_OF_TIME);
 
 	if(player:getFameLevel(JEUNO) >= 3 and TheAntiqueCollector == QUEST_AVAILABLE) then
@@ -54,8 +55,7 @@ function onTrigger(player,npc)
 	else
 		player:startEvent(0x000c); -- Standard dialog
 	end
-end;
-
+end; 
 
 -----------------------------------
 -- onEventUpdate
@@ -90,6 +90,3 @@ function onEventFinish(player,csid,option)
 		player:setVar("circleTime",5);
 	end
 end;
-
-
-

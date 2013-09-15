@@ -21,7 +21,10 @@ function onSpellCast(caster,target,spell)
 	   duration = duration * 3;
 	end
 
-	local power = 150; -- 150/1024
+	-- Estoqueurs Bonus
+	duration = duration + (duration * caster:getMod(MOD_ENHANCING_DUR));
+	
+	local power = 150;
 
 	if(target:addStatusEffect(EFFECT_HASTE,power,0,duration) == false) then
 		spell:setMsg(75);

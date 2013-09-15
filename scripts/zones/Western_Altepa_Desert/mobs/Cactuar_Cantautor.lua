@@ -10,8 +10,8 @@
 function onMobDeath(mob,killer)	
 
     -- Set Cactuar_Cantautor's Window Open Time
-    wait = math.random((3600),(43200));
-    SetServerVariable("[POP]Cactuar_Cantautor", os.time(t) + wait); -- 1-12 hours
+    wait = math.random((3600),(14400));
+    SetServerVariable("[POP]Cactuar_Cantautor", os.time(t) + wait); -- 1-4 hours
     DeterMob(mob:getID(), true);
 
     -- Set PH back to normal, then set to respawn spawn

@@ -10,6 +10,7 @@ package.loaded["scripts/zones/Norg/TextIDs"] = nil;
 
 require("scripts/globals/settings");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Norg/TextIDs");
 
 -----------------------------------
@@ -91,6 +92,7 @@ function onEventFinish(player,csid,option)
 			player:addItem(1151);
 			player:messageSpecial(ITEM_OBTAINED, 1151); -- Oriental Steel
 			player:setVar("ForgeYourDestiny_Event",questItem + 0x01);
+			debugTeleport(player,17220130); -- qm2, zone 108
 		else
 		   player:messageSpecial(ITEM_CANNOT_BE_OBTAINED, 1151); -- Oriental Steel
 		end
@@ -99,6 +101,7 @@ function onEventFinish(player,csid,option)
 			player:tradeComplete();
 			player:addItem(1151);
 			player:messageSpecial(ITEM_OBTAINED, 1151); -- Oriental Steel
+			debugTeleport(player,17220130); -- qm2, zone 108
 		else
 		   player:messageSpecial(ITEM_CANNOT_BE_OBTAINED, 1151); -- Oriental Steel
 		end

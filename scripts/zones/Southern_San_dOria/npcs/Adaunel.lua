@@ -1,9 +1,9 @@
 -----------------------------------
---	Area: Southern San d'Oria
---	NPC: Adaunel
---  General Info NPC
+-- Area: Southern San d'Oria
+-- NPC: Adaunel
+-- Type: General Info NPC
 -- @zone 230 
--- @pos 80 -7 -22
+-- @pos 80, -7, -22
 ------------------------------------
 package.loaded["scripts/zones/Southern_San_dOria/TextIDs"] = nil;
 -----------------------------------

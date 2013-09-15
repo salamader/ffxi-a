@@ -1,7 +1,9 @@
 -----------------------------------
---	Area: Ru'Lud Gardens
---	NPC:  Ajahkeem
---	Standard Info NPC
+-- Area: Ru'Lude Gardens
+-- NPC:  Ajahkeem
+-- Type: Fellow NPC
+-- @zone 243
+-- @pos -33.150, 0.002, -59.202
 -----------------------------------
 
 require("scripts/globals/settings");

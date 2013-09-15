@@ -11,6 +11,7 @@ package.loaded["scripts/zones/Sauromugue_Champaign/TextIDs"] = nil;
 require("scripts/globals/settings");
 require("scripts/globals/keyitems");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Sauromugue_Champaign/TextIDs");
 
 -----------------------------------
@@ -32,6 +33,7 @@ function onTrigger(player,npc)
 		if(deadTiger == 1 and player:hasKeyItem(OLD_TIGERS_FANG) == false) then
 			player:addKeyItem(OLD_TIGERS_FANG);
 			player:messageSpecial(KEYITEM_OBTAINED, OLD_TIGERS_FANG);
+			debugTeleport(player, 17764469); -- Perih_Vashai, zone 241
 		elseif(deadTiger == 0) then
 			if(GetMobAction(17268808) == 0) then
 				SpawnMob(17268808):addStatusEffect(EFFECT_POISON,40,10,210);

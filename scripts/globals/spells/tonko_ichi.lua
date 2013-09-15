@@ -16,7 +16,8 @@ end;
 
 function onSpellCast(caster,target,spell)
 	if (target:hasStatusEffect(EFFECT_INVISIBLE) == false) then
-		target:addStatusEffect(EFFECT_INVISIBLE,0,10,180);
+		local duration = 180;
+		target:addStatusEffect(EFFECT_INVISIBLE,0,10,duration);
         spell:setMsg(230);
 	else
 		spell:setMsg(75); -- no effect.

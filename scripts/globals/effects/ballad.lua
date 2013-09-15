@@ -18,7 +18,9 @@ end;
 -----------------------------------
 
 function onEffectTick(target,effect)
-	target:addMP(effect:getPower());
+	local mp = effect:getPower() + effect:getSubPower();
+
+	target:addMP(mp);
 end;
 
 -----------------------------------

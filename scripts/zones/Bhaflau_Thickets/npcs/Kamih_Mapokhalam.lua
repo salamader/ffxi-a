@@ -26,6 +26,7 @@ function onTrade(player,npc,trade)
 		else
 			player:startEvent(0x0092);
 		end
+	
 	end
 	
 end; 
@@ -60,7 +61,12 @@ function onEventFinish(player,csid,option)
 --printf("RESULT: %u",option);
 	
 	if(csid == 0x0079) then
-		player:setPos(325,-4,-620,0,72);
+		if(player:getCurrentMission(TOAU,UNDERSEA_SCOUTING))then
+			player:setVar("TOAUM9",1);
+			player:setPos(325,-4,-620,0,72);
+		else
+			player:setPos(325,-4,-620,0,72);
+		end
 	elseif(csid == 0x0092) then
 		player:tradeComplete();
 		player:addKeyItem(MAP_OF_ALZADAAL_RUINS);

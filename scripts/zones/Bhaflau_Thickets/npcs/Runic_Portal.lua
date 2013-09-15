@@ -9,6 +9,7 @@ package.loaded["scripts/zones/Bhaflau_Thickets/TextIDs"] = nil;
 
 require("scripts/globals/besieged");
 require("scripts/globals/teleports");
+require("scripts/globals/missions");
 require("scripts/zones/Bhaflau_Thickets/TextIDs");
 
 -----------------------------------
@@ -23,13 +24,17 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	
-	if(hasRunicPortal(player,3) == 1) then
-		player:startEvent(0x006d);
-	else
-		player:startEvent(0x006f);
+	if(player:getCurrentMission(TOAU)== IMMORTAL_SENTRIES and player:getVar("TOAUM2") ==1)then
+		player:startEvent(0x006F);
+	elseif(player:getCurrentMission(TOAU) > IMMORTAL_SENTRIES)then
+		if(hasRunicPortal(player,3) == 1) then
+			player:startEvent(0x006d);
+		else
+			player:startEvent(0x006f);
+		end
+	else	
+		player:messageSpecial(RESPONSE);
 	end
-	
 end; 
 
 -----------------------------------
@@ -53,6 +58,7 @@ function onEventFinish(player,csid,option)
 		if(csid == 0x006f) then
 			player:addNationTeleport(AHTURHGAN,8);
 		end
+
 		toChamberOfPassage(player);
 	end
 	

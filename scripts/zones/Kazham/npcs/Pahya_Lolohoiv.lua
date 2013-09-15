@@ -21,7 +21,7 @@ end;
 
 function onTrigger(player,npc)
 
---player:startEvent(Event(0x004B));	
+--player:startEvent(0x004B);	
 player:showText(npc,PAHYALOLOHOIV_SHOP_DIALOG);
 
 stock = {0x119d,10,		-- Distilled Water

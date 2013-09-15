@@ -12,8 +12,10 @@ require("scripts/globals/settings");
 require("scripts/globals/titles");
 require("scripts/globals/keyitems");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Windurst_Woods/TextIDs");
 require("scripts/globals/missions");
+
 -----------------------------------
 -- onTrade Action
 -----------------------------------
@@ -54,6 +56,7 @@ function onTrigger(player,npc)
 	        player:startEvent(0x02AE);		
 	-- the fanged one		
 	elseif(TheFangedOne ~= QUEST_COMPLETED) then
+		
 		if(TheFangedOne == QUEST_AVAILABLE and player:getMainLvl() >= ADVANCED_JOB_LEVEL) then
 			player:startEvent(0x015f);
 		elseif(TheFangedOne == QUEST_ACCEPTED and player:hasKeyItem(OLD_TIGERS_FANG) == false) then
@@ -63,6 +66,8 @@ function onTrigger(player,npc)
 		elseif(player:getVar("TheFangedOne_Event") == 1) then
 			player:startEvent(0x0166);
 		end
+	elseif(player:getCurrentMission(COP) >= THREE_PATHS and player:getVar("louverance") == 1)then
+			player:startEvent(0x02AE);
 	
 	-- sin hunting
 	elseif(SinHunting == QUEST_AVAILABLE and Job == 11 and LvL >= 40 and SinHuntingCS == 0) then
@@ -118,6 +123,9 @@ function onEventFinish(player,csid,option)
 
 	if(csid == 0x015f) then
 		player:addQuest(WINDURST,THE_FANGED_ONE);
+		debugTeleport(player, 17269214); -- Tiger_bones
+	elseif(csid == 0x02AE)then
+		player:setVar("louverance",2);
 	elseif(csid == 0x0165 or csid == 0x0166) then
         if(player:getFreeSlotsCount(0) >= 1 and player:hasItem(13117) == false) then
 			player:delKeyItem(OLD_TIGERS_FANG);
@@ -130,7 +138,7 @@ function onEventFinish(player,csid,option)
 			player:messageSpecial(PERIH_VASHAI_DIALOG);
 			player:addFame(WINDURST, WIN_FAME* 30);
 			player:completeQuest(WINDURST,THE_FANGED_ONE);
-		else
+			else
 			player:messageSpecial(ITEM_CANNOT_BE_OBTAINED,13117);
 			player:setVar("TheFangedOne_Event",1);
 		end

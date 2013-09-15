@@ -1,31 +1,42 @@
 -----------------------------------
--- Area: Sacrificial Chamber
--- NPC:  Tonberry's Elemental
--- Zilart Mission 4 BCNM Fight
+--  Area: Sacrificial Chamber (163)
+--   Mob: Tonberry_s_Elemental
 -----------------------------------
 
+-- require("scripts/zones/Sacrificial_Chamber/MobIDs");
+
 -----------------------------------
--- onMobSpawn Action
+-- onMobInitialize
 -----------------------------------
 
-function OnMobSpawn(mob)
+function onMobInitialize(mob)	
+end;
+
+-----------------------------------
+-- onMobSpawn
+-----------------------------------
+
+function onMobSpawn(mob)	
 end;
 
 -----------------------------------
 -- onMobEngaged
 -----------------------------------
 
-function onMobEngaged(mob,target)
-	local mobid = mob:getID();
-
-	for i=mobid-3,mobid-1 do
-		GetMobByID(i):updateEnmity(target);
-	end
+function onMobEngaged(mob,target)	
 end;
 
 -----------------------------------
--- onMobDeath Action
+-- onMobFight
 -----------------------------------
 
-function onMobDeath(mob,killer)
+function onMobFight(mob,target)	
 end;
+
+-----------------------------------
+-- onMobDeath
+-----------------------------------
+
+function onMobDeath(mob,killer)	
+end;
+

@@ -1,29 +1,42 @@
 -----------------------------------
--- Area: Xarcabard
--- NPC:  Koenigstiger
--- Involved in Quests: Unbridled Passion (RNG AF3)
--- @zone 112
+--  Area: Xarcabard (112)
+--   Mob: Koenigstiger
 -----------------------------------
 
-require("scripts/globals/quests");
+-- require("scripts/zones/Xarcabard/MobIDs");
+
+-----------------------------------
+-- onMobInitialize
+-----------------------------------
+
+function onMobInitialize(mob)	
+end;
 
 -----------------------------------
 -- onMobSpawn
 -----------------------------------
 
-function OnMobSpawn(mob)
+function onMobSpawn(mob)	
+end;
+
+-----------------------------------
+-- onMobEngaged
+-----------------------------------
+
+function onMobEngaged(mob,target)	
+end;
+
+-----------------------------------
+-- onMobFight
+-----------------------------------
+
+function onMobFight(mob,target)	
 end;
 
 -----------------------------------
 -- onMobDeath
 -----------------------------------
 
-function onMobDeath(mob, killer)
-
-	local UnbridledPassionCS = killer:getVar("unbridledPassion");		
-
-	if (UnbridledPassionCS == 4) then
-		killer:setVar("unbridledPassion",5);		
-	end
-
+function onMobDeath(mob,killer)	
 end;
+

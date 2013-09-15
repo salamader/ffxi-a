@@ -11,8 +11,8 @@ ITEM_CANNOT_BE_OBTAINEDX = 6377;
           HOMEPOINT_SET = 7247; -- Home point set!
 
 -- Other Texts
-NENE_DELIVERY_DIALOG = 10759; -- Yooo want to send gooods? Yooo want to send ‚Äúclink clink?‚Äù
-NANA_DELIVERY_DIALOG = 10760; -- Yooo send gooods. Yooo send ‚Äúclink clink.‚Äù
+NENE_DELIVERY_DIALOG = 10759; -- Yooo want to send gooods? Yooo want to send ìclink clink?î
+NANA_DELIVERY_DIALOG = 10760; -- Yooo send gooods. Yooo send ìclink clink.î
 		  
 -- Quest Dialog
 NOMAD_MOOGLE_DIALOG = 7248; -- I'm a traveling moogle, kupo. I help adventurers in the Outlands access items they have stored in a Mog House elsewhere, kupo.

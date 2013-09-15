@@ -10,8 +10,8 @@
 function onMobDeath(mob,killer)
 
     -- Set Pelican's Window Open Time
-    wait = math.random((10800),(43200)); -- 4-12 hours
-    SetServerVariable("[POP]Pelican", os.time(t) + wait); -- 4-12 hours
+    wait = math.random((3600),(14400)); -- 1-4 hours
+    SetServerVariable("[POP]Pelican", os.time(t) + wait); -- 1-4 hours
     DeterMob(mob:getID(), true);
 
     -- Set PH back to normal, then set to respawn spawn

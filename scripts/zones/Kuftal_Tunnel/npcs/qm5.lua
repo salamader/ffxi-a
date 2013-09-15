@@ -2,7 +2,8 @@
 -- Area: Kuftal Tunnel
 -- NPC:  ???
 -- Involved in Mission: Bastok 8-2
--- @pos -27 -10 -185 32
+-- @zone 32
+-- @pos -27, -10, -185
 -----------------------------------
 package.loaded["scripts/zones/Kuftal_Tunnel/TextIDs"] = nil;
 -----------------------------------
@@ -49,7 +50,6 @@ end;
 -----------------------------------
 -- onEventFinish
 -----------------------------------
-
 
 function onEventFinish(player,csid,option)
 -- printf("CSID: %u",csid);

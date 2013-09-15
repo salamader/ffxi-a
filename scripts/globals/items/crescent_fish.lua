@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4473
--- Item: crescent_fish
--- Food Effect: 5Min, Mithra only
+-- Item: Crescent Fish
+-- Food Effect: 5 Min, Mithra only
 -----------------------------------------
 -- Dexterity 3
 -- Mind -5

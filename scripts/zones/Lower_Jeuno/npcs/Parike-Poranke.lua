@@ -1,11 +1,9 @@
 -----------------------------------
---  Area: Lower Jeuno
---   NPC: Parike-Poranke
---  Type: Adventurer's Assistant
+-- Area: Lower Jeuno
+-- NPC: Parike-Poranke
+-- Type: Adventurer's Assistant
 -- @zone: 245
---  @pos: -33.161 -1 -61.303
---
--- Auto-Script: Requires Verification (Verfied by Brawndo)
+-- @pos: -33.161 -1 -61.303
 -----------------------------------
 package.loaded["scripts/zones/Lower_Jeuno/TextIDs"] = nil;
 -----------------------------------
@@ -42,4 +40,3 @@ function onEventFinish(player,csid,option)
 	-- printf("CSID: %u",csid);
 	-- printf("RESULT: %u",option);
 end;
-

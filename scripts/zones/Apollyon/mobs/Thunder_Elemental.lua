@@ -1,10 +1,10 @@
 -----------------------------------
 -- Area: Apollyon SW
--- NPC:  elemental
-
+-- NPC:  Thunder Elemental
 -----------------------------------
 package.loaded["scripts/zones/Apollyon/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Apollyon/TextIDs");
 

@@ -1,7 +1,10 @@
 -----------------------------------
--- Cavernous Maw
--- Teleports Players to Batallia_Downs_S
--- @pos -48 0 435 105
+-- Area: Batallia Downs
+-- Name: Cavernous Maw
+-- Teleports Players to Batallia 
+-- Downs S
+-- @zone 105
+-- @pos -48, 0, 435
 -----------------------------------
 package.loaded["scripts/zones/Batallia_Downs/TextIDs"] = nil;
 -----------------------------------
@@ -27,7 +30,7 @@ end;
 function onTrigger(player,npc)
 	
 	if(ENABLE_WOTG == 1 and player:hasKeyItem(PURE_WHITE_FEATHER) == false) then
-		player:startEvent(0x01f4,0);
+		player:startEvent(0x01f4,0,2,1,2,1,2,1,2);
 	elseif(ENABLE_WOTG == 1 and hasMawActivated(player,0)) then
 		player:startEvent(0x038e);
 	else
@@ -52,13 +55,14 @@ end;
 function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
-
 	if(csid == 0x01f4) then
 		r = math.random(1,3);
 		player:addKeyItem(PURE_WHITE_FEATHER);
 		player:messageSpecial(KEYITEM_OBTAINED,PURE_WHITE_FEATHER);
 		player:completeMission(WOTG,CAVERNOUS_MAWS);
 		player:addMission(WOTG,BACK_TO_THE_BEGINNING);
+		player:setVar("csmaw",1);
+		player:setVar("WotgStatus",1);
 		if(r == 1) then
 			player:addNationTeleport(MAW,1);
 			toMaw(player,1); -- go to Batallia_Downs[S]
@@ -71,6 +75,5 @@ function onEventFinish(player,csid,option)
 		end;
 	elseif(csid == 0x038e and option == 1) then
 		toMaw(player,1); -- go to Batallia_Downs[S]
-	end;
-	
+	end
 end;

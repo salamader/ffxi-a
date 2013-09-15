@@ -37,6 +37,11 @@ function onTrigger(player,npc)
 		player:showText(npc, 8596); -- Dialogue after first cutscene
 	elseif (currentMission == THE_CHAINS_THAT_BIND_US) and (missionStatus == 3) then
 		player:startEvent(0x0300); -- Cutscene on return from Quicksand Caves
+
+	elseif(player:getQuestStatus(CRYSTAL_WAR,FIRES_OF_DISCONTENT) == QUEST_ACCEPTED and player:getVar("fires") == 2)then
+player:startEvent(0x03BC);
+	elseif(player:getQuestStatus(CRYSTAL_WAR,FIRES_OF_DISCONTENT) == QUEST_ACCEPTED and player:getVar("fires") == 3)then
+player:startEvent(0x03BD);
 	else
 		player:startEvent(0x025c);
 	end
@@ -61,6 +66,8 @@ function onEventFinish(player,csid,option)
 --printf("RESULT: %u",option);
 	if(csid == 0x02cb and option == 0) then
 		player:setVar("MissionStatus",1);
+	elseif(csid == 0x03bc)then
+		player:setVar("fires",3);
 	elseif(csid == 0x02ff and option == 0) then
 	    player:setVar("MissionStatus", 1);
 	elseif(csid == 0x0300) then

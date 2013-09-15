@@ -11,8 +11,9 @@ ITEM_CANNOT_BE_OBTAINED = 7925; -- You cannot obtain the item <item> come back a
 HARVESTING_IS_POSSIBLE_HERE = 7343; -- Harvesting is possible here if you have <item>
 
 -- Other Texts
-NOTHING_HAPPENS = 7333; -- Nothing happens...
+		NOTHING_HAPPENS = 7333; -- Nothing happens...
+			   LEYPOINT = 7335; -- An eerie red glow emanates from this stone platform., The surrounding air feels alive with energy...
 
 -- Quest: NAVIGATING_THE_UNFRIENDLY_SEAS
-PLACE_HYDROGAUAGE = 7279; -- You set the <item> in the trench.
-ENIGMATIC_LIGHT = 7280; -- The <item> is giving off an enigmatic light.
+	  PLACE_HYDROGAUAGE = 7279; -- You set the <item> in the trench.
+		ENIGMATIC_LIGHT = 7280; -- The <item> is giving off an enigmatic light.

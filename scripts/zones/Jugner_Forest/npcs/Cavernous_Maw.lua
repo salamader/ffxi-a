@@ -1,7 +1,10 @@
 -----------------------------------
--- Cavernous Maw
--- Teleports Players to Jugner Forest [S]
--- @pos -118 -8 -518 104
+-- Area: Jugner Forest
+-- Name: Cavernous Maw
+-- Teleports Players to Jugner
+-- Forest [S]
+-- @zone 104
+-- @pos -122.835, -8.000, -519.974
 -----------------------------------
 package.loaded["scripts/zones/Jugner_Forest/TextIDs"] = nil;
 -----------------------------------
@@ -24,13 +27,11 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	
 	if(ENABLE_WOTG == 1 and player:hasKeyItem(PURE_WHITE_FEATHER) and hasMawActivated(player,3)) then
 		player:startEvent(0x0389);
 	else
 		player:messageSpecial(NOTHING_HAPPENS);
 	end
-	
 end;
 
 -----------------------------------
@@ -48,9 +49,7 @@ end;
 function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
-	
 	if(csid == 0x0389 and option == 1) then
 		toMaw(player,13);
 	end
-	
 end;

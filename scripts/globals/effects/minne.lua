@@ -1,5 +1,4 @@
 -----------------------------------
---	
 --	EFFECT_MINNE
 -- getPower returns the TIER (e.g. 1,2,3,4)
 -- DO NOT ALTER ANY OF THE EFFECT VALUES! DO NOT ALTER EFFECT POWER! 
@@ -11,16 +10,19 @@ require("scripts/globals/status");
 -----------------------------------
 
 function onEffectGain(target,effect)
+
+	target:addMod(MOD_ENMITY, effect:getTier());
+
 	if(effect:getPower()==1) then
-		target:addMod(MOD_DEF, 14);
+		target:addMod(MOD_DEF, (14 + effect:getSubPower()));
 	elseif(effect:getPower()==2) then
-		target:addMod(MOD_DEF, 28);
+		target:addMod(MOD_DEF, (28 + effect:getSubPower()));
 	elseif(effect:getPower()==3) then
-		target:addMod(MOD_DEF, 40);
+		target:addMod(MOD_DEF, (40 + effect:getSubPower()));
 	elseif(effect:getPower()==4) then
-		target:addMod(MOD_DEF, 48);
+		target:addMod(MOD_DEF, (48 + effect:getSubPower()));
 	elseif(effect:getPower()==5) then
-		target:addMod(MOD_DEF, 60);
+		target:addMod(MOD_DEF, (60 + effect:getSubPower()));
 	end
 end;
 
@@ -36,15 +38,18 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
+
+	target:delMod(MOD_ENMITY, effect:getTier());
+
 	if(effect:getPower()==1) then
-		target:delMod(MOD_DEF, 14);
+		target:delMod(MOD_DEF, (14 + effect:getSubPower()));
 	elseif(effect:getPower()==2) then
-		target:delMod(MOD_DEF, 28);
+		target:delMod(MOD_DEF, (28 + effect:getSubPower()));
 	elseif(effect:getPower()==3) then
-		target:delMod(MOD_DEF, 40);
+		target:delMod(MOD_DEF, (40 + effect:getSubPower()));
 	elseif(effect:getPower()==4) then
-		target:delMod(MOD_DEF, 48);
+		target:delMod(MOD_DEF, (48 + effect:getSubPower()));
 	elseif(effect:getPower()==5) then
-		target:delMod(MOD_DEF, 60);
+		target:delMod(MOD_DEF, (60 + effect:getSubPower()));
 	end
 end;

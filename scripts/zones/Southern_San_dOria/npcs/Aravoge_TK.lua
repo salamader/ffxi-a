@@ -42,7 +42,7 @@ function onTrigger(player,npc)
 		player:messageSpecial(KEYITEM_OBTAINED + 1,getSupplyKey(region));
 		player:setVar("supplyQuest_started",0);
 		player:setVar("supplyQuest_region",0);
-      player:setVar("supplyQuest_fresh",0);
+		player:setVar("supplyQuest_fresh",0);
 	else
 		Menu1 = getArg1(guardnation,player);
 		Menu2 = getExForceAvailable(guardnation,player);
@@ -97,7 +97,20 @@ function onEventFinish(player,csid,option)
 	elseif(option >= 32768 and option <= 32944) then
 		for Item = 1,size,3 do
 			if(option == inventory[Item]) then
-				if(player:getFreeSlotsCount() >= 1) then
+				
+				if(player:hasItem(inventory[Item + 2]) == 1) then
+					if(inventory[Item + 2] == 0x3D91) then 			-- Chariot Band
+						cannotObtain = 1;
+					elseif(inventory[Item + 2] == 0x3D92) then		-- Empress Band
+						cannotObtain = 1;
+					elseif(inventory[Item + 2] == 0x3D93) then		-- Emperor Band
+						cannotObtain = 1;
+					end
+				else
+					cannotObtain = 0;
+				end
+				
+				if(player:getFreeSlotsCount() >= 1 and cannotObtain == 0) then
                -- Logic to impose limits on exp bands
                if (option >= 32933 and option <= 32935) then
                   if (checkConquestRing(player) > 0) then
@@ -135,7 +148,7 @@ function onEventFinish(player,csid,option)
 		player:messageSpecial(KEYITEM_OBTAINED,getSupplyKey(region));
 		player:setVar("supplyQuest_started",vanaDay());
 		player:setVar("supplyQuest_region",region);
-      player:setVar("supplyQuest_fresh",getConquestTally());
+		player:setVar("supplyQuest_fresh",getConquestTally());
 	end;
 	
 end;

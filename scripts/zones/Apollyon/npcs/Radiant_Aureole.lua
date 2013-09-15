@@ -1,6 +1,6 @@
 -----------------------------------
 -- Area: Appolyon
--- NPC:  Radiant_Aureole
+-- NPC:  Radiant Aureole
 -- @pos 
 -----------------------------------
 require("scripts/globals/limbus");
@@ -9,6 +9,7 @@ package.loaded["scripts/zones/Apollyon/TextIDs"] = nil;
 -----------------------------------
 
 require("scripts/zones/Apollyon/TextIDs");
+
 -----------------------------------
 -- onTrade Action
 -----------------------------------

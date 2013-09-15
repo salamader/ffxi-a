@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Water
+-- Spell: Water IV
 -- Deals water damage to an enemy.
 -----------------------------------------
 

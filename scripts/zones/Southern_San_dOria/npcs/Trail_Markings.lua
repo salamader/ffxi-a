@@ -29,7 +29,7 @@ function onTrigger(player,npc)
 		player:startEvent(0x02AE); -- cs with Cornelia
 	elseif(player:getVar("DynaSandoria_Win") == 1) then
 		player:startEvent(0x02ba,HYDRA_CORPS_COMMAND_SCEPTER); -- Win CS
-	elseif(player:hasKeyItem(VIAL_OF_SHROUDED_SAND)) then
+	elseif(player:hasKeyItem(VIAL_OF_SHROUDED_SAND)) then -- and player:hasKeyItem(PRISMATIC_HOURGLASS)) then
 		local firstDyna = 0;
 		local realDay = os.time();
 		local dynaWaitxDay = player:getVar("dynaWaitxDay");

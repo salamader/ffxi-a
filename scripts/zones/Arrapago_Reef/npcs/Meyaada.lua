@@ -1,6 +1,6 @@
 -----------------------------------
 -- Area: Arrapago Reef
--- NPC:  meyaada
+-- NPC:  Meyaada subligar blue
 -----------------------------------
 package.loaded["scripts/zones/Arrapago_Reef/TextIDs"] = nil;
 -----------------------------------
@@ -21,17 +21,21 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-    local IPpoint=player:getPoint(AHTURHGAN );
+	local IPpoint=player:getPoint(AHTURHGAN );
 	local assault=player:getCurrentMission(ASSAULT);
 	--print(IPpoint);
 	--print(assault);
-	
-  if(assault>40 and assault<51 and player:hasKeyItem(ASSAULT_ARMBAND)==false)then
-   player:startEvent(0x00DF,50,IPpoint);
-   
-  else
-  player:startEvent(0x0004);
--- player:delKeyItem(ASSAULT_ARMBAND);
+
+	if(player:hasKeyItem(SUPPLIES_PACKAGE))then
+		player:startEvent(0x0005);
+	elseif(player:getVar("TOAUM2") ==1)then
+		player:startEvent(0x0006);
+	elseif(player:getCurrentMission(TOAU) > IMMORTAL_SENTRIES)then
+		player:startEvent(0x0007);
+	elseif(assault>40 and assault<51 and player:hasKeyItem(ASSAULT_ARMBAND)==false)then
+		player:startEvent(0x00DF,50,IPpoint);
+	else
+		player:startEvent(0x0004);
 	end
 end; 
 
@@ -56,6 +60,11 @@ function onEventFinish(player,csid,option)
        player:delPoint(AHTURHGAN,50);
 	   player:addKeyItem(ASSAULT_ARMBAND);
 	   player:messageSpecial(KEYITEM_OBTAINED,ASSAULT_ARMBAND);
+	elseif(csid == 0x0005 and option == 1)then
+		player:delKeyItem(SUPPLIES_PACKAGE);
+		player:setVar("TOAUM2",1);
+	elseif(csid == 0x0006)then
+		player:setVar("TOAUM2",1);
 	end
 	
 end;

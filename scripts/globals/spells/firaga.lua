@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Firaga 1
+-- Spell: Firaga
 -- Deals wind damage to an enemy.
 -----------------------------------------
 

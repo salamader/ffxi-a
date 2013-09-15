@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4289
--- Item: forest_carp
--- Food Effect: 30Min, Mithra only
+-- Item: Forest Carp
+-- Food Effect: 30 Min, Mithra only
 -----------------------------------------
 -- Dexterity 2
 -- Mind -4

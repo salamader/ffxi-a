@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4272
--- Item: slice_of_dragon_meat
--- Food Effect: 5Min, Galka only
+-- Item: Slice of Dragon Meat
+-- Food Effect: 5 Min, Galka only
 -----------------------------------------
 -- Strength 6
 -- Intelligence -8

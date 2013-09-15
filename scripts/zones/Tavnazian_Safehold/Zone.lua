@@ -32,6 +32,7 @@ cs = -1;
 	
 	if(player:getCurrentMission(COP) == AN_INVITATION_WEST)then
 		cs = 0x0065;
+		player:setVar("COPM21",0);
 	elseif(player:getCurrentMission(COP) == SHELTERING_DOUBT and player:getVar("PromathiaStatus") == 0)then
         cs = 0x006B;
 	elseif(player:getCurrentMission(COP) == CHAINS_AND_BONDS and player:getVar("PromathiaStatus") == 1) then

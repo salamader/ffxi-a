@@ -60,7 +60,7 @@ function onEventFinish(player,csid,option)
 		player:addQuest(BASTOK,STARDUST);
     elseif (csid == 0x022B) then
         player:tradeComplete();
-        player:addGil(300);
+        player:addGil(300*GIL_RATE);
 		player:messageSpecial(GIL_OBTAINED,GIL_RATE*300);
         player:completeQuest(BASTOK,STARDUST);
 	end

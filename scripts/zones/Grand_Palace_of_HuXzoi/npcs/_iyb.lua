@@ -17,9 +17,9 @@ end;
 
 function onTrigger(player,npc)
     if(player:getCurrentMission(COP) == A_FATE_DECIDED  and player:getVar("PromathiaStatus")==0)then
-	player:startEvent(0x0002);
+		player:startEvent(0x0002);
     else
-	player:startEvent(0x0038);
+		player:startEvent(0x0038);
 	end
 	return 1;
 end;

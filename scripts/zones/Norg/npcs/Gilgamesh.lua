@@ -42,6 +42,10 @@ function onTrigger(player,npc)
 		player:startEvent(0x00aa);
 	elseif(ZilartMission == ARK_ANGELS) then
 		player:startEvent(0x00ab);
+	elseif(ZilartMission == THE_SEALED_SHRINE and player:getVar("ZM15") >= 2 )then
+		player:startEvent(0x00ad);
+	elseif(ZilartMission == AWAKENING)then
+		player:startEvent(0x00B1);
 	end
 	
 end;
@@ -73,6 +77,8 @@ function onEventFinish(player,csid,option)
 	if(csid == 0x0063) then
 		player:tradeComplete();
 		player:setVar("MissionStatus",3);
+	elseif(csid == 0x00ab) then
+		player:setVar("ZilartStatus",1);
 	end
 	
 end;

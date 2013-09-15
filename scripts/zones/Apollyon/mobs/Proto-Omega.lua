@@ -1,16 +1,15 @@
 -----------------------------------
 -- Area: Apollyon Centrale
 -- NPC:  Proto-Omega
-
 -----------------------------------
 package.loaded["scripts/zones/Apollyon/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Apollyon/TextIDs");
 require("scripts/globals/titles");
 require("scripts/globals/status");
 require("scripts/globals/magic");
-
 
 -----------------------------------
 -- onMobSpawn Action
@@ -87,7 +86,7 @@ end;
 -----------------------------------
 
 function onMobDeath(mob,killer)
-  killer:addTitle(APOLLYON_RAVAGER);
+	killer:addTitle(APOLLYON_RAVAGER);
     local mobX = mob:getXPos();
 	local mobY = mob:getYPos();
 	local mobZ = mob:getZPos();

@@ -33,7 +33,18 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	player:startEvent(0x0172);
+
+	if(player:getCurrentMission(BASTOK) == THE_SALT_OF_THE_EARTH and player:getVar("BASTOK91") == 0)then
+		player:startEvent(0x0305);
+	elseif(player:getCurrentMission(BASTOK) == THE_SALT_OF_THE_EARTH and player:getVar("BASTOK91") == 1)then
+		player:startEvent(0x0306);
+	elseif(player:getVar("BASTOK91") == 10)then
+		player:startEvent(0x0307);
+	elseif(player:getVar("BASTOK91") == 11)then
+		player:startEvent(0x0308);
+	else	
+		player:startEvent(0x0172);
+	end	
 end;
 
 -----------------------------------
@@ -55,6 +66,12 @@ function onEventFinish(player,csid,option)
 	
 	if(csid == 0x0174 or csid == 0x0175) then
 		finishMissionTimeline(player,1,csid,option);
+	elseif(csid == 0x0305)then
+		player:setVar("BASTOK91",1);
+	elseif(csid == 0x0308)then
+		player:setVar("BASTOK91",0);
+		player:delKeyItem(MIRACLESALT);
+		player:completeMission(BASTOK,THE_SALT_OF_THE_EARTH);
 	end
 	
 end;

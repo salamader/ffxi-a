@@ -10,6 +10,7 @@ package.loaded["scripts/zones/Port_Bastok/TextIDs"] = nil;
 
 require("scripts/globals/settings");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Port_Bastok/TextIDs");
 
 -----------------------------------
@@ -63,6 +64,7 @@ function onEventFinish(player,csid,option)
 
 	if(csid == 0x00f1) then
 		player:setVar("AyameAndKaede_Event",1);
+		debugTeleport(player,17743909); -- Ensetsu, zone 236
 	elseif(csid == 0x0105) then
 		player:setVar("twentyInPirateYearsCS",2);
 	end

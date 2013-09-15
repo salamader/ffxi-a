@@ -118,6 +118,9 @@ function onRegionEnter(player,region)
 			door:openDoor(15); -- open door with a 15 second time delay.
 			--platform = GetNPCByID(base_id + RegionID + 1);
 			--platform:setAnimation(8); -- this is supposed to light up the platform but it's not working. Tried other values too.
+		elseif(player:hasKeyItem(LOADSTONE)) then
+			local door = GetNPCByID(base_id + RegionID - 1);
+			door:openDoor(15); -- open door with a 15 second time delay.
 		end
 	end
 	

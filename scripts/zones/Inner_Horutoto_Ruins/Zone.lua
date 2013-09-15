@@ -47,28 +47,34 @@ function onRegionEnter(player,region)
 		[1] = function (x)  -- Red Circle		
 			if(player:getMainJob() == 5 and region:AddCount(1) == 1) then		
 				red:setAnimation(8);
-				if(white:getAnimation() == 8 and black:getAnimation() == 8) then	
+				white:setAnimation(8);
+				black:setAnimation(8);
+				--if(white:getAnimation() == 8 and black:getAnimation() == 8) then	
 					GetNPCByID(17563861):openDoor(30);
 					GetNPCByID(17563862):openDoor(30);
-				end	
+				--end	
 			end		
 		end,		
 		[2] = function (x)  -- White Circle		
 			if(player:getMainJob() == 3 and region:AddCount(1) == 1) then		
-				white:setAnimation(8);	
-				if(red:getAnimation() == 8 and black:getAnimation() == 8) then	
+				red:setAnimation(8);
+				white:setAnimation(8);
+				black:setAnimation(8);	
+				--if(red:getAnimation() == 8 and black:getAnimation() == 8) then	
 					GetNPCByID(17563861):openDoor(30);
 					GetNPCByID(17563862):openDoor(30);
-				end	
+				--end	
 			end		
 		end,		
 		[3] = function (x)  -- Black Circle		
 			if(player:getMainJob() == 4 and region:AddCount(1) == 1) then		
-				black:setAnimation(8);	
-				if(red:getAnimation() == 8 and white:getAnimation() == 8) then	
+				red:setAnimation(8);
+				white:setAnimation(8);
+				black:setAnimation(8);
+				--if(red:getAnimation() == 8 and white:getAnimation() == 8) then	
 					GetNPCByID(17563861):openDoor(30);
 					GetNPCByID(17563862):openDoor(30);
-				end	
+				--end	
 			end
 		end,
 		[4] = function (x)  -- Teleport at H-6
@@ -92,16 +98,22 @@ function onRegionLeave(player,region)
 	{		
 		[1] = function (x)  -- Red Circle		
 			if(player:getMainJob() == 5 and region:DelCount(1) == 0) then		
-				red:setAnimation(9);	
+				red:setAnimation(9);
+				white:setAnimation(9);
+				black:setAnimation(9);
 			end		
 		end,		
 		[2] = function (x)  -- White Circle		
 			if(player:getMainJob() == 3 and region:DelCount(1) == 0) then		
-				white:setAnimation(9);	
+				red:setAnimation(9);
+				white:setAnimation(9);
+				black:setAnimation(9);	
 			end		
 		end,		
 		[3] = function (x)  -- Black Circle		
 			if(player:getMainJob() == 4 and region:DelCount(1) == 0) then		
+				red:setAnimation(9);
+				white:setAnimation(9);
 				black:setAnimation(9);
 			end		
 		end,		

@@ -1,21 +1,1 @@
------------------------------------------
---  ID: 17587
---  Trick Staff II
---  Transports the user to their Home Point
------------------------------------------
-
------------------------------------------
--- OnItemCheck
------------------------------------------
-
-function onItemCheck(target)
-    return 0;
-end;
-
------------------------------------------
--- OnItemUse
------------------------------------------
-
-function onItemUse(target)
-    target:warp();
-end;
+-------------------------------------------	ID: 17587--	Trick Staff II--  Transports the user to their Home Point-----------------------------------------require("scripts/globals/settings");require("scripts/globals/status");------------------------------------------- OnItemCheck-----------------------------------------function onItemCheck(target)	return 0;end;------------------------------------------- OnItemUse-----------------------------------------function onItemUse(target)	target:warp();end;

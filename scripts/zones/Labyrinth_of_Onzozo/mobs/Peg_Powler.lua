@@ -10,8 +10,8 @@
 function onMobDeath(mob,killer)	
   
     -- Set Peg Powler's Window Open Time
-    wait = math.random((7200),(57600));
-    SetServerVariable("[POP]Peg_Powler", os.time(t) + wait); -- 2-16 hours
+    wait = math.random((3600),(14400));
+    SetServerVariable("[POP]Peg_Powler", os.time(t) + wait); -- 1-4 hours
     DeterMob(mob:getID(), true);
 
     -- Set PH back to normal, then set to respawn spawn

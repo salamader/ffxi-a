@@ -1,7 +1,7 @@
 -----------------------------------
--- Area: Valkurm_Dunes
+-- Area: Valkurm Dunes
 -- NPC:  Hieroglyphics
--- Dynamis Valkurm_Dunes Enter
+-- Dynamis Valkurm Dunes Enter
 -- @pos 117 -10 133 172 103
 -----------------------------------
 package.loaded["scripts/zones/Valkurm_Dunes/TextIDs"] = nil;

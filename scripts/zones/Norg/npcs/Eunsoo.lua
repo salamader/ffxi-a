@@ -35,6 +35,7 @@ end;
 function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
+player:setPos(48.930,10.002,-71.032,195,0xF3);
 end;
 
 

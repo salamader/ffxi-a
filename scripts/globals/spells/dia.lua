@@ -1,6 +1,7 @@
 -----------------------------------------
 -- Spell: Dia
--- Lowers an enemy's defense and gradually deals light elemental damage.
+-- Lowers an enemy's defense and 
+-- gradually deals light elemental damage.
 -----------------------------------------
 
 require("scripts/globals/settings");
@@ -37,13 +38,24 @@ function onSpellCast(caster,target,spell)
 	local final = finalMagicAdjustments(caster,target,spell,dmg);
 
 	local duration = 60;
+	local diaPowerMod = 0;
+	
+	if(caster:getEquipID(SLOT_MAIN) == 17466 or caster:getEquipID(SLOT_SUB) == 17466) then -- Dia Wand
+		diaPowerMod = 1;
+	end
+	
+	if (caster:hasStatusEffect(EFFECT_SABOTEUR) == true) then
+	    duration = duration + (duration * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
+		diaPowerMod = diaPowerMod + 1;
+		caster:delStatusEffect(EFFECT_SABOTEUR);
+    end
 
 	-- Check for Bio.
 	local bio = target:getStatusEffect(EFFECT_BIO);
 
 	-- Do it!
 	if(DIA_OVERWRITE == 0 or (DIA_OVERWRITE == 1 and bio == nil)) then
-		target:addStatusEffect(EFFECT_DIA,1,3,duration, 0, 5);
+		target:addStatusEffect(EFFECT_DIA,1,3,duration, 0, 5, diaPowerMod);
 		spell:setMsg(2);
 	else
 		spell:setMsg(75);

@@ -1,0 +1,35 @@
+-----------------------------------------
+-- Spell: Sentinel's Scherzo
+-- Mitigates severly damaging attacks to 
+-- Party Members within target AoE
+-----------------------------------------
+
+require("scripts/globals/status");
+require("scripts/globals/magic");
+
+-----------------------------------------
+-- OnSpellCast
+-----------------------------------------
+
+function OnMagicCastingCheck(caster,target,spell)
+	return 0;
+end;
+
+function onSpellCast(caster,target,spell)
+	-- Mostly Guestimate ??
+	local duration = 120;
+	local power = 20;
+	duration = duration + (duration * (target:getMod(MOD_SONG_DURATION)/100));
+	duration = duration + (duration * ((target:getMod(MOD_ALL_SONGS) * 10)/100));
+	duration = duration + (duration * ((target:getMod(MOD_SCHERZO) * 10)/100));
+	
+	power = power + (target:getMod(MOD_SCHERZO) * 5);
+	power = power + (target:getMod(MOD_ALL_SONGS) * 5);
+	
+    -- Until someone finds a way to delete Effects by tier we should not allow bard spells to stack.
+    -- Since all the tiers use the same effect buff it is hard to delete a specific one.
+    target:delStatusEffect(EFFECT_SCHERZO);
+    target:addStatusEffect(EFFECT_SCHERZO,power,0,duration);
+    spell:setMsg(230);
+    return EFFECT_SCHERZO;
+end;

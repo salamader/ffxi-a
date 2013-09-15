@@ -1,6 +1,6 @@
 ---------------------------------------------------
--- Berserk
--- Berserk Ability.
+-- Mob Ability: Benediction
+--
 ---------------------------------------------------
 
 require("/scripts/globals/settings");

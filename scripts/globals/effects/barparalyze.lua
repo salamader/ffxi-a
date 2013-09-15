@@ -1,6 +1,6 @@
 -----------------------------------
 --
---  EFFECT_BARAMNESIA
+--  EFFECT_BARPARALYZE
 --
 -----------------------------------
 
@@ -12,6 +12,7 @@ require("scripts/globals/status");
 
 function onEffectGain(target,effect)
 	target:addMod(MOD_PARALYZERES,effect:getPower());
+	target:addMod(MOD_MDEF, effect:getTier());
 end;
 
 -----------------------------------
@@ -27,4 +28,5 @@ end;
 
 function onEffectLose(target,effect)
 	target:delMod(MOD_PARALYZERES,effect:getPower());
+	target:delMod(MOD_MDEF, effect:getTier());
 end;

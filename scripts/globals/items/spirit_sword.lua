@@ -1,7 +1,8 @@
 -----------------------------------------
---  ID: 13682
---  Ether Tank
---  When used, you will obtain one Ether
+--  ID: 16613
+--  Item: Spirit Sword
+--  Enchantment: TP +10
+--  Durration: Instant
 -----------------------------------------
 
 -----------------------------------------
@@ -9,11 +10,8 @@
 -----------------------------------------
 
 function onItemCheck(target)
-local result = 0;
-    if (target:getFreeSlotsCount() == 0) then
-        result = 308;
-    end
-return result;
+	local result = 0;
+	return result;
 end;
 
 -----------------------------------------

@@ -12,6 +12,7 @@ require("scripts/globals/settings");
 require("scripts/globals/titles");
 require("scripts/globals/keyitems");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Port_Bastok/TextIDs");
 
 -----------------------------------
@@ -27,11 +28,13 @@ end;
 
 function onTrigger(player,npc)
 
-	AyameAndKaede = player:getQuestStatus(BASTOK,AYAME_AND_KAEDE);
+	local AyameAndKaede = player:getQuestStatus(BASTOK,AYAME_AND_KAEDE);
+	local PirateYearsCS = player:getVar("twentyInPirateYearsCS");
+	local BigBoxCS = player:getVar("illTakeTheBigBoxCS");
 
 	if(AyameAndKaede == QUEST_ACCEPTED) then
 
-		questStatus = player:getVar("AyameAndKaede_Event")
+		local questStatus = player:getVar("AyameAndKaede_Event")
 
 		if((questStatus == 1 or questStatus == 2) and player:hasKeyItem(STRANGELY_SHAPED_CORAL) == false) then
 			player:startEvent(0x00f2);
@@ -46,13 +49,13 @@ function onTrigger(player,npc)
 		end
 	elseif(AyameAndKaede == QUEST_COMPLETED and player:getQuestStatus(OUTLANDS,TWENTY_IN_PIRATE_YEARS) == QUEST_AVAILABLE) then
 		player:startEvent(0x00f7);
-	elseif(player:getVar("twentyInPirateYearsCS") == 2) then
+	elseif(PirateYearsCS == 2) then
 		player:startEvent(0x0106);
-	elseif(player:getVar("twentyInPirateYearsCS") == 4) then
+	elseif(PirateYearsCS == 4) then
 		player:startEvent(0x0107);
-	elseif(player:getQuestStatus(OUTLANDS,I_LL_TAKE_THE_BIG_BOX) == QUEST_ACCEPTED and player:getVar("illTakeTheBigBoxCS") == 0) then
+	elseif(player:getQuestStatus(OUTLANDS,I_LL_TAKE_THE_BIG_BOX) == QUEST_ACCEPTED and BigBoxCS == 0) then
 		player:startEvent(0x0108);
-	elseif(player:getVar("illTakeTheBigBoxCS") == 1) then
+	elseif(BigBoxCS == 1) then
 		player:startEvent(0x0109);
 	else
 		player:startEvent(0x001b);
@@ -81,8 +84,10 @@ function onEventFinish(player,csid,option)
 
 	if(csid == 0x00f2) then
 		player:setVar("AyameAndKaede_Event", 2);
+		debugTeleport(player,17486235); -- qm2, zone 173
 	elseif(csid == 0x00f5) then
 		player:setVar("AyameAndKaede_Event", 3);
+		debugTeleport(player, 17809462); -- Ryoma, zone 252
 	elseif(csid == 0x00f6) then
 		player:delKeyItem(SEALED_DAGGER);
 		player:addTitle(SHADOW_WALKER);

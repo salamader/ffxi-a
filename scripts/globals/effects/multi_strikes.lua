@@ -1,7 +1,7 @@
 -----------------------------------
 --
---
---
+-- EFFECT_MULTI_STRIKES
+-- Author: mvd1987
 -----------------------------------
 
 -----------------------------------
@@ -9,6 +9,7 @@
 -----------------------------------
 
 function onEffectGain(target,effect)
+	target:addMod(MOD_DOUBLE_ATTACK, effect:getPower());
 end;
 
 -----------------------------------
@@ -23,4 +24,5 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
+	target:delMod(MOD_DOUBLE_ATTACK, effect:getPower());
 end;

@@ -6,7 +6,7 @@
 
 package.loaded["scripts/zones/Windurst_Walls/TextIDs"] = nil;
 require("scripts/globals/settings");
---require("scripts/globals/shop");
+require("scripts/globals/shop");
 require("scripts/zones/Windurst_Walls/TextIDs");
 
 -----------------------------------

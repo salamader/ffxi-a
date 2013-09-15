@@ -1,5 +1,6 @@
 -----------------------------------
 -- Ability: Activate
+-- Calls fourth your automaton.
 -----------------------------------
 
 require("scripts/globals/settings");

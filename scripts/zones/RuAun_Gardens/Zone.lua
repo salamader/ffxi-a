@@ -338,7 +338,7 @@ function onRegionEnter(player,region)
 		---------------------------------
 		[37] = function (x)  
 		---------------------------------
-			if(player:getVar("skyShortcut") == 1) then
+			if(player:getVar("TuLiaRegistration") == 1) then
 				player:startEvent(0x002a);
 			else
 				title = player:getTitle();
@@ -353,7 +353,7 @@ function onRegionEnter(player,region)
 		---------------------------------
 		[38] = function (x)  
 		---------------------------------
-			if(player:getVar("skyShortcut") == 1) then
+			if(player:getVar("TuLiaRegistration") == 1) then
 				player:startEvent(0x002a);
 			else
 				title = player:getTitle();
@@ -396,7 +396,7 @@ function onEventFinish(player,csid,option)
 --printf("RESULT: %u",option);
 	
 	if(csid == 0x0029 and option ~= 0) then
-		player:setVar("skyShortcut",1);
+		player:setVar("TuLiaRegistration",1);
 	elseif(csid == 0x0033) then
 		player:setVar("ZilartStatus",0);
 		player:completeMission(ZILART,THE_GATE_OF_THE_GODS);

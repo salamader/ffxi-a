@@ -58,9 +58,9 @@ cs = -1;
 	end
 	
 	if  (player:getVar("FirstPromyvionDem") == 1)then
-	cs = 0x0032;	
+		cs = 0x0032;	
 	elseif(ENABLE_COP_ZONE_CAP == 1)then
-	player:addStatusEffect(EFFECT_LEVEL_RESTRICTION,30,0,0);-- ZONE LEVEL RESTRICTION
+		player:addStatusEffect(EFFECT_LEVEL_RESTRICTION,30,0,0);-- ZONE LEVEL RESTRICTION
 	end
 	return cs;	
 end;		
@@ -189,12 +189,12 @@ function onEventFinish(player,csid,option)
 		player:setPos(-225, -46, -280, 130, 14); -- -> back to Hall of Transferance
 	elseif(csid == 0x0032)then		
 		player:setVar("FirstPromyvionDem",0);
-			if(ENABLE_COP_ZONE_CAP == 1)then
+		if(ENABLE_COP_ZONE_CAP == 1)then
 			player:addStatusEffect(EFFECT_LEVEL_RESTRICTION,30,0,0);-- ZONE LEVEL RESTRICTION
-			end
+		end
 	end
 	
-	 if (option==1)then
-	player:setVar("MemoryReceptacle",0);
+	if (option==1)then
+		player:setVar("MemoryReceptacle",0);
 	end
 end;

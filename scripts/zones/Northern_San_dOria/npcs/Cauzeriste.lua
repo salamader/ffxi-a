@@ -1,8 +1,10 @@
 -----------------------------------
 -- Area: Northern San d'Oria
 -- NPC: Cauzeriste
--- Guild Merchant NPC: Woodworking Guild 
+-- Type: Guild Merchant
+-- Woodworking Guild 
 -- @zone 231
+-- @pos -175.946, 3.999, 280.301
 -----------------------------------
 package.loaded["scripts/zones/Northern_San_dOria/TextIDs"] = nil;
 -----------------------------------
@@ -47,7 +49,3 @@ function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
 end;
-
-
-
-

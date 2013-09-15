@@ -1,7 +1,8 @@
 -----------------------------------
---      Area: Northern San d'Oria
---      NPC: Attarena
---      Only sells when San d'Oria controlls Li'Telor Region
+--  Area: Northern San d'Oria
+--  NPC: Attarena
+--  Only sells when San d'Oria 
+--  controlls Li'Telor Region.
 -----------------------------------
 package.loaded["scripts/zones/Northern_San_dOria/TextIDs"] = nil;
 -----------------------------------
@@ -42,7 +43,7 @@ RegionOwner = GetRegionOwner(LITELOR);
                 player:showText(npc,ATTARENA_OPEN_DIALOG);
 
                 stock = {0x026f,119,            -- Bay Leaves
-                                 0x103a,6440}           -- Holy Water
+                         0x103a,6440}           -- Holy Water
 
                 showShop(player,SANDORIA,stock);
         end

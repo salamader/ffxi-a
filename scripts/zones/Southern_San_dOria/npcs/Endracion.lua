@@ -52,6 +52,8 @@ end;
 
 function onTrigger(player,npc)
 
+local PresOfPapsqueCompleted = player:hasCompletedMission(SANDORIA,PRESTIGE_OF_THE_PAPSQUE);
+
 	if(player:getNation() ~= SANDORIA) then
 		player:startEvent(0x03F3); -- for Non-San d'Orians
 	else
@@ -59,7 +61,7 @@ function onTrigger(player,npc)
 		MissionStatus = player:getVar("MissionStatus");
 		pRank = player:getRank();
 		cs, p, offset = getMissionOffset(player,1,CurrentMission,MissionStatus);
-		
+	
 		if(CurrentMission <= 15 and (cs ~= 0 or offset ~= 0 or (CurrentMission == 0 and offset == 0))) then
 			if(cs == 0) then
 				player:showText(npc,ORIGINAL_MISSION_OFFSET + offset); -- dialog after accepting mission
@@ -76,6 +78,12 @@ function onTrigger(player,npc)
 		    player:startEvent(0x040f);
 		elseif(CurrentMission == RANPERRE_S_FINAL_REST and player:getVar("MissionStatus") == 9) then
 		    player:startEvent(0x0409);
+		elseif(CurrentMission ~= THE_SECRET_WEAPON and pRank == 7 and PresOfPapsqueCompleted == true and getMissionRankPoints(player,19) == 1 and player:getVar("SecretWeaponStatus") == 0) then
+			player:startEvent(0x003d);
+		elseif(CurrentMission == THE_SECRET_WEAPON and player:getVar("SecretWeaponStatus") == 3) then
+			player:startEvent(0x0413);
+		elseif(player:hasCompletedMission(0,20) and tonumber(os.date("%j")) == player:getVar("Wait1DayForM8-1_date")) then
+            player:startEvent(0x0415);
 		elseif((CurrentMission ~= 255) and not (player:getVar("MissionStatus") == 8)) then
 			player:startEvent(0x03e9); -- Have mission already activated
 		else
@@ -113,8 +121,11 @@ function onEventFinish(player,csid,option)
 	elseif(csid == 0x040f) then
 	   player:setVar("MissionStatus",7);
 	   player:setVar("Wait1DayForRanperre_date",0);
-	elseif(csid == 0x0409) then
++	elseif(csid == 0x003d) then
++		player:setVar("SecretWeaponStatus",1);
+	elseif(csid == 0x0415) then
+	   player:setVar("WaitCS8-1",1);
+	elseif(csid == 0x0409 or csid == 0x0413) then
 	   finishMissionTimeline(player,2,csid,option);
 	end
-
 end;

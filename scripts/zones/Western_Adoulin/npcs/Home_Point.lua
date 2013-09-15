@@ -1,11 +1,11 @@
 -----------------------------------
--- Area: Bastok Markets
+-- Area: Southern San d'Oria
 -- NPC: Home Point
 -----------------------------------
 
 require("scripts/globals/settings");
-package.loaded["scripts/zones/Bastok_Markets/TextIDs"] = nil;
-require("scripts/zones/Bastok_Markets/TextIDs");
+package.loaded["scripts/zones/Southern_San_dOria/TextIDs"] = nil;
+require("scripts/zones/Southern_San_dOria/TextIDs");
 
 -----------------------------------
 -- onTrade Action

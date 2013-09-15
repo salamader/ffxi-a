@@ -11,6 +11,7 @@ package.loaded["scripts/zones/Southern_San_dOria/TextIDs"] = nil;
 require("scripts/globals/settings");
 require("scripts/globals/keyitems");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Southern_San_dOria/TextIDs");
 
 ----------------------------------- 
@@ -65,6 +66,7 @@ function onEventFinish(player,csid,option)
 	if (csid == 0x0279) then
 		player:addKeyItem(BOOK_OF_THE_EAST);
 		player:messageSpecial(KEYITEM_OBTAINED, BOOK_OF_THE_EAST);
+		debugTeleport(player,17388007); -- Disused Well
 	end
 	
 end;

@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Flood
+-- Spell: Flood II
 -- Deals water damage to an enemy.
 -----------------------------------------
 

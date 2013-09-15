@@ -1,6 +1,8 @@
 -----------------------------------
 -- Area: Riverne Site #B01
 -- NPC:  Unstable Displacement
+-- @zone 29
+-- @pos
 -----------------------------------
 package.loaded["scripts/zones/Riverne-Site_B01/TextIDs"] = nil;
 -----------------------------------

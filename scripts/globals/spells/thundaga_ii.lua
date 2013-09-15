@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Thundaga 2
+-- Spell: Thundaga II
 -- Deals thunder damage to an enemy.
 -----------------------------------------
 

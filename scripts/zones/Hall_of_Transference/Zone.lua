@@ -2,11 +2,20 @@
 -- 
 -- Zone: Hall_of_Transference
 -- 
+--  Consists of three separate but identically looking areas, for dem, holla and mea:
+--   280 -80 -68  (mea)
+--  -260 -40 -280 (dem)
+--  -260 0 280    (holla)
+--
+-- 0x009b "I heard you were poking your nose at the Second Creig so I knew you would show here"
 -----------------------------------
 package.loaded["scripts/zones/Hall_of_Transference/TextIDs"] = nil;
 -----------------------------------
 
+require("scripts/globals/missions");
 require("scripts/globals/settings");
+require("scripts/globals/titles");
+require("scripts/globals/keyitems");
 require("scripts/zones/Hall_of_Transference/TextIDs");
 
 -----------------------------------
@@ -26,12 +35,33 @@ end;
 
 function onZoneIn(player,prevZone)
 cs = -1;
+if(prevZone == 108 or prevZone == 102 or prevZone == 117)then
+
+    if(player:getVar("COPM2") == 3)then
 	
-	if((player:getXPos() == 0) and (player:getYPos() == 0) and (player:getZPos() == 0)) then	
-		player:setPos(274,-82,-62 ,180);
-     end
-	 
-	return cs;
+	if(player:hasKeyItem(LIGHT_OF_DEM) and player:hasKeyItem(LIGHT_OF_MEA) and not(player:hasKeyItem(LIGHT_OF_HOLLA)))then
+	cs = 0x009B;
+	player:setVar("COPM2",4);
+
+	elseif(player:hasKeyItem(LIGHT_OF_HOLLA) and player:hasKeyItem(LIGHT_OF_MEA) and not(player:hasKeyItem(LIGHT_OF_DEM)))then
+	cs = 0x009B;
+	player:setVar("COPM2",5);
+
+		
+	elseif(player:hasKeyItem(LIGHT_OF_HOLLA) and player:hasKeyItem(LIGHT_OF_DEM) and not(player:hasKeyItem(LIGHT_OF_MEA)))then
+	cs = 0x009B;
+	player:setVar("COPM2",6);
+
+	end
+  end
+
+end
+
+if((player:getXPos() == 0) and (player:getYPos() == 0) and (player:getZPos() == 0)) then	
+player:setPos(274,-82,-62 ,180);
+
+end
+return cs;
 end;
 
 -----------------------------------
@@ -43,20 +73,16 @@ function onRegionEnter(player,region)
 	switch (region:GetRegionID()): caseof
 	{
 		[1] = function (x) -- Holla
-			player:setVar("option",1);
-			player:startEvent(103);
+			player:startEvent(0x0067);
 		end,
 		[2] = function (x) -- Mea
-			player:setVar("option",1);
-			player:startEvent(104);
+			player:startEvent(0x0068);
 		end,
 		[3] = function (x) -- Dem
-			player:setVar("option",1);
-			player:startEvent(105);
+			player:startEvent(0x0069);
 		end,
 		[4] = function (x)
-			player:setVar("option",2);
-			player:startEvent(103);
+			player:startEvent(0x0067);
 		end,
 	}
 	
@@ -83,14 +109,29 @@ end;
 -----------------------------------
 
 function onEventFinish(player,csid,option)
---printf("CSID: %u",csid);
---printf("RESULT: %u",option);
+	-- printf("CSID: %u",csid);
+	-- printf("RESULT: %u",option);
 
-	if(csid==103)then
-		player:setPos(337 ,19 ,-60 ,125 ,102); -- Holla to La Theine
-	elseif(csid==104)then
-		player:setPos(179 ,35 ,256 ,63 ,117 ); -- Mea to Tahrongi
-	elseif(csid==105)then
-		player:setPos(136 ,19 ,220 ,130 ,108 ); -- Dem to Konschtat
+
+	if(player:getVar("COPM2") == 4)then
+		player:setPos(82 ,0 ,89 ,119 ,16 );
+	elseif(player:getVar("COPM2") == 5)then
+		player:setPos(152,0 ,-70 ,81 ,18 );
+	elseif(player:getVar("COPM2") == 6)then
+		player:setPos(-107 ,0 ,223 ,164 ,20);
+	elseif(csid == 0x009b)then
+		if(player:getVar("COPM2") == 4)then
+			player:setPos(82 ,0 ,89 ,119 ,16 );
+		elseif(player:getVar("COPM2") == 5)then
+			player:setPos(152,0 ,-70 ,81 ,18 );
+		elseif(player:getVar("COPM2") == 6)then
+			player:setPos(-107 ,0 ,223 ,164 ,20);
+		end
+	elseif(csid==103 and option ==1)then
+		player:setPos(337 ,19 ,-60 ,125 ,102); 
+	elseif(csid==104 and option ==1)then
+		player:setPos(179 ,35 ,256 ,63 ,117 ); 
+	elseif(csid==105 and option ==1)then
+		player:setPos(136 ,19 ,220 ,130 ,108 ); 
 	end
 end;

@@ -14,6 +14,7 @@ require("scripts/globals/titles");
 require("scripts/globals/keyitems");
 require("scripts/globals/shop");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Bostaunieux_Oubliette/TextIDs");
 require("scripts/globals/pathfind");
 
@@ -50,7 +51,7 @@ function onTrade(player,npc,trade)
 	end
 	if(player:getQuestStatus(SANDORIA,THE_RUMOR) == QUEST_ACCEPTED) then
 		count = trade:getItemCount();
-		BeastBlood = trade:hasItemQty(930,1)
+		local BeastBlood = trade:hasItemQty(930,1)
 		if(BeastBlood == true and count == 1) then
 			player:startEvent(0x000c);
 			npc:wait(-1);
@@ -64,10 +65,10 @@ end;
 
 function onTrigger(player,npc)
 
-	troubleAtTheSluice = player:getQuestStatus(SANDORIA,TROUBLE_AT_THE_SLUICE);
-	TheHolyCrest = player:getVar("TheHolyCrest_Event");
-	tatsVar = player:getVar("troubleAtTheSluiceVar");
-	theRumor = player:getQuestStatus(SANDORIA,THE_RUMOR);
+	local troubleAtTheSluice = player:getQuestStatus(SANDORIA,TROUBLE_AT_THE_SLUICE);
+	local TheHolyCrest = player:getVar("TheHolyCrest_Event");
+	local tatsVar = player:getVar("troubleAtTheSluiceVar");
+	local theRumor = player:getQuestStatus(SANDORIA,THE_RUMOR);
 	
 	npc:wait(-1);
 
@@ -113,6 +114,7 @@ function onEventFinish(player,csid,option)
 	
 	if(csid == 0x0006) then
 		player:setVar("TheHolyCrest_Event",2);
+		debugTeleport(player,17723419); -- Morjean, zone 231, 98 x
 	elseif(csid == 0x0011) then
 		player:tradeComplete();
 		player:addKeyItem(NEUTRALIZER);

@@ -17,11 +17,15 @@ function OnUseAbility(player, target, ability)
    -- is disputed.  Source used: http://wiki.bluegartr.com/bg/Sentinel
 	local sFeet = player:getEquipID(SLOT_FEET);
 	local power = 90;
-	if(sFeet == 15138 or sFeet == 15671) then
-		power = power + 13; -- -103%.  This is oddly correct.
+	local duration = 30;
+	local merit = player:getMerit(MERIT_GUARDIAN);
+	if(sFeet == 15138 or sFeet == 15671 or sFeet == 10736) then
+		power = power + 13;
+	end
+	if(sFeet == 10736) then
+		duration = duration + (2 * merit);
 	end
 
-   -- Sent as positive power because UINTs, man.
-   player:addStatusEffect(EFFECT_SENTINEL,power,3,30);
+	player:addStatusEffect(EFFECT_SENTINEL,power,3,duration);
 
 end;

@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 5565
--- Item: slice_of_cerberus_meat
--- Food Effect: 30Min, All Races
+-- Item: Slice of Cerberus Meat
+-- Food Effect: 30 Min, All Races
 -----------------------------------------
 -- Health 10
 -- Magic -10

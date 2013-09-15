@@ -1,14 +1,16 @@
 -----------------------------------
---	Area: Mhaura
---	NPC: Yabby Tanmikey
---  Guild Merchant NPC: Goldsmithing Guild 
+-- Area: Mhaura
+-- NPC: Yabby Tanmikey
+-- Type: Guild Merchant
+-- Goldsmithing Guild
+-- @zone 249
+-- @pos -36.459, -16.000, 76.840 
 -----------------------------------
 package.loaded["scripts/zones/Mhaura/TextIDs"] = nil;
 -----------------------------------
 
 require("scripts/globals/settings");
 require("scripts/zones/Mhaura/TextIDs");
-
 
 -----------------------------------
 -- onTrade Action
@@ -44,6 +46,3 @@ function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
 end;
-
-
-

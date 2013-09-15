@@ -7,24 +7,24 @@
 -- 
 -- Auto-Script: Requires Verification (Verified by Brawndo)
 -----------------------------------
-package.loaded["scripts/zones/Aht_Urhgan_Whitegate/TextIDs"] = nil;
------------------------------------
-
------------------------------------
--- onTrade Action
------------------------------------
-
-function onTrade(player,npc,trade)
-end;
 
 -----------------------------------
 -- onTrigger Action
 -----------------------------------
-
 function onTrigger(player,npc)
-	player:startEvent(0x01f6);
-end;
+	birth = 1009810800;
+	timer = os.time();
+	counter = (timer - birth);
+	player:startEvent(0x01f6,0,0,0,0,0,0,0,counter);
+end; 
 
+
+-----------------------------------
+-- onTrade Action
+-----------------------------------
+function onTrade(player,npc,trade)
+end;  
+  
 -----------------------------------
 -- onEventUpdate
 -----------------------------------
@@ -35,11 +35,9 @@ function onEventUpdate(player,csid,option)
 end;
 
 -----------------------------------
--- onEventFinish
+-- onEventFinish Action
 -----------------------------------
-
 function onEventFinish(player,csid,option)
-	-- printf("CSID: %u",csid);
-	-- printf("RESULT: %u",option);
+--print("CSID:",csid);
+--print("RESULT:",option);
 end;
-

@@ -38,6 +38,5 @@ function onSpellCast(caster,target,spell)
     end
 
     spell:setMsg(75); -- no effect
-
     return 0;
 end;

@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Silence
+-- Spell: Silencega
 -----------------------------------------
 require("scripts/globals/status");
 require("scripts/globals/magic");
@@ -18,6 +18,11 @@ function onSpellCast(caster,target,spell)
 		--Pull base stats.
 		local dINT = (caster:getStat(MOD_MND) - target:getStat(MOD_MND));
 		local bonus = AffinityBonus(caster, spell:getElement());
+		local body = caster:getEquipID(SLOT_BODY);
+
+		if (body == 11088) then -- Estoquers Sayon +2
+			bonus = bonus * 1.1;		
+		end
 
 		--Duration, including resistance.  May need more research.
 		local duration = 180;

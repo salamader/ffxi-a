@@ -1,5 +1,6 @@
 -----------------------------------
--- Ability: Deploy
+-- Ability: Assault
+-- Orders the Atatar to attack.
 -----------------------------------
 
 require("scripts/globals/settings");

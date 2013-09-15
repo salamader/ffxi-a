@@ -1,12 +1,16 @@
 -----------------------------------
 -- Area: West Ronfaure
--- NPC:   Vilatroire
--- 
--- @pos -260.361 -70.999 423.420 100
--- 0x0036  0x0088  0x0087  0x0086  0x0085  0x0084  0x0083  0x0082  0x0081  
---
+-- NPC:  Vilatroire
+-- Involved in Quest: Introduction
+-- to Teamwork.
+-- @zone 100
+-- @pos -263.577 -72.999 425.885 
+-- 0x0036  0x0088  0x0087  0x0086
+-- 0x0085  0x0084  0x0083  0x0082
+-- 0x0081  
 -----------------------------------
 
+require("scripts/globals/settings");
 require("scripts/globals/quests");
 require("scripts/zones/West_Ronfaure/TextIDs");
 
@@ -52,5 +56,7 @@ end;
 function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
-
+	if(csid == 0x0087) then
+		player:addQuest(SANDORIA,INTRODUCTION_TO_TEAMWORK);
+	end
 end;

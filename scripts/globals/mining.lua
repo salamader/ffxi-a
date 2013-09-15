@@ -82,6 +82,8 @@ function pickaxeBreak(player,trade)
 	Body = player:getEquipID(SLOT_BODY);
 	Hands = player:getEquipID(SLOT_HANDS);
 	Feet = player:getEquipID(SLOT_FEET);
+	Waist = player:getEquipID(SLOT_WAIST);
+	Neck = player:getEquipID(SLOT_NECK);
 
 	if(Body == 14374 or Body == 14375) then
 		pickaxebreak = pickaxebreak + 0.073;
@@ -90,6 +92,12 @@ function pickaxeBreak(player,trade)
 		pickaxebreak = pickaxebreak + 0.073;
 	end
 	if(Feet == 14176 or Feet == 14177) then
+		pickaxebreak = pickaxebreak + 0.073;
+	end
+	if(Waist == 11769) then
+		pickaxebreak = pickaxebreak + 0.073;
+	end
+	if(Neck == 10926) then
 		pickaxebreak = pickaxebreak + 0.073;
 	end
 	

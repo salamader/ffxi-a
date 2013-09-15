@@ -1,9 +1,10 @@
 -----------------------------------
 -- Area: Southern San d'Oria
 -- NPC: Kueh Igunahmori
--- Guild Merchant NPC: Leathercrafting Guild 
+-- Type: Guild Merchant
+-- Leathercrafting Guild 
 -- @zone 230
--- @pos -189 -8 14
+-- @pos -189, -8, 14
 -----------------------------------
 package.loaded["scripts/zones/Southern_San_dOria/TextIDs"] = nil;
 -----------------------------------
@@ -47,7 +48,3 @@ function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
 end;
-
-
-
-

@@ -1,9 +1,10 @@
 -----------------------------------
 -- Area: Temenos N T	
--- NPC:  Telchines_Dragoon
+-- NPC:  Telchines Dragoon
 -----------------------------------
 package.loaded["scripts/zones/Temenos/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Temenos/TextIDs");
 

@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4377
--- Item: slice_of_coeurl_meat
--- Food Effect: 5Min, Galka only
+-- Item: Slice of Coeurl Meat
+-- Food Effect: 5 Min, Galka only
 -----------------------------------------
 -- Strength 5
 -- Intelligence -7

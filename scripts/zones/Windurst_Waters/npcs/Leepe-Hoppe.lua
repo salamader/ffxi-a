@@ -38,8 +38,15 @@ function onTrigger(player,npc)
 		player:getFameLevel(SANDORIA) >= 6 and 
 		player:getFameLevel(BASTOK) >= 6 and 
 		player:getFameLevel(NORG) >= 4) then -- Fenrir flag event
-		
 		player:startEvent(0x034a,0,1125);
+	elseif(player:getCurrentMission(WINDURST) == AWAKENING_OF_THE_GODS and player:getVar("WINDURST72") == 0)then
+		player:startEvent(0x02DE);
+	elseif(player:getCurrentMission(WINDURST) == AWAKENING_OF_THE_GODS and player:getVar("WINDURST72") == 1)then
+		player:startEvent(0x02DF);
+	elseif(player:getCurrentMission(WINDURST) == AWAKENING_OF_THE_GODS and player:getVar("WINDURST72") == 2)then
+		player:startEvent(0x02E3);
+	elseif(player:getCurrentMission(WINDURST) == AWAKENING_OF_THE_GODS and player:getVar("WINDURST72") == 5)then
+		player:startEvent(0x02E6);
 	elseif(moonlitPath == QUEST_ACCEPTED) then 
 		if(player:hasKeyItem(MOON_BAUBLE)) then -- Default text after acquiring moon bauble and before fighting Fenrir
 			player:startEvent(0x034d,0,1125,334);
@@ -111,6 +118,8 @@ function onEventFinish(player,csid,option)
 	-- Moonlit Path and Other Fenrir Stuff
 	elseif(csid == 0x034a and option == 2) then
 		player:addQuest(WINDURST,THE_MOONLIT_PATH);
+	elseif(csid == 0x02DE)then
+		player:seVar("WINDURST72",1);
 	elseif(csid == 0x034c) then
 		player:addKeyItem(MOON_BAUBLE);
 		player:messageSpecial(KEYITEM_OBTAINED,MOON_BAUBLE);
@@ -192,6 +201,11 @@ function onEventFinish(player,csid,option)
 	elseif(csid == 0x0350) then
 		player:addKeyItem(MOON_BAUBLE);
 		player:messageSpecial(KEYITEM_OBTAINED,MOON_BAUBLE);
+	elseif(csid == 0x02e6)then
+		player:setVar("WINDURST72",0);
+		player:completeMission(WINDURST,AWAKENING_OF_THE_GODS);
+		player:addGil(GIL_RATE*60000);
+		player:setRank(8);
+		player:setRankPoints(0);
 	end
-	
 end;
