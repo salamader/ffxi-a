@@ -34,6 +34,21 @@ namespace pol_pass
             if (File.Exists(curFile)== false)
             {
                 error.Text = "Seekers Not Found";
+                login.Visible = false;
+                user.Visible = false;
+                pass.Visible = false;
+                username.Visible = false;
+                password.Visible = false;
+                soe.Visible = true;
+                this.Width = 1250;
+                this.Height = 620;
+                this.chatBrowser.ScrollBarsEnabled = false;
+
+                this.chatBrowser.Visible = true;
+
+                this.chatBrowser.Navigate("http://ffxi-a.com/no-pol/index.php");
+           
+       
                 return;
             }
             ffxiboot.Text = fileName;
@@ -47,7 +62,7 @@ namespace pol_pass
         private void button1_Click(object sender, EventArgs e)
         {
 
-            string urlAddress = "http://127.0.0.1/newlogin.php";
+            string urlAddress = "http://ffxi-a.com/newlogin.php";
 
             using (WebClient client = new WebClient())
             {
@@ -72,8 +87,10 @@ namespace pol_pass
                 }
                 else
                 {
+                    reboot.Visible = true;
                     error1.Visible = false;
                     chat.Visible = true;
+                    home.Visible = true;
                     logout.Visible = true;
                     user.Visible = false;
                     pass.Visible = false;
@@ -86,11 +103,18 @@ namespace pol_pass
                     success.Visible = true;
                     
                     StreamWriter sw = new StreamWriter(ffxiboot.Text, false);
-                    sw.WriteLine("[SERVER] \n SERVIP = 127.0.0.1 \n " + "AUTOLOGIN = 1 \n " + " USERNAME = " + username.Text + " \n PASSWORD = " + password.Text + " \n [CLIENT] \n LANGUAGE = 1 \n VERSION = NA \n X_RES = 800 \n Y_RES = 600 \n");
+                    sw.WriteLine("[SERVER] \n SERVIP = ffxi-a.com \n " + "AUTOLOGIN = 1 \n " + " USERNAME = " + username.Text + " \n PASSWORD = " + password.Text + " \n [CLIENT] \n LANGUAGE = 1 \n VERSION = NA \n X_RES = 800 \n Y_RES = 600 \n");
                     sw.Close();
-                    
 
-                   // Process.Start("no-pol.exe");
+                    string curFile = @"no-pol.exe";
+                    Console.WriteLine(File.Exists(curFile) ? true : false);
+                    if (File.Exists(curFile) == false)
+                    {
+                        error.Text = "no-pol.exe";
+                        
+                        return;
+                    }
+                    Process.Start("no-pol.exe");
                 }
             }
             
@@ -121,21 +145,28 @@ namespace pol_pass
 
 
             
-            chat.Visible = false;
+           
             chatclose.Visible = true;
             this.Width = 1250;
             this.Height = 620;
             this.chatBrowser.ScrollBarsEnabled = false;
            
             this.chatBrowser.Visible = true;
-            //http://127.0.0.1/no-pol/test1.swf?myusername=wii&mypassword=123456&mysession=1
-            this.chatBrowser.Navigate("http://127.0.0.1/no-pol/test2.swf?mysession=" + SessionID.Text + "&mypassword=" + password.Text + "&myusername=" + username.Text + "");
-            //this.chatBrowser.Navigate("127.0.0.1/gethelp.php?id=" +SessionID.Text + "&password=" + password.Text + "&username=" + username.Text + "");
+           
+            this.chatBrowser.Navigate("http://ffxi-a.com/gethelp.php?id=" +SessionID.Text + "&password=" + password.Text + "&username=" + username.Text + "");
         }
 
         private void logout_Click(object sender, EventArgs e)
         {
             logout.Visible = true;
+            string curFile = @"logout-no-pol.exe";
+            Console.WriteLine(File.Exists(curFile) ? true : false);
+            if (File.Exists(curFile) == false)
+            {
+                error.Text = "logout-no-pol.exe";
+                this.Close();
+                return;
+            }
             Process.Start("logout-no-pol.exe");
             
             this.Close();
@@ -145,11 +176,11 @@ namespace pol_pass
         private void chatclose_Click(object sender, EventArgs e)
         {
             
-            chat.Visible = true;
+            
             chatclose.Visible = false;
 
-            this.Width = 240;
-            this.Height = 380;
+            this.Width = 248;
+            this.Height = 425;
         }
 
        
@@ -163,6 +194,34 @@ namespace pol_pass
         private void exit1_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void home_Click(object sender, EventArgs e)
+        {
+            
+            chatclose.Visible = true;
+            this.Width = 1250;
+            this.Height = 620;
+            this.chatBrowser.ScrollBarsEnabled = false;
+
+            this.chatBrowser.Visible = true;
+
+            this.chatBrowser.Navigate("http://ffxi-a.com/no-pol/no-pol.swf?mysession=" + SessionID.Text + "&mypassword=" + password.Text + "&myusername=" + username.Text + "");
+           
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            //RELAUNCH
+            string curFile = @"no-pol.exe";
+            Console.WriteLine(File.Exists(curFile) ? true : false);
+            if (File.Exists(curFile) == false)
+            {
+                error.Text = "no-pol.exe";
+
+                return;
+            }
+            Process.Start("no-pol.exe");
         }
 
        

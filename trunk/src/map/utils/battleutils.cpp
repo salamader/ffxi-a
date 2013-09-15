@@ -2114,6 +2114,7 @@ uint16 TakePhysicalDamage(CBattleEntity* PAttacker, CBattleEntity* PDefender, in
             if(PDefender->PMaster != NULL && PDefender->PMaster->objtype == TYPE_PC)
             {
                 ((CPetEntity*)PDefender)->loc.zone->PushPacket(PDefender, CHAR_INRANGE, new CEntityUpdatePacket(PDefender, ENTITY_UPDATE));
+				 ((CPetEntity*)PDefender)->loc.zone->PushPacket(PDefender, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PDefender, ENTITY_UPDATE));
             }
 
         }
@@ -2121,6 +2122,7 @@ uint16 TakePhysicalDamage(CBattleEntity* PAttacker, CBattleEntity* PDefender, in
         case TYPE_PET:
         {
             ((CPetEntity*)PDefender)->loc.zone->PushPacket(PDefender, CHAR_INRANGE, new CEntityUpdatePacket(PDefender, ENTITY_UPDATE));
+			((CPetEntity*)PDefender)->loc.zone->PushPacket(PDefender, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PDefender, ENTITY_UPDATE));
         }
         break;
     }
@@ -4000,6 +4002,7 @@ void tryToCharm(CBattleEntity* PCharmer, CBattleEntity* PVictim)
 		((CCharEntity*)PCharmer)->pushPacket(new CCharUpdatePacket((CCharEntity*)PCharmer));
 		((CCharEntity*)PCharmer)->pushPacket(new CPetSyncPacket((CCharEntity*)PCharmer));
 		PVictim->loc.zone->PushPacket(PVictim, CHAR_INRANGE, new CEntityUpdatePacket(PVictim, ENTITY_UPDATE));
+		PVictim->loc.zone->PushPacket(PVictim, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PVictim, ENTITY_UPDATE));
 	}
 
 	else if (PVictim->objtype == TYPE_PC)
@@ -4343,6 +4346,7 @@ void DrawIn(CBattleEntity* PEntity, position_t* pos, float offset)
 	else
 	{
 		PEntity->loc.zone->PushPacket(PEntity,CHAR_INRANGE, new CEntityUpdatePacket(PEntity,ENTITY_UPDATE));
+		PEntity->loc.zone->PushPacket(PEntity,CHAR_INRANGE_SELF, new CEntityUpdatePacket(PEntity,ENTITY_UPDATE));
 	}
 }
 

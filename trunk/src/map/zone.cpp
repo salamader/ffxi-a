@@ -11,8 +11,8 @@
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
+  GNU General Public License for more details.F
+  F
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see http://www.gnu.org/licenses/
 
@@ -950,7 +950,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
     // TODO: могут возникать проблемы с переходом между одной и той же зоной (zone == prevzone)
 
 	m_charList.erase(PChar->targid);
-	PChar->SpawnPCList.erase(PChar->id);
+	PChar->SpawnPCList.erase(PChar->targid);
 	//ShowMessage(CL_YELLOW"DECREASE THIS ZONE ID %u\n"CL_RESET,PChar->loc.destination);
 	 
   /*string_t zonename = "noname";
@@ -982,6 +982,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 	else
 	{
 		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CCharPacket(PChar,ENTITY_DESPAWN));
+		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCharPacket(PChar,ENTITY_DESPAWN));
 		//PChar->pushPacket(new CCharPacket(PChar,ENTITY_DESPAWN));
 	}
 	if (PChar->m_LevelRestriction != 0)
@@ -1062,7 +1063,7 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
         if (PChar->targid != it->first)
         {
 			PChar->targid++;
-			ShowMessage("IS NOT IT FRIST %s targid = %u \n" CL_RESET,PChar->GetName(), PChar->targid);
+			ShowMessage(CL_BG_RED"IS NOT IT FRIST %s targid = %u \n" CL_RESET,PChar->GetName(), PChar->targid);
 			const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
             Sql_Query(SqlHandle,fmtQuery,PChar->targid,PChar->id);
             break;
@@ -1070,7 +1071,7 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 		else
 		{
         PChar->targid++;
-		ShowMessage("ELSE IT SECOND %s targid = %u \n" CL_RESET,PChar->GetName(), PChar->targid);
+		ShowMessage(CL_BG_RED"ELSE IT SECOND %s targid = %u \n" CL_RESET,PChar->GetName(), PChar->targid);
 		//ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid++);
 		const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
         Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
@@ -1083,31 +1084,13 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
     }
     PChar->loc.zone = this;
     PChar->loc.zoning = false;
-   // PChar->loc.destination = 0;
-   // PChar->m_InsideRegionID = 0;
+  
 
     PChar->m_PVPFlag = CanUseMisc(MISC_PVP);
 
+	
 	m_charList[PChar->targid] = PChar;
-	PChar->SpawnPCList[PChar->id] = PChar;
-	/*ShowDebug("INCREASE THIS IS %u \n",PChar->loc.destination);
-  string_t zonename = "noname";
-	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
-	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
-			
-
-	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	                {
-						
-				   zonename =  Sql_GetData(SqlHandle,0);
-				  
-				   ShowDebug(CL_CYAN"CZone:: %s IncreaseZoneCounter <%u> %s \n" CL_RESET, zonename.c_str(), m_charList.size(),PChar->GetName());
-				 }
-				 else
-				 {
-					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
-					 return;
-				 }*/
+	PChar->SpawnPCList[PChar->targid] = PChar;
 	
 
 	if (!ZoneTimer && !m_charList.empty())
@@ -1121,7 +1104,7 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 			500);
 	}
 
-	//remove status effects that wear on zone
+	
 	PChar->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_ON_ZONE);
 
   if (PChar->animation == ANIMATION_CHOCOBO && !CanUseMisc(MISC_CHOCOBO))
@@ -1129,11 +1112,7 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
       PChar->animation = ANIMATION_NONE;
       PChar->StatusEffectContainer->DelStatusEffectSilent(EFFECT_CHOCOBO);
   }
-  //if (PChar->m_Costum != 0)
-  //{
-  //    PChar->m_Costum = 0;
-   //   PChar->StatusEffectContainer->DelStatusEffect(EFFECT_COSTUME);
-  //}
+  
 
 	if (m_TreasurePool != NULL)
 	{
@@ -1183,6 +1162,9 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 			{
 				PChar->SpawnMOBList.insert(MOB, SpawnIDList_t::value_type(PCurrentMob->id, PCurrentMob));
 				PChar->pushPacket(new CEntityUpdatePacket(PCurrentMob, ENTITY_SPAWN));
+				PChar->pushPacket(new CEntityUpdatePacket(PCurrentMob, ENTITY_UPDATE));
+				PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CEntityUpdatePacket(PCurrentMob, ENTITY_SPAWN));
+	            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PCurrentMob, ENTITY_UPDATE));
 			}
 
 			if (PChar->isDead() || PChar->godmode==1 || PCurrentMob->PMaster != NULL)
@@ -1789,19 +1771,11 @@ void CZone::ZoneServer(uint32 tick)
 	{
 		CMobEntity* PMob = (CMobEntity*)it->second;
 
-		if(!m_charList.size() !=NULL)
-        {
-
-
-		//ShowMessage("THE CHAR LIST IS EMPTY MOB\n");
-	    }
-		else
-		{
 		
 		PMob->StatusEffectContainer->CheckEffects(tick);
 		PMob->Check_Engagment->CheckCurrentAction(tick);
 		PMob->StatusEffectContainer->CheckRegen(tick);
-		}
+		
 		
 	}
 

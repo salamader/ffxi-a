@@ -47,6 +47,7 @@ int32 close_door(uint32 tick, CTaskMgr::CTask* PTask)
 
 	PNpc->animation = ANIMATION_OPEN_DOOR;
 	PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CEntityUpdatePacket(PNpc,ENTITY_UPDATE));
+	PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PNpc,ENTITY_UPDATE));
 	return 0;
 }
 
@@ -62,6 +63,7 @@ int32 reappear_npc(uint32 tick, CTaskMgr::CTask* PTask)
 
 	PNpc->status = STATUS_NORMAL;
 	PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CEntityUpdatePacket(PNpc,ENTITY_UPDATE));
+	PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PNpc,ENTITY_UPDATE));
 	return 0;
 }
 

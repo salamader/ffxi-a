@@ -517,6 +517,7 @@ inline int32 CLuaBaseEntity::setPos(lua_State *L)
     if( m_PBaseEntity->objtype != TYPE_PC)
     {
         m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_DESPAWN));
+		m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_DESPAWN));
     }
 
 	if(lua_isnumber(L, 1))
@@ -571,6 +572,7 @@ inline int32 CLuaBaseEntity::setPos(lua_State *L)
     else
     {
         m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_SPAWN));
+		 m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_SPAWN));
     }
 	return 0;
 }
@@ -634,6 +636,7 @@ inline int32 CLuaBaseEntity::AirShips(lua_State *L)
     if( m_PBaseEntity->objtype != TYPE_PC)
     {
         m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_DESPAWN));
+		m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_DESPAWN));
     }
 
 	if(lua_isnumber(L, 1))
@@ -688,6 +691,7 @@ inline int32 CLuaBaseEntity::AirShips(lua_State *L)
     else
     {
         m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_SPAWN));
+		m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_SPAWN));
     }
 	return 0;
 }
@@ -2438,6 +2442,10 @@ inline int32 CLuaBaseEntity::showText(lua_State *L)
 				PBaseEntity,
 				CHAR_INRANGE,
 				new CEntityUpdatePacket(PBaseEntity,ENTITY_UPDATE));
+			PBaseEntity->loc.zone->PushPacket(
+				PBaseEntity,
+				CHAR_INRANGE_SELF,
+				new CEntityUpdatePacket(PBaseEntity,ENTITY_UPDATE));
 		}
 
         uint32 param0 = 0;
@@ -2461,6 +2469,7 @@ inline int32 CLuaBaseEntity::showText(lua_State *L)
         else
         {
 			m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE,new CMessageSpecialPacket(PBaseEntity, messageID, param0, param1, param3));
+			m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF,new CMessageSpecialPacket(PBaseEntity, messageID, param0, param1, param3));
         }
 	}
 	return 0;
@@ -3177,6 +3186,7 @@ inline int32 CLuaBaseEntity::messageBasic(lua_State* L)
 	}
 	else{//broadcast in range
 		m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE,new CMessageBasicPacket(m_PBaseEntity, m_PBaseEntity, param0, param1, messageID));
+		m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF,new CMessageBasicPacket(m_PBaseEntity, m_PBaseEntity, param0, param1, messageID));
 	}
 	return 0;
 }
@@ -3218,6 +3228,7 @@ inline int32 CLuaBaseEntity::clearTargID(lua_State* L)
 
 	m_PBaseEntity->m_TargID = 0;
     m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity,ENTITY_UPDATE));
+	m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity,ENTITY_UPDATE));
 	return 0;
 }
 
@@ -3546,6 +3557,7 @@ inline int32 CLuaBaseEntity::setAnimation(lua_State *L)
 			((CCharEntity*)m_PBaseEntity)->pushPacket(new CCharUpdatePacket((CCharEntity*)m_PBaseEntity));
 		} else {
             m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity,ENTITY_UPDATE));
+			m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity,ENTITY_UPDATE));
 		}
 	}
 	return 0;
@@ -3574,6 +3586,7 @@ inline int32 CLuaBaseEntity::speed(lua_State *L)
 			    ((CCharEntity*)m_PBaseEntity)->pushPacket(new CCharUpdatePacket((CCharEntity*)m_PBaseEntity));
             } else {
                 m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE));
+				  m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE));
             }
         }
         return 0;
@@ -3605,6 +3618,7 @@ inline int32 CLuaBaseEntity::AnimationSub(lua_State *L)
 			    ((CCharEntity*)m_PBaseEntity)->pushPacket(new CCharUpdatePacket((CCharEntity*)m_PBaseEntity));
             } else {
                 m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE));
+				 m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE));
             }
         }
         return 0;
@@ -3694,6 +3708,7 @@ inline int32 CLuaBaseEntity::setStatus(lua_State *L)
 
 	m_PBaseEntity->status = (STATUSTYPE)lua_tointeger(L, 1);
 	m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE));
+	m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE));
 	return 0;
 }
 

@@ -772,6 +772,9 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
 		map_session_data_t* map_session_data = it->second;
 
         CCharEntity* PChar = map_session_data->PChar;
+		//CZone* PZone = zoneutils::GetZone(PChar->loc.destination);
+		
+		
 		
         if ( checktime == 0 || checktime == 5 || 
 			checktime == 10 || checktime == 15 ||

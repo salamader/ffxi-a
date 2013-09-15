@@ -37,7 +37,10 @@
             this.chatBrowser = new System.Windows.Forms.WebBrowser();
             this.tracer = new System.Windows.Forms.TextBox();
             this.SessionID = new System.Windows.Forms.Label();
-            this.success = new System.Windows.Forms.PictureBox();
+            this.soe = new System.Windows.Forms.PictureBox();
+            this.reboot = new System.Windows.Forms.Button();
+            this.chatclose = new System.Windows.Forms.Button();
+            this.home = new System.Windows.Forms.Button();
             this.error1 = new System.Windows.Forms.PictureBox();
             this.logout = new System.Windows.Forms.Button();
             this.chat = new System.Windows.Forms.Button();
@@ -45,17 +48,18 @@
             this.user = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.chatclose = new System.Windows.Forms.Button();
             this.login = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.success = new System.Windows.Forms.PictureBox();
             this.bv = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.success)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.soe)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.error1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pass)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.user)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.success)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bv)).BeginInit();
             this.SuspendLayout();
             // 
@@ -103,6 +107,7 @@
             this.error.Size = new System.Drawing.Size(28, 13);
             this.error.TabIndex = 7;
             this.error.Text = "error";
+            this.error.Visible = false;
             // 
             // chatBrowser
             // 
@@ -132,22 +137,75 @@
             this.SessionID.Text = "SessionID";
             this.SessionID.Visible = false;
             // 
-            // success
+            // soe
             // 
-            this.success.BackgroundImage = global::pol_pass.Properties.Resources.butback;
-            this.success.Image = global::pol_pass.Properties.Resources.success2;
-            this.success.Location = new System.Drawing.Point(23, 133);
-            this.success.Name = "success";
-            this.success.Size = new System.Drawing.Size(182, 101);
-            this.success.TabIndex = 32;
-            this.success.TabStop = false;
-            this.success.Visible = false;
+            this.soe.BackgroundImage = global::pol_pass.Properties.Resources.soe;
+            this.soe.Location = new System.Drawing.Point(3, 82);
+            this.soe.Name = "soe";
+            this.soe.Size = new System.Drawing.Size(228, 256);
+            this.soe.TabIndex = 35;
+            this.soe.TabStop = false;
+            this.soe.Visible = false;
+            // 
+            // reboot
+            // 
+            this.reboot.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.reboot.BackgroundImage = global::pol_pass.Properties.Resources.butback;
+            this.reboot.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.reboot.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.reboot.FlatAppearance.BorderSize = 0;
+            this.reboot.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.reboot.ForeColor = System.Drawing.Color.Transparent;
+            this.reboot.Image = global::pol_pass.Properties.Resources.reboot;
+            this.reboot.Location = new System.Drawing.Point(96, 119);
+            this.reboot.Name = "reboot";
+            this.reboot.Size = new System.Drawing.Size(128, 34);
+            this.reboot.TabIndex = 34;
+            this.reboot.UseVisualStyleBackColor = false;
+            this.reboot.Visible = false;
+            this.reboot.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // chatclose
+            // 
+            this.chatclose.BackColor = System.Drawing.Color.Transparent;
+            this.chatclose.BackgroundImage = global::pol_pass.Properties.Resources.butback;
+            this.chatclose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.chatclose.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.chatclose.FlatAppearance.BorderSize = 0;
+            this.chatclose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.chatclose.ForeColor = System.Drawing.Color.Transparent;
+            this.chatclose.Image = global::pol_pass.Properties.Resources.back;
+            this.chatclose.Location = new System.Drawing.Point(5, 153);
+            this.chatclose.Name = "chatclose";
+            this.chatclose.Size = new System.Drawing.Size(86, 34);
+            this.chatclose.TabIndex = 16;
+            this.chatclose.UseVisualStyleBackColor = false;
+            this.chatclose.Visible = false;
+            this.chatclose.Click += new System.EventHandler(this.chatclose_Click);
+            // 
+            // home
+            // 
+            this.home.BackColor = System.Drawing.Color.Transparent;
+            this.home.BackgroundImage = global::pol_pass.Properties.Resources.butback;
+            this.home.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.home.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.home.FlatAppearance.BorderSize = 0;
+            this.home.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.home.ForeColor = System.Drawing.Color.Transparent;
+            this.home.Image = global::pol_pass.Properties.Resources.home1;
+            this.home.Location = new System.Drawing.Point(3, 119);
+            this.home.Name = "home";
+            this.home.Size = new System.Drawing.Size(91, 34);
+            this.home.TabIndex = 33;
+            this.home.UseVisualStyleBackColor = false;
+            this.home.Visible = false;
+            this.home.Click += new System.EventHandler(this.home_Click);
             // 
             // error1
             // 
             this.error1.BackgroundImage = global::pol_pass.Properties.Resources.butback;
             this.error1.Image = global::pol_pass.Properties.Resources.error1;
-            this.error1.Location = new System.Drawing.Point(42, 231);
+            this.error1.Location = new System.Drawing.Point(42, 227);
             this.error1.Name = "error1";
             this.error1.Size = new System.Drawing.Size(149, 92);
             this.error1.TabIndex = 31;
@@ -233,24 +291,6 @@
             this.pictureBox3.TabIndex = 25;
             this.pictureBox3.TabStop = false;
             // 
-            // chatclose
-            // 
-            this.chatclose.BackColor = System.Drawing.Color.Transparent;
-            this.chatclose.BackgroundImage = global::pol_pass.Properties.Resources.butback;
-            this.chatclose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.chatclose.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chatclose.FlatAppearance.BorderSize = 0;
-            this.chatclose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.chatclose.ForeColor = System.Drawing.Color.Transparent;
-            this.chatclose.Image = global::pol_pass.Properties.Resources.chat;
-            this.chatclose.Location = new System.Drawing.Point(5, 86);
-            this.chatclose.Name = "chatclose";
-            this.chatclose.Size = new System.Drawing.Size(86, 34);
-            this.chatclose.TabIndex = 16;
-            this.chatclose.UseVisualStyleBackColor = false;
-            this.chatclose.Visible = false;
-            this.chatclose.Click += new System.EventHandler(this.chatclose_Click);
-            // 
             // login
             // 
             this.login.BackColor = System.Drawing.Color.WhiteSmoke;
@@ -277,6 +317,17 @@
             this.pictureBox2.TabIndex = 23;
             this.pictureBox2.TabStop = false;
             // 
+            // success
+            // 
+            this.success.BackgroundImage = global::pol_pass.Properties.Resources.butback;
+            this.success.Image = global::pol_pass.Properties.Resources.success2;
+            this.success.Location = new System.Drawing.Point(24, 224);
+            this.success.Name = "success";
+            this.success.Size = new System.Drawing.Size(182, 101);
+            this.success.TabIndex = 32;
+            this.success.TabStop = false;
+            this.success.Visible = false;
+            // 
             // bv
             // 
             this.bv.BackColor = System.Drawing.Color.Transparent;
@@ -294,7 +345,10 @@
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(233, 382);
-            this.Controls.Add(this.success);
+            this.Controls.Add(this.soe);
+            this.Controls.Add(this.reboot);
+            this.Controls.Add(this.chatclose);
+            this.Controls.Add(this.home);
             this.Controls.Add(this.error1);
             this.Controls.Add(this.logout);
             this.Controls.Add(this.chat);
@@ -302,7 +356,6 @@
             this.Controls.Add(this.user);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.pictureBox3);
-            this.Controls.Add(this.chatclose);
             this.Controls.Add(this.SessionID);
             this.Controls.Add(this.tracer);
             this.Controls.Add(this.error);
@@ -313,6 +366,7 @@
             this.Controls.Add(this.login);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.chatBrowser);
+            this.Controls.Add(this.success);
             this.Controls.Add(this.bv);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -321,13 +375,14 @@
             this.Name = "Form1";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.Text = "FFXI-A";
-            ((System.ComponentModel.ISupportInitialize)(this.success)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.soe)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.error1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pass)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.user)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.success)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bv)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -356,6 +411,9 @@
         private System.Windows.Forms.PictureBox pass;
         private System.Windows.Forms.PictureBox error1;
         private System.Windows.Forms.PictureBox success;
+        private System.Windows.Forms.Button home;
+        private System.Windows.Forms.Button reboot;
+        private System.Windows.Forms.PictureBox soe;
     }
 }
 
