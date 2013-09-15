@@ -39,9 +39,7 @@ function onZoneIn(player,prevZone)
 		elseif(prevZone == 58) then
 			cs = 0x00cc;
 		else 
-			local position = math.random(1,5) - 83;
-			player:setPos(-100,0,position,0);
-		end
+					end
 	end
 return cs;	
 
