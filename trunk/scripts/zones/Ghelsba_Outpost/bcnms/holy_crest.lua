@@ -60,9 +60,9 @@ function onEventFinish(player,csid,option)
 		player:setVar("TheHolyCrest_Event",0);
 		player:addFame(SANDORIA,SAN_FAME*30);
 		player:completeQuest(SANDORIA,THE_HOLY_CREST);
-      if (option >= 2147483648 and option <= 2147483679) then -- Safety, in case the cutscene spews idk what.
-         player:setPetName(PETTYPE_WYVERN,option-2147483647);
-      end
+   		if (option >= 2147483648 and option <= 2147483679) then -- Safety, in case the cutscene spews idk what.
+        	player:setPetName(PETTYPE_WYVERN,option-2147483647);
+   		end
 	end
 	
 end;

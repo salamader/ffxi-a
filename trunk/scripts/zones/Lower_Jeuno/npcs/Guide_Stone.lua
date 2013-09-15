@@ -1,6 +1,9 @@
 -----------------------------------
--- 	Guide Stone
--- 	Normal Text
+-- Area: Lower Jeuno
+-- NPC: Guide Stone
+-- Type: Standard Info NPC
+-- @zone 245
+-- @pos 19.886, -3.000, 47.000
 -----------------------------------
 
 -----------------------------------

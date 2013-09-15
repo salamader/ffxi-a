@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 5152
--- Item: slice_of_buffalo_meat
--- Food Effect: 5Min, Galka only
+-- Item: Slice of Buffalo Meat
+-- Food Effect: 5 Min, Galka only
 -----------------------------------------
 -- Strength 4
 -- Agility -5

@@ -1,11 +1,14 @@
 -----------------------------------
 -- Area: Bibiki Bay
--- NPC:  ??? (Spawn Shen)
--- 
+-- NPC:  ???  (qm1)
+-- COP Mission 7-4
+-- @zone 4
+-- @pos 100, -45, 941
 -----------------------------------
 package.loaded["scripts/zones/Bibiki_Bay/TextIDs"] = nil;
 -----------------------------------
 
+require("scripts/globals/missions");
 require("scripts/zones/Bibiki_Bay/TextIDs");
 
 -----------------------------------
@@ -13,15 +16,6 @@ require("scripts/zones/Bibiki_Bay/TextIDs");
 -----------------------------------
 
 function onTrade(player,npc,trade)
-	
-	-- Trade Shrimp Lantern
-	if(GetMobAction(16793859) == 0 and trade:hasItemQty(1823,1) and trade:getItemCount() == 1)then
-	  	player:tradeComplete();
-		SpawnMob(16793859,180):updateEnmity(player);
-		SpawnMob(16793860,180):updateEnmity(player);
-		SpawnMob(16793861,180):updateEnmity(player);
-    end
-	
 end;
 
 -----------------------------------
@@ -29,7 +23,13 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	player:messageSpecial(NOTHING_OUT_OF_ORDINARY);
+	if(player:getCurrentMission(COP) == CALM_BEFORE_THE_STORM and GetMobAction(16793858) == 0 and player:getVar("COP_Dalham_KILL") == 0)then
+		SpawnMob(16793858,180):updateEnmity(player);
+	elseif(player:getCurrentMission(COP) == CALM_BEFORE_THE_STORM and player:getVar("COP_Dalham_KILL") == 1)then
+		player:startEvent(0x0029);
+	else
+		player:messageSpecial(NOTHING_OUT_OF_ORDINARY);
+	end
 end;
 
 -----------------------------------
@@ -48,4 +48,7 @@ end;
 function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
+	if(csid == 0x0029)then
+		player:setVar("COP_Dalham_KILL",2);
+	end
 end;

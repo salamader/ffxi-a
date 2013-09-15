@@ -1,8 +1,9 @@
 -----------------------------------
 -- Area: Selbina
 -- NPC:  Graegham
--- Guild Merchant NPC: Fishing Guild 
+-- Type: Guild Merchant Fishing Guild
 -- @zone 248
+-- @pos -12.423, -7.287, 8.665
 -----------------------------------
 
 require("scripts/globals/settings");
@@ -42,6 +43,3 @@ function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
 end;
-
-
-

@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: Tahrongi_Canyon
--- NPC:  Dimensional_Portal
+-- Area: Tahrongi Canyon
+-- NPC:  Dimensional Portal
 -----------------------------------
 package.loaded["scripts/zones/Tahrongi_Canyon/TextIDs"] = nil;
 -----------------------------------

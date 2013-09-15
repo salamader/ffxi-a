@@ -29,10 +29,10 @@ function onSpellCast(caster,target,spell)
 
             if(target:addStatusEffect(EFFECT_BLINDNESS,power,0,duration)) then
                 spell:setMsg(236);
+                else
+                    spell:setMsg(75);
+                end
             else
-                spell:setMsg(75);
-            end
-        else
             spell:setMsg(85);
         end
     else

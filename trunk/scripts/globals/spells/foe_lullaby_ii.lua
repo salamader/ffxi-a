@@ -1,8 +1,10 @@
 -----------------------------------------
--- Spell: Foe Lullaby
+-- Spell: Foe Lullaby II
 -----------------------------------------
+
 require("scripts/globals/status");
 require("scripts/globals/magic");
+
 -----------------------------------------
 -- OnSpellCast
 -----------------------------------------
@@ -13,7 +15,7 @@ end;
 
 function onSpellCast(caster,target,spell)
     local duration = 60;
-    local bonus = AffinityBonus(caster, spell:getElement());
+	local bonus = AffinityBonus(caster, spell:getElement());
     local pCHR = caster:getStat(MOD_CHR);
     local mCHR = target:getStat(MOD_CHR);
     local dCHR = (pCHR - mCHR);
@@ -29,16 +31,9 @@ function onSpellCast(caster,target,spell)
     else
 
         -- add equipment bonus
-        local sItem = caster:getEquipID(2);
-
-        -- Mary's Horn
-        if(sItem == 17366) then
-            duration = duration * 1.1;
-        end
-
-        if(sItem == 17841 or sItem == 17854) then
-            duration = duration * 1.2;
-        end
+		duration = duration + (duration * (caster:getMod(MOD_SONG_DURATION)/100));
+ 		duration = duration + (duration * ((caster:getMod(MOD_ALL_SONGS) * 10)/100));
+		duration = duration + (duration * ((caster:getMod(MOD_LULLABY) * 10)/100));
 
         if(target:addStatusEffect(EFFECT_LULLABY,1,0,duration)) then
             spell:setMsg(237);

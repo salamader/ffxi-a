@@ -3,9 +3,10 @@
 -- Zone: Abyssea-Altepa
 -- 
 -----------------------------------
+package.loaded["scripts/zones/Abyssea-Altepa/TextIDs"] = nil;
+-----------------------------------
 
 require("scripts/globals/settings");
-package.loaded["scripts/zones/Abyssea-Altepa/TextIDs"] = nil;
 require("scripts/zones/Abyssea-Altepa/TextIDs");
 
 -----------------------------------
@@ -20,11 +21,11 @@ end;
 -----------------------------------
 
 function onZoneIn(player,prevZone)
-cs = -1;
-if ((player:getXPos() == 0) and (player:getYPos() == 0) and (player:getZPos() == 0)) then	
+	cs = -1;
+	if ((player:getXPos() == 0) and (player:getYPos() == 0) and (player:getZPos() == 0)) then	
 		player:setPos(435 ,0 ,320 ,136)
 	end	
-return cs;
+	return cs;
 end;
 
 -----------------------------------

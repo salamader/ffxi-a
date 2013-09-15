@@ -7,39 +7,36 @@
 --
 -- Auto-Script: Requires Verification (Verified by Brawndo)
 -----------------------------------
+-- Includes
+require("scripts/globals/settings");
+require("scripts/globals/quests");
 package.loaded["scripts/zones/Aht_Urhgan_Whitegate/TextIDs"] = nil;
------------------------------------
-
------------------------------------
--- onTrade Action
------------------------------------
-
-function onTrade(player,npc,trade)
-end;
 
 -----------------------------------
 -- onTrigger Action
 -----------------------------------
-
 function onTrigger(player,npc)
-	player:startEvent(0x021f);
-end;
+		 artsAndCrafts = player:getQuestStatus(AHT_URHGAN,ARTS_AND_CRAFTS);
+artsAndCrafts_Mathloug = player:getVar("QUEST_ARTSANDCRAFTS_MATHLOUQ");
+
+	if (artsAndCrafts == 1 and artsAndCrafts_Mathloug ~= 1) then
+		player:startEvent(0x01FF);
+	else
+		player:startEvent(0x021F);
+	end
+end; 
+ 
+-----------------------------------
+-- onTrade Action
+-----------------------------------
+function onTrade(player,npc,trade)
+end; 
 
 -----------------------------------
--- onEventUpdate
+-- onEventFinish Action
 -----------------------------------
-
-function onEventUpdate(player,csid,option)
-	-- printf("CSID: %u",csid);
-	-- printf("RESULT: %u",option);
-end;
-
------------------------------------
--- onEventFinish
------------------------------------
-
 function onEventFinish(player,csid,option)
-	-- printf("CSID: %u",csid);
-	-- printf("RESULT: %u",option);
+	if (csid == 0x01FF) then
+		player:setVar("QUEST_ARTSANDCRAFTS_MATHLOUQ",1);
+	end
 end;
-

@@ -2,8 +2,7 @@
 -- Ability: Jump
 -----------------------------------
 
-require("scripts/globals/settings");
-require("scripts/globals/status");
+-- NOTE: THIS SCRIPT IS CURRENTLY IGNORED.  See battleutils:jumpAbility()
 
 -----------------------------------
 -- OnUseAbility

@@ -1,6 +1,6 @@
 -----------------------------------
 -- Area: Dynamis Valkurm
--- NPC:  Manifest_Idol
+-- NPC:  Manifest Idol
 -----------------------------------
 package.loaded["scripts/zones/Dynamis-Valkurm/TextIDs"] = nil;
 -----------------------------------

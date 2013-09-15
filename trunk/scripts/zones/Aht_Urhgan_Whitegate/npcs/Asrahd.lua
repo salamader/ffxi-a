@@ -91,7 +91,7 @@ function onEventFinish(player,csid,option)
 			player:delPoint(IS,1000);
 		elseif(option <= 2049) then -- player bought item
 			item, price = getISPItem(option)
-			if(player:getFreeSlotCount(0) > 0) then
+			if(player:getFreeSlotsCount() > 0) then
 				player:delPoint(IS,price);
 				player:addItem(item);
 				player:messageSpecial(ITEM_OBTAINED,item);

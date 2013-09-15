@@ -4,7 +4,7 @@
 -- Starts and Finishes Quest: Only the Best (R)
 -- Involved in Quest: Riding on the Clouds
 -- @zone 248
--- @pos 25 -6 6
+-- @pos 25, -6, 6
 -----------------------------------
 
 require("scripts/globals/keyitems");
@@ -77,22 +77,22 @@ function onEventFinish(player,csid,option)
 		player:addQuest(OTHER_AREAS,ONLY_THE_BEST);
 	elseif(csid == 0x003e) then
 		player:tradeComplete();
-		player:addGil(100);
-		player:messageSpecial(TextID_Selbina.GIL_OBTAINED,100);
+		player:addGil(100*GIL_RATE);
+		player:messageSpecial(TextID_Selbina.GIL_OBTAINED,100*GIL_RATE);
 		player:addFame(BASTOK,  BAS_FAME*10);
 		player:addFame(SANDORIA,SAN_FAME*10);
 		player:completeQuest(OTHER_AREAS,ONLY_THE_BEST);
 	elseif(csid == 0x003f) then
 		player:tradeComplete();
-		player:addGil(120);
-		player:messageSpecial(TextID_Selbina.GIL_OBTAINED,120);
+		player:addGil(120*GIL_RATE);
+		player:messageSpecial(TextID_Selbina.GIL_OBTAINED,120*GIL_RATE);
 		player:addFame(BASTOK,  BAS_FAME*20);
 		player:addFame(SANDORIA,SAN_FAME*20);
 		player:completeQuest(OTHER_AREAS,ONLY_THE_BEST);
 	elseif(csid == 0x0040) then
 		player:tradeComplete();
-		player:addGil(600);
-		player:messageSpecial(TextID_Selbina.GIL_OBTAINED,600);
+		player:addGil(600*GIL_RATE);
+		player:messageSpecial(TextID_Selbina.GIL_OBTAINED,600*GIL_RATE);
 		player:addFame(BASTOK,  BAS_FAME*30);
 		player:addFame(SANDORIA,SAN_FAME*30);
 		player:completeQuest(OTHER_AREAS,ONLY_THE_BEST);

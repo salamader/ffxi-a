@@ -30,3 +30,5 @@ FOURTH_DARK_ORB_IN_PLACE = 9; -- Forth Mana Orb Receptacle is ready for use.
  DARK_MANA_ORB_RECHARGER = 12; -- This appears to be a device that recharges Mana Orbs.
         DOOR_FIRMLY_SHUT = 7209; -- The door is firmly shut.
     ALL_G_ORBS_ENERGIZED = 7212; -- The six Mana Orbs have been successfully energized with magic!
+			  DISAPPEARS = 7211; -- W61
+					EVEN = 7242; -- W61

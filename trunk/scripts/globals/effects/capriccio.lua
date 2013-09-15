@@ -1,7 +1,8 @@
 -----------------------------------
 --
---
---
+-- EFFECT_CAPRICCIO
+-- Increases Petrification Resistance 
+-- to Party Members within target AoE
 -----------------------------------
 
 -----------------------------------
@@ -9,6 +10,7 @@
 -----------------------------------
 
 function onEffectGain(target,effect)
+	target:addMod(MOD_PETRIFYRES,effect:getPower());
 end;
 
 -----------------------------------
@@ -23,4 +25,5 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
+	target:delMod(MOD_PETRIFYRES,effect:getPower());
 end;

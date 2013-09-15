@@ -10,19 +10,6 @@ require("scripts/globals/titles");
 -----------------------------------
 
 function OnMobSpawn(mob)
-
-end;
-
------------------------------------
--- onMobFight Action
------------------------------------
-
-function onMobFight(mob,target)
-
-	if(mob:getBattleTime() == 1200) then
-		mob:rageMode();
-	end
-
 end;
 
 -----------------------------------
@@ -32,9 +19,9 @@ end;
 function onMobDeath(mob, killer)
 
 	killer:addTitle(SIMURGH_POACHER);
-
-    -- Set Simurgh's spawnpoint and respawn time (21-24 hours)
+  
+    -- Set Simurgh's spawnpoint and respawn time (1-4 hours)
     UpdateNMSpawnPoint(mob:getID());
-    mob:setRespawnTime(math.random((75600),(86400)));
-
+    mob:setRespawnTime(math.random((3600),(14400)));
+  
 end;

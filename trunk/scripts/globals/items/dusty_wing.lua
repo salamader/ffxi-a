@@ -1,15 +1,21 @@
 -----------------------------------------
---	ID: 5440
---	Dusty Wing
---	Increases TP of the user by 300
+-- ID: 5440
+-- Item: Dusty Wing
+-- Effect: Increases TP of the user by 300
 -----------------------------------------
+
+require("scripts/globals/status");
 
 -----------------------------------------
 -- OnItemCheck
 -----------------------------------------
 
 function onItemCheck(target)
-	return 0;
+	result = 0;
+	if (target:hasStatusEffect(EFFECT_MEDICINE)) then
+		result = 111;
+	end	
+	return result;
 end;
 
 -----------------------------------------
@@ -17,5 +23,6 @@ end;
 -----------------------------------------
 
 function onItemUse(target)
+	target:addStatusEffect(EFFECT_MEDICINE,0,0,180);
 	target:addTP(300);
 end;

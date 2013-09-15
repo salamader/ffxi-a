@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: La_Theine_Plateau
--- NPC:  Dimensional_Portal
+-- Area: La Theine Plateau
+-- NPC:  Dimensional Portal
 -----------------------------------
 package.loaded["scripts/zones/La_Theine_Plateau/TextIDs"] = nil;
 -----------------------------------

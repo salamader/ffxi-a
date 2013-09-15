@@ -1,21 +1,24 @@
 -----------------------------------
 -- Area: Dynamis Valkurm
--- NPC:  Cirrate_Christelle
-
+-- NPC:  Cirrate Christelle
 -----------------------------------
+
 package.loaded["scripts/zones/Dynamis-Valkurm/TextIDs"] = nil;
+
 -----------------------------------
 
 require("scripts/globals/dynamis");
 require("scripts/zones/Dynamis-Valkurm/TextIDs");
 require("scripts/globals/keyitems");
 require("scripts/globals/titles");
+
 -----------------------------------
 -- onMobSpawn Action
 -----------------------------------
 
 function onMobSpawn(mob)
 end;
+
 -----------------------------------
 -- onMobEngaged
 -----------------------------------

@@ -22,7 +22,7 @@ function onTrigger(player,npc)
 
 	local ZilartMission = player:getCurrentMission(ZILART);
 	local currentMission = player:getCurrentMission(BASTOK);
-   local ZilartStatus = player:getVar("ZilartStatus");
+	local ZilartStatus = player:getVar("ZilartStatus");
 
    -- Checked here to be fair to new players
    local DMEarrings = 0;

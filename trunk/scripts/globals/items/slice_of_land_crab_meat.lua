@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4400
--- Item: slice_of_land_crab_meat
--- Food Effect: 5Min, Mithra only
+-- Item: Slice of Land Crab Meat
+-- Food Effect: 5 Min, Mithra only
 -----------------------------------------
 -- Dexterity -4
 -- Vitality 3

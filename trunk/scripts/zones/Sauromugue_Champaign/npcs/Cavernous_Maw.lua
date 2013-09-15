@@ -1,7 +1,10 @@
------------------------------------
--- Cavernous Maw
--- Teleports Players to Sauromugue_Champaign_S
--- @pos 369 8 -227 120
+-- Area: Sauromugue Champaign
+-- Name: Cavernous Maw
+-- Type: Teleport
+-- Teleports Players to Sauromugue
+-- Champaign S (Zone 98)
+-- @zone 120
+-- @pos 372.226, 9.239, -223.676
 -----------------------------------
 package.loaded["scripts/zones/Sauromugue_Champaign/TextIDs"] = nil;
 -----------------------------------
@@ -25,7 +28,6 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	
 	if(ENABLE_WOTG == 1 and player:hasKeyItem(PURE_WHITE_FEATHER) == false) then
 		player:startEvent(0x01f4,2);
 	elseif(ENABLE_WOTG == 1 and hasMawActivated(player,2)) then
@@ -57,8 +59,8 @@ function onEventFinish(player,csid,option)
 		r = math.random(1,3);
 		player:addKeyItem(PURE_WHITE_FEATHER);
 		player:messageSpecial(KEYITEM_OBTAINED,PURE_WHITE_FEATHER);
-		player:completeMission(WOTG,CAVERNOUS_MAWS);
-		player:addMission(WOTG,BACK_TO_THE_BEGINNING);
+		player:setVar("WotgStatus",1);
+		player:setVar("csmaw",1);		
 		if(r == 1) then
 			player:addNationTeleport(MAW,1);
 			toMaw(player,1); -- go to Batallia_Downs[S]
@@ -70,7 +72,7 @@ function onEventFinish(player,csid,option)
 			toMaw(player,5); -- go to Sauromugue_Champaign_[S]
 		end;
 	elseif(csid == 0x0388 and option == 1) then
-		toMaw(player,1); -- go to Batallia_Downs[S]
-	end;
+		toMaw(player,5); -- go to sauroS
+	end
 	
 end;

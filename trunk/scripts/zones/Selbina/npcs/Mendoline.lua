@@ -1,8 +1,9 @@
 -----------------------------------
 -- Area: Selbina
 -- NPC:  Mendoline
--- Guild Merchant NPC: Fishing Guild 
+-- Type: Guild Merchant Fishing Guild 
 -- @zone 248
+-- @pos -13.603, -7.287, 10.916
 -----------------------------------
 
 require("scripts/globals/settings");
@@ -41,6 +42,3 @@ function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
 end;
-
-
-

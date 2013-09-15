@@ -7,10 +7,11 @@
 package.loaded["scripts/zones/Port_San_dOria/TextIDs"] = nil;
 -----------------------------------
 
-require("scripts/globals/quests");
 require("scripts/globals/settings");
-require("scripts/globals/keyitems");
-require("scripts/zones/Port_San_dOria/TextIDs");
+require("scripts/globals/quests");
+require("scripts/globals/teleports");
+require("scripts/globals/settings");
+require("scripts/globals/keyitems");require("scripts/zones/Port_San_dOria/TextIDs");
 
 -----------------------------------
 -- onTrade Action
@@ -48,7 +49,7 @@ function onTrigger(player,npc)
 	elseif (Quotas_Progress == 1) then
 		if (player:getVar("ChasingQuotas_date") > os.time()) then
 			player:startEvent(3); -- Fluff cutscene because you haven't waited a day
-		else
+	else
 			player:startEvent(7); -- Boss got mugged
 		end
 	elseif (Quotas_Progress == 2) then
@@ -109,7 +110,7 @@ function onEventFinish(player,csid,option)
 			player:setVar("ChasingQuotas_No",1);
 		else
 			player:addQuest(SANDORIA,CHASING_QUOTAS);
-		end
+	end
 	elseif (csid == 14 and option == 1) then
 		player:setVar("ChasingQuotas_No",0);
 		player:addQuest(SANDORIA,CHASING_QUOTAS);

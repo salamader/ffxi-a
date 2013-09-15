@@ -32,7 +32,7 @@ function onTrigger(player,npc)
 	
 	local LadderID = npc:getID();
 	local Xpos = player:getXPos();
-	--printf("LadderID: %u",LadderID);
+	printf("LadderID: %u",LadderID);
 	
 	if(LadderID == 16888090 and Xpos >= 102) then
 		player:startEvent(0x0015);

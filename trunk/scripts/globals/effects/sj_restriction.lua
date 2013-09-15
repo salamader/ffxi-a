@@ -1,7 +1,6 @@
 -----------------------------------
---
---
---
+--	EFFECT_SJ_RESTRICTION
+-- Disables the use of subjobs.
 -----------------------------------
 
 require("scripts/globals/status");

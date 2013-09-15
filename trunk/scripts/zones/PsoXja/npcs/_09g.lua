@@ -1,6 +1,7 @@
 -----------------------------------
 -- Area: Pso'Xja
 -- NPC:  avatars Gate
+-- POS: 280 32 -60
 -----------------------------------
 package.loaded["scripts/zones/PsoXja/TextIDs"] = nil;
 -----------------------------------

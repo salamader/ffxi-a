@@ -1,6 +1,6 @@
 -----------------------------------
 -- Area: Dynamis Buburimu
--- NPC:  Adamantking_Effigy
+-- NPC:  Adamantking Effigy
 
 -----------------------------------
 package.loaded["scripts/zones/Dynamis-Buburimu/TextIDs"] = nil;

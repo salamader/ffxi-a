@@ -1,19 +1,14 @@
 -----------------------------------	
--- Skill Level: 357
--- Description: Delivers a threefold attack. Decreases target's magic defense. Duration of effect varies with TP.
--- To obtain Shattersoul, the quest Martial Mastery must be completed and it must be purchased from the Merit Points menu.
--- Target's magic defense is lowered by 10.
--- Aligned with the Shadow Gorget, Soil Gorget & Snow Gorget.
--- Aligned with the Shadow Belt, Soil Belt & Snow Belt.
--- Element: N/A
--- Skillchain Properties: Gravitation/Induration
---Shattersoul is only available to Warriors, Monks, White Mages, Black Mages, Paladins, Bards, Dragoons, Summoners and Scholars.
--- While some jobs may obtain skill level 357 earlier than level 96, Shattersoul must be unlocked once skill reaches level 357 and job level 96 is reached.
--- Staff skill level 357 is obtainable by the following jobs at these corresponding levels:
--- Modifiers: INT:20~100%, depending on merit points ugrades.
--- Damage Multipliers by TP:	
+-- Shattersoul
+-- Staff weapon skill	
+-- Skill level: 357	
+-- Decreases target's Magic Defense. Duration of effect varies with TP.	
+-- Aligned with the Shadow, Soil, and Snow Gorgets.	
+-- Aligned with the Shadow, Soil, and Snow Belts.	
+-- Element: None	
+-- Modifiers: INT:20%~100% Depending on Merit Point upgrades.	
 -- 100%TP    200%TP    300%TP	
--- 1.375      1.375      1.375	
+-- 1.375      1.375     1.375	
 -----------------------------------	
 	
 require("scripts/globals/status");	
@@ -24,14 +19,22 @@ require("scripts/globals/weaponskills");
 function OnUseWeaponSkill(player, target, wsID)	
 	
 	local params = {};
-	params.numHits = 2;
-	params.ftp100 = 1.375; params.ftp200 = 1.375; params.ftp300 = 1.375;
+	params.numHits = 3;
+	params.ftp100 = 1; params.ftp200 = 1; params.ftp300 = 1;
 	params.str_wsc = 0.0; params.dex_wsc = 0.0; params.vit_wsc = 0.0; params.agi_wsc = 0.0; params.int_wsc = 0.2; params.mnd_wsc = 0.0; params.chr_wsc = 0.0;
 	params.crit100 = 0.0; params.crit200 = 0.0; params.crit300 = 0.0;
 	params.canCrit = false;
 	params.acc100 = 0.0; params.acc200= 0.0; params.acc300= 0.0;
 	params.atkmulti = 1;
 	local damage, criticalHit, tpHits, extraHits = doPhysicalWeaponskill(player, target, params);
+
+	if damage > 0 then
+		local tp = player:getTP();
+		local duration = (tp/100 * 60);
+		if(target:hasStatusEffect(EFFECT_MAGIC_DEF_DOWN) == false) then
+			target:addStatusEffect(EFFECT_MAGIC_DEF_DOWN, 10, 0, duration);
+		end
+	end	
 	
 	return tpHits, extraHits, criticalHit, damage;
 	

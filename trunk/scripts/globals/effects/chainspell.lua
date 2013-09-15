@@ -1,7 +1,7 @@
 -----------------------------------
 --
 -- 	EFFECT_CHAINSPELL
--- 	
+--  Allows rapid spellcasting. 	
 -----------------------------------
 
 require("scripts/globals/status");
@@ -11,6 +11,7 @@ require("scripts/globals/status");
 
 function onEffectGain(target,effect)
 	target:addMod(MOD_UFASTCAST,150);
+	target:addMod(MOD_QUICK_MAGIC,150);			
 end;
 
 -----------------------------------
@@ -26,4 +27,5 @@ end;
 
 function onEffectLose(target,effect)
 	target:delMod(MOD_UFASTCAST,150);
+	target:delMod(MOD_QUICK_MAGIC,150);
 end;

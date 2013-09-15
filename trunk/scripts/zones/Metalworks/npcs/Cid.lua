@@ -127,10 +127,9 @@ function onTrigger(player,npc)
 	elseif(CidsSecret == QUEST_ACCEPTED and LetterKeyItem) then
 		player:startEvent(0x01fd);
 	--End Cid's Secret
-    else
-        player:startEvent(0x01f4); -- Standard Dialogue
-    end
-	
+	else
+		player:startEvent(0x01f4); -- Standard Dialogue
+	end
 end;
 
 -- 0x01f7  0x01f8  0x01f9  0x01fa  0x01f4  0x01f6  0x02d0  0x01fb  0x01fc  0x01fd  0x025b  0x02f3  0x02f8  0x03f2  0x02fb  0x02fc 
@@ -179,28 +178,28 @@ local currentday = tonumber(os.date("%j"));
 	elseif(csid == 0x0354)then
 	        player:setVar("COP_Louverance_s_Path",7);		
     elseif(csid == 0x0352)then 
-	 	    player:setVar("PromathiaStatus",0);
-	        player:completeMission(COP,DESIRES_OF_EMPTINESS);
-            player:addMission(COP,THREE_PATHS);
-    elseif(csid == 0x0351)then 
-            player:setVar("PromathiaStatus",2);
-	    elseif(csid == 0x0358)then 
-            player:setVar("PromathiaStatus",1);		
+		player:setVar("PromathiaStatus",0);
+		player:completeMission(COP,DESIRES_OF_EMPTINESS);
+		player:addMission(COP,THREE_PATHS);
+	elseif(csid == 0x0351)then 
+		player:setVar("PromathiaStatus",2);
+	elseif(csid == 0x0358)then 
+		player:setVar("PromathiaStatus",1);		
 	elseif (csid == 0x034D)then
-	        player:setVar("PromathiaStatus",0);
-	        player:completeMission(COP,THE_CALL_OF_THE_WYRMKING);
-            player:addMission(COP,A_VESSEL_WITHOUT_A_CAPTAIN);
+		player:setVar("PromathiaStatus",0);
+		player:completeMission(COP,THE_CALL_OF_THE_WYRMKING);
+		player:addMission(COP,A_VESSEL_WITHOUT_A_CAPTAIN);
 	elseif (csid == 0x034F)then 
-	        -- finishing mission 3.3 and all sub missions
-			player:setVar("EMERALD_WATERS_Status",0);
-			player:setVar("MEMORIES_OF_A_MAIDEN_Status",0);
-	        player:completeMission(COP,THE_ROAD_FORKS);
-			player:addMission(COP,DESCENDANTS_OF_A_LINE_LOST);
-			player:completeMission(COP,DESCENDANTS_OF_A_LINE_LOST);
-			player:addMission(COP,COMEDY_OF_ERRORS_ACT_I);
-			player:completeMission(COP,COMEDY_OF_ERRORS_ACT_I);
-			player:addMission(COP,TENDING_AGED_WOUNDS ); --starting 3.4 COP mission
-	elseif(csid == 0x02f8) then
+		-- finishing mission 3.3 and all sub missions
+		player:setVar("EMERALD_WATERS_Status",0);
+		player:setVar("MEMORIES_OF_A_MAIDEN_Status",0);
+		player:completeMission(COP,THE_ROAD_FORKS);
+		player:addMission(COP,DESCENDANTS_OF_A_LINE_LOST);
+		player:completeMission(COP,DESCENDANTS_OF_A_LINE_LOST);
+		player:addMission(COP,COMEDY_OF_ERRORS_ACT_I);
+		player:completeMission(COP,COMEDY_OF_ERRORS_ACT_I);
+		player:addMission(COP,TENDING_AGED_WOUNDS ); --starting 3.4 COP mission
+	elseif(csid == 0x02f8) then 
 		player:addQuest(BASTOK,DARK_PUPPET);
 		player:setVar("darkPuppetCS",1);
 	elseif(csid == 0x01f7) then
@@ -225,9 +224,9 @@ local currentday = tonumber(os.date("%j"));
 		player:messageSpecial(KEYITEM_OBTAINED, C_L_REPORTS);
 	elseif(csid == 0x02fb) then
 		player:setVar("MissionStatus",1);
-    elseif(csid == 0x01fb) then
-        player:addQuest(BASTOK,CID_S_SECRET);
-    elseif(csid == 0x01fd) then
+	elseif(csid == 0x01fb) then
+		player:addQuest(BASTOK,CID_S_SECRET);
+	elseif(csid == 0x01fd) then
 		if(player:getFreeSlotsCount(0) >= 1) then
 			player:delKeyItem(UNFINISHED_LETTER);
 			player:setVar("CidsSecret_Event",0);
@@ -238,7 +237,7 @@ local currentday = tonumber(os.date("%j"));
 		else
 			player:messageSpecial(ITEM_CANNOT_BE_OBTAINED,13570);
 		end
-     end
+	end
 	 -- complete chapter "tree path"
 	 if(csid == 0x0355 or csid == 0x0356 or csid == 0x0357)then
 	   if (player:getVar("COP_Tenzen_s_Path")==11 and player:getVar("COP_Ulmia_s_Path")==8 and player:getVar("COP_Louverance_s_Path")==10)then

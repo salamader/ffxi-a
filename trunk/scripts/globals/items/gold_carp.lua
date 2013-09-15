@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4427
--- Item: gold_carp
--- Food Effect: 5Min, Mithra only
+-- Item: Gold Carp
+-- Food Effect: 5 Min, Mithra only
 -----------------------------------------
 -- Dexterity 3
 -- Mind -5

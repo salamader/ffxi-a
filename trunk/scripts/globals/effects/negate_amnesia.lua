@@ -1,7 +1,6 @@
 -----------------------------------
---
---
---
+-- EFFECT_NEGATE_AMNESIA
+-- Amnesia Resistance +100
 -----------------------------------
 
 -----------------------------------
@@ -9,6 +8,7 @@
 -----------------------------------
 
 function onEffectGain(target,effect)
+	target:addMod(MOD_AMNESIARES, 100);
 end;
 
 -----------------------------------
@@ -23,4 +23,5 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
+	target:delMod(MOD_AMNESIARES, 100);
 end;

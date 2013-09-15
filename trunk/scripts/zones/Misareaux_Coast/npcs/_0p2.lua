@@ -22,15 +22,15 @@ end;
 
 function onTrigger(player,npc)
 	if(player:getCurrentMission(COP) == THE_SAVAGE and player:getVar("PromathiaStatus") == 0)then
-	       player:startEvent(0x0008);
+		player:startEvent(0x0008);
 	elseif(player:getCurrentMission(COP) == ANCIENT_VOWS and player:getVar("PromathiaStatus") == 0)then
 		player:startEvent(0x0006);
 	elseif(player:getCurrentMission(COP) == FLAMES_IN_THE_DARKNESS and player:getVar("PromathiaStatus") == 0)then
-	   player:startEvent(0x000C);
+		player:startEvent(0x000C);
 	elseif(player:getCurrentMission(COP) > AN_ETERNAL_MELODY or hasCompletedMission(COP,THE_LAST_VERSE))then
-	player:startEvent(0x0228);
+		player:startEvent(0x0228);
 	else
-	player:messageSpecial(DOOR_CLOSED);
+		player:messageSpecial(DOOR_CLOSED);
 	end
 	
 	return 1;

@@ -1,6 +1,7 @@
 -----------------------------------------
 -- Spell: Suiton: San
--- Deals water damage to an enemy and lowers its resistance against lightning.
+-- Deals water damage to an enemy and 
+-- lowers its resistance to lightning.
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -17,7 +18,12 @@ end;
 function onSpellCast(caster,target,spell)
 	--doNinjutsuNuke(V,M,caster,spell,target,hasMultipleTargetReduction,resistBonus)
 	local dmg = doNinjutsuNuke(134,1,caster,spell,target,false,1.0);
-	handleNinjutsuDebuff(caster, target, spell, 30, 15, MOD_THUNDERRES);
+	local duration = 30;
+	if(caster:getObjType() == TYPE_PC) then
+		dmg = dmg + caster:getMerit(MERIT_SUITON_EFFECT);
+		duration = 30 + caster:getMerit(MERIT_SUITON_EFFECT);
+	end
+	handleNinjutsuDebuff(caster, target, spell, duration, 15, MOD_THUNDERRES);
 
 	return dmg;
 

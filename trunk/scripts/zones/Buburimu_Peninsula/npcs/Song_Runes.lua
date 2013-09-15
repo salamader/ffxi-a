@@ -9,6 +9,7 @@ package.loaded["scripts/zones/Buburimu_Peninsula/TextIDs"] = nil;
 require("scripts/globals/settings");
 require("scripts/globals/titles");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Buburimu_Peninsula/TextIDs");
 
 -----------------------------------
@@ -18,10 +19,7 @@ require("scripts/zones/Buburimu_Peninsula/TextIDs");
 function onTrade(player,npc,trade)
 			
 	if (player:getVar("TheOldMonument_Event") == 3) then
-		count = trade:getItemCount();
-		gil = trade:getGil();
-
-		if (trade:hasItemQty(917,1) == true and count == 1 and gil == 0) then
+		if (trade:hasItemQty(917,1) == true and trade:getItemCount() == 1 and trade:getGil() == 0) then
 			player:tradeComplete();
 			player:completeQuest(JEUNO,THE_OLD_MONUMENT);
 			player:addItem(634,1);

@@ -10,17 +10,16 @@ require("scripts/globals/settings");
 require("scripts/globals/quests");
 require("scripts/zones/Port_Bastok/TextIDs");
 
-
 -----------------------------------
 -- onTrade Action
 -----------------------------------
 
 function onTrade(player,npc,trade)
 
-count = trade:getItemCount();
-gil = trade:getGil();
+	local count = trade:getItemCount();
+	local gil = trade:getGil();
+	local itemQuality = 0;
 
-itemQuality = 0;
 	if (trade:getItemCount() == 1 and trade:getGil() == 0) then
 		if (trade:hasItemQty(957,1)) then		-- Amaryllis
 			itemQuality = 2;
@@ -48,7 +47,7 @@ itemQuality = 0;
 		end
 	end
 
-	ALadysHeart = player:getQuestStatus(BASTOK,A_LADY_S_HEART);
+	local ALadysHeart = player:getQuestStatus(BASTOK,A_LADY_S_HEART);
 
 	if (itemQuality == 2) then
 		if (ALadysHeart == QUEST_COMPLETED) then
@@ -70,7 +69,6 @@ itemQuality = 0;
 
 end; 
 
-
 -----------------------------------
 -- onTrigger Action
 -----------------------------------
@@ -78,7 +76,6 @@ end;
 function onTrigger(player,npc)
 	player:startEvent(0x00a0, 0, 236, 10);
 end; 
-
 
 -----------------------------------
 -- onEventUpdate
@@ -88,7 +85,6 @@ function onEventUpdate(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
 end;
-
 
 -----------------------------------
 -- onEventFinish

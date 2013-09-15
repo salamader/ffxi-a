@@ -1,7 +1,8 @@
 -----------------------------------
 --
--- 	EFFECT_NONE
--- 	
+-- 	EFFECT_MAGIC_ACC_DOWN
+-- 	Increases / Decreases
+-- 	Magic Acc
 -----------------------------------
 
 -----------------------------------
@@ -9,6 +10,8 @@
 -----------------------------------
 
 function onEffectGain(target,effect)
+    target:addMod(MOD_MACC,effect:getPower());
+end;
 end;
 
 -----------------------------------
@@ -23,4 +26,5 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
+    target:delMod(MOD_MACC,effect:getPower());
 end;

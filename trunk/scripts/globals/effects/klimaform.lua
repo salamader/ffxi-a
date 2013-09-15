@@ -1,7 +1,7 @@
 -----------------------------------
---
---
---
+--	EFFECT_KILAFORM
+-- Increases MACC for spells of the
+-- same element as current weather.
 -----------------------------------
 
 -----------------------------------

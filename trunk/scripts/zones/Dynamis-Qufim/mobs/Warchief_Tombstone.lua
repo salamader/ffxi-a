@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: Dynamis qufim
--- NPC:  Warchief_Tombstone
+-- Area: Dynamis Qufim
+-- NPC:  Warchief Tombstone
 -----------------------------------
 
 require("scripts/globals/titles");

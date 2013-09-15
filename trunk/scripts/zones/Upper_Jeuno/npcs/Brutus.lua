@@ -1,8 +1,12 @@
 -----------------------------------
 -- Area: Upper Jeuno
 -- NPC: Brutus
--- Starts Quest: Chocobo's Wounds, Save My Son, Path of the Beastmaster, Wings of gold, Scattered into Shadow
--- @pos -55 8 95 244
+-- Starts Quest: Chocobo's Wounds,
+-- Save My Son, Path of the
+-- Beastmaster, Wings of gold,
+-- Scattered into Shadow
+-- @zone 244
+-- @pos -55, 8, 95
 -----------------------------------
 package.loaded["scripts/zones/Upper_Jeuno/TextIDs"] = nil;
 -----------------------------------
@@ -25,17 +29,17 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-
-	ChocobosWounds = player:getQuestStatus(JEUNO,CHOCOBO_S_WOUNDS);
-	saveMySon = player:getQuestStatus(JEUNO,SAVE_MY_SON);
-	wingsOfGold = player:getQuestStatus(JEUNO,WINGS_OF_GOLD);
-	scatIntoShadow = player:getQuestStatus(JEUNO,SCATTERED_INTO_SHADOW);
-
-	mLvl = player:getMainLvl();
-	mJob = player:getMainJob();
-
-	if(player:getMainLvl() >= 20 and ChocobosWounds ~= QUEST_COMPLETED) then
-        chocoFeed = player:getVar("ChocobosWounds_Event");
+	
+	local ChocobosWounds = player:getQuestStatus(JEUNO,CHOCOBO_S_WOUNDS);
+	local SaveMySon = player:getQuestStatus(JEUNO,SAVE_MY_SON);
+	local wingsOfGold = player:getQuestStatus(JEUNO,WINGS_OF_GOLD);
+	local scatIntoShadow = player:getQuestStatus(JEUNO,SCATTERED_INTO_SHADOW);
+	
+	local mLvl = player:getMainLvl();
+	local mJob = player:getMainJob();
+	
+	if((mLvl >= 20 or mLvl >= ADVANCED_JOB_LEVEL) and ChocobosWounds ~= QUEST_COMPLETED) then
+        local chocoFeed = player:getVar("ChocobosWounds_Event");
 
        	if(ChocobosWounds == QUEST_AVAILABLE) then
             player:startEvent(0x0047);
@@ -46,9 +50,9 @@ function onTrigger(player,npc)
         else
             player:startEvent(0x0066);
         end
-    elseif(ChocobosWounds == QUEST_COMPLETED and saveMySon == QUEST_AVAILABLE) then
+    elseif(ChocobosWounds == QUEST_COMPLETED and SaveMySon == QUEST_AVAILABLE) then
 		player:startEvent(0x0016);
-    elseif(saveMySon == QUEST_COMPLETED and player:getQuestStatus(JEUNO,PATH_OF_THE_BEASTMASTER) == QUEST_AVAILABLE) then
+    elseif(SaveMySon == QUEST_COMPLETED and player:getQuestStatus(JEUNO,PATH_OF_THE_BEASTMASTER) == QUEST_AVAILABLE) then
     	player:startEvent(0x0046);
 	elseif(mLvl >= AF1_QUEST_LEVEL and mJob == 9 and wingsOfGold == QUEST_AVAILABLE) then
 		if(player:getVar("wingsOfGold_shortCS") == 1) then
@@ -73,7 +77,7 @@ function onTrigger(player,npc)
 			player:startEvent(0x008d);
 		end
 	elseif(scatIntoShadow == QUEST_ACCEPTED) then
-		scatIntoShadowCS = player:getVar("scatIntoShadowCS");
+		local scatIntoShadowCS = player:getVar("scatIntoShadowCS");
 		if(player:hasKeyItem(AQUAFLORA1) or player:hasKeyItem(AQUAFLORA2) or player:hasKeyItem(AQUAFLORA3)) then
 			player:startEvent(0x008e);
 		elseif(scatIntoShadowCS == 0) then

@@ -29,6 +29,84 @@ function OnUseWeaponSkill(player, target, wsID)
 	params.atkmulti = 1;
 	local damage, criticalHit, tpHits, extraHits = doPhysicalWeaponskill(player, target, params);
 	
+	local main = player:getEquipID(SLOT_MAIN);
+	local sub = player:getEquipID(SLOT_SUB);
+	local aftermath = 0;
+	local tp = player:getTP();
+	local duration = 0;
+	local subpower = 0;
+	
+	if (main == 18999 or sub == 18999) then
+		aftermath = 1;
+	elseif (main == 19068 or sub == 19068) then
+		aftermath = 1;
+	elseif (main == 19088 or sub == 19088) then
+		aftermath = 1;
+	elseif (main == 19620 or sub == 19620) then
+		aftermath = 1;
+		damage = damage * 1.15;
+	elseif (main == 19718 or sub == 19718) then
+		aftermath = 1;
+		damage = damage * 1.15;
+	elseif (main == 19827 or sub == 19827) then
+		aftermath = 1;
+		damage = damage * 1.3;
+	elseif (main == 19956 or sub == 19956) then
+		aftermath = 1;
+		damage = damage * 1.3;
+	end
+		
+	if (aftermath == 1) then
+		if (tp == 300) then
+			player:delStatusEffect(EFFECT_AFTERMATH_LV1);
+			player:delStatusEffect(EFFECT_AFTERMATH_LV2);
+			player:delStatusEffect(EFFECT_AFTERMATH_LV3);
+			if (main == 18999 or sub == 18999) then
+				duration = 120;
+				player:addStatusEffect(EFFECT_AFTERMATH_LV3,14,0,duration,0,40);
+			elseif ((main == 19068 or sub == 19068) or (main == 19088 or sub == 19088) or (main == 19620  or sub == 19620)) then
+				duration = 180;
+				player:addStatusEffect(EFFECT_AFTERMATH_LV3,14,0,duration,0,60);
+			elseif ((main == 19718 or sub == 19718) or (main == 19827 or sub == 19827) or (main == 19956 or sub == 19956)) then
+				duration = 180;
+				player:addStatusEffect(EFFECT_AFTERMATH_LV3,15,0,duration,0,20);
+			end
+		elseif (tp >= 200) then
+			if (player:hasStatusEffect(EFFECT_AFTERMATH_LV3) == false) then
+				player:delStatusEffect(EFFECT_AFTERMATH_LV1);
+				player:delStatusEffect(EFFECT_AFTERMATH_LV2);
+				if (main == 18999 or sub == 18999) then
+					duration = 90;
+					subpower = math.floor(2 * (tp / 5) - 60);
+				elseif ((main == 19068 or sub == 19068) or (main == 19088 or sub == 19088) or (main == 19620  or sub == 19620)) then
+					duration = 120;
+					subpower = math.floor(3 * (tp / 5) - 90);
+				elseif ((main == 19718 or sub == 19718) or (main == 19827 or sub == 19827) or (main == 19956 or sub == 19956)) then
+					duration = 120;
+					subpower = math.floor((tp * .6) - 80);
+				end
+				player:addStatusEffect(EFFECT_AFTERMATH_LV2,14,0,duration,0,subpower);
+			end
+		else
+			if (player:hasStatusEffect(EFFECT_AFTERMATH_LV3) == false) then
+				if (player:hasStatusEffect(EFFECT_AFTERMATH_LV2) == false) then
+					player:delStatusEffect(EFFECT_AFTERMATH_LV1);
+					if (main == 18999 or sub == 18999) then
+						duration = 60;
+						subpower = math.floor(tp / 10);
+					elseif ((main == 19068 or sub == 19068) or (main == 19088 or sub == 19088) or (main == 19620  or sub == 19620)) then
+						duration = 90;
+						subpower = math.floor(3 * (tp / 20));
+					elseif ((main == 19718 or sub == 19718) or (main == 19827 or sub == 19827) or (main == 19956 or sub == 19956)) then
+						duration = 90;
+						subpower = math.floor((tp / 10) + 20);
+					end
+					player:addStatusEffect(EFFECT_AFTERMATH_LV1,14,0,duration,0,subpower);
+				end
+			end
+		end
+	end
+	
 	return tpHits, extraHits, criticalHit, damage;
 	
 end	

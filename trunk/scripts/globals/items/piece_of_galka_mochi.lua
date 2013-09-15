@@ -1,7 +1,8 @@
 -----------------------------------------
---	ID: 5206
---	Piece of Galka Mochi
---	Enchantment: 60Min, Costume - Galka Child
+-- ID: 5206
+-- Item: Piece of Galka Mochi
+-- Enchantment: 60 Min, Costume - Galka
+-- Child
 -----------------------------------------
 
 require("scripts/globals/status");

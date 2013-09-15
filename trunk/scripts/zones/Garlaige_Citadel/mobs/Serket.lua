@@ -10,19 +10,6 @@ require("scripts/globals/titles");
 -----------------------------------
 
 function OnMobSpawn(mob)
-
-end;
-
------------------------------------
--- onMobFight Action
------------------------------------
-
-function onMobFight(mob,target)
-
-	if(mob:getBattleTime() == 1800) then
-		mob:rageMode();
-	end
-
 end;
 
 -----------------------------------
@@ -33,8 +20,8 @@ function onMobDeath(mob, killer)
 
     killer:addTitle(SERKET_BREAKER);
 
-    -- Set Serket's spawnpoint and respawn time (21-24 hours)
+    -- Set Serket's spawnpoint and respawn time (4-8 hours)
     UpdateNMSpawnPoint(mob:getID());
-    mob:setRespawnTime(math.random((75600),(86400)));
-
+    mob:setRespawnTime(math.random((14400),(28800)));
+    
 end;

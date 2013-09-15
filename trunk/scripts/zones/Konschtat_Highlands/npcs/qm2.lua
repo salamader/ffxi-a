@@ -9,6 +9,7 @@ package.loaded["scripts/zones/Konschtat_Highlands/TextIDs"] = nil;
 -----------------------------------
 
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Konschtat_Highlands/TextIDs");
 
 -----------------------------------
@@ -30,7 +31,11 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	player:messageSpecial(NOTHING_OUT_OF_ORDINARY);
+	if (player:hasItem(1152)) then
+		debugTeleport(player,17809421); -- Ranemaud
+	else
+		player:messageSpecial(NOTHING_OUT_OF_ORDINARY);
+	end
 end;
 
 -----------------------------------

@@ -1,7 +1,8 @@
 ---------------------------------------------
 --  Envoutement
 --
---  Description: Deals damage to a single target. Additional effect: Curse
+--  Description: Deals damage to a single
+--  target. Additional effect: Curse
 --  Type: Physical
 --  Utsusemi/Blink absorb: 1 shadow
 --  Range: Melee

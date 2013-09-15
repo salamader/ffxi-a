@@ -1,8 +1,11 @@
 -----------------------------------
---	Area: Ru'Lud Gardens
---	Door: Windurstian Ambassador
---	Windurst Missions 3.3 "A New Journey" and 4.1 "Magicite"
---  @pos 31 9 -22 243
+-- Area: Ru'Lud Gardens
+-- Door: Windurstian Ambassador
+-- Involved in Missions: Windurst
+-- Missions 3.3 "A New Journey" and
+-- 4.1 "Magicite"
+-- @zone 243
+-- @pos 32.110, 7.502, -20.944
 -----------------------------------
 package.loaded["scripts/zones/RuLude_Gardens/TextIDs"] = nil;
 package.loaded["scripts/globals/missions"] = nil;
@@ -36,10 +39,12 @@ function onTrigger(player,npc)
 		else
 			player:startEvent(0x0083);
 		end
-	elseif(player:getRank() >= 4) then
-		player:messageSpecial(WINDURST_EMBASSY); -- restricted area
+	elseif((player:getRank() <= 3 and MissionStatus == 0) or pNation ~= 2) then
+		player:messageSpecial(EMBASSY_1); -- restricted area
+	elseif(player:getRank() == 3 and player:hasKeyItem(LETTER_TO_THE_CONSULS_WINDURST) == false) then
+		player:messageSpecial(EMBASSY_2); -- you have no letter of introduction
 	else
-		player:messageSpecial(WINDURST_EMBASSY + 1); -- you have no letter of introduction
+		player:messageSpecial(EMBASSY_3); -- The consulate is away.
 	end
 	
 	return 1;

@@ -2,11 +2,14 @@
 -- Area: Port Windurst
 -- NPC: Aroro
 -- Standard Merchant NPC
+-- @zone 240
+-- @pos 18.629, -3.326, 76.404
 -- Confirmed shop stock, August 2013
+-----------------------------------
+package.loaded["scripts/zones/Port_Windurst/TextIDs"] = nil;
 -----------------------------------
 
 require("scripts/globals/shop");
-package.loaded["scripts/zones/Port_Windurst/TextIDs"] = nil;
 require("scripts/zones/Port_Windurst/TextIDs");
 
 -----------------------------------
@@ -44,7 +47,6 @@ function onTrigger(player,npc)
         0x12F0,  6508,3      --Drown
     }
     showNationShop(player, WINDURST, stock);
-
 end;
 
 -----------------------------------

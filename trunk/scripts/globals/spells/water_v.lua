@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Water
+-- Spell: Water V
 -- Deals water damage to an enemy.
 -----------------------------------------
 

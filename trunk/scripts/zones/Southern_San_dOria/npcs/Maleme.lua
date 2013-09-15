@@ -36,6 +36,7 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
+	player:showText(npc,WEATHER_DIALOG);
 end; 
 
 -----------------------------------

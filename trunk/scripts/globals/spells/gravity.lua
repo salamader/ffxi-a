@@ -16,12 +16,23 @@ end;
 function onSpellCast(caster,target,spell)
 
     -- Pull base stats.
-    local dINT = (caster:getStat(MOD_INT) - target:getStat(MOD_INT));
+	local dINT = (caster:getStat(MOD_INT) - target:getStat(MOD_INT));
     local bonus = AffinityBonus(caster, spell:getElement());
-    local power = 50; -- 50% reduction
-
+	local power = 50; -- 50% reduction
+    
+	local body = caster:getEquipID(SLOT_BODY);
+	if (body == 11088) then -- Estoquers Sayon +2
+		power = power * 1.1;		
+	end
+    
     -- Duration, including resistance.  Unconfirmed.
     local duration = 120 * applyResistance(caster,spell,target,dINT,35,bonus);
+
+	if (caster:hasStatusEffect(EFFECT_SABOTEUR) == true) then
+		duration = duration + (duration * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
+		power = power + (power * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
+		caster:delStatusEffect(EFFECT_SABOTEUR);
+	end
 
     if(100 * math.random() >= target:getMod(MOD_GRAVITYRES)) then
         if(duration >= 30) then --Do it!

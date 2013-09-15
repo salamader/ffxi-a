@@ -1,28 +1,42 @@
 -----------------------------------
--- Area: 
--- Mob: Lost_Soul
--- location @pos 
+--  Area: Maze of Shakhrami (198)
+--   Mob: Lost_Soul
 -----------------------------------
 
-require("scripts/globals/settings");
-require("scripts/zones/Maze_of_Shakhrami/TextIDs");
+-- require("scripts/zones/Maze_of_Shakhrami/MobIDs");
 
 -----------------------------------
--- onMobSpawn Action
+-- onMobInitialize
 -----------------------------------
 
-function OnMobSpawn(mob)
+function onMobInitialize(mob)	
+end;
+
+-----------------------------------
+-- onMobSpawn
+-----------------------------------
+
+function onMobSpawn(mob)	
+end;
+
+-----------------------------------
+-- onMobEngaged
+-----------------------------------
+
+function onMobEngaged(mob,target)	
+end;
+
+-----------------------------------
+-- onMobFight
+-----------------------------------
+
+function onMobFight(mob,target)	
 end;
 
 -----------------------------------
 -- onMobDeath
 -----------------------------------
 
-function onMobDeath(mob, killer)
-	
-	if(killer:getVar("EquipedforAllOccasions") == 1) then
-		killer:setVar("EquipedforAllOccasions",2);
-	end
+function onMobDeath(mob,killer)	
 end;
-	
 

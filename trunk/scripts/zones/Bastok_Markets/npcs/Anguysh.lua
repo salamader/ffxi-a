@@ -3,9 +3,9 @@
 -- NPC: Anguysh
 -- Standard Info NPC
 -----------------------------------
-
-
 package.loaded["scripts/zones/Bastok_Markets/TextIDs"] = nil;
+-----------------------------------
+
 require("scripts/zones/Bastok_Markets/TextIDs");
 
 -----------------------------------

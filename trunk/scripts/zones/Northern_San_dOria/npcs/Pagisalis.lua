@@ -1,7 +1,8 @@
 -----------------------------------
 -- Area: Northern San d'Oria
 -- NPC:  Pagisalis
--- Involved In Quest: Enveloped in Darkness
+-- Involved In Quest: Enveloped in
+-- Darkness
 -- @zone 231
 -- @pos 
 -----------------------------------

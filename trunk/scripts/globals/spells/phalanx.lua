@@ -1,5 +1,5 @@
 -----------------------------------------
---	Spell: PHALANX
+--	Spell: Phalanx
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -21,6 +21,9 @@ function onSpellCast(caster,target,spell)
 		duration = duration * 3;
 	end
 
+	-- Estoqueurs Bonus
+	duration = duration + (duration * caster:getMod(MOD_ENHANCING_DUR));
+	
 	if(enhskill<=300) then
 		final = (enhskill/10) -2;
 		if(final<0) then

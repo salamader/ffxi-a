@@ -1,8 +1,10 @@
 -----------------------------------------
 -- Spell: Foe Requiem
 -----------------------------------------
+
 require("scripts/globals/status");
 require("scripts/globals/magic");
+
 -----------------------------------------
 -- OnSpellCast
 -----------------------------------------
@@ -16,7 +18,7 @@ function onSpellCast(caster,target,spell)
     local duration = 63;
     local power = 1;
 
-    local bonus = AffinityBonus(caster, spell:getElement());
+	local bonus = AffinityBonus(caster, spell:getElement());
     local pCHR = caster:getStat(MOD_CHR);
     local mCHR = target:getStat(MOD_CHR);
     local dCHR = (pCHR - mCHR);
@@ -25,42 +27,12 @@ function onSpellCast(caster,target,spell)
         spell:setMsg(85);--resist message
         return 1;
     end
-
-    local sItem = caster:getEquipID(2);
-
-    -- flute +1
-    if(sItem == 17372) then
-        power = power + 1;
-    end
-
-    if(sItem == 17844) then
-        power = power + 1;
-    end
-
-    if(sItem == 17346) then
-        power = power + 2;
-    end
-
-    if(sItem == 17379) then
-        power = power + 2;
-    end
-
-    if(sItem == 17362) then
-        power = power + 2;
-    end
-
-    if(sItem == 17832) then
-        power = power + 3;
-    end
-
-    if(sItem == 17852) then
-        power = power + 4;
-    end
-
-    if(sItem == 18342) then
-        power = power + 2;
-    end
-
+	duration = duration + (duration * (caster:getMod(MOD_SONG_DURATION)/100));
+ 	duration = duration + (duration * ((caster:getMod(MOD_ALL_SONGS) * 10)/100));
+	duration = duration + (duration * ((caster:getMod(MOD_REQUIEM) * 10)/100));
+	
+	power = power + caster:getMod(MOD_REQUIEM) + caster:getMod(MOD_ALL_SONGS);
+	
     -- Try to overwrite weaker slow / haste
     if(canOverwrite(target, effect, power)) then
         -- overwrite them

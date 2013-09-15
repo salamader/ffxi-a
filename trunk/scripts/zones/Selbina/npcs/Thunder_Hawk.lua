@@ -3,10 +3,9 @@
 -- NPC:  Thunder Hawk
 -- Starts and Finishes Quest: The Rescue
 -- @zone 248
--- @pos -58 -10 6
+-- @pos -58, -10, 6
 -----------------------------------
 
-require("scripts/zones/Selbina/TextIDs");
 require("scripts/globals/settings");
 require("scripts/globals/titles");
 require("scripts/globals/quests");
@@ -59,15 +58,12 @@ function onEventFinish(player,csid,option)
 		player:addQuest(OTHER_AREAS,THE_RESCUE);
 	elseif(csid == 0x0051) then
 		player:completeQuest(OTHER_AREAS,THE_RESCUE);
-		player:addTitle(HONORARY_CITIZEN_OF_SELBINA);
+		player:addTitle(HONORARY_CITIZEN_OFTextID_Selbina);
 		player:delKeyItem(TRADERS_SACK);
 		player:addKeyItem(MAP_OF_THE_RANGUEMONT_PASS);
-		player:messageSpecial(KEYITEM_OBTAINED,MAP_OF_THE_RANGUEMONT_PASS);
-		player:addGil(3000);
-		player:messageSpecial(GIL_OBTAINED,3000);
+		player:messageSpecial(TextID_Selbina.KEYITEM_OBTAINED,MAP_OF_THE_RANGUEMONT_PASS);
+		player:addGil(3000*GIL_RATE);
+		player:messageSpecial(TextID_Selbina.GIL_OBTAINED,3000*GIL_RATE);
 		player:addFame(OTHER_AREAS,30);
 	end
 end;
-
-
-

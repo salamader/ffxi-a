@@ -1,7 +1,10 @@
 -----------------------------------
--- Cavernous Maw
--- Teleports Players to North Gustaberg [S]
--- @pos 466 0 479 106
+-- Area: North Gustaberg
+-- Name: Cavernous Maw
+-- Teleports Players to North
+-- Gustaberg [S]
+-- @zone 106
+-- @pos 462.628, 0.029, 479.280
 -----------------------------------
 package.loaded["scripts/zones/North_Gustaberg/TextIDs"] = nil;
 -----------------------------------
@@ -24,13 +27,11 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	
 	if(ENABLE_WOTG == 1 and player:hasKeyItem(PURE_WHITE_FEATHER) and hasMawActivated(player,7)) then
 		player:startEvent(0x0387);
 	else
 		player:messageSpecial(NOTHING_HAPPENS);
 	end
-	
 end;
 
 -----------------------------------
@@ -48,9 +49,7 @@ end;
 function onEventFinish(player,csid,option)
 --print("CSID:",csid);
 --print("RESULT:",option);
-	
 	if(csid == 0x0387 and option == 1) then
 		toMaw(player,11);
 	end
-	
 end;

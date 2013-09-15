@@ -1,7 +1,7 @@
 -----------------------------------
 -- Area: Northern San d'Oria
 -- NPC: Antonian
--- Regional Marchant NPC
+-- Regional Merchant NPC
 -- Only sells when San d'Oria controlls Aragoneu.
 -----------------------------------
 package.loaded["scripts/zones/Northern_San_dOria/TextIDs"] = nil;
@@ -43,10 +43,10 @@ RegionOwner = GetRegionOwner(ARAGONEU);
                 player:showText(npc,ANTONIAN_OPEN_DIALOG);
 
                 stock = {0x0277,36,  --Horo Flour
-                                 0x0275,43,  --Millioncorn
-                                 0x113f,111, --Roasted Corn
-                                 0x0349,36,  --Yagudo Feather
-                                 0x1199,90}  --Sunflower Seeds
+                         0x0275,43,  --Millioncorn
+                         0x113f,111, --Roasted Corn
+                         0x0349,36,  --Yagudo Feather
+                         0x1199,90}  --Sunflower Seeds
                                  
                 showShop(player,SANDORIA,stock);
         end

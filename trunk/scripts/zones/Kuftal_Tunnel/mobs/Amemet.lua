@@ -11,7 +11,7 @@
 function onMobDeath(mob,killer)	
 
     -- Set Amemet's Window Open Time
-    wait = math.random((7200),(43200)); -- 2-12 hours
+    wait = math.random((1440),(3600)); -- 24min-1hr
     SetServerVariable("[POP]Amemet", os.time(t) + wait);
     DeterMob(mob:getID(), true);
 

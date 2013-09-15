@@ -17,4 +17,4 @@ CHEST_UNLOCKED = 7262; -- You unlock the chest!
 CHEST_ILLUSION = 7268; -- The chest was but an illusion...
   CHEST_LOCKED = 7269; -- The chest appears to be locked.
           FELL = 7282; -- wood fell
-          EVIL = 7281; -- evil presence
+	      EVIL = 7281; -- evil presence

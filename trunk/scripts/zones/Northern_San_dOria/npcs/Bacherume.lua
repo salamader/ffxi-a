@@ -1,10 +1,10 @@
 -----------------------------------
---  Area: Northern San d'Oria
---  NPC: Bacherume
---  Type: Standard Info NPC
---  @zone: 231
---  @pos: 4.500 0.000 99.000
---
+-- Area: Northern San d'Oria
+-- NPC: Bacherume
+-- Type: Standard Info NPC
+-- @zone: 231
+-- @pos: 4.500 0.000 99.000
+-- cutscenes  0x0000  0x0238  0x0239  0x0036  0x032a  0x036e
 -----------------------------------
 
 -----------------------------------
@@ -19,6 +19,7 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
+	player:startEvent(0x0238);
 end;
 
 -----------------------------------

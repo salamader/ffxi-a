@@ -10,8 +10,8 @@
 function onMobDeath(mob,killer)	
 
     -- Set Cargo_Crab_Colin's Window Open Time
-    wait = math.random((7200),(21600));
-    SetServerVariable("[POP]Cargo_Crab_Colin", os.time(t) + wait); -- 1-6 hours
+    wait = math.random((1440),(3600));
+    SetServerVariable("[POP]Cargo_Crab_Colin", os.time(t) + wait); -- 24min-1hr
     DeterMob(mob:getID(), true);
     
     -- Set PH back to normal, then set to respawn spawn

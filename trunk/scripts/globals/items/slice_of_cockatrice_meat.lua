@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4435
--- Item: slice_of_cockatrice_meat
--- Food Effect: 5Min, Galka only
+-- Item: Slice of Cockatrice Meat
+-- Food Effect: 5 Min, Galka only
 -----------------------------------------
 -- Strength 4
 -- Intelligence -6

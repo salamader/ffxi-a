@@ -629,10 +629,17 @@ function MobFinalAdjustments(dmg,mob,skill,target,skilltype,skillparam,shadowbeh
 	end
 
 	dmg = utils.dmgTaken(target, dmg);
+	if(target:hasStatusEffect(EFFECT_MANA_WALL) == true) then
+		dmg = utils.manawall(target, dmg);
+	end
+	if(target:hasStatusEffect(EFFECT_SCARLET_DELIRIUM_I) == true) then
+		utils.scarletDelirium(target, dmg);
+	end
 
 	if(skilltype == MOBSKILL_PHYSICAL) then
 
 		dmg = utils.physicalDmgTaken(target, dmg);
+		utils.dmgToTP(target, dmg);
 
 	elseif(skilltype == MOBSKILL_MAGICAL) then
 
@@ -645,6 +652,7 @@ function MobFinalAdjustments(dmg,mob,skill,target,skilltype,skillparam,shadowbeh
 	elseif(skilltype == MOBSKILL_RANGED) then
 
 		dmg = utils.rangedDmgTaken(target, dmg);
+		utils.dmgToTP(target, dmg);
 
 	end
 
@@ -656,6 +664,7 @@ function MobFinalAdjustments(dmg,mob,skill,target,skilltype,skillparam,shadowbeh
 	end
 
 	dmg = utils.stoneskin(target, dmg);
+	utils.dmgToMP(target, dmg);
 
 	if(dmg > 0) then
 		target:wakeUp();

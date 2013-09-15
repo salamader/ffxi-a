@@ -42,7 +42,7 @@ function onTrigger(player,npc)
 	local herMajestysGarden = player:getQuestStatus(SANDORIA,HER_MAJESTY_S_GARDEN);
 	      currentMission = player:getCurrentMission(SANDORIA);
 	      MissionStatus = player:getVar("MissionStatus");
-      local circleOfTime = player:getQuestStatus(JEUNO,THE_CIRCLE_OF_TIME);
+	local circleOfTime = player:getQuestStatus(JEUNO,THE_CIRCLE_OF_TIME);
 
 	if(player:getQuestStatus(SANDORIA,LURE_OF_THE_WILDCAT_SAN_D_ORIA) == QUEST_ACCEPTED and player:getMaskBit(player:getVar("wildcatSandy_var"),20) == false) then
 		player:startEvent(0x0231);

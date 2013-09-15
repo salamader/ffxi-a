@@ -1,10 +1,10 @@
 -----------------------------------
 -- Area: Temenos Central 1floor	
--- NPC: Temenos_Weapon
-
+-- NPC: Temenos Weapon
 -----------------------------------
 package.loaded["scripts/zones/Temenos/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Temenos/TextIDs");
 

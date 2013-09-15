@@ -16,7 +16,11 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	player:startEvent(0x00FE);
+	if(getMercenaryRank(player) > 0) then
+		player:startEvent(0x00FF);	--Default Mercenary
+	else
+		player:startEvent(0x00FE);	--Default
+	end
 end; 
 
 -----------------------------------

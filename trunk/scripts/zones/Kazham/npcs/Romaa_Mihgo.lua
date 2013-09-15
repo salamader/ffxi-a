@@ -22,7 +22,13 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	player:startEvent(0x0107);
+	if(player:getCurrentMission(WINDURST) == AWAKENING_OF_THE_GODS and player:getVar("WINDURST72") == 3)then
+		player:startEvent(0x010A);
+	elseif(player:getCurrentMission(WINDURST) == AWAKENING_OF_THE_GODS and player:getVar("WINDURST72") == 4)then
+		player:startEvent(0x010B);
+	else
+		player:startEvent(0x0107);
+	end
 end;
 
 -----------------------------------
@@ -41,5 +47,8 @@ end;
 function onEventFinish(player,csid,option)
 	-- printf("CSID: %u",csid);
 	-- printf("RESULT: %u",option);
+	if(csid == 0x010A)then
+		player:setVar("WINDURST72",4);
+	end
 end;
 

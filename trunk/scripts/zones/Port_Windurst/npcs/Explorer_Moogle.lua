@@ -41,11 +41,6 @@ function onEventUpdate(player,csid,option)
 --printf("RESULT: %u",option);
 end;
 
-
-function toExplorerMoogle(player,zone)
-player:toExplorerMoogle(zone);
-end;
-
 -----------------------------------
 -- onEventFinish
 -----------------------------------

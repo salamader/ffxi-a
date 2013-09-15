@@ -1,7 +1,8 @@
 -----------------------------------
---      Area: Southern San d'Oria
---      NPC: Phamelise
---      Only sells when San d'Oria controlls Zulkheim Region
+--  Area: Southern San d'Oria
+--  NPC: Phamelise
+--  Only sells when San d'Oria
+--  controlls Zulkheim Region.
 -----------------------------------
 package.loaded["scripts/zones/Southern_San_dOria/TextIDs"] = nil;
 -----------------------------------
@@ -42,12 +43,12 @@ function onTrigger(player,npc)
 		player:showText(npc,PHAMELISE_OPEN_DIALOG);
 
 		stock = {0x1114,44,       --Giant Sheep Meat
-						 0x026e,44,       --Dried Marjoram
-						 0x0262,55,       --San d'Orian Flour
-						 0x0263,36,       --Rye Flour
-						 0x0730,1840, --Semolina
-						 0x110e,22,       --La Theine Cabbage
-						 0x111a,55}       --Selbina Milk
+				 0x026e,44,       --Dried Marjoram
+				 0x0262,55,       --San d'Orian Flour
+				 0x0263,36,       --Rye Flour
+				 0x0730,1840, 	  --Semolina
+				 0x110e,22,       --La Theine Cabbage
+				 0x111a,55}       --Selbina Milk
 
 		showShop(player,SANDORIA,stock);
 	end

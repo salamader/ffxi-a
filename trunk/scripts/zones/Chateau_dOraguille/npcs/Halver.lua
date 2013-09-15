@@ -1,8 +1,9 @@
 -----------------------------------
 -- Area: Chateau d'Oraguille
 -- NPC:  Halver
--- Involved in Mission 2-3, 3-3, 5-1, 5-2
+-- Involved in Mission 2-3, 3-3, 5-1, 5-2, 8-1
 -- Involved in Quest: Lure of the Wildcat (San d'Oria)
+-- Involved in Quest #2: A Timely Visit
 -- @pos 2 0 0 233
 -----------------------------------
 package.loaded["scripts/globals/missions"] = nil;
@@ -41,6 +42,9 @@ function onTrigger(player,npc)
 	
 	if(player:getQuestStatus(SANDORIA,LURE_OF_THE_WILDCAT_SAN_D_ORIA) == QUEST_ACCEPTED and player:getMaskBit(player:getVar("wildcatSandy_var"),17) == false) then
 		player:startEvent(0x022e);
+	-- A Timely Visit quest
+	elseif(player:getQuestStatus(SANDORIA,A_TIMELY_VISIT) == 1 and player:getVar("ATimelyVisitProgress") == 4) then
+		player:startEvent(0x0070);
 	-- Blackmail quest
 	elseif(player:getQuestStatus(SANDORIA, BLACKMAIL) == QUEST_ACCEPTED and player:hasKeyItem(SUSPICIOUS_ENVELOPE)) then
 		player:startEvent(0x0225);
@@ -77,15 +81,11 @@ function onTrigger(player,npc)
 	        player:startEvent(0x0018);		
 	    elseif(currentMission == LEAUTE_S_LAST_WISHES and MissionStatus == 3) then
             player:startEvent(0x0016);
-		-- Mission San D'Oria 6-1 Leaute's last wishes
-		elseif(player:getCurrentMission(SANDORIA) == LEAUTE_S_LAST_WISHES and MissionStatus == 0) then
-			player:startEvent(0x0019);
-		elseif(player:getCurrentMission(SANDORIA) == LEAUTE_S_LAST_WISHES and MissionStatus == 1) then
-			player:startEvent(0x0017);
-		elseif(player:getCurrentMission(SANDORIA) == LEAUTE_S_LAST_WISHES and MissionStatus == 2) then
-			player:startEvent(0x0018);		
-		elseif(player:getCurrentMission(SANDORIA) == LEAUTE_S_LAST_WISHES and MissionStatus == 3) then
-			player:startEvent(0x0016);
+		-- Mission San d'Oria 8-1 Coming of Age -- 
+		elseif(player:getCurrentMission(SANDORIA) == COMING_OF_AGE and MissionStatus == 1) then
+			player:startEvent(0x003A);
+		elseif(player:getCurrentMission(SANDORIA) == COMING_OF_AGE and player:hasKeyItem(DROPS_OF_AMNIO) and MissionStatus == 3) then
+			player:startEvent(0x0066);
 		end
 	elseif(pNation == BASTOK) then
 		if(currentMission == THE_EMISSARY) then
@@ -140,9 +140,16 @@ function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
 
-	if(csid == 0x01f5) then
+	if (csid == 0x0070) then
+		player:setVar("ATimelyVisitProgress",6);
+	elseif(csid == 0x01f5) then
 		player:addMission(BASTOK,THE_EMISSARY_SANDORIA);
 		player:setVar("MissionStatus",4);
+	elseif(csid == 0x0234 and option == 1) then
+		player:completeMission(TOAU,CONFESSIONS_OF_ROYALTY);
+		player:addMission(TOAU,EASTERLY_WINDS);
+		player:delKeyItem(RAILLEFALS_LETTER);
+		player:setVar("TOAUM4",0);
 	elseif(csid == 0x01f7) then
 		player:setVar("MissionStatus",9);
 	elseif(csid == 0x01fc) then
@@ -165,7 +172,11 @@ function onEventFinish(player,csid,option)
 		player:setVar("MissionStatus",1);
 	elseif(csid == 0x0016) then
 		player:setVar("MissionStatus",4);
-		
+	elseif(csid == 0x003A) then
+		player:setVar("MissionStatus",2);
+	elseif(csid == 0x0066) then
+		finishMissionTimeline(player,3,csid,option);
+		player:setVar("Wait1DayM8-1_date", os.date("%j"));
 	end
 	
 end;

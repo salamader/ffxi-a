@@ -61,6 +61,10 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
+	--player:startEvent(0x002e);
+	Sarcophagus = sarcophagusNumber(npc:getXPos(),npc:getZPos());	
+	ANewDawn = player:getQuestStatus(JEUNO,A_NEW_DAWN);
+	SturmKilled = player:getVar("ANewDawnSturmKilled");
 	
 	if(sarcophagusNumber(npc:getXPos(),npc:getZPos()) == player:getVar("TheRequiemRandom")) then
 		if(player:getVar("TheRequiemYumKilled") == 1) then
@@ -70,6 +74,16 @@ function onTrigger(player,npc)
 			SpawnMob(17576265):updateEnmity(player); -- Spawn Yum Kimil NM @pos -414 8 499
 			SpawnMob(17576267):updateEnmity(player); -- Spawn Owl Guardian NM @pos -414 8 501
 			SpawnMob(17576266):updateEnmity(player); -- Spawn Dog Guardian NM @pos -414 8 497
+		end
+	elseif(ANewDawn == QUEST_ACCEPTED) then
+		if(player:hasKeyItem(TAMERS_WHISTLE) and Sarcophagus == 4 and SturmKilled ~= 1) then
+			SpawnMob(17576269); -- Spawn Taifun NM @pos
+                	SpawnMob(17576270); -- Spawn Trombe NM @pos 
+                	SpawnMob(17576268); -- Spawn Strum NM @pos
+		elseif(Sarcophagus == 4 and SturmKilled == 1) then
+			player:startEvent(0x002d);
+		else
+			player:messageSpecial(NOTHING_HAPPENED);
 		end
 	else
 		player:messageSpecial(SARCOPHAGUS_CANNOT_BE_OPENED); -- Standard dialog
@@ -101,6 +115,12 @@ function onEventFinish(player,csid,option)
 		player:setVar("TheRequiemAlreadyPoped",0);
 		player:addKeyItem(STAR_RING1);
 		player:messageSpecial(KEYITEM_OBTAINED,STAR_RING1); -- Star Ring (Key Item). 
+	elseif(csid == 0x002d) then
+		player:setVar("ANewDawnSturmKilled",0);
+		player:delKeyItem(TAMERS_WHISTLE);
+		player:addItem(14222);
+		player:messageSpecial(ITEM_OBTAINED,14222);
+		player:completeQuest(JEUNO,A_NEW_DAWN);
 	end
 	
 end;

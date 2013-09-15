@@ -11,6 +11,7 @@ package.loaded["scripts/zones/Korroloka_Tunnel/TextIDs"] = nil;
 require("scripts/globals/settings");
 require("scripts/globals/keyitems");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Korroloka_Tunnel/TextIDs");
 
 -----------------------------------
@@ -28,10 +29,10 @@ function onTrigger(player,npc)
 	
 	if(player:getQuestStatus(BASTOK,AYAME_AND_KAEDE) == QUEST_ACCEPTED) then
 		if(player:getVar("AyameAndKaede_Event") == 2 and player:hasKeyItem(STRANGELY_SHAPED_CORAL) == false) then
-			leechesDespawned = (GetMobAction(17486187) == 0 and GetMobAction(17486188) == 0 and GetMobAction(17486189) == 0);
-			spawnTime = player:getVar("KorrolokaLeeches_Spawned");
-			canSpawn = (leechesDespawned and (os.time() - spawnTime) > 30);
-			killedLeeches = player:getVar("KorrolokaLeeches");
+			local leechesDespawned = (GetMobAction(17486187) == 0 and GetMobAction(17486188) == 0 and GetMobAction(17486189) == 0);
+			local spawnTime = player:getVar("KorrolokaLeeches_Spawned");
+			local canSpawn = (leechesDespawned and (os.time() - spawnTime) > 30);
+			local killedLeeches = player:getVar("KorrolokaLeeches");
 
 			if(killedLeeches >= 1) then
 				if((killedLeeches == 3 and (os.time() - player:getVar("KorrolokaLeeches_Timer") < 30)) or (killedLeeches < 3 and leechesDespawned and (os.time() - spawnTime) < 30)) then
@@ -40,6 +41,7 @@ function onTrigger(player,npc)
 					player:setVar("KorrolokaLeeches",0);
 					player:setVar("KorrolokaLeeches_Spawned",0);
 					player:setVar("KorrolokaLeeches_Timer",0);
+					debugTeleport(player,17743909); -- Ensetsu, zone 236
 				elseif(leechesDespawned) then
 					SpawnMob(17486187,168):updateEnmity(player); -- Despawn after 3 minutes (-12 seconds for despawn delay).
 					SpawnMob(17486188,168):updateEnmity(player);

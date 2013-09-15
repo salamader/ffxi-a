@@ -1,6 +1,6 @@
 -----------------------------------
 -- Area: Konschtat Highlands
--- NPC:  Dimensional_Portal
+-- NPC:  Dimensional Portal
 -----------------------------------
 package.loaded["scripts/zones/Konschtat_Highlands/TextIDs"] = nil;
 -----------------------------------

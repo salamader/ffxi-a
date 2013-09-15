@@ -11,8 +11,8 @@
 function onMobDeath(mob,killer)	
 
     -- Set Sabotender Mariachi's Window Open Time
-    wait = math.random((10800),(28800)); -- 3-8 hours
-    SetServerVariable("[POP]Sabotender_Mariachi", os.time(t) + wait); -- 3-8 hours
+    wait = math.random((3600),(14400)); -- 1-4 hours
+    SetServerVariable("[POP]Sabotender_Mariachi", os.time(t) + wait); -- 1-4 hours
     DeterMob(mob:getID(), true);
 
     -- Set PH back to normal, then set to respawn spawn

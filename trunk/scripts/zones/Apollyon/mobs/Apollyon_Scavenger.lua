@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Apollyon NW
--- NPC:  Kaiser Behemoth
-
+-- NPC:  Apollyon Scavenger
 -----------------------------------
 package.loaded["scripts/zones/Apollyon/TextIDs"] = nil;
 -----------------------------------

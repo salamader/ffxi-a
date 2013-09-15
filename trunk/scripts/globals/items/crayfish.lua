@@ -1,11 +1,11 @@
 -----------------------------------------
 -- ID: 4472
--- Item: crayfish
--- Food Effect: 5Min, Mithra only
+-- Item: Crayfish
+-- Food Effect: 5 Min, Mithra only
 -----------------------------------------
 -- Dexterity -3
 -- Vitality 1
--- defense 10
+-- Defense 10
 -----------------------------------------
 
 require("scripts/globals/status");

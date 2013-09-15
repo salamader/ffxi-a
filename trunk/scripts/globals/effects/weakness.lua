@@ -43,6 +43,7 @@ function onEffectLose(target,effect)
     target:delMod(MOD_HPP,-75);
     target:delMod(MOD_MPP,-75);
     target:delMod(MOD_HASTE_MAGIC,-1024);
+	target:updateHealth();
 
     if(effect:getPower() == 2) then
         -- handle double weakness

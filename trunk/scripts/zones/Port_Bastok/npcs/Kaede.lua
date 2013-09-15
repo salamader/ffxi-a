@@ -11,6 +11,7 @@ package.loaded["scripts/zones/Port_Bastok/TextIDs"] = nil;
 require("scripts/globals/settings");
 require("scripts/globals/keyitems");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Port_Bastok/TextIDs");
 
 -----------------------------------
@@ -36,9 +37,9 @@ end;
 
 function onTrigger(player,npc)
 	
-	ayameKaede = player:getQuestStatus(BASTOK,AYAME_AND_KAEDE);
+	local ayameKaede = player:getQuestStatus(BASTOK,AYAME_AND_KAEDE);
 	
-	if(ayameKaede == QUEST_AVAILABLE and player:getMainLvl() >= 30) then			
+	if(ayameKaede == QUEST_AVAILABLE and player:getMainLvl() >= ADVANCED_JOB_LEVEL) then
 		player:startEvent(0x00f0);
 	elseif(ayameKaede == QUEST_ACCEPTED) then
 		player:startEvent(0x001a);
@@ -48,7 +49,7 @@ function onTrigger(player,npc)
 		player:startEvent(0x001a);
 	end
 	
-end; 
+end;
 
 -----------------------------------
 -- onEventUpdate
@@ -70,6 +71,7 @@ function onEventFinish(player,csid,option)
 	if(csid == 0x00f0) then
 		if(player:getQuestStatus(BASTOK,AYAME_AND_KAEDE) == QUEST_AVAILABLE) then
 			player:addQuest(BASTOK,AYAME_AND_KAEDE);
+			debugTeleport(player,17743879); -- Kagetora, zone 236
 		end
 	end
 	

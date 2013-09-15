@@ -25,9 +25,9 @@ function onTrigger(player,npc)
 	if(player:getCurrentMission(COP) == DISTANT_BELIEFS and player:getVar("PromathiaStatus") == 3)then
 		player:startEvent(0x0071);
 	elseif(player:getCurrentMission(COP) == SHELTERING_DOUBT and player:getVar("PromathiaStatus") == 2)then	
-	    player:startEvent(0x006D);
+		player:startEvent(0x006D);
 	elseif(player:getCurrentMission(COP) == THE_SAVAGE and player:getVar("PromathiaStatus") == 2) then 	
-	    player:startEvent(0x006E);
+		player:startEvent(0x006E);
 	else
 		player:startEvent(0x007B);
 	end

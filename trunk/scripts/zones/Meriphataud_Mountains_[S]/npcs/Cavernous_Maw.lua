@@ -1,7 +1,10 @@
 -----------------------------------
--- Cavernous Maw
--- Teleports Players to Meriphataud Mountains
--- @pos 597 -32 279 97
+-- Area: Meriphataud Mountains [S]
+-- Name: Cavernous Maw
+-- Teleports Players to Meriphataud
+-- Mountains
+-- @zone 97
+-- @pos 597, -32, 279
 -----------------------------------
 package.loaded["scripts/zones/Meriphataud_Mountains_[S]/TextIDs"] = nil;
 -----------------------------------
@@ -23,13 +26,11 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	
 	if(hasMawActivated(player,5) == false) then
 		player:startEvent(0x0066);
 	else
 		player:startEvent(0x0067);
 	end
-	
 end;
 
 -----------------------------------
@@ -48,13 +49,10 @@ end;
 function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
-	
 	if(option == 1) then
 		if(csid == 0x0066) then
 			player:addNationTeleport(MAW,32);
 		end
-		
 		toMaw(player,18);
 	end
-	
 end;

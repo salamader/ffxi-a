@@ -1,11 +1,9 @@
 -----------------------------------
---  Area: Bastok Markets
---   NPC: Ciqala
---  Type: Merchant
+-- Area: Bastok Markets
+-- NPC: Ciqala
+-- Type: Merchant
 -- @zone: 235
---  @pos: -283.147 -11.319 -143.680
---
--- Auto-Script: Requires Verification
+-- @pos: -283.147 -11.319 -143.680
 --
 -- Updated Aug-09-2013 by Zerahn, based on bgwiki and gamerescape
 -----------------------------------

@@ -1,7 +1,10 @@
 -----------------------------------
--- Cavernous Maw
--- Teleports Players to West Sarutabaruta
--- @pos 0 0 -165 95
+-- Area: West Sarutabaruta [S]
+-- Name: Cavernous Maw
+-- Teleports Players to West
+-- Sarutabaruta
+-- @zone 95
+-- @pos 0, 0, -165
 -----------------------------------
 package.loaded["scripts/zones/West_Sarutabaruta_[S]/TextIDs"] = nil;
 -----------------------------------
@@ -23,13 +26,11 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	
 	if(hasMawActivated(player,8) == false) then
 		player:startEvent(0x0064);
 	else
 		player:startEvent(0x0065);
 	end
-	
 end;
 
 -----------------------------------
@@ -48,13 +49,10 @@ end;
 function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
-	
 	if(option == 1) then
 		if(csid == 0x0064) then
 			player:addNationTeleport(MAW,256);
 		end
-		
 		toMaw(player,8);
 	end
-	
 end;

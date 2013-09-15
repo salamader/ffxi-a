@@ -1,10 +1,10 @@
 -----------------------------------
 -- Area: Temenos Central 1floor	
--- NPC: Enhanced_Dragon
-
+-- NPC: Enhanced Dragon
 -----------------------------------
 package.loaded["scripts/zones/Temenos/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Temenos/TextIDs");
 

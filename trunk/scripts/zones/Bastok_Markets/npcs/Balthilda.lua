@@ -1,13 +1,9 @@
 -----------------------------------
---  Area: Bastok Markets
---   NPC: Balthilda
---  Type: Merchant
+-- Area: Bastok Markets
+-- NPC: Balthilda
+-- Type: Merchant
 -- @zone: 235
---  @pos: -300 -10 -161
---
--- NPC not found in 'npc_list'
---
--- Auto-Script: Requires Verification. Verified standard dialog - thrydwolf 12/18/2011
+-- @pos: -300 -10 -161
 --
 -- Updated Aug-09-2013 by Zerahn, based on bgwiki and gamerescape
 -----------------------------------
@@ -43,7 +39,6 @@ function onTrigger(player,npc)
         0x349D,  1150,3      --Leather Ring
     }
     showNationShop(player, BASTOK, stock);
-
 end;
 
 -----------------------------------

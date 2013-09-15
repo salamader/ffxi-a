@@ -1,9 +1,11 @@
 -----------------------------------------
 --	ID: 15860
 --	Gyokuto Obi
---	Enchantment: 60Min, Costume - Large Rarab
+--	Enchantment: Costume - Large Rarab
+--	Durration: 60 Mins
 -----------------------------------------
 
+require("scripts/globals/settings");
 require("scripts/globals/status");
 
 -----------------------------------------

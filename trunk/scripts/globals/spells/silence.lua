@@ -27,6 +27,17 @@ function onSpellCast(caster,target,spell)
 		--Duration, including resistance.  May need more research.
 		local duration = 180;
 
+	    local body = caster:getEquipID(SLOT_BODY);
+	    if (body == 11088) then -- Estoquers Sayon +2
+			bonus = bonus * 1.1;		
+		end
+    
+		if (caster:hasStatusEffect(EFFECT_SABOTEUR) == true) then
+			duration = duration + (duration * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
+			bonus = bonus * 2;
+			caster:delStatusEffect(EFFECT_SABOTEUR);
+		end
+
 		--Resist
 		local resist = applyResistance(caster,spell,target,dINT,35,bonus);
 		

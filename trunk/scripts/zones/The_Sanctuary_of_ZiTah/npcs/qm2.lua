@@ -10,6 +10,7 @@ package.loaded["scripts/zones/The_Sanctuary_of_ZiTah/TextIDs"] = nil;
 
 require("scripts/globals/settings");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/The_Sanctuary_of_ZiTah/TextIDs");
 
 -----------------------------------
@@ -41,7 +42,11 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	player:messageSpecial(STURDY_BRANCH,1021);
+	if (player:hasItem(1153)) then
+		debugTeleport(player, 17809424); -- Jaucribaix
+	else
+		player:messageSpecial(STURDY_BRANCH,1021);
+	end
 end; 
 
 -----------------------------------

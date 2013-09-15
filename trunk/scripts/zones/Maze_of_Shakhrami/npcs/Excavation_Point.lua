@@ -8,6 +8,7 @@ package.loaded["scripts/zones/Maze_of_Shakhrami/TextIDs"] = nil;
 -----------------------------------
 
 require("scripts/globals/excavation");
+require("scripts/globals/teleports");
 require("scripts/zones/Maze_of_Shakhrami/TextIDs");
 
 -----------------------------------
@@ -22,6 +23,7 @@ function onTrade(player,npc,trade)
 				player:tradeComplete();
 				player:addItem(1159);
 				player:messageSpecial(ITEM_OBTAINED, 1159); -- Wyvern Egg
+				debugTeleport(player,17723419); -- Morjean, zone 231, 98 x
 			else
 			   player:messageSpecial(ITEM_CANNOT_BE_OBTAINED, 1159); -- Wyvern Egg
 			end

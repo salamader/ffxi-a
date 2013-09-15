@@ -35,7 +35,7 @@ function onTrigger(player,npc)
 	
 	merc = 2 -- Probably could be done, but not really important atm
 	
-	player:startEvent(0x008C,0,merc,runicpass,player:getPoint(IS),getAstralCandescence(),cost,captain);
+	player:startEvent(0x008C,0,merc,runicpass,player:getPoint(3),getAstralCandescence(),cost,captain);
 	
 end;
 

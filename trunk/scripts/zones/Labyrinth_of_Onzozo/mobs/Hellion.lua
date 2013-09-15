@@ -10,8 +10,8 @@
 function onMobDeath(mob,killer)	
   
     -- Set Hellion's Window Open Time
-    wait = math.random((7200),(14400));
-    SetServerVariable("[POP]Hellion", os.time(t) + wait); -- 2-4 hours
+    wait = math.random((3600),(7200));
+    SetServerVariable("[POP]Hellion", os.time(t) + wait); -- 1-2 hours
     DeterMob(mob:getID(), true);
 
     -- Set PH back to normal, then set to respawn spawn

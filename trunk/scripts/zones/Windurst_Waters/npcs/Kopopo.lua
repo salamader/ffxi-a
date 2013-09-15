@@ -1,9 +1,9 @@
 -----------------------------------
 -- Area: Windurst Waters
 -- NPC:  Kopopo
--- Guild Merchant NPC: Cooking Guild 
+-- Type: Guild Merchant Cooking Guild 
 -- @zone 238
--- @pos -103 -2 74
+-- @pos -103, -2, 74
 -----------------------------------
 package.loaded["scripts/zones/Windurst_Waters/TextIDs"] = nil;
 -----------------------------------

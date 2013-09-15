@@ -1,8 +1,10 @@
 -----------------------------------
 -- Area: Chateau d'Oraguille
 -- Door: Great Hall
--- Involved in Missions: 3-3, 5-2, 6-1
--- @pos 0 -1 13 233
+-- Involved in Missions: 3-3, 5-2,
+-- 6-1, 8-2, and 9-1
+-- @zone 233
+-- @pos 0, -1, 13
 -----------------------------------
 package.loaded["scripts/zones/Chateau_dOraguille/TextIDs"] = nil;
 package.loaded["scripts/globals/missions"] = nil;
@@ -33,6 +35,16 @@ function onTrigger(player,npc)
 		player:startEvent(0x003D);
 	elseif(currentMission == LEAUTE_S_LAST_WISHES and player:getVar("MissionStatus") == 1) then
 	    player:startEvent(87);
+	elseif(currentMission == LIGHTBRINGER and player:getVar("MissionStatus") == 0) then
+		player:startEvent(0x0064);
+	elseif(currentMission == LIGHTBRINGER and player:getVar("MissionStatus") == 6) then
+		player:startEvent(0x0068)
+	elseif(currentMission == BREAKING_BARRIERS and player:getVar("MissionStatus") == 0) then
+		player:startEvent(0x0020)
+	elseif(currentMission == BREAKING_BARRIERS and player:getVar("MissionStatus") == 4) then
+		if(player:hasKeyItem(FIGURE_OF_TITAN) and player:hasKeyItem(FIGURE_OF_GARUDA) and player:hasKeyItem(FIGURE_OF_LEVIATHAN)) then
+			player:startEvent(0x004c);
+		end
     else
         player:startEvent(0x202);
 	end
@@ -62,10 +74,21 @@ function onEventFinish(player,csid,option)
 		player:setVar("MissionStatus",3);
 		player:addKeyItem(LETTER_TO_THE_AMBASSADOR);
 		player:messageSpecial(KEYITEM_OBTAINED,LETTER_TO_THE_AMBASSADOR);
-	elseif(csid == 0x003D) then
+	elseif(csid == 0x003D or csid == 0x0068 or csid == 0x0020 or csid == 0x004c) then
 		finishMissionTimeline(player,3,csid,option);
 	elseif(csid == 87)then
         player:setVar('MissionStatus',2);
+	elseif(csid == 0x0064) then
+		player:setVar("Mission8-1Completed",0) -- dont need this var anymore. JP midnight is done and prev mission completed.
+		player:setVar("MissionStatus",1);
+	elseif(csid == 0x0068) then
+		player:setVar("Mission8-2Kills",0);
+		finishMissionTimeline(player,3,csid,option);
+	elseif(csid == 0x0020) then
+		player:setVar("Cutscenes_8-2",0); -- dont need this var now that mission is flagged and cs have been triggered to progress
+		player:setVar("MissionStatus",1);
+	elseif(csid == 0x004c) then
+		finishMissionTimeline(player,3,csid,option);
 	end
 	
 end;

@@ -1,7 +1,6 @@
 -----------------------------------------
 -- Spell: Hojo:Ichi
 -- Description: Inflicts Slow on target.
--- Edited from slow.lua
 -----------------------------------------
 
 require("scripts/globals/status");

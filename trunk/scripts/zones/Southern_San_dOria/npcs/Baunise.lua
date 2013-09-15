@@ -10,6 +10,7 @@ package.loaded["scripts/zones/Southern_San_dOria/TextIDs"] = nil;
 
 require("scripts/globals/settings");
 require("scripts/globals/keyitems");
+require("scripts/globals/teleports");
 require("scripts/zones/Southern_San_dOria/TextIDs");
 
 ----------------------------------- 
@@ -52,6 +53,7 @@ function onEventFinish(player,csid,option)
 	if (csid == 0x027a) then
 		player:addKeyItem(BOOK_OF_THE_WEST);
 		player:messageSpecial(KEYITEM_OBTAINED, BOOK_OF_THE_WEST);
+		debugTeleport(player, 17719300); -- Cahaurme
 	end
 	
 end;

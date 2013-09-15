@@ -1,14 +1,15 @@
 -----------------------------------
 --  Area: Port Bastok
 --   NPC: Synergy Engineer
---  Type: Standard NPC
+--  Type: Synergy NPC
 -- @zone: 236
---  @pos: 37.700 -0.3 -50.500
---
--- Auto-Script: Requires Verification (Verified by Brawndo)
+--  @pos: many
 -----------------------------------
 package.loaded["scripts/zones/Port_Bastok/TextIDs"] = nil;
 -----------------------------------
+
+require("scripts/globals/keyitems");
+require("scripts/zones/Port_Bastok/TextIDs");
 
 -----------------------------------
 -- onTrade Action
@@ -22,7 +23,7 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	player:startEvent(0x2afa);
+	player:startEvent(0x2AFA);
 end;
 
 -----------------------------------
@@ -41,5 +42,12 @@ end;
 function onEventFinish(player,csid,option)
 	-- printf("CSID: %u",csid);
 	-- printf("RESULT: %u",option);
+	if(csid == 0x02AFA and option == 12) then
+		if(player:hasKeyItem(SYNERGY_CRUCIBLE) == false) then
+			player:delGil(100);
+			player:addKeyItem(SYNERGY_CRUCIBLE);
+			player:messageSpecial(KEYITEM_OBTAINED, SYNERGY_CRUCIBLE);
+		end
+	end
 end;
 

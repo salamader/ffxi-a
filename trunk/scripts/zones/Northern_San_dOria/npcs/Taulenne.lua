@@ -1,7 +1,9 @@
 -----------------------------------
 -- Area: Northern San d'Oria
 -- NPC: Taulenne
--- Armor Storage NPC
+-- Type: Armor Storage NPC
+-- @zone 231
+-- @pos -92.751, -0.199, 58.104
 -----------------------------------
 package.loaded["scripts/zones/Northern_San_dOria/TextIDs"] = nil;
 package.loaded["scripts/globals/armorstorage"] = nil;

@@ -44,15 +44,15 @@ function onMobDeath(mob, killer)
     killer:addTitle(NIDHOGG_SLAYER);
 
     -- Set Nidhogg's Window Open Time
-    wait = 72 * 3600
-    SetServerVariable("[POP]Nidhogg", os.time(t) + wait); -- 3 days
+    wait = 8 * 3600
+    SetServerVariable("[POP]Nidhogg", os.time(t) + wait); -- 8 hours
     DeterMob(mob:getID(), true);
     
-    -- Set Fafnir's spawnpoint and respawn time (21-24 hours)
+    -- Set Fafnir's spawnpoint and respawn time (1-4 hours)
     Fafnir = 17408018;
     SetServerVariable("[PH]Nidhogg", 0);
     DeterMob(Fafnir, false);
     UpdateNMSpawnPoint(Fafnir);
-    GetMobByID(Fafnir):setRespawnTime(math.random((75600),(86400)));
+    GetMobByID(Fafnir):setRespawnTime(math.random((3600),(14400)));
 
 end;

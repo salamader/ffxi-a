@@ -6,6 +6,7 @@
 --  @pos: -71 -5 -39
 -- 
 -- Involved in Quest: A Taste For Meat
+-- Over the Hills and Far Away
 -----------------------------------
 package.loaded["scripts/zones/Port_San_dOria/TextIDs"] = nil;
 -----------------------------------
@@ -38,6 +39,8 @@ function onTrigger(player,npc)
 		end;
 	elseif (player:getQuestStatus(SANDORIA, A_TASTE_FOR_MEAT) == QUEST_AVAILABLE and player:getVar("aTasteForMeat") == 0) then
 		player:startEvent(0x020f);
+	elseif (player:getQuestStatus(SANDORIA, OVER_THE_HILLS_AND_FAR_AWAY) == QUEST_AVAILABLE and player:getVar("DiaryPage") >= 4 and player:getFameLevel(SANDORIA) >= 8) then
+		player:startEvent(0x02D5);
 	else	
 		player:startEvent(0x020d);
 	end;
@@ -70,7 +73,10 @@ function onEventFinish(player,csid,option)
 			player:addItem(4371,1);
 			player:messageSpecial(ITEM_OBTAINED,4371);
 			player:setVar("aTasteForMeat", 0);
-		end;
-	end;
+		end
+	elseif (csid == 0x02D5) then
+		player:addQuest(SANDORIA,OVER_THE_HILLS_AND_FAR_AWAY);
+		player:setVar("overtheHills", 1);
+	end
 	
 end;

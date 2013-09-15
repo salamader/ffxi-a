@@ -2,6 +2,8 @@
 -- Area: Bastok Markets
 -- NPC: Salimah
 -- Start & Finishes Quest: Gourmet
+-- @zone 235
+-- @pos -31.687, -6.824, -73.282
 -----------------------------------
 
 require("scripts/globals/quests");
@@ -49,6 +51,8 @@ function onTrade(player,npc,trade)
 
 				player:startEvent(event,item);
 			end
+
+			player:startEvent(event,item);
 		end
 	end
 end;

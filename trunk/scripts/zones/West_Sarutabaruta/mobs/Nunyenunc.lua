@@ -10,8 +10,8 @@
 function onMobDeath(mob,killer)	
 
     -- Set Nunyenunc's Window Open Time
-    wait = math.random((7200),(10800))
-    SetServerVariable("[POP]Nunyenunc", os.time(t) + wait); -- 2-3 hours
+    wait = math.random((1440),(3600))
+    SetServerVariable("[POP]Nunyenunc", os.time(t) + wait); -- 24min-1hr
     DeterMob(mob:getID(), true);
     
     -- Set PH back to normal, then set to respawn spawn

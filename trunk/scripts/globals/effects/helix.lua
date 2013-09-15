@@ -22,7 +22,9 @@ end;
 
 function onEffectTick(target,effect)
 	local dmg = utils.stoneskin(target, effect:getPower());
-
+	if(target:hasStatusEffect(EFFECT_MANA_WALL) == true) then
+		dmg = utils.manawall(target, dmg);
+	end
 	if(dmg > 0) then
 		target:delHP(dmg);
 		target:wakeUp();

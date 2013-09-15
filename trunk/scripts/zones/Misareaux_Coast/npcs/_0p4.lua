@@ -1,7 +1,7 @@
 -----------------------------------
 --  Area: Misareaux Coast
 --  NPC: Storage Compartment 
---  COP spawn Boggelmann.
+--  ??? COP spawn Boggelmann.
 -----------------------------------
 package.loaded["scripts/zones/Misareaux_Coast/TextIDs"] = nil;
 -----------------------------------

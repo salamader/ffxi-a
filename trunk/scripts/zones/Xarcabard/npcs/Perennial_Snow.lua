@@ -17,7 +17,7 @@ require("scripts/zones/Xarcabard/TextIDs");
 
 function onTrade(player,npc,trade)
 
-
+	
 end;
 
 -----------------------------------
@@ -25,15 +25,15 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-   local circleOfTime = player:getQuestStatus(JEUNO,THE_CIRCLE_OF_TIME);
-
-   if (circleOfTime == QUEST_ACCEPTED and player:getVar("circleTime") == 3) then
-       if (player:getVar("star_ringburied") == 0) then
-           player:startEvent(0x03);
-       elseif (player:getVar("star_ringburied") < tonumber(os.date("%j")) and player:getVar("circleTime") == 3) then
-           player:startEvent(0x02);
-       end
-   end
+	local circleOfTime = player:getQuestStatus(JEUNO,THE_CIRCLE_OF_TIME);
+	
+	if (circleOfTime == QUEST_ACCEPTED and player:getVar("circleTime") == 3) then
+		if (player:getVar("star_ringburied") == 0) then
+			player:startEvent(0x03);
+		elseif (player:getVar("star_ringburied") < tonumber(os.date("%j")) and player:getVar("circleTime") == 3) then
+			player:startEvent(0x02);
+		end
+	end
 
 end;
 
@@ -54,11 +54,11 @@ function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
 
-   if (csid == 0x03) then
-       player:setVar("star_ringburied",os.date("%j"));
-   elseif (csid == 0x02) then
-       player:setVar("star_ringburied",0);
-       player:setVar("circleTime",4);
-       printf("test");
-   end
+	if (csid == 0x03) then
+		player:setVar("star_ringburied",os.date("%j"));
+	elseif (csid == 0x02) then
+		player:setVar("star_ringburied",0);
+		player:setVar("circleTime",4);
+		printf("test");
+	end
 end;

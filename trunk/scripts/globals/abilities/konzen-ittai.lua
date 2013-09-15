@@ -1,5 +1,6 @@
 -----------------------------------
 -- Ability: Konzen-Ittai
+-- Readies enemy for skillchain.
 -----------------------------------
 
 require("scripts/globals/settings");

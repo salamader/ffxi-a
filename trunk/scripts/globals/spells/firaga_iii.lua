@@ -1,6 +1,6 @@
 -----------------------------------------
--- Spell: Firaga 3
--- Deals wind damage to an enemy.
+-- Spell: Firaga III
+-- Deals fire damage to an enemy.
 -----------------------------------------
 
 require("scripts/globals/magic");

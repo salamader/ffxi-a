@@ -10,7 +10,7 @@
 function onMobDeath(mob,killer)
 
     -- Set Yowie's Window Open Time
-    wait = math.random((7200),(28800)); -- 2-8 hours
+    wait = math.random((1440),(3600)); -- 24min-1hr
     SetServerVariable("[POP]Yowie", os.time(t) + wait);
     DeterMob(mob:getID(), true);
 

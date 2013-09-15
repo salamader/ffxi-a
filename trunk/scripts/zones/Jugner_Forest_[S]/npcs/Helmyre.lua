@@ -22,7 +22,12 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	player:startEvent(0x00d0);
+	price = 100;
+	gil = player:getGil();
+	hasLicense = player:hasKeyItem(CHOCOBO_LICENSE);
+	if (hasLicense and level >= 15) then
+		player:startEvent(0x00d0);
+	end
 end;
 
 -----------------------------------
@@ -41,5 +46,17 @@ end;
 function onEventFinish(player,csid,option)
 	-- printf("CSID: %u",csid);
 	-- printf("RESULT: %u",option);
+	local durationMod = 0;
+	durationMod = player:getMod(MOD_CHOCOBO_TIME) * 60;
+	local price = 100;
+	if (csid == 0x06A and option == 0) then
+	        if (player:delGil(price)) then
+	            if (player:getMainLvl() >= 20) then
+	                player:addStatusEffectEx(EFFECT_CHOCOBO,EFFECT_CHOCOBO,1,0,(1800 + durationMod),true);
+	            else
+	                player:addStatusEffectEx(EFFECT_CHOCOBO,EFFECT_CHOCOBO,1,0,(900 + durationMod),true);
+	            end
+	        end
+	end
 end;
 

@@ -3,7 +3,8 @@
 -- NPC:  Hakkuru-Rinkuru
 -- Involved In Quest: Making Amends
 -- Starts and Ends Quest: Wonder Wands
--- @pos -111 -4 101 240
+-- @zone 240
+-- @pos -111 -4 101
 -----------------------------------
 package.loaded["scripts/zones/Port_Windurst/TextIDs"] = nil;
 package.loaded["scripts/globals/missions"] = nil;
@@ -53,8 +54,7 @@ function onTrigger(player,npc)
 	WonderWands = player:getQuestStatus(WINDURST,WONDER_WANDS); --Third and final quest in series
 	needToZone = player:needToZone();
 	pFame = player:getFameLevel(WINDURST);
-	
-	-- Check if we are on Windurst Mission 1-1
+
 	if(player:getCurrentMission(WINDURST) == THE_HORUTOTO_RUINS_EXPERIMENT) then
 		MissionStatus = player:getVar("MissionStatus");
 		if(MissionStatus == 0) then
@@ -62,8 +62,12 @@ function onTrigger(player,npc)
 		elseif(MissionStatus == 1) then
 			player:startEvent(0x005b);
 		elseif(MissionStatus == 3) then
-			player:startEvent(0x005e,0,CRACKED_MANA_ORBS) -- Finish Mission 1-1
+			player:startEvent(0x005e,0,CRACKED_MANA_ORBS);
 		end
+	elseif(player:getCurrentMission(WINDURST) == FULL_MOON_FOUNTAIN and player:getVar("WINDURST61") == 0)then
+		player:startEvent(0x01c8);
+	elseif(player:getCurrentMission(WINDURST) == FULL_MOON_FOUNTAIN and player:getVar("WINDURST61") == 6)then 
+		player:startEvent(0x01c9);
 	elseif(player:getCurrentMission(WINDURST) == TO_EACH_HIS_OWN_RIGHT and player:getVar("MissionStatus") == 2) then
 		player:startEvent(0x0093);
 -- Begin Making Amends Section
@@ -109,6 +113,10 @@ function onEventFinish(player,csid,option)
 	
 	if(csid == 0x005a) then
 		player:setVar("MissionStatus",1);
+	elseif(csid == 0x01c8)then
+		player:setVar("WINDURST61",1);
+		player:addKeyItem(SOUTHWESTERN_STAR_CHARM);
+		player:messageSpecial(KEYITEM_OBTAINED,SOUTHWESTERN_STAR_CHARM);
 	elseif(csid == 0x0093) then
 		player:setVar("MissionStatus",3);
 	elseif(csid == 0x005e) then

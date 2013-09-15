@@ -26,6 +26,7 @@ PLAYERS_HAVE_NOT_REACHED_LEVEL =  7299; --Players who have not reached level <<<
        FLYER_REFUSED =  8063; --Your flyer is refused.
       FLYER_ACCEPTED =  8712; --The flyer is accepted.
        FLYER_ALREADY =  8713; --This person already has a flyer.
+NOTHING_OUT_OF_ORDINARY =  6417; --There is nothing out of the ordinary here.<Prompt>
 
 -- Harvest Festival
       TRICK_OR_TREAT =  7243; --Trick or treat...
@@ -50,6 +51,13 @@ ITEM_DELIVERY_DIALOG =  8292; --Parcels delivered to rooms anywhere in Vana'diel
     LEUVERET_MESSAGE =  8721; --Leuveret looks over curiously for a moment.
 
      PAUNELIE_DIALOG =  8192; --I'm sorry, can I help you?
+       SOBANE_DIALOG =  9612; --My name is Sobane, and my husband is the royal family's head chef.<Prompt>
+      WEATHER_DIALOG =  6474; --Your fate rides on the changing winds of Vana'diel. I can give you insight on the local weather.<Prompt>
+          GATE_GUARD =  7571; --Just got here and you're aching to leave, eh? Listen, the lands are wild beyond our gates, filled with fiends and their ilk.<Prompt>
+     DAHJAL_DIALOG_1 =  7992; --I am the great fire-eater! Braver of the Blaze! I'm just taking a little break right now.<Prompt>
+      MOKOP_SANKOP_1 =  7991; --Really, you see, I'm a clown. Know why? Because I'm funny!<Prompt>
+       CHEH_RAIHAH_1 =  7994; --I play the pipes. Which ones, you ask? The only ones! Bagpipes! Just not when I'm on break.<Prompt>
+      NALTA_DIALOG_1 =  7993; --I'm a mime. I'm on break right now, so let me be.<Prompt>
 
 -- Shop Texts
       LUSIANE_SHOP_DIALOG =  7843; --Hello! Let Taumila's handle all your sundry needs!

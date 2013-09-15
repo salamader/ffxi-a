@@ -5,18 +5,18 @@ require("scripts/globals/utils")
 
     MMSG_BUFF_FAIL = 75;
 
-	DIVINE_MAGIC_SKILL	 	= 32;
+    DIVINE_MAGIC_SKILL	 	= 32;
     HEALING_MAGIC_SKILL 	= 33;
-	ENHANCING_MAGIC_SKILL 	= 34;
-	ENFEEBLING_MAGIC_SKILL 	= 35;
-	ELEMENTAL_MAGIC_SKILL 	= 36;
+    ENHANCING_MAGIC_SKILL 	= 34;
+    ENFEEBLING_MAGIC_SKILL 	= 35;
+    ELEMENTAL_MAGIC_SKILL 	= 36;
     DARK_MAGIC_SKILL 		= 37;
     NINJUTSU_SKILL          = 39;
-    SUMMENING_SKILL 	    = 38;
+    SUMM0NING_SKILL 	    = 38;
     SINGING_SKILL           = 40;
     STRING_SKILL            = 41;
     WIND_SKILL              = 42;
-    BLUE_SKILL			    = 43;
+    BLUE_SKILL				= 43;
 
 	FIRESDAY		= 0;
 	EARTHSDAY		= 1;
@@ -32,10 +32,10 @@ require("scripts/globals/utils")
     ELE_EARTH       = 2;
     ELE_WATER       = 3;
     ELE_WIND        = 4;
-    ELE_ICE          = 5;
-    ELE_LIGHTNING    = 6;
+    ELE_ICE         = 5;
+    ELE_LIGHTNING   = 6;
     -- added both because monsterstpmoves calls it thunder
-    ELE_THUNDER = 6;
+    ELE_THUNDER     = 6;
     ELE_LIGHT       = 7;
     ELE_DARK        = 8;
 
@@ -71,7 +71,7 @@ HARD_CAP = 120; --guesstimated
 function calculateMagicDamage(V,M,player,spell,target,skilltype,atttype,hasMultipleTargetReduction)
 
     local dint = player:getStat(atttype) - target:getStat(atttype);
-    local dmg = V;
+    local dmg = V + player:getMod(MOD_MAG_DMG_STAT);
 
     if(dint<=0) then --ifdINT penalises, it's always M=1
         dmg = dmg + dint;
@@ -90,7 +90,6 @@ function calculateMagicDamage(V,M,player,spell,target,skilltype,atttype,hasMulti
     end
 
     -- printf("dmg: %d dint: %d\n", dmg, dint);
-
     return dmg;
 
 end;
@@ -103,9 +102,14 @@ function doEnspell(caster,target,spell,effect)
     end
 
     local duration = 180;
+    duration = duration + target:getMod(MOD_ENSPELL_DURATION);
+	-- Estoqueurs Bonus
+	duration = duration + (duration * caster:getMod(MOD_ENHANCING_DUR));
+
     if (caster:hasStatusEffect(EFFECT_COMPOSURE) == true and caster:getID() == target:getID()) then
         duration = duration * 3;
     end
+
     --calculate potency
     local magicskill = target:getSkillLevel(ENHANCING_MAGIC_SKILL) + target:getMod(79 + ENHANCING_MAGIC_SKILL);
 
@@ -114,10 +118,7 @@ function doEnspell(caster,target,spell,effect)
         potency = 5 + ((5*magicskill)/100);
     end
 
-    -- enhancing sword
-    if(target:getEquipID(SLOT_MAIN) == 16605 or target:getEquipID(SLOT_SUB) == 16605) then
-        potency = potency + 5;
-    end
+    potency = potency + target:getMod(MOD_ENSPELL_DMG);
 
     if(target:addStatusEffect(effect,potency,0,duration)) then
         spell:setMsg(230);
@@ -258,6 +259,28 @@ function AffinityBonus(caster,ele)
 	-- Iridal and Chatoyant will return affinity for strong and weak, cancelling their bonus out, so they need to be specifically checked.
 	-- Could do an if strong == weak, but that would cause problems once/if augments or magian gear is added.
 	local equippedMain = caster:getEquipID(SLOT_MAIN);
+	
+	local job = caster:getMainJob();
+	local sjob = caster:getSubJob();
+	if(caster:getObjType() == TYPE_PC) then
+		if(job == JOB_BLM or sjob == JOB_BLM) then
+			if(ele == 1) then
+				affinity = affinity + caster:getMerit(MERIT_FIRE_MAGIC_POTENCY);
+			elseif(ele == 2) then
+				affinity = affinity + caster:getMerit(MERIT_EARTH_MAGIC_POTENCY);
+			elseif(ele == 3) then
+				affinity = affinity + caster:getMerit(MERIT_WATER_MAGIC_POTENCY);
+			elseif(ele == 4) then
+				affinity = affinity + caster:getMerit(MERIT_WIND_MAGIC_POTENCY);
+			elseif(ele == 5) then
+				affinity = affinity + caster:getMerit(MERIT_ICE_MAGIC_POTENCY);
+			elseif(ele == 6) then
+				affinity = affinity + caster:getMerit(MERIT_LIGHTNING_MAGIC_POTENCY);
+			else
+				affinity = affinity;
+			end
+		end
+	end
 	if (equippedMain == 18632) then
 		affinity = affinity + 1;
 	elseif (equippedMain == 18633) then
@@ -285,9 +308,10 @@ function applyResistance(player,spell,target,diff,skill,bonus)
     if(target:hasStatusEffect(EFFECT_MAGIC_SHIELD, 0)) then
         return 0;
     end
-
     local resist = 1.0;
     local magicaccbonus = 0;
+	local ele = spell:getElement();
+	local weather = player:getWeather();
 
     if(bonus ~= nil) then
         magicaccbonus = magicaccbonus + bonus;
@@ -295,7 +319,6 @@ function applyResistance(player,spell,target,diff,skill,bonus)
 
 	--get the base acc (just skill plus magic acc mod)
 	local magicacc = player:getSkillLevel(skill) + player:getMod(79 + skill) + player:getMod(MOD_MACC);
-
 	if player:hasStatusEffect(EFFECT_ALTRUISM) and spell:getSpellGroup() == SPELLGROUP_WHITE then
 		magicacc = magicacc + player:getStatusEffect(EFFECT_ALTRUISM):getPower();
 	end
@@ -308,10 +331,145 @@ function applyResistance(player,spell,target,diff,skill,bonus)
 	else
 		magicacc = magicacc + diff;
 	end
-	--add acc for ele/dark seal
+	--add acc for dark seal/troubadour/divine emblem
     if(player:getStatusEffect(EFFECT_DARK_SEAL) ~= nil and skill == DARK_MAGIC_SKILL) then
         magicaccbonus = magicaccbonus + 256;
+		player:delStatusEffect(EFFECT_DARK_SEAL);
+	elseif(player:getStatusEffect(EFFECT_DIVINE_EMBLEM) ~= nil and skill == DIVINE_MAGIC_SKILL) then
+        magicaccbonus = magicaccbonus + 128;
+	elseif(player:getStatusEffect(EFFECT_KLIMAFORM) ~= nil) then
+		if(ele == 1) then
+			if(weather == 4 or weather == 5) then
+				magicaccbonus = magicaccbonus + 256;
+			end
+		elseif(ele == 2) then
+			if(weather == 8 or weather == 9) then
+				magicaccbonus = magicaccbonus + 256;
+			end
+		elseif(ele == 3) then
+			if(weather == 6 or weather == 7) then
+				magicaccbonus = magicaccbonus + 256;
+			end
+		elseif(ele == 4) then
+			if(weather == 10 or weather == 11) then
+				magicaccbonus = magicaccbonus + 256;
+			end
+		elseif(ele == 5) then
+			if(weather == 12 or weather == 13) then
+				magicaccbonus = magicaccbonus + 256;
+			end
+		elseif(ele == 6) then
+			if(weather == 14 or weather == 15) then
+				magicaccbonus = magicaccbonus + 256;
+			end
+		elseif(ele == 7) then
+			if(weather == 16 or weather == 17) then
+				magicaccbonus = magicaccbonus + 256;
+			end
+		elseif(ele == 8) then
+			if(weather == 18 or weather == 19) then
+				magicaccbonus = magicaccbonus + 256;
+			end
+		end
+	elseif(player:getStatusEffect(EFFECT_TROUBADOUR) ~= nil) then
+		local bardMerit = player:getMerit(MERIT_TROUBADOUR);
+		local mAccBonus = 0;
+		if(bardMerit == 50) then
+			mAccBonus = 64;
+		elseif(bardMerit == 75) then
+			mAccBonus = 128;
+		elseif(bardMerit == 100) then
+			mAccBonus = 192;
+		elseif(bardMerit == 125) then
+			mAccBonus = 256;
+		end
+        magicaccbonus = magicaccbonus + mAccBonus;
     end
+    
+    
+    -- add Magical Accuracy Bonus from BLM AM II Spells
+    local id = spell:getID();
+    local merit = 0;
+    
+    if(player:getObjType() == TYPE_PC) then
+        if(id == 207 or id == 209 or id == 211 or id == 213 or id == 215 or id == 205) then
+		if (id == 205) then
+		        merit = player:getMerit(MERIT_FLARE_II);
+		elseif (id == 207) then
+		       	merit = player:getMerit(MERIT_FREEZE_II);
+		elseif (id == 209) then
+		        merit = player:getMerit(MERIT_TORNADO_II);
+		elseif (id == 211) then
+		        merit = player:getMerit(MERIT_QUAKE_II);
+		elseif (id == 213) then
+		        merit = player:getMerit(MERIT_BURST_II);
+		elseif (id == 215) then
+		        merit = player:getMerit(MERIT_FLOOD_II);
+		end
+        magicaccbonus = magicaccbonus + (merit - 5);
+        end
+    end -- if BLM AM II +
+
+	-- add Magical Accuracy Bonus from Merit RDM Spells
+	
+	if(player:getObjType() == TYPE_PC) then
+		if(job == JOB_RDM or sjob == JOB_RDM) then
+			if(ele == 1) then
+				magicaccbonus = magicaccbonus + player:getMerit(MERIT_FIRE_MAGIC_ACCURACY);
+			elseif(ele == 2) then
+				magicaccbonus = magicaccbonus + player:getMerit(MERIT_EARTH_MAGIC_ACCURACY);
+			elseif(ele == 3) then
+				magicaccbonus = magicaccbonus + player:getMerit(MERIT_WATER_MAGIC_ACCURACY);
+			elseif(ele == 4) then
+				magicaccbonus = magicaccbonus + player:getMerit(MERIT_WIND_MAGIC_ACCURACY);
+			elseif(ele == 5) then
+				magicaccbonus = magicaccbonus + player:getMerit(MERIT_ICE_MAGIC_ACCURACY);
+			elseif(ele == 6) then
+				magicaccbonus = magicaccbonus + player:getMerit(MERIT_LIGHTNING_MAGIC_ACCURACY);
+			else
+				magicaccbonus = magicaccbonus;
+			end
+		end
+	end
+	
+	if(player:getObjType() == TYPE_PC) then
+		if(id == 79) then
+			merit = player:getMerit(MERIT_SLOW_II);
+			magicaccbonus = magicaccbonus + (merit - 1);
+        	end
+        end
+        
+        if(player:getObjType() == TYPE_PC) then
+		if(id == 80 or id == 276) then
+			if (id == 80) then
+			       	merit = player:getMerit(MERIT_PARALYZE_II);
+			elseif (id == 276) then
+			        merit = player:getMerit(MERIT_BLIND_II);
+			end
+		end
+        	magicaccbonus = magicaccbonus + (merit - 5);
+        end -- if RDM Merit Spells +
+        
+        -- add Magical Accuracy Bonus from Merit NIN Spells
+        if(player:getObjType() == TYPE_PC) then
+		if(id == 322 or id == 325 or id == 328 or id == 331 or id == 334 or id == 337) then
+			if(id == 322) then
+				merit = player:getMerit(MERIT_KATON_SAN);
+			elseif(id == 325) then
+				merit = player:getMerit(MERIT_HYOTON_SAN);
+			elseif(id == 328) then
+				merit = player:getMerit(MERIT_HUTON_SAN);
+			elseif(id == 331) then
+				merit = player:getMerit(MERIT_DOTON_SAN);
+			elseif(id == 334) then
+				merit = player:getMerit(MERIT_RAITON_SAN);
+			elseif(id == 337) then
+				merit = player:getMerit(MERIT_SUITON_SAN);
+			end
+		end
+		magicaccbonus = magicaccbonus + ((merit - 1)*5);
+	
+        end -- if NIN Merit Spells +
 	--add acc for staves
 	local affinityBonus = AffinityBonus(player, spell:getElement());
 	magicaccbonus = magicaccbonus + (affinityBonus-1) * 200;
@@ -324,7 +482,6 @@ function applyResistance(player,spell,target,diff,skill,bonus)
 
 	--base magic evasion (base magic evasion plus resistances(players), plus elemental defense(mobs)
 	local magiceva = target:getMod(MOD_MEVA) + target:getMod(resistMod[spell:getElement()]);
-
 	--get the difference of acc and eva, scale with level (3.33 at 10 to 0.44 at 75)
 	local multiplier = 0;
 	if player:getMainLvl() < 40 then
@@ -336,8 +493,9 @@ function applyResistance(player,spell,target,diff,skill,bonus)
 	magicaccbonus = magicaccbonus / 2;
 	--add magicacc bonus
 	p = p + magicaccbonus;
-    -- printf("acc: %f, eva: %f, bonus: %f", magicacc, magiceva, magicaccbonus);
-
+	-- print(magicacc);
+	-- print(magiceva);
+	-- print(magicaccbonus);
 
 	--double any acc over 50 if it's over 50
 	if(p > 5) then
@@ -346,7 +504,7 @@ function applyResistance(player,spell,target,diff,skill,bonus)
 
 	--add a flat bonus that won't get doubled in the previous step
 	p = p + 45;
-
+	
 	--add a scaling bonus or penalty based on difference of targets level from caster
 	local leveldiff = player:getMainLvl() - target:getMainLvl();
 	if(leveldiff < 0) then
@@ -360,9 +518,9 @@ function applyResistance(player,spell,target,diff,skill,bonus)
     elseif(p < 5) then
         p = 5;
     end
-
+	
 	p = p / 100;
-
+	
     -- Resistance thresholds based on p.  A higher p leads to lower resist rates, and a lower p leads to higher resist rates.
     local half = (1 - p);
     local quart = ((1 - p)^2);
@@ -374,7 +532,6 @@ function applyResistance(player,spell,target,diff,skill,bonus)
     -- print("SIXTEENTH:",sixteenth);
 
     local resvar = math.random();
-
     -- Determine final resist based on which thresholds have been crossed.
     if(resvar <= sixteenth) then
         resist = 0.0625;
@@ -383,10 +540,10 @@ function applyResistance(player,spell,target,diff,skill,bonus)
         resist = 0.125;
         --printf("Spell resisted to 1/8!  Threshold = %u",eighth);
     elseif(resvar <= quart) then
-        resist = 0.25;
+		resist = 0.25;
         --printf("Spell resisted to 1/4.  Threshold = %u",quart);
     elseif(resvar <= half) then
-        resist = 0.5;
+		resist = 0.5;
         --printf("Spell resisted to 1/2.  Threshold = %u",half);
     else
         resist = 1.0;
@@ -590,7 +747,11 @@ function getSkillLvl(rank,level)
  end;
 
  function finalMagicAdjustments(caster,target,spell,dmg)
-
+	local skill = spell:getSkillType();
+	local element = spell:getElement();
+	local ammo = target:getEquipID(SLOT_AMMO);
+	local recoverMP = 0;
+	local occultTP = 0;
     -- handle multiple targets
     if(caster:isSpellAoE(spell:getID())) then
         local total = spell:getTotalTargets();
@@ -615,18 +776,85 @@ function getSkillLvl(rank,level)
             -- return 1;
         -- end
     end
-
-
+	
+	if(caster:hasStatusEffect(EFFECT_SCARLET_DELIRIUM_II) == true) then
+		dmg = dmg + (dmg * caster:getMod(MOD_SCARLET_MDMG)/100);
+	end
+	
+	if(caster:getObjType() == TYPE_PC) then
+		if(caster:hasStatusEffect(EFFECT_ANCIENT_CIRCLE) == true and target:getSystem() == 10) then
+			dmg = dmg + (dmg * caster:getMod(MOD_DRAGON_DMG)/100);
+		elseif(caster:hasStatusEffect(EFFECT_ARCANE_CIRCLE) == true and target:getSystem() == 3) then
+			dmg = dmg + (dmg * caster:getMod(MOD_ARCANE_DMG)/100);
+		elseif(caster:hasStatusEffect(EFFECT_HOLY_CIRCLE) == true and target:getSystem() == 19) then
+			dmg = dmg + (dmg * caster:getMod(MOD_UNDEAD_DMG)/100);
+		elseif(caster:hasStatusEffect(EFFECT_WARDING_CIRCLE) == true and target:getSystem() == 9) then
+			dmg = dmg + (dmg * caster:getMod(MOD_DEMON_DMG)/100);
+		end
+	elseif(caster:getObjType() == TYPE_MOB) then
+		if(target:hasStatusEffect(EFFECT_ANCIENT_CIRCLE) == true and caster:getSystem() == 10) then
+			dmg = dmg - (dmg * target:getMod(MOD_DRAGON_DMG)/100);
+		elseif(target:hasStatusEffect(EFFECT_ARCANE_CIRCLE) == true and caster:getSystem() == 3) then
+			dmg = dmg - (dmg * target:getMod(MOD_ARCANE_DMG)/100);
+		elseif(target:hasStatusEffect(EFFECT_HOLY_CIRCLE) == true and caster:getSystem() == 19) then
+			dmg = dmg - (dmg * target:getMod(MOD_UNDEAD_DMG)/100);
+		elseif(target:hasStatusEffect(EFFECT_WARDING_CIRCLE) == true and caster:getSystem() == 9) then
+			dmg = dmg - (dmg * target:getMod(MOD_DEMON_DMG)/100);
+		end
+	end
+	
     dmg = utils.dmgTaken(target, dmg);
     dmg = utils.magicDmgTaken(target, dmg);
-
     dmg = dmg - target:getMod(MOD_PHALANX);
+	
     if(dmg < 0) then
         dmg = 0;
     end
+	
+	if(target:getObjType() == TYPE_PC) then
+		if(ammo == 18473 and element == 1 and (math.random(100) <= 5)) then -- Flame Sachet
+			dmg = utils.absorbMagicDmg(target, dmg);
+		elseif(ammo == 18474 and element == 5 and (math.random(100) <= 5)) then -- Snow Sachet
+			dmg = utils.absorbMagicDmg(target, dmg);
+		elseif(ammo == 18475 and element == 4 and (math.random(100) <= 5)) then -- Breeze Sachet
+			dmg = utils.absorbMagicDmg(target, dmg);
+		elseif(ammo == 18476 and element == 2 and (math.random(100) <= 5)) then -- Soil Sachet
+			dmg = utils.absorbMagicDmg(target, dmg);
+		elseif(ammo == 18477 and element == 6 and (math.random(100) <= 5)) then -- Thunder Sachet
+			dmg = utils.absorbMagicDmg(target, dmg);
+		elseif(ammo == 18478 and element == 3 and (math.random(100) <= 5)) then -- Aqua Sachet
+			dmg = utils.absorbMagicDmg(target, dmg);
+		elseif(ammo == 18479 and element == 7 and (math.random(100) <= 5)) then -- Light Sachet
+			dmg = utils.absorbMagicDmg(target, dmg);
+		elseif(ammo == 18480 and element == 8 and (math.random(100) <= 5)) then -- Shadow Sachet
+			dmg = utils.absorbMagicDmg(target, dmg);
+		end
+		if((target:getEquipID(SLOT_BODY) == 11354) and (math.random(100) <= 5)) then -- Nocturnus Mail
+			dmg = utils.absorbMagicDmg(target, dmg);
+		end
+		if((target:getEquipID(SLOT_BACK) == 10990) and (math.random(100) <= 5)) then -- Engulfer Cape
+			dmg = utils.absorbMagicDmg(target, dmg);
+		elseif(target:getEquipID(SLOT_BACK) == 10993 and element == 0 and (math.random(100) <= 10)) then -- Drachenblut Cape
+			dmg = utils.absorbMagicDmg(target, dmg);
+		end
+	end
 
+	if(target:hasStatusEffect(EFFECT_SACROSANCTITY) == true) then
+		dmg = utils.sacrosanctityDmg(target, dmg);
+	end
+	
     --handling stoneskin
     dmg = utils.stoneskin(target, dmg);
+	
+	if(target:hasStatusEffect(EFFECT_MANA_WALL) == true) then
+		dmg = utils.manawall(target, dmg);
+	end
+	
+	if(target:hasStatusEffect(EFFECT_SCARLET_DELIRIUM_I) == true) then
+		utils.scarletDelirium(target, dmg);
+	end
+	
+	utils.dmgToMP(target, dmg);
 
     target:delHP(dmg);
     target:updateEnmityFromDamage(caster,dmg);
@@ -635,7 +863,27 @@ function getSkillLvl(rank,level)
     if (target:getObjType() ~= TYPE_PC) then
         target:addTP(10);
     end
-
+	
+	if(skill == 36) then
+		if(caster:getEquipID(SLOT_BODY) == 10286) then -- Seidr Cotehardie
+			recoverMP = dmg * .02;
+			caster:addMP(recoverMP);
+		end
+		-- printf("Cure MP Recovered %u",recoverMP);
+		if(recoverMP > 0) then
+			caster:messageBasic(25,0,recoverMP);
+		end
+	end
+	
+	if(skill == 36 or skill == 37) then
+		if(caster:getMod(MOD_OCCULT_ACCUMEN) > 0) then
+			local mpCost = spell:getMPCost();
+			if(mpCost >= 100) then
+				occultTP = (mpCost/100) * (caster:getMod(MOD_OCCULT_ACCUMEN)/1000);
+				caster:addTP(occultTP);
+			end
+		end
+	end
     return dmg;
  end;
 
@@ -645,9 +893,6 @@ function adjustForTarget(target,dmg)
 end;
 
 function calculateMagicBurstAndBonus(caster, spell, target)
-    local equippedHands = caster:getEquipID(SLOT_HANDS);
-    local equippedEar1  = caster:getEquipID(SLOT_EAR1);
-    local equippedEar2  = caster:getEquipID(SLOT_EAR2);
 
     local burst = 1.0;
     local burstBonus = 1.0;
@@ -675,34 +920,44 @@ function calculateMagicBurstAndBonus(caster, spell, target)
 		end
 
 		-- Get burst bonus from gear/spell bonus
+		burstBonus = burstBonus + (target:getMod(MOD_MAG_BURST_BONUS)/100);
 
-        -- Sorcerer's Gloves
-        if(equippedHands == 15105 or equippedHands == 14912) then
-            burstBonus = burstBonus + 0.05;
-        end
-
-        if(equippedEar1 == 15962 or equippedEar2 == 15962) then
-            burstBonus = burstBonus + 0.05;
-        end
-
-        -- TODO: This should be getting the spell ID, and checking
+        --  	 This should be getting the spell ID, and checking
         --       if it is an Ancient Magic II spell.  Add 0.03
         --       to burstBonus for each merit the caster has for
-        --       the given spell.
+        --       the given spell over the 1st merit.
 
         -- AM 2 get magic burst bonuses
-        --id = spell:getID();
-        --if(id == 207 or id == 209 or id == 211 or id == 213 or id == 215 or id == 205) then
-        --    if(AM2 Merit 1) then
-        --        burstBonus = burstBonus + 0.03;
-        --    elseif(AM2 Merit 2) then
-        --        burstBonus += 0.06;
-        --    elseif(AM2 Merit 3) then
-        --        burstBonus += 0.09;
-        --    elseif(AM2 Merit 4) then
-        --        burstBonus += 0.12;
-        --    end
-        --end -- if AM2+
+        local id = spell:getID();
+        local merit = 0;
+        if(caster:getObjType() == TYPE_PC) then        
+        	if(id == 207 or id == 209 or id == 211 or id == 213 or id == 215 or id == 205) then
+        		if (id == 205) then
+		        	merit = caster:getMerit(MERIT_FLARE_II);
+		        elseif (id == 207) then
+		        	merit = caster:getMerit(MERIT_FREEZE_II);
+		        elseif (id == 209) then
+		        	merit = caster:getMerit(MERIT_TORNADO_II);
+		        elseif (id == 211) then
+		        	merit = caster:getMerit(MERIT_QUAKE_II);
+		        elseif (id == 213) then
+		        	merit = caster:getMerit(MERIT_BURST_II);
+		        elseif (id == 215) then
+		        	merit = caster:getMerit(MERIT_FLOOD_II);
+		        end
+		end        
+            	if(merit == 5) then
+            	    burstBonus = burstBonus;
+            	elseif(merit == 10) then
+            	    burstBonus = burstBonus + 0.03;
+            	elseif(merit == 15) then
+            	    burstBonus = burstBonus + 0.06;
+            	elseif(merit == 20) then
+            	    burstBonus = burstBonus + 0.09;
+            	elseif(merit == 25) then
+            	    burstBonus = burstBonus + 0.12;
+            	end
+        end -- if AM2+
     end
 
     return burst, burstBonus;
@@ -710,14 +965,41 @@ end;
 
 function addBonuses(caster, spell, target, dmg, bonusmab)
 	local ele = spell:getElement();
-
+	local id = spell:getID();
+	local skill = spell:getSkillType();
+	local merit = 0;
+	
+	-- Elemental Mag Dmg Bonus (Spirit Lantern etc.)
+	if(skill == 36) then
+		dmg = math.floor(dmg * (1 + (caster:getMod(MOD_ELEM_MAG_DMG)/100)));
+	end
+	-- Enfeebling Mag Dmg Bonus (Estoquers Sayon +2 etc.)
+	if(skill == 35) then
+		dmg = math.floor(dmg * (1 + (caster:getMod(MOD_ENFB_MAG_DMG)/100)));
+	end
+	-- Drain / Aspir Dmg Bonus (Bounty Sickle etc.)
+	if(id >= 245 and id <= 248) then
+		dmg = math.floor(dmg * (1 + (caster:getMod(MOD_DRAIN_ASPIR)/100)));
+		if(caster:hasStatusEffect(EFFECT_NETHER_VOID) == true) then
+			dmg = dmg + (dmg / 2);
+		end
+	end
+	-- Divine Emblem Holy Banish Dmg Bonus
+	if(caster:getStatusEffect(EFFECT_DIVINE_EMBLEM) ~= nil and (id == 21 or id == 22 or 
+	(id >= 28 and id <= 32) or (id >= 38 and id <= 42))) then
+        dmg = math.floor(dmg * (1 + (caster:getSkillLevel(DIVINE_MAGIC_SKILL)/100)));
+		target:updateEnmity(caster,((spell:getCE() / 2) + (spell:getCE() * (caster:getMod(MOD_DIVINE_EMBLEM)/100)))
+		,((spell:getVE() / 2) + (spell:getVE() * (caster:getMod(MOD_DIVINE_EMBLEM)/100))));
+	end
+	caster:delStatusEffect(EFFECT_DIVINE_EMBLEM);
+	
 	local affinityBonus = AffinityBonus(caster, spell:getElement());
 	dmg = math.floor(dmg * affinityBonus);
-
+	--printf("Affinity Bonus DMG %u",dmg);
 	local speciesReduction = target:getMod(defenseMod[ele]);
 	speciesReduction = 1.00 - (speciesReduction/1000);
 	dmg = math.floor(dmg * speciesReduction);
-
+	--printf("Species Reduction Bonus 2 DMG %u",dmg);
 	local dayWeatherBonus = 1.00;
 	local equippedMain = caster:getEquipID(SLOT_MAIN);
 	local equippedWaist = caster:getEquipID(SLOT_WAIST);
@@ -788,10 +1070,40 @@ function addBonuses(caster, spell, target, dmg, bonusmab)
 		mab = (100 + caster:getMod(MOD_MATT)) / (100 + target:getMod(MOD_MDEF));
 	end
 
-    if(mab < 0) then
-        mab = 0;
-    end
+	local magicCritRate = caster:getMod(MOD_MAGIC_CRIT_RATE);
+	local magicCritBonus = 0;
+	
+	if(magicCritRate > 0) then
+		if(math.random(100) >= magicCritRate) then
+			magicCritBonus = 10 + caster:getMod(MOD_MAG_CRIT_DMG);
+		end
+	end
+		
+    local mab = (100 + caster:getMod(MOD_MATT) + magicCritBonus) / (100 + target:getMod(MOD_MDEF));
+	
+	if(mab < 0) then
+		mab = 0;
+	end
 
+	-- add Magical Attack Bonus from Merit NIN Spells
+	if(caster:getObjType() == TYPE_PC) then
+		if(id == 322 or id == 325 or id == 328 or id == 331 or id == 334 or id == 337) then
+			if(id == 322) then
+				merit = caster:getMerit(MERIT_KATON_SAN);
+			elseif(id == 325) then
+				merit = caster:getMerit(MERIT_HYOTON_SAN);
+			elseif(id == 328) then
+				merit = caster:getMerit(MERIT_HUTON_SAN);
+			elseif(id == 331) then
+				merit = caster:getMerit(MERIT_DOTON_SAN);
+			elseif(id == 334) then
+				merit = caster:getMerit(MERIT_RAITON_SAN);
+			elseif(id == 337) then
+				merit = caster:getMerit(MERIT_SUITON_SAN);
+			end
+			mab = mab + ((merit - 1)*5);
+		end
+    end -- if NIN Merit Spells +
 	dmg = math.floor(dmg * mab);
 
 	if (caster:hasStatusEffect(EFFECT_EBULLIENCE)) then
@@ -821,7 +1133,9 @@ function addBonuses(caster, spell, target, dmg, bonusmab)
 	-- print(burst);
 	-- print(mab);
 	-- print(magicDmgMod);
-
+	if(caster:hasStatusEffect(EFFECT_NETHER_VOID)) then
+		caster:delStatusEffect(EFFECT_NETHER_VOID);
+	end
     return dmg;
 end;
 
@@ -1000,15 +1314,45 @@ function handleThrenody(caster, target, spell, basePower, baseDuration, modifier
 	-- Remove previous Threnody
 	target:delStatusEffect(EFFECT_THRENODY);
 
+	local power = basePower;
+	local duration = baseDuration;
+	
+	duration = duration + (duration * (caster:getMod(MOD_SONG_DURATION)/100));
+ 	duration = duration + (duration * ((caster:getMod(MOD_ALL_SONGS) * 10)/100));
+	duration = duration + (duration * ((caster:getMod(MOD_THRENODY) * 10)/100));
+	
+	power = power + ((caster:getMod(MOD_THRENODY) + caster:getMod(MOD_ALL_SONGS)) * 5);
+
+	-- Set spell message and apply status effect
+	target:addStatusEffect(EFFECT_THRENODY, power, 0, duration, 0, modifier, 0);
+	return EFFECT_THRENODY;
+end;
+
+function handleCarol(caster, target, spell, basePower, baseDuration, modifier)
+
+	-- Remove previous Carol
+	target:delStatusEffect(EFFECT_CAROL);
+
 	-- TODO: Check equipment bounses, increase duration/power
 	local power = basePower;
 	local duration = baseDuration;
 
+	
+	duration = duration + (duration * (caster:getMod(MOD_SONG_DURATION)/100));
+ 	duration = duration + (duration * ((caster:getMod(MOD_ALL_SONGS) * 10)/100));
+	duration = duration + (duration * ((caster:getMod(MOD_CAROL) * 10)/100));
+	
+	power = power + ((caster:getMod(MOD_CAROL) + caster:getMod(MOD_ALL_SONGS)) * 5);
+	
 	-- Set spell message and apply status effect
-	target:addStatusEffect(EFFECT_THRENODY, power, 0, duration, 0, modifier, 0);
-
-	return EFFECT_THRENODY;
+	if(target:addStatusEffect(EFFECT_CAROL, power, 0, duration, 0, modifier, 0)) then
+	        spell:setMsg(230);
+	else
+		spell:setMsg(75); -- no effect
+	end
+	return EFFECT_CAROL;
 end;
+
 
 function handleNinjutsuDebuff(caster, target, spell, basePower, baseDuration, modifier)
     -- Add new
@@ -1056,12 +1400,8 @@ function doNuke(V,M,caster,spell,target,hasMultipleTargetReduction,resistBonus,s
 	--get the resisted damage
 	dmg = dmg*resist;
 	if(skill == NINJUTSU_SKILL) then
-		-- boost ninjitsu damage
-		-- 5% ninjitsu damage
-		local head = caster:getEquipID(SLOT_HEAD);
-		if(head == 15084) then
-			dmg = math.floor(dmg * 1.05);
-		end
+		-- Ninjutsu Mag Dmg Bonus (Koga Hatsuburi etc.)
+		dmg = math.floor(dmg * (1 + (caster:getMod(MOD_NIN_MAG_DMG)/100)));
 	end
 	--add on bonuses (staff/day/weather/jas/mab/etc all go in this function)
 	dmg = addBonuses(caster,spell,target,dmg);

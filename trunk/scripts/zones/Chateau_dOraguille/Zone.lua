@@ -33,6 +33,12 @@ cs = -1;
 		cs = 0x022b;
 	elseif(prevZone == 231 and player:hasKeyItem(MESSAGE_TO_JEUNO_SANDORIA)) then
 		cs = 0x01FD;
+	elseif(player:getVar("SecretWeapon") == 1) then
+	    cs = 0x0000;
+	elseif(player:getCurrentMission(SANDORIA) == COMING_OF_AGE and player:getVar("MissionStatus") == 0) then
+	    cs = 0x0074;
+	elseif(player:getCurrentMission(SANDORIA) == LIGHTBRINGER and player:getVar("MissionStatus") == 0) then
+	    cs = 0x0064;
 	end
 	
 	return cs;
@@ -68,6 +74,12 @@ function onEventFinish(player,csid,option)
 	elseif(csid == 0x01FD) then
 		player:setVar("MissionStatus",9);
 		player:delKeyItem(MESSAGE_TO_JEUNO_SANDORIA);
+	elseif(csid == 0x0000) then
+		player:setVar("SecretWeapon",2);
+	elseif(csid == 0x0074) then
+		player:setVar("MissionStatus",1);
+	elseif(csid == 0x0064) then
+		player:setVar("MissionStatus",1);
 	end
 	
 end;		

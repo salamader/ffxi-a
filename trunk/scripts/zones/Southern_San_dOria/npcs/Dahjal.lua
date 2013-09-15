@@ -1,13 +1,15 @@
 -----------------------------------
 -- Area: Southern San d'Oria
--- NPC:  Dahjal
--- first in conquest Npc
+-- NPC: Dahjal
+-- Type: Conquest Troupe
 -- @zone 230
--- @pos 
+-- @pos 177.985, -8.800, 177.646
 -----------------------------------
 package.loaded["scripts/zones/Southern_San_dOria/TextIDs"] = nil;
 -----------------------------------
 
+require("scripts/globals/settings");
+require("scripts/globals/quests");
 require("scripts/zones/Southern_San_dOria/TextIDs");
 
 -----------------------------------
@@ -15,9 +17,10 @@ require("scripts/zones/Southern_San_dOria/TextIDs");
 -----------------------------------
 
 function onTrade(player,npc,trade)
+	local FlyerForRegine = player:getQuestStatus(SANDORIA,FLYERS_FOR_REGINE);
 	if (FlyerForRegine == 1) then
-		count = trade:getItemCount();
-		MagicFlyer = trade:hasItemQty(532,1);
+		local count = trade:getItemCount();
+		local MagicFlyer = trade:hasItemQty(532,1);
 		if (MagicFlyer == true and count == 1) then
 			player:messageSpecial(FLYER_REFUSED);
 		end
@@ -30,7 +33,7 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-
+	player:showText(npc,DAHJAL_DIALOG_1);
 end; 
 
 -----------------------------------

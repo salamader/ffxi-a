@@ -1,10 +1,10 @@
 -----------------------------------
 -- Area: Temenos N T	
--- NPC:  Praetorian_Guard
-
+-- NPC:  Praetorian Guard
 -----------------------------------
 package.loaded["scripts/zones/Temenos/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Temenos/TextIDs");
 

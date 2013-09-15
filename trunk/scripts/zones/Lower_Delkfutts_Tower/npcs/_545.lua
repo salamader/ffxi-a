@@ -2,6 +2,8 @@
 -- Area: Lower Delkfutt's Tower
 -- NPC:  Cermet Door
 -- Spawns a mob in CoP.  Never opens.
+-- COP 5-3 tenzen
+-- @zone 184
 -----------------------------------
 package.loaded["scripts/zones/Lower_Delkfutts_Tower/TextIDs"] = nil;
 -----------------------------------
@@ -26,6 +28,8 @@ function onTrigger(player,npc)
 	    SpawnMob(17531121,180):updateEnmity(player);
 	elseif(player:getCurrentMission(COP) == THREE_PATHS  and  player:getVar("COP_Tenzen_s_Path") == 7 and player:hasKeyItem(DELKFUTT_RECOGNITION_DEVICE))then
 	    player:startEvent(0x0019);
+	else
+		player:messageSpecial(DOOR_FIRMLY_SHUT);
 	end
 
 	return 1;

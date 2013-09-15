@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Slow
+-- Spell: Slow II
 -- Spell accuracy is most highly affected by Enfeebling Magic Skill, Magic Accuracy, and MND.
 -- Slow's potency is calculated with the formula (150 + dMND*2)/1024, and caps at 300/1024 (~29.3%).
 -- And MND of 75 is neccessary to reach the hardcap of Slow.
@@ -29,12 +29,23 @@ function onSpellCast(caster,target,spell)
 			potency = 350;
 		 end
 
+	     local body = caster:getEquipID(SLOT_BODY);
+    	 if (body == 11088) then -- Estoquers Sayon +2
+			 potency = potency * 1.1;		
+     	 end
+
 		local merits = caster:getMerit(MERIT_SLOW_II);
 		--Power.
 		local power = (potency  + (merits * 10)) / 1024;
 
 		--Duration, including resistance.
 		local duration = 180 * applyResistance(caster,spell,target,dMND,35,bonus);
+
+	    if (caster:hasStatusEffect(EFFECT_SABOTEUR) == true) then
+    		duration = duration + (duration * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
+    		power = power + (power * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
+    		caster:delStatusEffect(EFFECT_SABOTEUR);
+    	end
 
         if(duration >= 60) then --Do it!
 

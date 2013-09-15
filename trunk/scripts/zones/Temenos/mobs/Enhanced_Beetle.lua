@@ -1,10 +1,10 @@
 -----------------------------------
 -- Area: Temenos W T	
--- NPC: Enhanced_Beetle
-
+-- NPC: Enhanced Beetle
 -----------------------------------
 package.loaded["scripts/zones/Temenos/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Temenos/TextIDs");
 

@@ -40,6 +40,22 @@ function onSpellCast(caster,target,spell)
 	if(final > diff) then
 		final = diff;
 	end
+	
+	local legs = caster:getEquipID(SLOT_LEGS);
+	local recoverMP = 0;
+	if(legs == 11226) then -- Orison's Pantaloon's +1
+		recoverMP = final * .02;
+		caster:addMP(recoverMP);
+	end
+	if(legs == 11126) then -- Orison's Pantaloon's +2
+		recoverMP = final * .05;
+		caster:addMP(recoverMP);
+	end
+	-- printf("Cure MP Recovered %u",recoverMP);
+	if(recoverMP > 0) then
+		caster:messageBasic(25,0,recoverMP);
+	end
+	
 	target:addHP(final);
 
 	target:wakeUp();

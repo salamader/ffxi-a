@@ -24,6 +24,8 @@ function onTrigger(player,npc)
 	
 	if(player:getCurrentMission(ZILART) == KAZAMS_CHIEFTAINESS) then
 		player:startEvent(0x0072);
+	elseif(player:getCurrentMission(WINDURST) ==  AWAKENING_OF_THE_GODS and player:getVar("WINDURST72") ==2)then
+		player:startEvent(0x0109);
 	elseif(player:getCurrentMission(ZILART) == THE_TEMPLE_OF_UGGALEPIH) then
 		player:startEvent(0x0073);
 	else
@@ -54,6 +56,8 @@ function onEventFinish(player,csid,option)
 		player:messageSpecial(KEYITEM_OBTAINED,SACRIFICIAL_CHAMBER_KEY);
 		player:completeMission(ZILART,KAZAMS_CHIEFTAINESS);
 		player:addMission(ZILART,THE_TEMPLE_OF_UGGALEPIH);
+	elseif(csid == 0x0109)then
+		player:setVar("WINDURST72",3);
 	end
 	
 end;

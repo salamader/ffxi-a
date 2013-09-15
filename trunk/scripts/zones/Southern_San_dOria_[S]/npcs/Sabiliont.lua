@@ -27,7 +27,11 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-player:showText(npc, 6999); -- (Couldn't find default dialogue) What are you doing here? This is no place for civillians
+	if(player:getQuestStatus(CRYSTAL_WAR,STEAMED_RAMS) == QUEST_COMPLETED)then
+		player:startEvent(0x0260);
+	else
+		player:showText(npc, 6999); -- (Couldn't find default dialogue) What are you doing here? This is no place for civillians
+	end
 end;
 
 -----------------------------------

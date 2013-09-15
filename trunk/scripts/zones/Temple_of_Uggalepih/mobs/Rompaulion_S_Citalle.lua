@@ -4,11 +4,34 @@
 -- Involved with San d'Oria quest "Knight Stalker"
 -----------------------------------
 
+-- require("scripts/zones/Temple_of_Uggalepih/MobIDs");
+
 -----------------------------------
--- onMobSpawn Action
+-- onMobInitialize
 -----------------------------------
 
-function OnMobSpawn(mob)
+function onMobInitialize(mob)	
+end;
+
+-----------------------------------
+-- onMobSpawn
+-----------------------------------
+
+function onMobSpawn(mob)	
+end;
+
+-----------------------------------
+-- onMobEngaged
+-----------------------------------
+
+function onMobEngaged(mob,target)	
+end;
+
+-----------------------------------
+-- onMobFight
+-----------------------------------
+
+function onMobFight(mob,target)	
 end;
 
 -----------------------------------

@@ -84,24 +84,22 @@ end;
 function onMobDeath(mob,killer)
 	
 	local mobID = mob:getID();
-	
+	--	printf("Eye killed: %u",mobID);
 	-- 035 039: spawn 043 when defeated
-	if(mobID == 17326536) then
-		SpawnMob(17326553);
+	if(mobID == 17330756 and GetMobAction(17330718) == 0 or mobID == 17330718 and GetMobAction(17330756) == 0) then
+		SpawnMob(17330814);
 	-- 058: spawn 60 when defeated
-	elseif(mobID == 17326661 and GetMobAction(17326668) == 0 and GetMobAction(17326673) == 0 or 
-		   mobID == 17326668 and GetMobAction(17326661) == 0 and GetMobAction(17326673) == 0 or 
-		   mobID == 17326673 and GetMobAction(17326661) == 0 and GetMobAction(17326668) == 0) then
-		SpawnMob(17326706);
+	elseif(mobID == 17330828) then
+		SpawnMob(17330830);
 	-- 114: spawn 112 when defeated
-	elseif(mobID == 17326790) then
-		SpawnMob(17326086);
+	elseif(mobID == 17330883) then
+		SpawnMob(17330532);
 	-- 144-149: spawn 150 when defeated
 	elseif(mobID >= 17330913 and mobID <= 17330918) then
 		SetServerVariable("[DynaXarcabard]TE150_Trigger",GetServerVariable("[DynaXarcabard]TE150_Trigger") + (mobID - 17330912) ^ 2);
 	end
 	
-	if(GetServerVariable("[DynaXarcabard]TE150_Trigger") == 63) then
+	if(GetServerVariable("[DynaXarcabard]TE150_Trigger") == 91) then
 		SpawnMob(17330919); -- 150
 	end
 	

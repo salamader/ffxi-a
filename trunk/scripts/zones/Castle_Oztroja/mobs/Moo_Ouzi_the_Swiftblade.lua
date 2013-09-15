@@ -10,7 +10,7 @@
 function onMobDeath(mob,killer)	
 
     -- Set Moo_Ouzi_the_Swiftblade's Window Open Time
-    wait = math.random((3600),(10800));
+    wait = math.random((1440),(3600));
     SetServerVariable("[POP]Moo_Ouzi_the_Swiftblade", os.time(t) + wait); -- 1-3 hours
     DeterMob(mob:getID(), true);
     

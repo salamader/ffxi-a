@@ -21,8 +21,8 @@ function onMobDeath(mob, killer)
     killer:addTitle(HELLSBANE);
     
     -- Set Viscount_Morax's Window Open Time
-    wait = math.random((3600),(28800));
-    SetServerVariable("[POP]Viscount_Morax", os.time(t) + wait); -- 1-8 hours
+    wait = math.random((1440),(3600));
+    SetServerVariable("[POP]Viscount_Morax", os.time(t) + wait); -- 24min-1hr
     DeterMob(mob:getID(), true);
     
     -- Set PH back to normal, then set to respawn spawn

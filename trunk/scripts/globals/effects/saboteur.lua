@@ -1,7 +1,7 @@
 -----------------------------------
---
---
---
+--	EFFECT_SABOTEUR
+-- Enhances the next enfeebling magic
+-- spell's effect and duration.
 -----------------------------------
 
 -----------------------------------

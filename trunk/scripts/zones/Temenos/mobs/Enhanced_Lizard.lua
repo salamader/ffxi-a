@@ -1,10 +1,10 @@
 -----------------------------------
 -- Area: Temenos W T	
--- NPC: Enhanced_Lizard
-
+-- NPC: Enhanced Lizard
 -----------------------------------
 package.loaded["scripts/zones/Temenos/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Temenos/TextIDs");
 

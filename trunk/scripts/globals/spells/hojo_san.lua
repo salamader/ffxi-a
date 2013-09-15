@@ -1,7 +1,6 @@
 -----------------------------------------
 -- Spell: Hojo:San
 -- Description: Inflicts Slow on target.
--- Edited from slow.lua
 -----------------------------------------
 
 require("scripts/globals/status");

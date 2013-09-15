@@ -77,6 +77,7 @@ GUILBERDRIER_MESSAGE = 13241; --Guilberdrier looks over curiously for a moment.
      VILLION_MESSAGE = 13244; --Villion looks over curiously for a moment.
 
 -- Shop Texts
+	      GUILD_SHOP = 6852;  --Hello, <Multiple Choice (Player Gender)>[sir/ma'am]. I have been appointed by the Guildworkers' Union to manage the trading of manufactured crafts and the exchange of guild points.<Prompt>
    DOGGOMEHR_SHOP_DIALOG = 11421; --Welcome to the Blacksmiths' Guild shop.
     LUCRETIA_SHOP_DIALOG = 11422; --Blacksmiths' Guild shop, at your service!
 

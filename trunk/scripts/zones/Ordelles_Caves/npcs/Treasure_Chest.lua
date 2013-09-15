@@ -1,9 +1,7 @@
 -----------------------------------
 -- Area: Ordelles Caves
--- NPC:  ???
+-- NPC:  Treasure Chest
 -- Involved In Quest: Signed In Blood
---
--- 
 -----------------------------------
 package.loaded["scripts/zones/Ordelles_Caves/TextIDs"] = nil;
 -----------------------------------

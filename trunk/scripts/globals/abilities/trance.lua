@@ -1,5 +1,6 @@
 -----------------------------------
--- Ability: Hundred Fists
+-- Ability: Trance
+-- Lowers Cost of Dances and Steps to 0
 -----------------------------------
  
 require("scripts/globals/settings");

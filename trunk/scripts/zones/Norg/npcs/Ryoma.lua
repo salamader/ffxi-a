@@ -12,6 +12,7 @@ require("scripts/globals/settings");
 require("scripts/globals/keyitems");
 require("scripts/globals/shop");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Norg/TextIDs");
 
 -----------------------------------
@@ -82,6 +83,7 @@ function onEventFinish(player,csid,option)
 		player:messageSpecial(KEYITEM_OBTAINED, SEALED_DAGGER);
 		player:delKeyItem(STRANGELY_SHAPED_CORAL);
 		player:setVar("AyameAndKaede_Event", 4);
+		debugTeleport(player, 17743909); -- Ensetsu, zone 236
 	elseif(csid == 0x0085) then
 		player:addQuest(OUTLANDS,TWENTY_IN_PIRATE_YEARS);
 		player:setVar("twentyInPirateYearsCS",1);

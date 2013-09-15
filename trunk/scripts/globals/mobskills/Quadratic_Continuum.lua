@@ -1,3 +1,10 @@
+---------------------------------------------
+--  Mobskill: Quadratic Continuum
+--
+--  Description:Drlivers a four fold attack.
+--  Type: Physical (Piercing)
+--
+---------------------------------------------
 require("/scripts/globals/settings");
 require("/scripts/globals/status");
 require("/scripts/globals/monstertpmoves");

@@ -1,5 +1,6 @@
 -----------------------------------
--- Ability: Assault
+-- Ability: Deploy
+-- Orders your automaton to attack.
 -----------------------------------
 
 require("scripts/globals/settings");

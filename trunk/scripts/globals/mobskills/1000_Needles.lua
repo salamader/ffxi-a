@@ -1,7 +1,8 @@
 ---------------------------------------------
 --  1000 Needles
 --
---  Description: Shoots multiple needles at enemies within range.
+--  Description: Shoots multiple needles at
+--  enemies within range.
 --  Type: Magical (Light)
 --
 --

@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: 
---  
+--  Area: Boneyard Gully (8)
+--   Mob: Shikaree_X
 -----------------------------------
 
 require("scripts/globals/titles");

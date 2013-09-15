@@ -33,7 +33,7 @@ function onTrade(player,npc,trade)
 			end
 		else
 			player:messageSpecial(FULL_INVENTORY_AFTER_TRADE, 13571);
-		end
+		end	
 	end
 	
 end; 
@@ -53,6 +53,8 @@ function onTrigger(player,npc)
 		player:startEvent(0x005d);
 	elseif(Rivals == QUEST_ACCEPTED) then
 		player:showText(npc,10311);
+	elseif(player:hasCompletedMission(BASTOK,ENTER_THE_TALEKEEPER) == true and player:getVar("optionalcsD") == 0)then
+		player:startEvent(0x00B8); 
 	else
 		player:startEvent(0x001e);
 	end
@@ -84,6 +86,8 @@ function onEventFinish(player,csid,option)
 		player:messageSpecial(ITEM_OBTAINED,13571);
 		player:addFame(BASTOK,BAS_FAME*30);
 		player:completeQuest(BASTOK,RIVALS);
+	elseif (csid == 0x00b8)then
+		player:setVar("optionalcsD",1)
 	end
 	
 end;

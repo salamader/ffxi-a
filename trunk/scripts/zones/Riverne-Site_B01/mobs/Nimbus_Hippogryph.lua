@@ -2,6 +2,8 @@
 -- Area: Riverne - Site B01
 -- MOB:  Nimbus Hippogryph
 -- Note: Place holder Imdugud
+-- @zone 29
+-- @pos 
 -----------------------------------	
 
 require("/scripts/zones/Riverne-Site_B01/MobIDs");

@@ -23,14 +23,17 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	
-	if(hasRunicPortal(player,4) == 1) then
-		player:startEvent(0x006d);
-	else
+	if(player:getCurrentMission(TOAU)== IMMORTAL_SENTRIES and player:getVar("TOAUM2") ==1)then
 		player:startEvent(0x006f);
-		
+	elseif(player:getCurrentMission(TOAU) > IMMORTAL_SENTRIES) then 
+		if(hasRunicPortal(player,4) == 1) then
+			player:startEvent(0x006d);
+		else
+			player:startEvent(0x006f);
+		end
+	else
+		player:messageSpecial(RESPONSE);
 	end
-	
 end; 
 
 -----------------------------------

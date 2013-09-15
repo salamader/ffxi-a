@@ -1,5 +1,5 @@
 -----------------------------------
--- Area: Crawler Nest
+-- Area: Upper Delkfutts Tower
 -- NPC:  Treasure Chest
 -- Involved In Quest: Wings of Gold
 -- @pos -380 -143 23 158
@@ -23,7 +23,7 @@ local TreasureMinLvL = 33;
 
 function onTrade(player,npc,trade)
 
-	-- trade:hasItemQty(1036,1); 		-- Treasure Key
+	-- trade:hasItemQty(1036,1); 			-- Treasure Key
 	-- trade:hasItemQty(1115,1);			-- Skeleton Key
 	-- trade:hasItemQty(1023,1);			-- Living Key
 	-- trade:hasItemQty(1022,1);			-- Thief's Tools
@@ -66,8 +66,8 @@ function onTrade(player,npc,trade)
 					-- print("[2]", loot[2]); -- debug
 					
 					if(loot[1]=="gil") then
-						player:addGil(loot[2]);
-						player:messageSpecial(GIL_OBTAINED,loot[2]);
+						player:addGil(loot[2]*GIL_RATE);
+						player:messageSpecial(GIL_OBTAINED,loot[2]*GIL_RATE);
 					else
 						-- Item
 						player:addItem(loot[2]);

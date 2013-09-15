@@ -58,7 +58,7 @@ function onMobDeath(mob, killer)
 	for i = 1, table.getn(Colorful_Leshy_PH_Table), 1 do
 		if (Colorful_Leshy_PH_Table[i] ~= nil) then
 			if (Leshy == Colorful_Leshy_PH_Table[i]) then
-				GetMobByID(Colorful_Leshy):setExtraVar(os.time() + math.random((43200), (86400)));
+				GetMobByID(Colorful_Leshy):setExtraVar(os.time() + math.random((3600),(14400)));
 			end
 		end
 	end

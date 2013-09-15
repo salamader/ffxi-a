@@ -1,7 +1,8 @@
 -----------------------------------
 --
 -- 	EFFECT_KAUSTRA
--- 	
+-- Relentless dark damage slowly
+-- devours an enemy.
 -----------------------------------
 
 require("scripts/globals/status");

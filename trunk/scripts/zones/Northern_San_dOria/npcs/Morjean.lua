@@ -9,6 +9,7 @@ package.loaded["scripts/zones/Northern_San_dOria/TextIDs"] = nil;
 
 require("scripts/globals/settings");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Northern_San_dOria/TextIDs");
 
 -----------------------------------
@@ -58,8 +59,12 @@ function onEventFinish(player,csid,option)
 	if(csid == 0x0041) then
 		player:addQuest(SANDORIA,THE_HOLY_CREST);
 		player:setVar("TheHolyCrest_Event",3);
+		if (DEBUG_MODE == 1) then
+			player:setPos(-362, -10, -179, 0, 198); -- Maze of Shakhrami, Tahrongi entrance
+		end
 	elseif(csid == 0x003e and option == 0) then
 		player:setVar("TheHolyCrest_Event",4);
+		debugTeleport(player,17265237); -- qm1, zone 119
 	end
 	
 end;

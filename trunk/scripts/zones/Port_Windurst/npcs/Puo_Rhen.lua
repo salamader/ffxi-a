@@ -4,8 +4,6 @@
 --  Type: Mission Starter
 -- @zone: 240
 --  @pos: -227.964 -9 187.087
---
--- Auto-Script: Requires Verification (Verfied By Brawndo)
 ----------------------------------- 
 package.loaded["scripts/zones/Port_Windurst/TextIDs"] = nil;
 -----------------------------------
@@ -42,4 +40,3 @@ function onEventFinish(player,csid,option)
 	-- printf("CSID: %u",csid);
 	-- printf("RESULT: %u",option);
 end;
-

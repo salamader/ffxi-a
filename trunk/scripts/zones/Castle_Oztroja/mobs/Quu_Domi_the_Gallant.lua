@@ -10,8 +10,8 @@
 function onMobDeath(mob,killer)	
 
     -- Set Quu_Domi_the_Gallant's Window Open Time
-    wait = math.random((3600),(10800));
-    SetServerVariable("[POP]Quu_Domi_the_Gallant", os.time(t) + wait); -- 1-3 hours
+    wait = math.random((1440),(3600));
+    SetServerVariable("[POP]Quu_Domi_the_Gallant", os.time(t) + wait); -- 24min-1hr
     DeterMob(mob:getID(), true);
     
     -- Set PH back to normal, then set to respawn spawn

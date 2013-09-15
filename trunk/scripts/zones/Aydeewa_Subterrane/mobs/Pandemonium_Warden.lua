@@ -14,7 +14,7 @@ function onMobEngaged(mob,target)
 -- Uncomment if you're testing with @spawnmob, otherwise you'll get all kinds of nil errors and no pets, while onMobFight doesn't run.
 -- Leave commented in most situations, otherwise players can reset their despawn timer.
 --[[
-	PWardenDespawnTime = os.time(t) + 7200; -- Two hours to forcible depop, if PWarden is engaged.
+	PWardenDespawnTime = os.time(t) + 10800; -- Three hours to forcible depop, if PWarden is engaged.
  	PWardenAstralFlows = 0;
 
 	for i = 17056170, 17056177, 1 do 

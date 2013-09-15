@@ -36,6 +36,11 @@ end;
 function onEventUpdate(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
+	if(csid == 0x001F)then
+		player:tradeComplete();
+		player:setVar("griffon",(player:getVar("Griffon")-1));
+		player:setVar("tradeill",1);
+	end
 end;
 
 -----------------------------------

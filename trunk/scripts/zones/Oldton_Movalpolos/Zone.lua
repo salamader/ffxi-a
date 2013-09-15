@@ -20,8 +20,8 @@ end;
 -----------------------------------		
 
 function onZoneIn(player,prevZone)	
- local currentday = tonumber(os.date("%j")); 
-  local LouverancePath=player:getVar("COP_Louverance_s_Path");	
+	local currentday = tonumber(os.date("%j")); 
+	local LouverancePath=player:getVar("COP_Louverance_s_Path");	
 	cs = -1;	
 	if ((player:getXPos() == 0) and (player:getYPos() == 0) and (player:getZPos() == 0)) then	
 		player:setPos(70.956,5.99,139.843,134);
@@ -58,8 +58,8 @@ function onEventFinish(player,csid,option)
 	--printf("CSID: %u",csid);
 	--printf("RESULT: %u",option);
 	if(csid==0x0001)then
-	   player:setVar("COP_Louverance_s_Path",5);
+		player:setVar("COP_Louverance_s_Path",5);
 	elseif(csid == 0x0039)then
-	  player:setVar("COP_jabbos_story",1);
+		player:setVar("COP_jabbos_story",1);
 	end
 end;	

@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4291
--- Item: sandfish
--- Food Effect: 5Min, Mithra only
+-- Item: Sandfish
+-- Food Effect: 5 Min, Mithra only
 -----------------------------------------
 -- Dexterity 3
 -- Mind -5

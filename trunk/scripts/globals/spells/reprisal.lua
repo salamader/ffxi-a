@@ -13,8 +13,10 @@ function OnMagicCastingCheck(caster,target,spell)
 end;
 
 function onSpellCast(caster,target,spell)
+
+    local shield = caster:getEquipID(SLOT_SUB);
     local duration = 60;
-  local typeEffect = EFFECT_REPRISAL;
+    local typeEffect = EFFECT_REPRISAL;
     if (caster:hasStatusEffect(EFFECT_COMPOSURE) == true and caster:getID() == target:getID()) then
         duration = duration * 3;
     end
@@ -25,11 +27,14 @@ function onSpellCast(caster,target,spell)
     -- totally guessing
     local power = ((int + 10) / 20 + 2) * (1 + (magicAtk / 100));
 
-   if(target:addStatusEffect(typeEffect,power,0,duration)) then
-     spell:setMsg(230);
-   else
-     spell:setMsg(75);
-   end
+    if (shield == 10806) then -- Adamas
+	power = power * 1.5;	
+
+    if(target:addStatusEffect(typeEffect,power,0,duration)) then
+        spell:setMsg(230);
+    else
+	spell:setMsg(75);
+    end
 
     return typeEffect;
 end;

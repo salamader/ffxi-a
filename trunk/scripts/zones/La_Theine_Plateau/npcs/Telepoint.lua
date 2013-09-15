@@ -34,9 +34,44 @@ end;
 
 function onTrigger(player,npc)
 	
+	if(player:hasKeyItem(DEM_GATE_CRYSTAL) == false) then
+		player:addKeyItem(DEM_GATE_CRYSTAL);
+		player:messageSpecial(KEYITEM_OBTAINED,DEM_GATE_CRYSTAL);
+	else
+		player:messageSpecial(ALREADY_OBTAINED_TELE);
+	end
+		
 	if(player:hasKeyItem(HOLLA_GATE_CRYSTAL) == false) then
 		player:addKeyItem(HOLLA_GATE_CRYSTAL);
 		player:messageSpecial(KEYITEM_OBTAINED,HOLLA_GATE_CRYSTAL);
+	else
+		player:messageSpecial(ALREADY_OBTAINED_TELE);
+	end
+		
+	if(player:hasKeyItem(MEA_GATE_CRYSTAL) == false) then
+		player:addKeyItem(MEA_GATE_CRYSTAL);
+		player:messageSpecial(KEYITEM_OBTAINED,MEA_GATE_CRYSTAL);
+	else
+		player:messageSpecial(ALREADY_OBTAINED_TELE);
+	end
+		
+	if(player:hasKeyItem(VAHZL_GATE_CRYSTAL) == false) then
+		player:addKeyItem(VAHZL_GATE_CRYSTAL);
+		player:messageSpecial(KEYITEM_OBTAINED,VAHZL_GATE_CRYSTAL);
+	else
+		player:messageSpecial(ALREADY_OBTAINED_TELE);
+	end
+		
+	if(player:hasKeyItem(YHOATOR_GATE_CRYSTAL) == false) then
+		player:addKeyItem(YHOATOR_GATE_CRYSTAL);
+		player:messageSpecial(KEYITEM_OBTAINED,YHOATOR_GATE_CRYSTAL);
+	else
+		player:messageSpecial(ALREADY_OBTAINED_TELE);
+	end
+		
+	if(player:hasKeyItem(ALTEPA_GATE_CRYSTAL) == false) then
+		player:addKeyItem(ALTEPA_GATE_CRYSTAL);
+		player:messageSpecial(KEYITEM_OBTAINED,ALTEPA_GATE_CRYSTAL);
 	else
 		player:messageSpecial(ALREADY_OBTAINED_TELE);
 	end

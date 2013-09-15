@@ -27,5 +27,12 @@ function onSpellCast(caster,target,spell)
 	dmg = adjustForTarget(target,dmg);
 	--add in final adjustments
 	dmg = finalMagicAdjustments(caster,target,spell,dmg);
+
+	if((caster:hasStatusEffect(EFFECT_DIVINE_EMBLEM) == true) and (target:isUndead() == true)) then
+		if(target:hasStatusEffect(EFFECT_AMNESIA) == false) then
+			target:addStatusEffect(EFFECT_AMNESIA,1,0,25);
+		end
+	end
+	
 	return dmg;
 end;

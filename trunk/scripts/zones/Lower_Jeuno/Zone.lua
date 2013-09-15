@@ -64,5 +64,8 @@ function onEventFinish(player,csid,option)
 	if (csid == 0x7534 and option == 0) then	
 		player:setHomePoint();
 		player:messageSpecial(HOMEPOINT_SET);
-        end
+	elseif (csid == 0x276E) then
+		--player:completeMission(ACP,A_CRYSTALLINE_PROPHECY);
+		--player:addMission(ACP,THE_ECHO_AWAKENS);
+	end
 end;		

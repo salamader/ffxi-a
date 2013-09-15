@@ -1,6 +1,8 @@
 -----------------------------------
--- Area: 
+-- Area:  King Ranperre's Tomb (190)
 -- NPC:  Cherry Sapling
+-- @zone 190
+-- @pos many
 -----------------------------------
 
 require("scripts/globals/titles");

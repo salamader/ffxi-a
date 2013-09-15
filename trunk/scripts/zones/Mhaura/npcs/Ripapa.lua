@@ -1,11 +1,13 @@
 -----------------------------------
 -- Area: Mhaura
 -- NPC:  Ripapa 
--- Starts and Finishes Quest: Trial by Lightning
+-- Starts and Finishes Quest: Trial
+-- by Lightning
 -- @Zone 249
--- @pos 29 -15 55
+-- @pos 29, -15, 55
 -----------------------------------
 package.loaded["scripts/zones/Mhaura/TextIDs"] = nil;
+-----------------------------------
 
 require("scripts/globals/titles");
 require("scripts/globals/settings");

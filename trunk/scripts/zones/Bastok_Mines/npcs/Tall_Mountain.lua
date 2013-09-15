@@ -32,7 +32,7 @@ function onTrigger(player,npc)
 
 	local checkStamp = testflag(tonumber(player:getVar("StampHunt_Event")),0x4);
 	
-	if(player:getCurrentMission(BASTOK) == RETURN_OF_THE_TALEKEEPER and player:getVar("MissionStatus") == 3) then
+	if(player:getCurrentMission(BASTOK) == RETURN_OF_THE_TALEKEEPER and player:getVar("MissionStatus") == 5) then
 		player:startEvent(0x00b6);
     elseif(player:getQuestStatus(BASTOK,STAMP_HUNT) == QUEST_ACCEPTED and checkStamp == false) then
         player:setVar("StampHunt_Event",stampCount+0x4);

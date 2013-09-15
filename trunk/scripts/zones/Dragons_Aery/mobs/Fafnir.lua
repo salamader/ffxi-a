@@ -50,11 +50,11 @@ function onMobDeath(mob, killer)
 	if (ToD <= os.time(t) and GetMobAction(Nidhogg) == 0) then
 		if (math.random((1),(5)) == 3 or kills > 6) then
 			UpdateNMSpawnPoint(Nidhogg);
-            GetMobByID(Nidhogg):setRespawnTime(math.random((75600),(86400)));
+            GetMobByID(Nidhogg):setRespawnTime(math.random((3600),(14400)));
 		end
 	else
 		UpdateNMSpawnPoint(Fafnir);
-        mob:setRespawnTime(math.random((75600),(86400)));
+        mob:setRespawnTime(math.random((3600),(14400)));
 		SetServerVariable("[PH]Nidhogg", kills + 1);
 	end
 

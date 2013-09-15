@@ -17,11 +17,11 @@ function onMobDeath(mob,killer)
     if (ToD <= os.time(t) and GetMobAction(Tzee_Xicu_the_Manifest) == 0) then
         if (math.random((1),(5)) == 3 or kills > 6) then
             UpdateNMSpawnPoint(Tzee_Xicu_the_Manifest);
-            GetMobByID(Tzee_Xicu_the_Manifest):setRespawnTime(math.random((75600),(86400)));
+            GetMobByID(Tzee_Xicu_the_Manifest):setRespawnTime(math.random((3600),(14400)));
         end
     else
         UpdateNMSpawnPoint(Yagudo_Avatar);
-        mob:setRespawnTime(math.random((75600),(86400)));
+        mob:setRespawnTime(math.random((3600),(14400)));
         SetServerVariable("[PH]Tzee_Xicu_the_Manifest", kills + 1);
     end
 end;

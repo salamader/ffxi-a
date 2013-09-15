@@ -62,5 +62,8 @@ function onEventFinish(player,csid,option)
 		end
 	player:addItem(4181) -- Warp Scroll
 	player:messageSpecial(ITEM_OBTAINED,4181);
+	player:setVar("TrialSizeLightning_date", 0);
+	player:addFame(KAZHAM,WIN_FAME*30);
+	player:completeQuest(OTHER_AREAS,TRIAL_SIZE_TRIAL_BY_LIGHTNING);
 	end
 end;	

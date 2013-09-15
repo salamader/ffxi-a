@@ -1,6 +1,6 @@
 ---------------------------------------------------
--- Berserk
--- Berserk Ability.
+-- Mob Ability: Soul Voice
+-- 
 ---------------------------------------------------
 
 require("/scripts/globals/settings");

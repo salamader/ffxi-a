@@ -9,6 +9,7 @@ package.loaded["scripts/zones/Davoi/TextIDs"] = nil;
 -----------------------------------
 
 require("scripts/globals/keyitems");
+require("scripts/globals/teleports");
 require("scripts/zones/Davoi/TextIDs");
 
 -----------------------------------
@@ -27,6 +28,7 @@ function onTrigger(player,npc)
 	if (player:hasKeyItem(KNIGHTS_SOUL) == false and player:hasKeyItem(BOOK_OF_TASKS) and player:hasKeyItem(BOOK_OF_THE_WEST) and player:hasKeyItem(BOOK_OF_THE_EAST)) then
 		player:addKeyItem(KNIGHTS_SOUL);
 		player:messageSpecial(KEYITEM_OBTAINED, KNIGHTS_SOUL);
+		debugTeleport(player, 17719359); -- Balasiel, zone 230, -138 x
 	else
 		player:messageSpecial(A_WELL);
 	end

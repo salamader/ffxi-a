@@ -125,6 +125,8 @@ function onTrigger(player,npc)
 		end
 	elseif(OvernightDelivery == QUEST_ACCEPTED and player:hasKeyItem(SMALL_BAG) == true and HourOfTheDay > 6) then
 		player:startEvent(0x015a); -- Failed to return in time
+	elseif(player:getCurrentMission(WINDURST) == AWAKENING_OF_THE_GODS)then
+		player:startEvent(0x02E4);
 	elseif(OvernightDelivery == QUEST_COMPLETED) then
 		rand = math.random(1,2);
 		if(rand == 1) then

@@ -10,7 +10,7 @@
 function onMobDeath(mob,killer)	
   
     -- Set Taxim's Window Open Time
-    SetServerVariable("[POP]Taxim", os.time(t) + 7200); -- 2 hours
+    SetServerVariable("[POP]Taxim", os.time(t) + math.random((1440),(3600))); -- 24min-1hr
     DeterMob(mob:getID(), true);
 
     -- Set PH back to normal, then set to respawn spawn

@@ -56,6 +56,7 @@ function onEventFinish(player,csid,option)
 		player:unlockJob(17);
 		player:messageSpecial(YOU_CAN_NOW_BECOME_A_CORSAIR);
 		player:completeQuest(AHT_URHGAN,LUCK_OF_THE_DRAW);
+		player:addTitle(SEAGULL_PHRATRIE_CREW_MEMBER)
 	end
 
 end;

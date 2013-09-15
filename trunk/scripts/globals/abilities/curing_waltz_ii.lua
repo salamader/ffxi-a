@@ -35,14 +35,17 @@ function OnUseAbility(player, target, ability)
 	
 	--Performing sj mj check.
 	if(mjob == 19) then
-		cure = (vit+chr)*0.5+130;
+		cure = (vit+chr)*0.5+120;
 	end
 	
 	if(sjob == 19) then
-		cure = (vit+chr)*0.25+130;
+		cure = (vit+chr)*0.25+120;
 	end
 
 	--Reducing TP.
+
+	cure = cure + (cure * (player:getMod(MOD_WALTZ_POTENCY)/100));
+	cure = cure + (cure * (target:getMod(MOD_WALTZ_RCVD)/100));
 
 	--Applying server mods....
 	cure = cure * CURE_POWER;

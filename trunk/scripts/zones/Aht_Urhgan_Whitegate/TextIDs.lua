@@ -10,7 +10,9 @@ ITEM_CANNOT_BE_OBTAINEDX = 214;
     NOT_HAVE_ENOUGH_GIL = 0; -- You do not have enough gil
  FISHING_MESSAGE_OFFSET = 831; -- You can't fish here
           HOMEPOINT_SET = 1272; -- Home point set!
-
+		   RUNIC_PORTAL = 3639;	-- You cannot use the runic portal without the Empire's authorization. (UNCONF)
+		 INVENTORY_FULL = 12045; -- Speak to me again after you've reorganized your inventory. (UNCONF)
+		 
 -- Conquest system
 SANCTION = 9660;	-- You have received the Empire's Sanction.
 

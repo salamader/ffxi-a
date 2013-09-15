@@ -2,20 +2,23 @@
 -- Moongate
 -- Area: Ro'Maeve
 -----------------------------------	
+	
+require("/scripts/globals/settings");	
 
-require("/scripts/globals/settings");
-require("/scripts/globals/keyitems");
 
+--TODO
+-- 1. game time must be between 0:00 - 3:00
+-- 2. moon must be full 95 - 5%	
+	
 -----------------------------------	
 -- onTrigger Action	
 -----------------------------------	
 	
-function onTrigger(player,npc)
+function onTrigger(player,npc)	
 	if(player:hasKeyItem(MOONGATE_PASS) == true) then
-		return -1;
-	else
-		return 1;
+	GetNPCByID(17277171):openDoor(30);
 	end
+
 end;	
 	
 -----------------------------------	

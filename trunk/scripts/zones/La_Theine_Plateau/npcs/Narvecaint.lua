@@ -2,6 +2,7 @@
 -- Area: La Theine Plateau
 -- NPC:  Narvecaint
 -- Involved in Mission: The Rescue Drill
+-- Involved in Quest: A Timely Visit
 -- @zone 102
 -- @pos -263 22 129
 -----------------------------------
@@ -9,6 +10,7 @@ package.loaded["scripts/zones/La_Theine_Plateau/TextIDs"] = nil;
 -----------------------------------
 
 require("scripts/globals/missions");
+require("scripts/globals/quests");
 require("scripts/zones/La_Theine_Plateau/TextIDs");
 
 -----------------------------------
@@ -39,9 +41,14 @@ function onTrigger(player,npc)
 			player:showText(npc, RESCUE_DRILL);
 		end
 	else
-		player:showText(npc, RESCUE_DRILL);
-	end
-	
+		if ((player:getQuestStatus(SANDORIA,A_TIMELY_VISIT) == 1) and (player:getVar("ATimelyVisitProgress") == 2)) then
+			player:startEvent(0x0000);
+		elseif ((player:getQuestStatus(SANDORIA,A_TIMELY_VISIT) == 1) and (player:getVar("ATimelyVisitProgress") == 12)) then
+			player:startEvent(0x0001);
+		else
+			player:showText(npc, RESCUE_DRILL);
+		end;
+	end;
 end;
 
 -----------------------------------
@@ -63,6 +70,10 @@ function onEventFinish(player,csid,option)
 	
 	if(csid == 0x006b) then
 		player:setVar("MissionStatus",7);
-	end
-	
-end;
+	elseif (csid == 0x0000) then
+		player:setVar("ATimelyVisitProgress",3);
+	elseif (csid == 0x0001) then
+		player:setVar("ATimelyVisitProgress",13);
+	end;
+
+end;	

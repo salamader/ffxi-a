@@ -19,8 +19,8 @@ end;
 function onMobDeath(mob, killer)
     killer:addTitle(VRTRA_VANQUISHER);
     
-    -- Set Vrtra's spawnpoint and respawn time (3-5 days)
+    -- Set Vrtra's spawnpoint and respawn time (4-8 hours)
     UpdateNMSpawnPoint(mob:getID());
-    mob:setRespawnTime(math.random((259200),(432000)));
+    mob:setRespawnTime(math.random((14400),(28800)));
     
 end;

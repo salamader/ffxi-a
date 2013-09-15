@@ -11,6 +11,9 @@ require("/scripts/zones/Batallia_Downs/MobIDs");
 -----------------------------------	
 	
 function onMobDeath(mob,killer)	
+	checkRegime(killer,mob,73,1);
+	checkRegime(killer,mob,72,1);
+end;	
 
     mob = mob:getID();
     if (Tottering_Toby_PH[mob] ~= nil) then

@@ -11,7 +11,7 @@ function OnBcnmRegister(player,instance)
 	HideArmouryCrates(GetInstanceRegion(1296),APPOLLYON_SE_NE);	
 	GetNPCByID(16933248):setAnimation(8);
     if(IsMobDead(16933125)==false)then DespawnMob(16933125);end		
-     player:setVar("Limbus_Trade_Item",0);	
+    player:setVar("Limbus_Trade_Item",0);	
 end;
 
 -- Physically entering the BCNM via bcnmEnter(bcnmid)

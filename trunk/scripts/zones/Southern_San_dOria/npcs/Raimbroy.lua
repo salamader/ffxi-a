@@ -64,6 +64,27 @@ function onTrigger(player,npc)
 		player:startEvent(0x0218);
 	elseif(theSweetestThings == QUEST_COMPLETED) then
 		player:startEvent(0x0219);
+	else
+		player:showText(npc,AVELINE_SHOP_DIALOG);
+		
+		stock = {940,500,		-- Revival Root
+		 	 3398,5000,		-- Odious Root
+			 1472,5000,		-- Gardenia Seed
+			 4505,500,		-- Sunflower Seeds
+			 2948,1000,		-- Acidic Humus
+			 2920,1000,		-- Alkaline Humus
+			 2728,1000,		-- Cernunnos Bulb
+			 1263,1000,		-- Leshonki Bulb
+			 1158,1000,		-- Wandering Bulb
+			 953,1000,		-- Treank Bulb
+			 3244,500,		-- Giant Mistletoe
+			 918,500,		-- Mistletoe
+			 2554,500,		-- Asphodel
+			 2729,500,		-- Hydrangea
+			 2507,500,		-- Lycopodium Flower
+			 5907,500}		-- Winterflower
+					  
+		showShop(player, STATIC, stock);
 	end
 	
 end; 

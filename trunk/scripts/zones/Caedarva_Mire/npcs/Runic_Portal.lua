@@ -24,22 +24,31 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	
-	if(npc:getID() == 17101261) then -- Azouph
-		if(hasRunicPortal(player,1) == 1) then
-			player:startEvent(0x0083);
-		else
-			player:startEvent(0x007c);
+
+	if(npc:getID() == 17101261 and player:getCurrentMission(TOAU)== IMMORTAL_SENTRIES and player:getVar("TOAUM2") ==1)then
+		player:startEvent(0x007C);
+	elseif(npc:getID() == 17101264 and player:getCurrentMission(TOAU)== IMMORTAL_SENTRIES and player:getVar("TOAUM2") ==1)then
+		player:startEvent(0x007D);
+	elseif(player:getCurrentMission(TOAU) > IMMORTAL_SENTRIES) then 
+
+		if(npc:getID() == 17101261) then -- Azouph
+			if(hasRunicPortal(player,1) == 1) then
+				player:startEvent(0x0083);
+			else
+				player:startEvent(0x007c);
+			end
+		else -- Dvucca
+			if(hasRunicPortal(player,2) == 1) then
+				player:startEvent(0x0086);
+			else
+				player:startEvent(0x007d);
+			end
 		end
-	else -- Dvucca
-		if(hasRunicPortal(player,2) == 1) then
-			player:startEvent(0x0086);
-		else
-			player:startEvent(0x007d);
-		end
+	else
+		player:messageSpecial(RESPONSE);
 	end
-	
-end; 
+end;
+
 
 -----------------------------------
 -- onEventUpdate

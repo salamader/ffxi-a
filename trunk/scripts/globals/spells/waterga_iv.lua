@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Water
+-- Spell: Waterga IV
 -- Deals water damage to an enemy.
 -----------------------------------------
 

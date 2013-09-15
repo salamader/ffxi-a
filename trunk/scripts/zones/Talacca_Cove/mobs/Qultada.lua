@@ -1,0 +1,42 @@
+-----------------------------------
+--  Area: Talacca Cove (57)
+--   Mob: Qultada
+-----------------------------------
+
+-- require("scripts/zones/Talacca_Cove/MobIDs");
+
+-----------------------------------
+-- onMobInitialize
+-----------------------------------
+
+function onMobInitialize(mob)	
+end;
+
+-----------------------------------
+-- onMobSpawn
+-----------------------------------
+
+function onMobSpawn(mob)	
+end;
+
+-----------------------------------
+-- onMobEngaged
+-----------------------------------
+
+function onMobEngaged(mob,target)	
+end;
+
+-----------------------------------
+-- onMobFight
+-----------------------------------
+
+function onMobFight(mob,target)	
+end;
+
+-----------------------------------
+-- onMobDeath
+-----------------------------------
+
+function onMobDeath(mob,killer)	
+end;
+

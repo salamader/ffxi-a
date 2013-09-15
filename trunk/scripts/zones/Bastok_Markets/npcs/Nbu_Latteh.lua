@@ -1,8 +1,10 @@
 -----------------------------------
 -- Area: Bastok Markets
 -- NPC:  Nbu Latteh
--- Starts & Finishes Quest: Mom, The Adventurer?
--- Starts Quest: The Signpost Marks the Spot
+-- Starts & Finishes Quest: Mom,
+-- The Adventurer?
+-- Starts Quest: The Signpost Marks
+-- the Spot
 -----------------------------------
 package.loaded["scripts/zones/Bastok_Markets/TextIDs"] = nil;
 -----------------------------------

@@ -1,6 +1,8 @@
 -----------------------------------
 -- Area: Misareaux Coast
 -- NPC:  Gration
+-- @zone 25
+-- @pos 0.000', -0.000, 38.000
 -----------------------------------
 
 require("scripts/globals/status");
@@ -31,5 +33,5 @@ function onMobDeath(mob, killer)
 	local kills = killer:getVar("FOMOR_HATE");
 	if(kills > 1) then
 		killer:setVar("FOMOR_HATE",kills -2);
-	end
+	end	
 end;

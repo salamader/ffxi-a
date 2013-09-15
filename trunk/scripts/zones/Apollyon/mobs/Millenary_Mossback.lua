@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Apollyon NW
 -- NPC:  Millenary Mossback
-
 -----------------------------------
 package.loaded["scripts/zones/Apollyon/TextIDs"] = nil;
 -----------------------------------

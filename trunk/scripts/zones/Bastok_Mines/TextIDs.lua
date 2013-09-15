@@ -27,6 +27,8 @@ PLAYERS_HAVE_NOT_REACHED_LEVEL = 11536; --Players who have not reached level <<<
   VIRNAGE_DIALOG_1 = 10798; --They stayed in a citadel on the Sauromugue Champaign. The paint may be there still!
   VIRNAGE_DIALOG_2 = 10804; --Hand my letter to Eperdur in the San d'Oria Cathedral to claim your reward.
 THE_GATE_IS_LOCKED = 11965; --The gate is locked.
+    CHOCOBO_DIALOG = 12435; --Kweh!
+     ZOPAGO_DIALOG = 12415; --I'm Zopago, advanced chocobo trainer and member of the Vana'diel Chocobo Society.<Prompt>
 
 -- Harvest Festival
       TRICK_OR_TREAT = 11496; --Trick or treat...

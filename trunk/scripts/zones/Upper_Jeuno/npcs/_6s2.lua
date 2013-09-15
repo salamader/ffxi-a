@@ -1,7 +1,9 @@
 -----------------------------------
 -- Area: Upper Jeuno
 -- NPC: Galmut's door
--- Starts and Finishes Quest: A Clock Most Delicate, Save the Clock Tower, The Clockmaster
+-- Starts and Finishes Quest: A 
+-- Clock Most Delicate, Save the
+-- Clock Tower, The Clockmaster
 -- @zone 244
 -- @pos -80 0 104
 -----------------------------------
@@ -77,8 +79,8 @@ function onEventFinish(player,csid,option)
 		else 
 			player:addTitle(PROFESSIONAL_LOAFER);
 			player:delKeyItem(CLOCK_TOWER_OIL);
-			player:addGil(1200);
-			player:messageSpecial(GIL_OBTAINED,1200);
+			player:addGil(1200*GIL_RATE);
+			player:messageSpecial(GIL_OBTAINED,1200*GIL_RATE);
 			player:addItem(12727);
 			player:messageSpecial(ITEM_OBTAINED,12727);
 			player:addFame(JEUNO,30);
@@ -91,8 +93,8 @@ function onEventFinish(player,csid,option)
 		else 
 			player:addQuest(JEUNO,THE_CLOCKMASTER);
 			player:addTitle(TIMEKEEPER);
-			player:addGil(1200);
-			player:messageSpecial(GIL_OBTAINED,1200);
+			player:addGil(1200*GIL_RATE);
+			player:messageSpecial(GIL_OBTAINED,1200*GIL_RATE);
 			player:addItem(17083);
 			player:messageSpecial(ITEM_OBTAINED,17083);
 			player:addFame(JEUNO,30);
@@ -100,6 +102,3 @@ function onEventFinish(player,csid,option)
 		end
 	end
 end;
-
-
-

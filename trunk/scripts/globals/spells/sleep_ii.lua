@@ -19,6 +19,16 @@ function onSpellCast(caster,target,spell)
 	local mINT = target:getStat(MOD_INT);
 	local dINT = (pINT - mINT);
 	local resm = applyResistance(caster,spell,target,dINT,ENFEEBLING_MAGIC_SKILL,bonus);
+
+	if (body == 11088) then -- Estoquers Sayon +2
+		bonus = bonus * 1.1;		
+	end
+	
+	if (caster:hasStatusEffect(EFFECT_SABOTEUR) == true) then
+		duration = duration + (duration * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
+		bonus = bonus * 2;
+		caster:delStatusEffect(EFFECT_SABOTEUR);
+    end
 	if(resm < 0.5) then
 		spell:setMsg(85);--resist message
 		return typeEffect;

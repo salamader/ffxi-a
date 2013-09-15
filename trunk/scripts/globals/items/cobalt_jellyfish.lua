@@ -1,6 +1,6 @@
 -----------------------------------------
 -- ID: 4443
--- Item: cobalt_jellyfish
+-- Item: Cobalt Jellyfish
 -- Food Effect: 5 Min, Mithra only
 -----------------------------------------
 -- Dexterity 1

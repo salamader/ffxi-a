@@ -3,7 +3,7 @@
 -- Zone: The_Shrouded_Maw (10)
 --
 -----------------------------------
-
+-- player:setPos(216,31,-340,254); -- BC for Diablos
 package.loaded["scripts/zones/The_Shrouded_Maw/TextIDs"] = nil;
 require("scripts/globals/settings");
 require("scripts/zones/The_Shrouded_Maw/TextIDs");

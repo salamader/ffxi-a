@@ -31,6 +31,12 @@ end;
 function onEventUpdate(player,csid,option)
 	--print("CSID:",csid);
 	--print("RESULT:",option);
+	if (csid == 0x0014) then
+		update = update + 1;
+		if(update == 2) then
+			GetNPCByID(17531153):setAnimation(8);
+		end
+	end
 end;
 
 -----------------------------------
@@ -42,6 +48,7 @@ function onEventFinish(player,csid,option)
 	--print("RESULT:",option);
 
 	if(csid == 0x0014 and option == 1) then
+		GetNPCByID(17531153):setAnimation(9);
 		player:setPos(313, 16, 20, 128, 0x9E);	-- to Upper Delkfutt's Tower
 	end
 end;

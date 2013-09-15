@@ -23,6 +23,18 @@ function onItemUse(target)
    if(target:hasStatusEffect(EFFECT_FOOD) == true) then
 	target:delStatusEffect(EFFECT_FOOD);
    end
+   if(target:hasStatusEffect(EFFECT_HASTE) == true) then
+   	target:delStatusEffect(EFFECT_HASTE);
+   end;
+   if(target:hasStatusEffect(EFFECT_REGEN) == true) then
+   	target:delStatusEffect(EFFECT_REGEN);
+   end;
+   if(target:hasStatusEffect(EFFECT_REFRESH) == true) then
+   	target:delStatusEffect(EFFECT_REFRESH);
+   end
+   if(target:hasStatusEffect(EFFECT_MEDICINE) == true) then
+      	target:delStatusEffect(EFFECT_MEDICINE);
+   end
 end;
 
 

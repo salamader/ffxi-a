@@ -3,6 +3,7 @@
 -- Zone: Toraimarai_Canal (169)
 --
 -----------------------------------
+-- Event 0x0030, 0x0031 and 0x0032 will warp players to BLM AF6 ???'s
 
 package.loaded["scripts/zones/Toraimarai_Canal/TextIDs"] = nil;
 require("scripts/globals/settings");

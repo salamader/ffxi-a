@@ -10,8 +10,8 @@
 function onMobDeath(mob,killer)	
 
     -- Set Yaa_Haqa_the_Profane's Window Open Time
-    wait = math.random((3600),(7200));
-    SetServerVariable("[POP]Yaa_Haqa_the_Profane", os.time(t) + wait); -- 1-2 hours
+    wait = math.random((1440),(3600));
+    SetServerVariable("[POP]Yaa_Haqa_the_Profane", os.time(t) + wait); -- 24min-1hr
     DeterMob(mob:getID(), true);
     
     -- Set PH back to normal, then set to respawn spawn

@@ -7,6 +7,7 @@
 -----------------------------------
 
 package.loaded["scripts/zones/Meriphataud_Mountains/TextIDs"] = nil;
+require("scripts/globals/teleports");
 require("scripts/zones/Meriphataud_Mountains/TextIDs");
 
 -----------------------------------

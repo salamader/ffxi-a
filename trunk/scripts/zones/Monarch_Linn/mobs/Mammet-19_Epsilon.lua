@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: Monarch Linn
--- NPC:  Mammet 19
+--  Area: Monarch Linn (31)
+--   Mob: Mammet-19_Epsilon
 -----------------------------------
 
 require("scripts/globals/status");

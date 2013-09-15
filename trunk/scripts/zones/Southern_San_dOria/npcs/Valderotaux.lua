@@ -2,8 +2,6 @@
 --	Area: Southern San d'Oria
 --	NPC: Valderotaux
 --  General Info NPC
--- @zone 230
--- @pos 97 0 113 
 -------------------------------------
 package.loaded["scripts/zones/Southern_San_dOria/TextIDs"] = nil;
 -----------------------------------
@@ -17,10 +15,13 @@ require("scripts/zones/Southern_San_dOria/TextIDs");
 ----------------------------------- 
 
 function onTrade(player,npc,trade)
-	-- "Flyers for Regine" conditional script
+-- "Flyers for Regine" conditional script
+FlyerForRegine = player:getQuestStatus(SANDORIA,FLYERS_FOR_REGINE);
 
-	if (player:getQuestStatus(SANDORIA,FLYERS_FOR_REGINE) == QUEST_ACCEPTED) then
-		if (trade:hasItemQty(532,1) and trade:getItemCount() == 1) then
+	if (FlyerForRegine == 1) then
+		count = trade:getItemCount();
+		MagicFlyer = trade:hasItemQty(532,1);
+		if (MagicFlyer == true and count == 1) then
 			player:messageSpecial(FLYER_REFUSED);
 		end
 	end
@@ -31,16 +32,7 @@ end;
 -----------------------------------
  
 function onTrigger(player,npc) 
-	local lakesideMin = player:getQuestStatus(JEUNO,LAKESIDE_MINUET);
-	local lakeProg = player:getVar("Lakeside_Minuet_Progress");
-	if(lakeProg == 1) then
-		player:startEvent(0x0378); -- Dance for the drunks!
-		player:setVar("Lakeside_Minuet_Progress",2);
-	elseif(lakeProg >= 2) then
-		player:startEvent(0x0379); -- Immediate regret of failure!
-	else
-		player:startEvent(0x03A);
-	end
+	player:startEvent(0x03A);
 end; 
 
 -----------------------------------
@@ -60,7 +52,3 @@ function onEventFinish(player,csid,option)
 --printf("CSID: %u",csid);
 --printf("RESULT: %u",option);
 end;
-
-
-
-

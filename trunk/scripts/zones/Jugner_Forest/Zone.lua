@@ -3,9 +3,8 @@
 -- Zone: Jugner_Forest (104)
 --
 -----------------------------------
-
 package.loaded[ "scripts/zones/Jugner_Forest/TextIDs"] = nil;
-
+-----------------------------------
 require( "scripts/zones/Jugner_Forest/TextIDs");
 require( "scripts/globals/icanheararainbow");
 

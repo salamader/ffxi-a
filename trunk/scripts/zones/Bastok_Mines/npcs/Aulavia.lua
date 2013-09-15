@@ -2,7 +2,8 @@
 -- Area: Bastok Mines
 -- NPC: Aulavia
 -- Regional Marchant NPC
--- Only sells when Bastok controls Vollbow.
+-- Only sells when Bastok controls
+-- Vollbow.
 -----------------------------------
 
 require("scripts/globals/harvest_festivals");

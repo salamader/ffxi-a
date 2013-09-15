@@ -1,7 +1,7 @@
 -----------------------------------
---
---
---
+-- EFFECT_SERENADE
+-- Increases Disease Resistance to 
+-- Party Members within target AoE
 -----------------------------------
 
 -----------------------------------
@@ -9,6 +9,7 @@
 -----------------------------------
 
 function onEffectGain(target,effect)
+	target:addMod(MOD_VIRUSRES,effect:getPower());
 end;
 
 -----------------------------------
@@ -23,4 +24,5 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
+	target:delMod(MOD_VIRUSRES,effect:getPower());
 end;

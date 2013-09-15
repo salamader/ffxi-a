@@ -1,9 +1,10 @@
 -----------------------------------
 -- Area: Dynamis Valkurm
 -- NPC:  Goblin Replica
-
 -----------------------------------
+
 package.loaded["scripts/zones/Dynamis-Valkurm/TextIDs"] = nil;
+
 -----------------------------------
 
 require("scripts/globals/dynamis");

@@ -2,7 +2,9 @@
 -- Area: Dynamis Xarcabard
 -- NPC:  Statue Prototype
 -----------------------------------
+
 package.loaded["scripts/zones/Dynamis-Xarcabard/TextIDs"] = nil;
+
 -----------------------------------
 
 require("scripts/globals/status");

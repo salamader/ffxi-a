@@ -1,10 +1,11 @@
 -----------------------------------
 -- Area: Temenos W T	
--- NPC: Enhanced_Tiger
+-- NPC: Enhanced Tiger
 
 -----------------------------------
 package.loaded["scripts/zones/Temenos/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Temenos/TextIDs");
 

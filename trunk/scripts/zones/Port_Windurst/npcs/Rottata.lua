@@ -25,13 +25,7 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	
-	if(guardnation == player:getNation()) then
-		player:startEvent(csid,0,0,0,0,0,0,player:getMainLvl(),1073741823 - player:getNationTeleport(guardnation));
-	else
-		player:startEvent(csid,0,0,0,0,0,1,0,0);
-	end
-	
+	player:startEvent(csid,0,0,0,0,0,0,player:getMainLvl(),1061158943);
 end;
 
 -----------------------------------

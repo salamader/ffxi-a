@@ -11,6 +11,7 @@ package.loaded["scripts/zones/Ordelles_Caves/TextIDs"] = nil;
 require("scripts/globals/settings");
 require("scripts/globals/keyitems");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Ordelles_Caves/TextIDs");
 
 ----------------------------------- 

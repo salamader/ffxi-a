@@ -1,10 +1,11 @@
 -----------------------------------
 -- Area: Temenos Central 1floor	
--- NPC: Temenos_Cleaner
+-- NPC: Temenos Cleaner
 
 -----------------------------------
 package.loaded["scripts/zones/Temenos/TextIDs"] = nil;
 -----------------------------------
+
 require("scripts/globals/limbus");
 require("scripts/zones/Temenos/TextIDs");
 

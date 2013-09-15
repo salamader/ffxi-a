@@ -2,6 +2,7 @@
 -- Area: Northern San d'Oria
 -- NPC:  Diary
 -- Involved in Quest: To Cure a Cough
+-- Over the Hills and Far Away
 -- @zone 230
 -- @pos -75 -12 65
 -----------------------------------
@@ -27,14 +28,16 @@ function onTrigger(player,npc)
 	
 	medicineWoman = player:getQuestStatus(SANDORIA,THE_MEDICINE_WOMAN);
 	toCureaCough = player:getQuestStatus(SANDORIA,TO_CURE_A_COUGH);
---	player:startEvent(0x02d2)  -- read page 4
 --	player:startEvent(0x02d3) read last page
+
 	if(toCureaCough == QUEST_AVAILABLE and player:getVar("DiaryPage") == 0)then
 		player:startEvent(0x27F);  -- see diary, option to read
 	elseif(player:getVar("DiaryPage") == 1) then
 		player:startEvent(0x280);  -- diary page 2
 	elseif(player:getVar("DiaryPage") >= 2 and medicineWoman == QUEST_COMPLETED) then
 		player:startEvent(0x281);  -- read page 3
+	elseif(player:getVar("DiaryPage") >= 3) then
+		player:startEvent(0x02d2)  -- read page 4
 	end 
 end; 
 
@@ -63,6 +66,8 @@ function onEventFinish(player,csid,option)
 		player:setVar("DiaryPage",2);	-- has read page 2
 	elseif (csid == 0x281) then
 		player:setVar("DiaryPage",3);	-- has read page 3
+	elseif (csid == 0x02D2) then
+		player:setVar("DiaryPage",4);	-- has read page 4
 	end
 
 end;

@@ -13,7 +13,7 @@ require( "scripts/globals/status" );
 -- onMobInitialize Action
 -----------------------------------
 function onMobInitialize( mob )
-end
+end;
 
 -----------------------------------
 -- onMobFight Action
@@ -58,7 +58,7 @@ function onMobFight( mob, target )
             GetMobByID( pets ):updateEnmity( target );
         end
     end
-end
+end;
 
 -----------------------------------
 -- onMobDeath
@@ -77,7 +77,7 @@ function onMobDeath( mob, killer )
     
     -- Reset popped pet var..
     mob:setExtraVar( 0 );
-end
+end;
 
 -----------------------------------
 -- OnMobDespawn
@@ -91,4 +91,4 @@ function onMobDespawn( mob )
     
     -- Reset popped pet var..
     mob:setExtraVar( 0 );
-end
+end;

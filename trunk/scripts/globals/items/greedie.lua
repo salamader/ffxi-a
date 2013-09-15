@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4500
--- Item: greedie
--- Food Effect: 5Min, Mithra only
+-- Item: Greedie
+-- Food Effect: 5 Min, Mithra only
 -----------------------------------------
 -- Dexterity 1
 -- Mind -3

@@ -1,7 +1,10 @@
 -----------------------------------
 -- Area: Norg
 -- NPC:  Jaucribaix
--- Starts and Finishes Quest: Forge Your Destiny, The Sacred Katana, Yomi Okuri, A Thief in Norg!?
+-- Starts and Finishes Quest:
+-- Forge Your Destiny, The Sacred
+-- Katana, Yomi Okuri, A Thief in
+-- Norg!?
 -- @pos 91 -7 -8 252
 -----------------------------------
 package.loaded["scripts/zones/Norg/TextIDs"] = nil;
@@ -12,6 +15,7 @@ require("scripts/globals/shop");
 require("scripts/globals/titles");
 require("scripts/globals/keyitems");
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Norg/TextIDs");
 
 -----------------------------------
@@ -152,6 +156,7 @@ function onEventFinish(player,csid,option)
 
 	if(csid == 0x0019 and option == 1) then
 		player:addQuest(OUTLANDS,FORGE_YOUR_DESTINY);
+		debugTeleport(player, 17809427); -- Aeka
 	elseif(csid == 0x001b) then
 		player:tradeComplete();
 		player:setVar("ForgeYourDestiny_timer", os.time() + 10368); --Add 3 game days

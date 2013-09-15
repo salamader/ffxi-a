@@ -7,6 +7,7 @@ package.loaded["scripts/zones/Port_San_dOria/TextIDs"] = nil;
 -----------------------------------
 
 require("scripts/globals/quests");
+require("scripts/globals/teleports");
 require("scripts/zones/Port_San_dOria/TextIDs");
 
 -----------------------------------
@@ -59,6 +60,7 @@ function onEventFinish(player,csid,option)
 
 	if(csid == 0x0018) then
 		player:setVar("TheHolyCrest_Event",1);
+		debugTeleport(player,17461503); -- Novalmauge
 	end
 
 end;

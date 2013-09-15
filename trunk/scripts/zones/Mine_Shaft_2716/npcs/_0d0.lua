@@ -1,6 +1,7 @@
 -----------------------------------
 -- Area: Mine_Shaft_2716
 -- NPC:  Shaft entrance
+-- @pos -58 -120 -579
 -----------------------------------
 package.loaded["scripts/zones/Mine_Shaft_2716/TextIDs"] = nil;
 -----------------------------------

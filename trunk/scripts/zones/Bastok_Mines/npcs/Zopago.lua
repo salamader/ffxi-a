@@ -1,14 +1,13 @@
 -----------------------------------
---  Area: Bastok Mines
---   NPC: Zopago
---  Type: VCS Chocobo Trainer
+-- Area: Bastok Mines
+-- NPC: Zopago
+-- Type: VCS Chocobo Trainer
 -- @zone: 234
---  @pos: 51.706 -0.126 -109.065
---
--- Auto-Script: Requires Verification
+-- @pos: 51.706 -0.126 -109.065
+-----------------------------------
+package.loaded["scripts/zones/Bastok_Mines/TextIDs"] = nil;
 -----------------------------------
 
-package.loaded["scripts/zones/Bastok_Mines/TextIDs"] = nil;
 require("scripts/zones/Bastok_Mines/TextIDs");
 
 -----------------------------------
@@ -23,7 +22,8 @@ end;
 -----------------------------------
 
 function onTrigger(player,npc)
-	player:startEvent(0xff02);
+	player:showText(npc,ZOPAGO_DIALOG);
+	-- player:startEvent(0xfcff);
 end;
 
 -----------------------------------
@@ -43,4 +43,3 @@ function onEventFinish(player,csid,option)
 	-- printf("CSID: %u",csid);
 	-- printf("RESULT: %u",option);
 end;
-

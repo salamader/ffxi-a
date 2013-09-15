@@ -1,7 +1,7 @@
 -----------------------------------
---
 -- 	EFFECT_ARCANE_CIRCLE
---
+-- Grants resistance against arcana
+-- to party members within AoE.
 -----------------------------------
 
 require("scripts/globals/status");
@@ -12,6 +12,7 @@ require("scripts/globals/status");
 
 function onEffectGain(target,effect)
    target:addMod(MOD_ARCANA_KILLER, effect:getPower());
+   target:addMod(MOD_ARCANE_DMG, effect:getPower());
 end;
 
 -----------------------------------
@@ -27,4 +28,5 @@ end;
 
 function onEffectLose(target,effect)
    target:delMod(MOD_ARCANA_KILLER, effect:getPower());
+   target:delMod(MOD_ARCANE_DMG, effect:getPower());
 end;

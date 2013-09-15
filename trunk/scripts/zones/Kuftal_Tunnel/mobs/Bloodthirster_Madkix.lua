@@ -10,7 +10,7 @@
 function onMobDeath(mob,killer)	
   
     -- Set Bloodthirster Madkix's Window Open Time
-    wait = math.random((7200),(28800)); -- 2-8 hours
+    wait = math.random((3600),(14400)); -- 1-4 hours
     SetServerVariable("[POP]Bloodthirster_Madkix", os.time(t) + wait);
     DeterMob(mob:getID(), true);
 

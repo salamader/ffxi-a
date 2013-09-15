@@ -7,7 +7,8 @@ FULL_INVENTORY_AFTER_TRADE = 6377; -- You cannot obtain the <item>. Try trading 
               GIL_OBTAINED = 6379; -- Obtained <number> gil
           KEYITEM_OBTAINED = 6381; -- Obtained key item: <keyitem>
             ITEMS_OBTAINED = 6387; -- You obtain <param2 number> <param1 item>
-
+		    ITEM_OBTAINEDX = 6387; -- You obtain x <item>
+  ITEM_CANNOT_BE_OBTAINEDX = 6375; -- " 
 -- Treasure Coffer/Chest Dialog
 CHEST_UNLOCKED = 7289; -- You unlock the chest!
     CHEST_FAIL = 7290; -- Fails to open the chest. 

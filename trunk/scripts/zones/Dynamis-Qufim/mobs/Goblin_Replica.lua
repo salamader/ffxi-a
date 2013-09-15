@@ -1,5 +1,5 @@
 -----------------------------------
--- Area: Dynamis qufim
+-- Area: Dynamis Qufim
 -- NPC:  Goblin Replica
 
 -----------------------------------

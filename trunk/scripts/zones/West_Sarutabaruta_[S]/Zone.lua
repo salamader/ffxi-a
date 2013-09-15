@@ -7,7 +7,7 @@
 package.loaded["scripts/zones/West_Sarutabaruta_[S]/TextIDs"] = nil;
 require("scripts/globals/settings");
 require("scripts/zones/West_Sarutabaruta_[S]/TextIDs");
-
+require("scripts/globals/keyitems");
 -----------------------------------
 -- onInitialize
 -----------------------------------

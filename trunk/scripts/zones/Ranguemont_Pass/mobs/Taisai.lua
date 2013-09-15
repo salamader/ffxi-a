@@ -48,7 +48,7 @@ function onMobDeath(mob, killer)
 	for i = 1, table.getn(Taisaijin_PH_Table), 1 do
 		if (Taisaijin_PH_Table[i] ~= nil) then
 			if (Taisai == Taisaijin_PH_Table[i]) then
-				GetMobByID(Taisaijin):setExtraVar(os.time() + math.random((86400), (259200)));
+				GetMobByID(Taisaijin):setExtraVar(os.time() + math.random((3600),(14400)));
 			end
 		end
 	end

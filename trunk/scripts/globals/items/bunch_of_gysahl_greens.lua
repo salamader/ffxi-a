@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4545
 -- Item: Bunch of Gysahl Greens
--- Food Effect: 5Min, All Races
+-- Food Effect: 5 Min, All Races
 -----------------------------------------
 -- Agility +3
 -- Vitality -5

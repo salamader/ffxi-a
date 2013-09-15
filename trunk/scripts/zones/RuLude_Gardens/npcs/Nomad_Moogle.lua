@@ -9,6 +9,7 @@ package.loaded["scripts/zones/RuLude_Gardens/TextIDs"] = nil;
 
 require("scripts/globals/settings");
 require("scripts/globals/keyitems");
+require("scripts/globals/quests");
 require("scripts/zones/RuLude_Gardens/TextIDs");
 
 -----------------------------------

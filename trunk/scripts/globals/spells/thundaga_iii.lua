@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Thundaga 3
+-- Spell: Thundaga III
 -- Deals thunder damage to an enemy.
 -----------------------------------------
 
