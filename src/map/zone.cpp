@@ -155,9 +155,31 @@ CONTINENTTYPE CZone::GetContinentID()
     return m_continentID;
 }
 
-uint32 CZone::GetIP()
+
+uint32 CZone::GetLANIP()
 {
-	return m_zoneIP;
+	in_addr inaddr;
+     inaddr.S_un.S_addr = inet_addr(map_config.NETWORK_Servers_Address);
+     if( inaddr.S_un.S_addr == INADDR_NONE)
+       {
+       hostent* phostent = gethostbyname(map_config.NETWORK_Servers_Address);
+      
+       inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
+       }
+	return m_zoneLANIP =inaddr.S_un.S_addr ;
+}
+
+uint32 CZone::GetWANIP()
+{
+	in_addr inaddr;
+     inaddr.S_un.S_addr = inet_addr(map_config.DNS_Servers_Address);
+     if( inaddr.S_un.S_addr == INADDR_NONE)
+       {
+       hostent* phostent = gethostbyname(map_config.DNS_Servers_Address);
+      
+       inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
+       }
+	return m_zoneWANIP =inaddr.S_un.S_addr;
 }
 
 uint16 CZone::GetPort()
@@ -374,7 +396,8 @@ void CZone::LoadZoneSettings()
 	 static const int8* Query =
         "SELECT "
           "zone.name,"
-          "zone.zoneip,"
+          "zone.lanip,"
+		  "zone.wanip,"
           "zone.zoneport,"
           "zone.music,"
           "zone.battlesolo,"
@@ -396,25 +419,26 @@ void CZone::LoadZoneSettings()
     {
         m_zoneName.insert(0, Sql_GetData(SqlHandle,0));
 
-    m_zoneIP   = inaddr.S_un.S_addr;
-    m_zonePort = (uint16)Sql_GetUIntData(SqlHandle,2);
-    m_zoneMusic.m_song   = (uint8)Sql_GetUIntData(SqlHandle,3);   // background music
-    m_zoneMusic.m_bSongS = (uint8)Sql_GetUIntData(SqlHandle,4);   // solo battle music
-    m_zoneMusic.m_bSongM = (uint8)Sql_GetUIntData(SqlHandle,5);   // party battle music
-    m_tax = (uint16)(Sql_GetFloatData(SqlHandle,6) * 100);      // tax for bazaar
-    m_miscMask = (uint16)Sql_GetUIntData(SqlHandle,7);
-    m_useNavMesh = (bool)Sql_GetIntData(SqlHandle,8);
+		m_zoneLANIP   = inaddr.S_un.S_addr;
+		m_zoneWANIP   = inaddr.S_un.S_addr;
+		m_zonePort = (uint16)Sql_GetUIntData(SqlHandle,3);
+		m_zoneMusic.m_song   = (uint8)Sql_GetUIntData(SqlHandle,4);		// background music
+		m_zoneMusic.m_bSongS = (uint8)Sql_GetUIntData(SqlHandle,5);		// solo battle music
+		m_zoneMusic.m_bSongM = (uint8)Sql_GetUIntData(SqlHandle,6);		// party battle music
+		m_tax = (uint16)(Sql_GetFloatData(SqlHandle,7) * 100);			// tax for bazaar
+		m_miscMask = (uint16)Sql_GetUIntData(SqlHandle,8);
+		m_useNavMesh = (bool)Sql_GetIntData(SqlHandle,9);
 
-    m_zoneType = (ZONETYPE)Sql_GetUIntData(SqlHandle, 9);
+		m_zoneType = (ZONETYPE)Sql_GetUIntData(SqlHandle, 10);
 
-        if (Sql_GetData(SqlHandle,10) != NULL) // сейчас нельзя использовать bcnmid, т.к. они начинаются с нуля
+        if (Sql_GetData(SqlHandle,11) != NULL) // now we can not use bcnmid, because they start from scratch
         {
             m_InstanceHandler = new CInstanceHandler(m_zoneID);
-      }
+	    }
         if (m_miscMask & MISC_TREASURE)
-    {
+		{
             m_TreasurePool = new CTreasurePool(TREASUREPOOL_ZONE);
-    }
+		}
     }
     else
     {
@@ -441,7 +465,8 @@ void CZone::LoadPlayerZoneSettings(CCharEntity* PChar)
 	 static const int8* Query =
         "SELECT "
           "zone.name,"
-          "zone.zoneip,"
+          "zone.lanip,"
+		  "zone.wanip,"
           "zone.zoneport,"
           "zone.music,"
           "zone.battlesolo,"
@@ -463,25 +488,26 @@ void CZone::LoadPlayerZoneSettings(CCharEntity* PChar)
     {
         m_zoneName.insert(0, Sql_GetData(SqlHandle,0));
 
-    m_zoneIP   = inaddr.S_un.S_addr;
-    m_zonePort = (uint16)Sql_GetUIntData(SqlHandle,2);
-    m_zoneMusic.m_song   = (uint8)Sql_GetUIntData(SqlHandle,3);   // background music
-    m_zoneMusic.m_bSongS = (uint8)Sql_GetUIntData(SqlHandle,4);   // solo battle music
-    m_zoneMusic.m_bSongM = (uint8)Sql_GetUIntData(SqlHandle,5);   // party battle music
-    m_tax = (uint16)(Sql_GetFloatData(SqlHandle,6) * 100);      // tax for bazaar
-    m_miscMask = (uint16)Sql_GetUIntData(SqlHandle,7);
-    m_useNavMesh = (bool)Sql_GetIntData(SqlHandle,8);
+		m_zoneLANIP   = inaddr.S_un.S_addr;
+		m_zoneWANIP   = inaddr.S_un.S_addr;
+		m_zonePort = (uint16)Sql_GetUIntData(SqlHandle,3);
+		m_zoneMusic.m_song   = (uint8)Sql_GetUIntData(SqlHandle,4);		// background music
+		m_zoneMusic.m_bSongS = (uint8)Sql_GetUIntData(SqlHandle,5);		// solo battle music
+		m_zoneMusic.m_bSongM = (uint8)Sql_GetUIntData(SqlHandle,6);		// party battle music
+		m_tax = (uint16)(Sql_GetFloatData(SqlHandle,7) * 100);			// tax for bazaar
+		m_miscMask = (uint16)Sql_GetUIntData(SqlHandle,8);
+		m_useNavMesh = (bool)Sql_GetIntData(SqlHandle,9);
 
-    m_zoneType = (ZONETYPE)Sql_GetUIntData(SqlHandle, 9);
+		m_zoneType = (ZONETYPE)Sql_GetUIntData(SqlHandle, 10);
 
-        if (Sql_GetData(SqlHandle,10) != NULL) // сейчас нельзя использовать bcnmid, т.к. они начинаются с нуля
+        if (Sql_GetData(SqlHandle,11) != NULL) // now we can not use bcnmid, because they start from scratch
         {
             m_InstanceHandler = new CInstanceHandler(m_zoneID);
-      }
+	    }
         if (m_miscMask & MISC_TREASURE)
-    {
+		{
             m_TreasurePool = new CTreasurePool(TREASUREPOOL_ZONE);
-    }
+		}
     }
     else
     {
@@ -503,7 +529,8 @@ void CZone::LoadPlayerZoneSettings(CCharEntity* PChar)
 	 static const int8* Query =
         "SELECT "
           "zone.name,"
-          "zone.zoneip,"
+          "zone.lanip,"
+		  "zone.wanip,"
           "zone.zoneport,"
           "zone.music,"
           "zone.battlesolo,"
@@ -525,25 +552,26 @@ void CZone::LoadPlayerZoneSettings(CCharEntity* PChar)
     {
         m_zoneName.insert(0, Sql_GetData(SqlHandle,0));
 
-    m_zoneIP   = inaddr.S_un.S_addr;
-    m_zonePort = (uint16)Sql_GetUIntData(SqlHandle,2);
-    m_zoneMusic.m_song   = (uint8)Sql_GetUIntData(SqlHandle,3);   // background music
-    m_zoneMusic.m_bSongS = (uint8)Sql_GetUIntData(SqlHandle,4);   // solo battle music
-    m_zoneMusic.m_bSongM = (uint8)Sql_GetUIntData(SqlHandle,5);   // party battle music
-    m_tax = (uint16)(Sql_GetFloatData(SqlHandle,6) * 100);      // tax for bazaar
-    m_miscMask = (uint16)Sql_GetUIntData(SqlHandle,7);
-    m_useNavMesh = (bool)Sql_GetIntData(SqlHandle,8);
+		m_zoneLANIP   = inaddr.S_un.S_addr;
+		m_zoneWANIP   = inaddr.S_un.S_addr;
+		m_zonePort = (uint16)Sql_GetUIntData(SqlHandle,3);
+		m_zoneMusic.m_song   = (uint8)Sql_GetUIntData(SqlHandle,4);		// background music
+		m_zoneMusic.m_bSongS = (uint8)Sql_GetUIntData(SqlHandle,5);		// solo battle music
+		m_zoneMusic.m_bSongM = (uint8)Sql_GetUIntData(SqlHandle,6);		// party battle music
+		m_tax = (uint16)(Sql_GetFloatData(SqlHandle,7) * 100);			// tax for bazaar
+		m_miscMask = (uint16)Sql_GetUIntData(SqlHandle,8);
+		m_useNavMesh = (bool)Sql_GetIntData(SqlHandle,9);
 
-    m_zoneType = (ZONETYPE)Sql_GetUIntData(SqlHandle, 9);
+		m_zoneType = (ZONETYPE)Sql_GetUIntData(SqlHandle, 10);
 
-        if (Sql_GetData(SqlHandle,10) != NULL) // сейчас нельзя использовать bcnmid, т.к. они начинаются с нуля
+        if (Sql_GetData(SqlHandle,11) != NULL) // now we can not use bcnmid, because they start from scratch
         {
             m_InstanceHandler = new CInstanceHandler(m_zoneID);
-      }
+	    }
         if (m_miscMask & MISC_TREASURE)
-    {
+		{
             m_TreasurePool = new CTreasurePool(TREASUREPOOL_ZONE);
-    }
+		}
     }
     else
     {
@@ -1025,24 +1053,28 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 	                {
 						
 				   targid =  Sql_GetUIntData(SqlHandle,0);
-				  // ShowMessage("MAX TARGETID NEW COUNT %u \n" CL_RESET,targid);
+				  
 				 
                PChar->targid = targid;
-
+			   ShowMessage("%s targid = %u \n" CL_RESET,PChar->GetName(), PChar->targid);
     for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 	{
         if (PChar->targid != it->first)
         {
-			PChar->targid = 1024;
-			//ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid);
+			PChar->targid++;
+			ShowMessage("IS NOT IT FRIST %s targid = %u \n" CL_RESET,PChar->GetName(), PChar->targid);
 			const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
-            Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
+            Sql_Query(SqlHandle,fmtQuery,PChar->targid,PChar->id);
             break;
         }
+		else
+		{
         PChar->targid++;
+		ShowMessage("ELSE IT SECOND %s targid = %u \n" CL_RESET,PChar->GetName(), PChar->targid);
 		//ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid++);
 		const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
         Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
+		}
     }
     if (PChar->targid >= 0x700)
     {

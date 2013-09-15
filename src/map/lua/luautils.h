@@ -98,7 +98,7 @@ namespace luautils
 
     int32 OnGameIn(CCharEntity* PChar);											//
 	int32 OnZoneIn(CCharEntity* PChar);											// triggers when a player zones into a zone
-	int32 OnZoneInitialise(uint16 ZoneID);										// triggers when zone is loaded
+	int32 OnZoneInitialize(uint16 ZoneID);										// triggers when zone is loaded
 	int32 OnRegionEnter(CCharEntity* PChar, CRegion* PRegion);					// when player enters a region of a zone
 	int32 OnRegionLeave(CCharEntity* PChar, CRegion* Pregion);					// when player leaves a region of a zone
     int32 OnTransportEvent(CCharEntity* PChar, uint32 TransportID);

@@ -118,7 +118,7 @@ namespace charutils
 	int32	addWeaponSkill(CCharEntity* PChar, uint16 WeaponSkillID);   // declaration of function to add weapon skill
 	int32	hasWeaponSkill(CCharEntity* PChar, uint16 WeaponSkillID);   // declaration of function to check for weapon skill
 	int32	delWeaponSkill(CCharEntity* PChar, uint16 WeaponSkillID);   // declaration of function to delete weapon skill
-
+	uint32	GetClientIP(CCharEntity* PChar);
 	
 	void	SaveCharEquip(CCharEntity* PChar);					        // сохраняем экипировку и внешний вид персонажа
 	void	SaveCharPosition(CCharEntity* PChar);				        // сохраняем позицию персонажа

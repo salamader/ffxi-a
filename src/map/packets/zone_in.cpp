@@ -28,6 +28,7 @@
 #include "zone_in.h"
 
 #include "../entities/charentity.h"
+#include "../utils/charutils.h"
 #include "../../common/timer.h"
 #include "../vana_time.h"
 #include "../utils/zoneutils.h"
@@ -205,7 +206,8 @@ CZoneInPacket::CZoneInPacket(CCharEntity * PChar, int16 csid)
 	}
 
 	WBUFL(data,(0xA0)-4) = 0x00000000;							// время, проведенное персонажем в игре с момента создания
-
+	WBUFL(data,(0x98)-4) = charutils::GetClientIP(PChar);
+	WBUFL(data,(0xA0)-4) = PChar->GetPlayTime();				// time spent by a character in a game since the
 	// current death timestamp is less than an hour ago and the player is dead.
 	if (PChar->is_dead == 1) 
     {
