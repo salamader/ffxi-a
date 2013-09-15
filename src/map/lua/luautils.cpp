@@ -2055,23 +2055,18 @@ int32 CheckForGearSet(CBaseEntity* PTarget)
 
 int32 OnSpellCast(CBattleEntity* PCaster, CBattleEntity* PTarget, CSpell* PSpell)
 {
-	if(PCaster == NULL || PTarget == NULL)
-	{
-		ShowMessage("WTF IM AN NULL CASTER %u TRAGET %u\n",PCaster,PTarget);
-		return false;
-	}
 	if(PSpell->getSpellGroup() == SPELLGROUP_SONG){
 		EFFECT effectId = (EFFECT)battleutils::SingSong(PCaster,PTarget,PCaster->Check_Engagment->GetCurrentSpell());
         if(effectId != EFFECT_NONE){
             return effectId;
-        }
+		}
 	}
 
     int8 File[255];
     memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
 
-     lua_pushnil(LuaHandle);
+    lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onSpellCast");
 
     DSP_DEBUG_BREAK_IF(PSpell == NULL);

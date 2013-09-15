@@ -819,6 +819,8 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 	{
 		
     ShowDebug("THE ZONE %u is not this %u %s .\n",PChar->loc.zone, this,PChar->GetName());
+	
+	
 	return;
 	//PChar->loc.zone = this;
 	}
@@ -1033,14 +1035,14 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
         {
 			PChar->targid++;
 			//ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid);
-			const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
-            Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
+			//const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
+           // Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
             break;
         }
         PChar->targid++;
 		//ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid++);
-		const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
-        Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
+		//const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
+        //Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
     }
     if (PChar->targid >= 0x700)
     {
@@ -1281,7 +1283,7 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 {
 	if(!m_charList.size() != NULL)
 	{
-		ShowDebug(CL_RED"IS THE PLAYER LIST SIZE NULL??\n"CL_RESET);
+		//ShowDebug(CL_RED"IS THE PLAYER LIST SIZE NULL??\n"CL_RESET);
 		return;
 	}
 	for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
@@ -1755,36 +1757,52 @@ void CZone::ZoneServer(uint32 tick)
 	{
 		CMobEntity* PMob = (CMobEntity*)it->second;
 
-		if(!m_charList.empty())
-    {
-
-
-		for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
+		if(!m_charList.size() !=NULL)
         {
-        CCharEntity* PChar = (CCharEntity*)it->second;
-		}
-	}
+
+
+		//ShowMessage("THE CHAR LIST IS EMPTY MOB\n");
+	    }
+		else
+		{
 		
 		PMob->StatusEffectContainer->CheckEffects(tick);
 		PMob->Check_Engagment->CheckCurrentAction(tick);
 		PMob->StatusEffectContainer->CheckRegen(tick);
+		}
 		
 	}
 
   for (EntityList_t::const_iterator it = m_npcList.begin(); it != m_npcList.end() ; ++it)
   {
     CNpcEntity* PNpc = (CNpcEntity*)it->second;
+	if(!m_charList.size() !=NULL)
+        {
 
-    if(PNpc->Check_Engagment != NULL)//EVEN THOUGH THIS IS NOT ALWASY A BATTEL ITS MOT OF THE FACT OF IS ENGAGED WITH
+
+		//ShowMessage("THE CHAR LIST IS EMPTY NPC\n");
+	    }
+		else
+		{
+    if(PNpc->Check_Engagment != NULL)
     {
       PNpc->Check_Engagment->CheckCurrentAction(tick);
     }
+	}
   }
 
 	EntityList_t::const_iterator pit = m_petList.begin();
 	while(pit != m_petList.end())
 	{
 		CPetEntity* PPet = (CPetEntity*)pit->second;
+		if(!m_charList.size() !=NULL)
+        {
+
+
+		//ShowMessage("THE CHAR LIST IS EMPTY PET\n");
+	    }
+		else
+		{
 		PPet->StatusEffectContainer->CheckEffects(tick);
 		PPet->Check_Engagment->CheckCurrentAction(tick);
 		PPet->StatusEffectContainer->CheckRegen(tick);
@@ -1793,6 +1811,7 @@ void CZone::ZoneServer(uint32 tick)
 		}
 		else{
 			++pit;
+		}
 		}
 	}
 

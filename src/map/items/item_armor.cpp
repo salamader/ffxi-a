@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ CItemArmor::CItemArmor(uint16 id) : CItemUsable(id)
 
 CItemArmor::~CItemArmor()
 {
-	// ни в коем случае не освобождать здесь указатели на модификатоты и спецеффекты. они глобальны.
+	// In any case not to release here pointers to modifiers and special effects they are global.
 }
 
 uint16 CItemArmor::getModelId()
@@ -117,7 +117,7 @@ uint8 CItemArmor::getSlotType()
 
 /************************************************************************
 *																		*
-*  Процент урона, блокируемого щитом                                    *
+*  Percentage of damage, blockable shield                               *
 *																		*
 ************************************************************************/
 
@@ -128,7 +128,7 @@ uint8 CItemArmor::getShieldAbsorption()
 
 /************************************************************************
 *																		*
-*  Проверяем, является ли проедмет щитом                                *
+*  Check whether the subject of a shield                                *
 *																		*
 ************************************************************************/
 
@@ -139,11 +139,11 @@ bool CItemArmor::IsShield()
 
 /************************************************************************
 *																		*
-*  Проверяем необходимость выполнения скрипта для экипировки при		*
-*  возникновении какого-либо из событий (экипировка, смена зоны и т.п.)	*
+*  The need to check the script for the equipment at occurrence of any 	*
+*  of the events (equipment, change of zone, etc.) 						*
 *																		*
-*  Функция возвращает типы событий на которые предмет реагирует, что	*
-*  избавляет нас от необходимости проверять	предмет во всех событиях	*
+*  It returns the types of events to which the subject responds that 	*
+*  Saves us from having to check the subject in all events				*
 *																		*
 ************************************************************************/
 
@@ -159,7 +159,7 @@ void CItemArmor::setScriptType(uint16 ScriptType)
 
 /************************************************************************
 *                                                                       *
-*  Добавляем модификатор к предмету                                     *
+*  Add a modifier to the subject	                                    *
 *                                                                       *
 ************************************************************************/
 
@@ -247,8 +247,8 @@ void CItemArmor::setAugment(uint8 slot, uint16 type, uint8 value)
 
 void CItemArmor::SetAugmentMod(uint16 type, uint8 value)
 {
-    // TODO: если augmenttype совпадает с modtype, то мы може установить значение сразу,
-    //       либо придется использовать дополнительную логику
+    // TODO: if augmenttype coincides with modtype, then we can set right,
+    //       or have to use additional logic
 
     if (type != 0) 
     {

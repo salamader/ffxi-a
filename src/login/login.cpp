@@ -138,20 +138,26 @@ while(it != login_sd_list.end())
 {
 	uint32 on_map = 0; /// 0 means no they are not on the map and 1 say they are on map
 	uint32 map_time = 0;
-	ShowMessage("LOBBY_TIME %u LOGIN LIST %u\n",lobby_time,(*it)->accid);
-	const char * Query = "SELECT map_time,on_map FROM accounts WHERE id= '%u';";
+	uint32 online = 0;
+	//ShowMessage("LOBBY_TIME %u LOGIN LIST %u\n",lobby_time,(*it)->accid);
+	const char * Query = "SELECT map_time,on_map,online FROM accounts WHERE id= '%u';";
 	           int32 ret3 = Sql_Query(SqlHandle,Query,(*it)->accid);
 			   if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)//START DATABASE SELECTION
 	            {
 				map_time =  Sql_GetUIntData(SqlHandle,0);
 				on_map =  Sql_GetUIntData(SqlHandle,1);
-				ShowMessage("LOBBY_TIME %u MAP_TIME %u\n",lobby_time,map_time);
+				online =  Sql_GetUIntData(SqlHandle,2);
+				//ShowMessage("LOBBY_TIME %u MAP_TIME %u\n",lobby_time,map_time);
 				//const char* Query = "UPDATE accounts SET  lobby_time = '%u' WHERE id = %u";
                 //Sql_Query(SqlHandle,Query,lobby_time,(*it)->accid);
+				if(online == 0)
+				{
+                // ShowMessage("ONLINE STATUS MIGHT NEED LOGOUT_CORRECT %u\n",online);
+				}
 				if(on_map == 1)
 				{
 					//lobby_session  accounts_sessions accid
-                ShowMessage("THIS PLAYER IS ON MAP SO LETS COUNT OUT TARGET %u\n",it);
+               // ShowMessage("THIS PLAYER IS ON MAP SO LETS COUNT OUT TARGET %u\n",it);
 				/*
 				orderby lobby session list and update targetid by 1 for each user.
 				const char* Query = "UPDATE accounts_sessions SET lobby_session ='%u' WHERE accid = %u";
@@ -192,23 +198,23 @@ while(it != login_sd_list.end())
 					
 				{ 
 					map_time = lobby_time -7;
-					ShowMessage("MAP_TIME %u IS LESS THEN LOBBY COUNTER\n",map_time);
+					//ShowMessage("MAP_TIME %u IS LESS THEN LOBBY COUNTER\n",map_time);
                  const char* Query = "UPDATE accounts SET map_time ='%u' WHERE id = %u";
                 Sql_Query(SqlHandle,Query,map_time ,(*it)->accid);
 				}
 				if(lobby_time==map_time)
 				{
-                ShowMessage("LOBBY_TIME %u == MAP_TIME %u\n",lobby_time,map_time);
+               // ShowMessage("LOBBY_TIME %u == MAP_TIME %u\n",lobby_time,map_time);
 				//OK PLAYER IS FULLY LOGIN LETS UPDATE THE ACCOUTNS TABLE TO SAY ON MAP
 				if(on_map == 1)
 				{
 				//lobby_time +=2;	
-                ShowMessage("on_map %u\n",on_map);
+                ShowMessage("CLEAN UP PLAYER LEFT ON MAP SERVER NOW %u\n",on_map);
 				const char* Query = "UPDATE accounts SET online ='0',on_map ='0' WHERE id = %u";
                 Sql_Query(SqlHandle,Query,(*it)->accid);
 				  Query = "UPDATE chars SET online = '0',shutdown='1' WHERE accid = %u";
                 Sql_Query(SqlHandle,Query,(*it)->accid);
-				
+				ShowMessage("ERRASE THE ACCOUNT FROM LOBBY SERVER NOW %u\n",(*it)->accid);
 				
 				}
 				return false;

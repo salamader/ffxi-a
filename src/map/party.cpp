@@ -298,7 +298,7 @@ void CParty::AddMember(CBattleEntity* PEntity)
             //charutils::SaveCharStats(PChar);
 
 		    PChar->status = STATUS_UPDATE;
-		  // PChar->pushPacket(new CMenuConfigPacket(PChar));
+		    PChar->pushPacket(new CMenuConfigPacket(PChar));
 		    PChar->pushPacket(new CCharUpdatePacket(PChar));
 		    PChar->pushPacket(new CCharSyncPacket(PChar));
 	    }

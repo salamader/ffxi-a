@@ -239,7 +239,7 @@ void CTransportHandler::TransportTimer()
             // корабль причалил, открываем двери пассажирам
             else if (ShipTimerOffset == PTransport->TimeAnimationArrive)
             {
-                PTransport->PDoorNPC->animation = ANIMATION_OPEN_DOOR;
+                PTransport->PDoorNPC->animation = ANIMATION_CLOSE_DOOR;
                 PTransport->Dock.zone->PushPacket(PTransport->PDoorNPC, CHAR_INZONE, new CEntityUpdatePacket(PTransport->PDoorNPC, ENTITY_UPDATE)); 
 				PTransport->Dock.zone->PushPacket(PTransport->PDoorNPC, CHAR_INRANGE, new CEntityUpdatePacket(PTransport->PDoorNPC, ENTITY_UPDATE)); 
 				//PTransport->Dock.zone->PushPacket(PTransport->PDoorNPC, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PTransport->PDoorNPC, ENTITY_UPDATE)); 
@@ -247,7 +247,7 @@ void CTransportHandler::TransportTimer()
             //корабль отчаливает
             else if (ShipTimerOffset == PTransport->TimeAnimationArrive + PTransport->TimeWaiting)
             {
-                PTransport->PDoorNPC->animation = ANIMATION_CLOSE_DOOR;
+                PTransport->PDoorNPC->animation = ANIMATION_OPEN_DOOR;
                 PTransport->PTransportNPC->animation = PTransport->AnimationDepart;
                 PTransport->PTransportNPC->loc.boundary = PTransport->Dock.boundary;
 

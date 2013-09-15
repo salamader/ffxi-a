@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 #include "../../common/cbasetypes.h"
 #include "../../common/mmo.h"
 
-// основной тип предмета m_type
+// basic type of object m_type
 
 enum ITEM_TYPE
 {
@@ -42,7 +42,7 @@ enum ITEM_TYPE
 	ITEM_LINKSHELL			= 0x80
 };
 
-// дополнительный тип предмета m_subtype
+// additional type of object m_subtype
 
 enum ITEM_SUBTYPE
 {
@@ -53,7 +53,7 @@ enum ITEM_SUBTYPE
 	ITEM_UNLOCKED			= 0xFE
 };
 
-// флаги предметов
+// items flags
 
 enum ITEM_FLAG
 {
@@ -134,17 +134,17 @@ private:
 	uint16		m_subid;
 	uint8		m_type;
 	uint8		m_subtype;
-	uint32		m_quantity;     // текущее количество предметов
-    uint32      m_reserve;      // зарезервированное количество предметов
-	uint32		m_stackSize;    // максимальное количество предметов
+	uint32		m_quantity;     // the current number of items
+    uint32      m_reserve;      // the number of reserved items
+	uint32		m_stackSize;    // the maximum number of items
 	uint32		m_BasePrice;    
-	uint32		m_CharPrice;    // стоимость предмета в bazaar
-	uint8		m_ahCat;        // категоряи предмета на укционе
+	uint32		m_CharPrice;    // value of the object in bazaar
+	uint8		m_ahCat;        // Subject category at auction
 	uint16		m_flag;
 	uint8		m_wornItem;		// worn item (BCNM item, maat testimony)
 
-	uint8		m_slotID;       // ячейка предмета в хранилище
-	uint8		m_locationID;   // номер хранилища предмета
+	uint8		m_slotID;       // Box object in the repository
+	uint8		m_locationID;   // object storage room
 
     bool        m_sent;
 

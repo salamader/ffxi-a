@@ -556,10 +556,17 @@ inline int32 CLuaBaseEntity::getRace(lua_State *L)
 *                                                                       *
 ************************************************************************/
 
-inline int32 CLuaBaseEntity::setPos(lua_State *L)
+inline int32 CLuaBaseEntity::AirShips(lua_State *L)
 {
-	ShowMessage("LUA CALLING SETPOS FOR PLAYER\n");
-	/*DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
+	ShowMessage("PLAYER IS ON A AIRSHIP\n");
+
+	//FROM 
+	//TO
+	//GET PLAYERS LAST POS
+	//SET IS IN EVENT
+	//SET PLAYERS NEW DESTINATION
+	//ALSO TO DO KNOW WHERE AT ALL TIMES THE AIR SHIPS ARE
+	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
 
     if( m_PBaseEntity->objtype != TYPE_PC)
     {
@@ -618,7 +625,7 @@ inline int32 CLuaBaseEntity::setPos(lua_State *L)
     else
     {
         m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_SPAWN));
-    }*/
+    }
 	return 0;
 }
 
@@ -10458,7 +10465,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,isZoneVisited),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,getWeather),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,setWeather),
-    LUNAR_DECLARE_METHOD(CLuaBaseEntity,setPos),
+    LUNAR_DECLARE_METHOD(CLuaBaseEntity,AirShips),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getPos),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,getRace),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,getNation),
