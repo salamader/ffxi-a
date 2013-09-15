@@ -1192,7 +1192,7 @@ void CAICharNormal::ActionMagicStart()
     if(m_PSpell == NULL)
 	{
 		ShowDebug("Spell ID %u IS NULL\n",m_PSpell);
-		  MagicStartError();
+		MagicStartError();
 		return;
 	}
 	DSP_DEBUG_BREAK_IF(m_ActionTargetID == 0);
