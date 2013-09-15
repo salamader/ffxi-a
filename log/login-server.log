@@ -1,3 +1,0 @@
-[1;32m[Status][0m Memory manager initialised: [1;37mlog/DSP.leaks[0m
-[1;37m[Info][0m DarkStar - onetimexi - SVN Revision: [1;37mUnknown[0m.
-[20/Aug 11:13][1;31m[Error][0m make_listen_bind: bind failed (socket #1, code 10048)!
