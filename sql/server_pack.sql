@@ -15,7 +15,7 @@ CREATE TABLE `server_message` (
   `server_message` varchar(80) CHARACTER SET utf8 NOT NULL DEFAULT 'Welcome To FFXI-A Alpha Development Server!',
   `id` int(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`server_message`,`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for server_variables
