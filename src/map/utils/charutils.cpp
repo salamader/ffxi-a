@@ -4196,7 +4196,11 @@ void SaveCharExp(CCharEntity* PChar, JOBTYPE job)
 
 void SaveCharSkills(CCharEntity* PChar, uint8 SkillID)
 {
-	DSP_DEBUG_BREAK_IF(SkillID >= MAX_SKILLTYPE);
+	if(SkillID >= MAX_SKILLTYPE)
+	{
+		ShowDebug("SkillID IS NULL %u\n",SkillID);
+		return;
+	}
 
 	const int8* Query =
         "INSERT INTO char_skills "

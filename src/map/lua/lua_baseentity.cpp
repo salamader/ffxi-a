@@ -10399,16 +10399,18 @@ inline int32 CLuaBaseEntity::add_All_Weaponskils(lua_State *L)
 
 	//TODO MAKE A NEW SYSTEM FOR THIS USING DATABASE
 	//FOR EACH JOB CLASS THAT HAVE SPELLS EXAMPLE
-	//blu_spells whm_spells blm_spells and so on.
-	if(m_PBaseEntity == NULL){return false;}
+	//blu_weapon whm_weapon blm_weapon and so on.
+ /*	if(m_PBaseEntity == NULL){return false;}
 	if(m_PBaseEntity->objtype != TYPE_PC){return false;}
 
     CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	
+		
 	char buf[110];
 	int32 spellid = 0;
-			  
+	uint8 type = 0; 		  
    string_t name ="none";
-   const char *pfmtQuery =  "SELECT weaponskillid,name FROM weapon_skills WHERE learnall = '1' ORDER BY id ASC LIMIT 255;";
+   const char *pfmtQuery =  "SELECT weaponskillid,name,type FROM weapon_skills WHERE learnall = '1' ORDER BY id ASC LIMIT 255;";
 
 				int32 ret =  Sql_Query(SqlHandle,pfmtQuery);
 				if( ret == SQL_ERROR )
@@ -10423,33 +10425,18 @@ inline int32 CLuaBaseEntity::add_All_Weaponskils(lua_State *L)
 				while(Sql_NextRow(SqlHandle) != SQL_NO_DATA) 
 				{
 					spellid    = Sql_GetIntData(SqlHandle,0);
-					
 					name    = Sql_GetData(SqlHandle,1);
-					charutils::addSpell(PChar, i);
+					type    = Sql_GetIntData(SqlHandle,2);
 					sprintf(buf,"Learned New WeaponSkill: ID: %u NAME: %s",spellid , name.c_str() );
 	                PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
-					charutils::BuildingCharAbilityTable(PChar);
-	charutils::BuildingCharWeaponSkills(PChar);
-	PChar->pushPacket(new CCharSkillsPacket(PChar));
-	PChar->pushPacket(new CCharAbilitiesPacket(PChar));
-					i++;
-				}
-				
-	//uint16 elements = sizeof ValidSpells / sizeof ValidSpells[0];
+					
+					
+	
 
-		// for(uint16 i = 1; i < elements; ++i)
-		// {
-			//if ()
-			//{
-				//charutils::SaveSpells(PChar);
-			//}
-		// }
-    
-    //PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 23));
+					i++;
+				}*/
+				
 	
-	
-        //sprintf(buf,"Adding All Spells");
-	    //PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	return 0;
 }
 inline int32 CLuaBaseEntity::set_Gil(lua_State *L)

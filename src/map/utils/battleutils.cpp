@@ -354,9 +354,15 @@ CWeaponSkill* GetWeaponSkill(uint16 WSkillID)
 
 std::list<CWeaponSkill*> GetWeaponSkills(uint8 skill)
 {
-    DSP_DEBUG_BREAK_IF(skill >= MAX_SKILLTYPE);
+    if(skill >= MAX_SKILLTYPE)
+	{
+     ShowDebug("WEAPONSKILLS MISSING %u\n",skill);
+	}
+	
 
 	return g_PWeaponSkillsList[skill];
+	
+	
 }
 
 /************************************************************************
