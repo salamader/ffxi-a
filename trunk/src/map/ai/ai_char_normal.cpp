@@ -618,7 +618,7 @@ void CAICharNormal::ActionItemFinish()
 
 	if ((m_Tick - m_LastActionTime) >= m_PItemUsable->getAnimationTime())
 	{
-        if(battleutils::IsParalised(m_PChar)){
+        if(battleutils::IsParalyzed(m_PChar)){
             m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_IS_PARALYZED));
         } else {
 
@@ -1487,7 +1487,7 @@ void CAICharNormal::ActionJobAbilityFinish()
     }
 
     // check paralysis
-    if(battleutils::IsParalised(m_PChar)){
+    if(battleutils::IsParalyzed(m_PChar)){
         // display paralyzed
         m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_IS_PARALYZED));
     } else {
@@ -2756,7 +2756,7 @@ void CAICharNormal::ActionAttack()
 			return;
 		}
 		m_LastMeleeTime = m_Tick;
-		if (battleutils::IsParalised(m_PChar))
+		if (battleutils::IsParalyzed(m_PChar))
 		{
 			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleTarget,0,0,MSGBASIC_IS_PARALYZED));
 		}

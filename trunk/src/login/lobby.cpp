@@ -334,14 +334,14 @@ int32 lobbydata_parse(int32 fd)
               inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
               }
 
-            const char *fmtQuery = "SELECT zoneid FROM zone_settings , chars  WHERE zoneid = pos_zone AND charid = %u;";
+            const char *fmtQuery = "SELECT zone FROM zonesystem , chars  WHERE zone = pos_zone AND charid = %u;";
             uint32 ZoneIP   = inaddr.S_un.S_addr;//sd->servip;
             uint16 ZonePort = 54230;
 
             if( Sql_Query(SqlHandle,fmtQuery,charid) != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 )
             {
              Sql_NextRow(SqlHandle);
-             if (Sql_GetIntData(SqlHandle,0) == 0)
+             if (Sql_GetIntData(SqlHandle,0) == 0||Sql_GetIntData(SqlHandle,0) == 30)
 				{
 				key3[16] += 6;
 			    }
@@ -421,14 +421,14 @@ int32 lobbydata_parse(int32 fd)
               inaddr.S_un.S_addr = *((unsigned long*) phostent->h_addr);
               }
 
-            const char *fmtQuery = "SELECT zoneid FROM zone_settings , chars  WHERE zoneid = pos_zone AND charid = %u;";
+            const char *fmtQuery = "SELECT zone FROM zonesystem , chars  WHERE zone = pos_zone AND charid = %u;";
             uint32 ZoneIP   = inaddr.S_un.S_addr;//sd->servip;
             uint16 ZonePort = 54230;
 
             if( Sql_Query(SqlHandle,fmtQuery,charid) != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 )
             {
              Sql_NextRow(SqlHandle);
-             if (Sql_GetIntData(SqlHandle,0) == 0)
+             if (Sql_GetIntData(SqlHandle,0) == 0 || Sql_GetIntData(SqlHandle,0) == 30)
 				{
 				key3[16] += 6;
 			    }

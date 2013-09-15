@@ -69,13 +69,13 @@ struct map_config_t
 	const int8 *mysql_password;		// mysql pass     -> default NULL
 	const int8 *mysql_database;		// mysql database -> default dspdb
 
-    const int8 *server_message;     // сообщение сервера
+    const int8 *server_message;     // find out why
 	const int8 *fr_server_message;  // Message for french client
 
 	uint32 max_time_lastupdate;		// max interval wait of last update player char
-    int32  vanadiel_time_offset;    // смещение игрового времени относительно реального времени
-    int32  lightluggage_block;      // если значение отлично от нуля, то персонажи с lightluggage будут удаляться с сервера автоматически
-    float  exp_rate;                // множитель получаемого опыта
+    int32  vanadiel_time_offset;    //displacement of playing time on the real-time
+    int32  lightluggage_block;      //if the value is non-zero, then the characters with lightluggage will be deleted from the server automatically
+    float  exp_rate;                // multiplier experience
 	float  exp_loss_rate;			// same as exp rate but applies when player dies
 	uint8  thf_in_party_for_drops;	// if 1 thf has to be in party for drops and within exp distance from mob
 	uint8  exp_party_gap_penalties;	// if 1 Party Gap Penalties will apply
@@ -89,6 +89,24 @@ struct map_config_t
 	float  mob_tp_multiplier;		// Multiplies the amount of TP mobs gain on any effect that would grant TP
 	float  player_tp_multiplier;	// Multiplies the amount of TP players gain on any effect that would grant TP
     uint8  newstyle_skillups;       // Allows failed parries and blocks to trigger skill up chance.
+	float  engage_dist_mod;			// Default is 1. Multiplies the distance that you can engage a target. Change to 3 for 3x the distance.
+	float  magic_dist_mod;			// Default is 1. Multiplies the distance that you can cast magic on a target. Change to 3 for 3x the distance.
+	float  ranged_dist_mod;			// Default is 1. Multiplies the distance that you can used ranged attack on a target. Change to 3 for 3x the distance.
+	int8   remove_engage_delay;		// Default is 0. This removes the engegement delay that happens just after killing a target, or after equipping a weapon.
+	float  magic_movement;			// Default is 0. Allows movement while magic casting.
+	int16  seal_crest_bonus;		// Increases chance of exp mobs dropping seals or crests. Set from 0 - 60.
+	int8   always_seal_crest;		// Allows non exp beastman mobs to drop seals and crests. Default is 0. Set to 1 for non exp beastman mobs to drop seals and crests.
+	int8   drop_rate_bonus;			// Adds to the drop rate percentate. Set to 20 to add additional %20 drop rate on all drops.
+	int8   all_mobs_drop_gil;		// Set to 1 to allow all mobs to drop gil. Currently does not display ingame messages for these gil drops. Default is 0. 
+	int16  gil_bonus;				// Multiplies the amount of gil dropped
+	int8   chain_on_easy;			// Allows exp chain on any exp mob
+	int8   chain_bonus;				// Increases the time frame allowed to get an exp chain. Default is 1.
+	int8   craft_skill_onfail;		// Allows same skillup on chance for failures as crafting successes have. Default is 0.
+	int8   craft_skillamt;			// Increases the chance of getting larger skillups while crafting. Set 0 to 100. Default 0.
+	int8   conquest_bonus;			// Multiplies the amount of conquest points earned on an exp mob kill. Default is 1
+	int16  craft_success;			// Increases the chance of succeding at crafting. Default 1.
+	float  notorious_hp_mod;		// Multiplier to NM HP.
+	float  notorious_mp_mod;		// Multiplier to NM HP.
 	uint8  max_merit_points;		// global variable, amount of merit points players are allowed
 	bool   audit_chat;
 };

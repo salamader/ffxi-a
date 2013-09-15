@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ void CItemWeapon::resetDelay()
 
 /************************************************************************
 *                                                                       *
-*  Оружие для атаки с дистанции (Range)                                 *
+*  Weapons to attack from a distance (Range)                            *
 *                                                                       *
 ************************************************************************/
 
@@ -75,7 +75,7 @@ bool CItemWeapon::isRanged()
 
 /************************************************************************
 *                                                                       *
-*  Двуручное оружие                                                     *
+*  Two-Handed Weapon                                                    *
 *                                                                       *
 ************************************************************************/
 
@@ -101,7 +101,7 @@ bool CItemWeapon::isUnlockable()
 
 /************************************************************************
 *                                                                       *
-*   Устанавливаем тип оружия и флаг isTwoHanded                         *
+*   Set the type of weapon and the flag isTwoHanded                     *
 *                                                                       *
 ************************************************************************/
 
@@ -150,9 +150,9 @@ uint8 CItemWeapon::getSubSkillType()
 
 /************************************************************************
 *																		*
-*  Устанавливаем время задержки оружия. Сразу переводим значение в млс.	*
-*  Все математические операции происходят с целыми числами, именно по	*
-*  этому порядок действий очень важен, чтобы не потерять часть данных.	*
+*  Set the time delay weapons. Immediately translate the value in the 	*
+*  MLS. All mathematical operations are on integers, it is for this 	*
+*  procedure is very important not to lose the data.					*
 *																		*
 ************************************************************************/
 
@@ -228,7 +228,7 @@ uint16 CItemWeapon::getDmgType()
 
 /************************************************************************
 *                                                                       *
-*  Дополнительный урон от оружия (fire, water и т.д.)                   *
+*  Additional weapon damage (fire, water, etc.)			                *
 *                                                                       *
 ************************************************************************/
 
@@ -256,7 +256,7 @@ void CItemWeapon::setUnlockable(uint16 unlockId)
 
 /************************************************************************
 *                                                                       *
-*  Максимально возможное количество ударов оружием                      *
+*  The maximum number of weapon attacks				                    *
 *                                                                       *
 ************************************************************************/
 
@@ -267,7 +267,7 @@ void CItemWeapon::setMaxHit(uint8 hit)
 
 /************************************************************************
 *                                                                       *
-*  Рассчет количества ударов                                            *
+*  Calculating the number of hits                                       *
 *                                                                       *
 ************************************************************************/
 
@@ -333,7 +333,7 @@ uint8 CItemWeapon::getHitCount(uint8 checkMobHits)
 		    else{ num+=7; break; }
             break;
 	}
-    return dsp_min(num,8); // не более восьми ударов за одну атаку
+    return dsp_min(num,8); // no more than eight times in one single attack
 }
 
 
@@ -341,6 +341,6 @@ uint8 CItemWeapon::getHitCount(uint8 checkMobHits)
 //Slashing = MOD_AXE, MOD_GREATAXE, MOD_GREATSWORD, MOD_SWORD, MOD_SCYTHE, MOD_KATANA, MOD_GREATKATANA
 //Piercing = MOD_DAGGER, MOD_POLEARM, MOD_ARCHERY, MOD_MARKSMANSHIP
 
-//Hand-to-Hand est un type de Blunt, qui est pourquoi MNK est efficace contre les Undead (Corse et Skeleton).
-//Je ne sais pas ce que vous entendez par Impact et Range? MOD_THROWING pourrait aller dans aucun d'eux parce qu'il ya différents types d'armes.
-//Par exemple, Boomerangs sont Blunt, Chakrams sont Slashing, et Shurikens sont Piercing.
+// Hand-to-Hand is a type of Blunt, which is why MNK is effective against the Undead (Skeleton and Corsica).
+// I do not know what you mean by impact and Range? MOD_THROWING could go in any of them because there are different types of weapons.
+// For example, Boomerangs are Blunt, chakrams are slashing and piercing are Shurikens.

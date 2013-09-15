@@ -928,6 +928,78 @@ int32 map_config_read(const int8* cfgName)
 		{
 			map_config.buffer_size = atoi(w2);
 		}
+		else if (strcmp(w1,"engage_dist_mod") == 0)
+		{
+			map_config.engage_dist_mod = atoi(w2);
+		}
+		else if (strcmp(w1,"magic_dist_mod") == 0)
+		{
+			map_config.magic_dist_mod = atoi(w2);
+		}
+		else if (strcmp(w1,"ranged_dist_mod") == 0)
+		{
+			map_config.ranged_dist_mod = atoi(w2);
+		}
+		else if (strcmp(w1,"remove_engage_delay") == 0)
+		{
+			map_config.remove_engage_delay = atoi(w2);
+		}
+		else if (strcmp(w1,"magic_movement") == 0)
+		{
+			map_config.magic_movement = atoi(w2);
+		}	
+		else if (strcmp(w1,"seal_crest_bonus") == 0)
+		{
+			map_config.seal_crest_bonus = atoi(w2);
+		}
+		else if (strcmp(w1,"always_seal_crest") == 0)
+		{
+			map_config.always_seal_crest = atoi(w2);
+		}
+		else if (strcmp(w1,"drop_rate_bonus") == 0)
+		{
+			map_config.drop_rate_bonus = atoi(w2);
+		}
+		else if (strcmp(w1,"all_mobs_drop_gil") == 0)
+		{
+			map_config.all_mobs_drop_gil = atoi(w2);
+		}
+		else if (strcmp(w1,"gil_bonus") == 0)
+		{
+			map_config.gil_bonus = atoi(w2);
+		}
+		else if (strcmp(w1,"chain_on_easy") == 0)
+		{
+			map_config.chain_on_easy = atoi(w2);
+		}
+		else if (strcmp(w1,"chain_bonus") == 0)
+		{
+			map_config.chain_bonus = atoi(w2);
+		}		
+		else if (strcmp(w1,"craft_skill_onfail") == 0)
+		{
+			map_config.craft_skill_onfail = atoi(w2);
+		}
+		else if (strcmp(w1,"craft_skillamt") == 0)
+		{
+			map_config.craft_skillamt = atoi(w2);
+		}
+		else if (strcmp(w1,"conquest_bonus") == 0)
+		{
+			map_config.conquest_bonus = atoi(w2);
+		}
+		else if (strcmp(w1,"craft_success") == 0)
+		{
+			map_config.craft_success = atoi(w2);
+		}
+		else if (strcmp(w1,"notorious_hp_mod") == 0)
+		{
+			map_config.notorious_hp_mod = atoi(w2);
+		}
+		else if (strcmp(w1,"notorious_mp_mod") == 0)
+		{
+			map_config.notorious_mp_mod = atoi(w2);
+		}
 		else if (strcmp(w1,"max_time_lastupdate") == 0)
 		{
 			map_config.max_time_lastupdate = atoi(w2);
@@ -999,6 +1071,10 @@ int32 map_config_read(const int8* cfgName)
 		else if (strcmp(w1,"NETWORK_Servers_Address") == 0)
 		{
 			map_config.NETWORK_Servers_Address = aStrdup(w2);
+		}
+		else if (strcmp(w1,"mysql_host") == 0)
+		{
+			map_config.mysql_host = aStrdup(w2);
 		}
 		else if (strcmp(w1,"mysql_host") == 0)
 		{

@@ -447,14 +447,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 						
 					 // return;
 					  }//2
-		             // return;
-					  // ShowNotice(CL_RED"WE ARE AT FIRST LOGIN IN EVENT %u\n"CL_RESET,inevent);
-					  
-				     // ShowNotice(CL_RED"EVENT == %u\n"CL_RESET,inevent);
-					 // ShowNotice(CL_RED"EVENT NUMBER == %u\n"CL_RESET,eventid);
-					  //PChar->pushPacket(new CDownloadingDataPacket());
-                      //PChar->pushPacket(new CZoneInPacket(PChar,eventid)); 
-					  //PChar->pushPacket(new CZoneVisitedPacket(PChar));
+		            
 					  
 	                }
 			  firstlogin = true;
@@ -483,19 +476,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
         if(PChar->is_returning == 1)
 		{
-		/*const int8* fmtQuery = "UPDATE accounts_sessions SET session_key = x'%s', server_addr = %u, client_port = %u WHERE charid = %u";
- 
-
- 
-		Sql_Query(SqlHandle,fmtQuery,
- 
-			session_key,
- 
-            PChar->loc.zone->GetIP(),
- 
-			session->client_port,
- 
-			PChar->id);*/
+		
  
 
  
@@ -533,82 +514,21 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	else
  
 	{
- 
-        if (PChar->loc.zone != NULL)
- 
-        {
-			zoneutils::GetZone(PChar->loc.destination)->LoadPlayerZoneSettings(PChar);
+		
+			ShowWarning(CL_YELLOW"IS NOT ZONING AUTO FIX : %s\n" CL_RESET, PChar->GetName());
+			Query = "UPDATE chars \
+                            SET pos_prevzone = '%u',pos_zone = '%u'\
+							WHERE charid = %u;";
+                        Sql_Query(SqlHandle, Query,lastzone,lastzone, PChar->id);
 			
-			ShowWarning(CL_YELLOW"Client cannot receive packet or key is invalid: %s\n" CL_RESET, PChar->GetName());
-			ShowWarning(CL_YELLOW"Reset the players to his nations homepoint: %s\n" CL_RESET, PChar->GetName());
-			 /*if(PChar->profile.nation==0)
-					  {
-                     // ShowNotice(CL_RED"TRACER: SANDY %u\n" CL_RESET,PChar->profile.nation);
-					//  ShowNotice(CL_RED"TRACER: SANDY GETZONE %u\n" CL_RESET,PChar->getZone());
-					   
-						  //SANDY
-						  PChar->loc.p.x = -96;
-						  PChar->loc.p.y = -1;
-						  PChar->loc.p.z = -40;
-						  PChar->loc.p.rotation = 224;
-						  PChar->loc.destination = 230;
-						 
-
-						 Query = "UPDATE chars \
-                            SET pos_rot = '224', pos_x = '-96', pos_y = '-1', pos_z = '-40'  ,pos_prevzone = '230',pos_zone = '230'\
-							WHERE charid = %u;";
-                        Sql_Query(SqlHandle, Query, PChar->id);
-						
-                      // return;
-			           
-					  }
-					  if(PChar->profile.nation==1)
-					  {
-					 // ShowNotice(CL_RED"TRACER: BASTOCK %u\n" CL_RESET,PChar->profile.nation);
-					 // ShowNotice(CL_RED"TRACER: BASTOCK GETZONE %u\n" CL_RESET,PChar->getZone());
-					  
-						  //BASTOK
-						PChar->loc.p.x = -45;
-						  PChar->loc.p.y = -0;
-						  PChar->loc.p.z = 26;
-						  PChar->loc.p.rotation = 213;
-						  PChar->loc.destination = 234;
-						 
-						Query = "UPDATE chars \
-                            SET pos_rot = '213', pos_x = '-45', pos_y = '-0', pos_z = '25'  ,pos_prevzone = '234',pos_zone = '234'\
-							WHERE charid = %u;";
-                        Sql_Query(SqlHandle, Query, PChar->id);
-					
-					 // return;
-					  
-					  }
-					  if(PChar->profile.nation==2)
-					  {//2
-					 // ShowNotice(CL_RED"TRACER: WINDY %u\n" CL_RESET,PChar->profile.nation);
-					 // ShowNotice(CL_RED"TRACER: WINDY GETZONE %u\n" CL_RESET,PChar->getZone());
-					 
-						  //WINDY
-						  PChar->loc.p.x = -120;
-						  PChar->loc.p.y = -6;
-						  PChar->loc.p.z = 175;
-						  PChar->loc.p.rotation = 48;
-						  PChar->loc.destination = 240;
-						  
-						Query = "UPDATE chars \
-                            SET pos_rot = '48', pos_x = '-120', pos_y = '-6', pos_z = '175'  ,pos_prevzone = '240',pos_zone = '240'\
-							WHERE charid = %u;";
-                        Sql_Query(SqlHandle, Query, PChar->id);
-						
-					 // return;
-					  }//2
-					  */
-	
-    //I ZONED IN TO MOGHOUSE AND THIS IS WHAT HAPPENS THEN WHEN I LOGIN BACK IN IT SHOWED I WAS STILL ON MAP SO DO A FULL CLEAN UP IF THIS HAPPENS
-	                    //PChar->leavegame();
-						//PacketParser[0x00D](session, PChar, 0);
-	
-	
-        }
+			            //THIS ELSE NEEDS TO BE FIXED SOME ONE NEEDS TO DO THIS
+						//THERE IS A LIST OF BAD ZONES IN THE ZONE_SYSTEM TABLE IN THE DATABSE
+						//THIS ONLY GETS CALLED FROM THEM ZONES
+       
+		    
+		return;
+		
+        
  
 	}
  
@@ -787,6 +707,16 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 246\n"CL_RESET);
 		                   PChar->loc.p.rotation = 2;
 		                   }
+						   if(zone == 256)
+	                       {
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 256\n"CL_RESET);
+		                   PChar->loc.p.rotation = 213;
+		                   }
+						   if(zone == 257)
+	                       {
+		                   ShowMessage(CL_GREEN"EXITING MOG HOUSE 257\n"CL_RESET);
+		                   PChar->loc.p.rotation = 186;
+		                   }
 						 
 				  }
 				  ShowMessage(CL_GREEN"DOWNLOADING DATA \n"CL_RESET);
@@ -798,7 +728,8 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					  
 				  if(nation == 0 && zone == 48 || nation == 0 && zone == 50 || nation == 0 && zone == 234
 					  || nation == 0 && zone == 235 || nation == 0 && zone == 236 || nation == 0 && zone == 238 || nation == 0 && zone == 239 || nation == 0 && zone == 240 
-					  || nation == 0 && zone == 241 || nation == 0 && zone == 243 || nation == 0 && zone == 244 || nation == 0 && zone == 245 || nation == 0 && zone == 246)
+					  || nation == 0 && zone == 241 || nation == 0 && zone == 243 || nation == 0 && zone == 244 || nation == 0 && zone == 245 || nation == 0 && zone == 246
+					  || nation == 0 && zone == 256 || nation == 0 && zone == 257)
 				  {
 					  ShowMessage(CL_GREEN"PROFILE NATION SANDY\n"CL_RESET);
 					  //AND IF THEY CHANGE JOBS 0x7534
@@ -807,7 +738,8 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				  
 				  if(nation == 1 && zone == 48 || nation == 1 && zone == 50 || nation == 1 && zone == 230 
 					  || nation == 1 && zone == 231 || nation == 1 && zone == 232 || nation == 1 && zone == 238 || nation == 1 && zone == 239 || nation == 1 && zone == 240 
-					  || nation == 1 && zone == 241 || nation == 1 && zone == 243 || nation == 1 && zone == 244 || nation == 1 && zone == 245 || nation == 1 && zone == 246)
+					  || nation == 1 && zone == 241 || nation == 1 && zone == 243 || nation == 1 && zone == 244 || nation == 1 && zone == 245 || nation == 1 && zone == 246 
+					  || nation == 1 && zone == 256 || nation == 1 && zone == 257)
 				  {
 					  ShowMessage(CL_GREEN"PROFILE NATION BASTOK\n"CL_RESET);
 					  //AND IF THEY CHANGE JOBS 0x7534
@@ -816,7 +748,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				  
 				  if(nation == 2 && zone == 48 || nation == 2 && zone == 50 || nation == 2 && zone == 230 
 					  || nation == 2 && zone == 231 || nation == 2 && zone == 232 || nation == 2 && zone == 234 || nation == 2 && zone == 235 || nation == 2 && zone == 246 
-					  || nation == 2 && zone == 243 || nation == 2 && zone == 244 || nation == 2 && zone == 245 || nation == 2 && zone == 246)
+					  || nation == 2 && zone == 243 || nation == 2 && zone == 244 || nation == 2 && zone == 245 || nation == 2 && zone == 246 || nation == 2 && zone == 256 || nation == 2 && zone == 257)
 				  {
 					  ShowMessage(CL_GREEN"PROFILE NATION WINDY\n"CL_RESET);
 					  //AND IF THEY CHANGE JOBS ??? NEED TO DO 0x7534
@@ -871,7 +803,7 @@ void SmallPacket0x00C(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		return;
 	}
 	PChar->pushPacket(new CInventorySizePacket(PChar));
-	//PChar->pushPacket(new CMenuConfigPacket(PChar));
+	PChar->pushPacket(new CMenuConfigPacket(PChar));
 	PChar->pushPacket(new CCharJobsPacket(PChar));
 	PChar->pushPacket(new CChocoboMusicPacket());
 
@@ -927,10 +859,10 @@ void SmallPacket0x00C(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	//ShowMessage(CL_YELLOW"I AM STILL CLEANING MAP\n"CL_RESET);
+	ShowMessage(CL_YELLOW"I AM STILL CLEANING MAP\n"CL_RESET);
 	if(PChar != NULL)
 	{
-		///ShowMessage(CL_YELLOW"I AM STILL CLEANING MAP AND IM IN\n"CL_RESET);
+		
     session->blowfish.status = BLOWFISH_WAITING;
 
     PChar->TradePending.clean();
@@ -952,6 +884,7 @@ void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	
     if (PChar->loc.zone != NULL)
     {
+		ShowMessage(CL_YELLOW"I AM STILL CLEANING MAP AND IM IN\n"CL_RESET);
         PChar->loc.zone->DecreaseZoneCounter(PChar);
     }
 	
@@ -1387,10 +1320,103 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		break;
 		case 0x14: // окончание обновления данных персонажа
 		{
-			if (PChar->loc.destination == 0)
+			  
+			if (PChar->loc.destination == ZONE_RESIDENTIAL_AREA || PChar->loc.destination == ZONE_214)
 			{
 				ShowDebug(CL_RED"PLAYER %s SPAWNING MOGGLE %u\n"CL_RESET,PChar->GetName(),PChar->getZone());
-				zoneutils::GetZone(PChar->loc.prevzone)->SpawnMoogle(PChar);
+				
+
+				          if(PChar->loc.prevzone == 48)
+	                       {
+		                  
+		                  zoneutils::GetZone(48)->SpawnMoogle(PChar);
+		                   }
+						  if(PChar->loc.prevzone == 50)
+	                       {
+		                  
+		                   zoneutils::GetZone(50)->SpawnMoogle(PChar);
+		                   }
+						 if(PChar->loc.prevzone == 230)
+	                       {
+		                  
+		                   zoneutils::GetZone(230)->SpawnMoogle(PChar);
+		                   }
+	                     if(PChar->loc.prevzone== 231)
+	                       {
+		                   
+		                  zoneutils::GetZone(231)->SpawnMoogle(PChar);
+		                   }
+	                     if(PChar->loc.prevzone == 232)
+	                       {
+		                   
+		                   zoneutils::GetZone(232)->SpawnMoogle(PChar);
+		                   }
+						  if(PChar->loc.prevzone == 234)//BASTOK MINE CS 0x7534
+	                       {
+		                 
+		                   zoneutils::GetZone(234)->SpawnMoogle(PChar);
+		                   }
+						  if(PChar->loc.prevzone == 235)//BASTOK MARKETS CS 0x7534
+	                       {
+		                   
+		                  zoneutils::GetZone(235)->SpawnMoogle(PChar);
+		                   }
+						   if(PChar->loc.prevzone == 236)//BASTOK PORT CS 0x7534
+	                       {
+		                   
+		                  zoneutils::GetZone(236)->SpawnMoogle(PChar);
+		                   }
+						   if(PChar->loc.prevzone == 238)
+	                       {
+		                 
+		                   zoneutils::GetZone(238)->SpawnMoogle(PChar);
+		                   }
+						   if(PChar->loc.prevzone == 239)
+	                       {
+		                  
+		                   zoneutils::GetZone(239)->SpawnMoogle(PChar);
+		                   }
+						   if(PChar->loc.prevzone == 240)
+	                       {
+		                   
+		                  zoneutils::GetZone(240)->SpawnMoogle(PChar);
+		                   }
+						   if(PChar->loc.prevzone == 241)
+	                       {
+		                   
+		                    zoneutils::GetZone(241)->SpawnMoogle(PChar);
+		                   }
+						   if(PChar->loc.prevzone == 243)
+	                       {
+		               
+						  zoneutils::GetZone(243)->SpawnMoogle(PChar);
+		                   }
+						   if(PChar->loc.prevzone == 244)
+	                       {
+		                 
+		                   zoneutils::GetZone(244)->SpawnMoogle(PChar);
+		                   }
+						   if(PChar->loc.prevzone == 245)
+	                       {
+		                   
+		                   zoneutils::GetZone(245)->SpawnMoogle(PChar);
+		                   }
+						   if(PChar->loc.prevzone == 246)
+	                       {
+		                   
+		                   zoneutils::GetZone(246)->SpawnMoogle(PChar);
+		                   }
+						   if(PChar->loc.prevzone == 256)
+	                       {
+							   
+		                   zoneutils::GetZone(256)->SpawnMoogle(PChar);
+		                   }
+						   if(PChar->loc.prevzone == 257)
+	                       {
+							   
+		                   zoneutils::GetZone(257)->SpawnMoogle(PChar);
+		                   }
+						   
 				
 			}
 			else
@@ -1399,12 +1425,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				PChar->loc.zone->SpawnNPCs(PChar);
 				PChar->loc.zone->SpawnMOBs(PChar);
 			}
-			//charutils::SaveCharPosition(PChar);
-			//if(PChar->godmode == 0)
-			//{
-				//PChar->nameflags.flags =0;
-				//PChar->pushPacket(new CCharUpdatePacket(PChar));
-			//}
+			
 			if(PChar->is_inevent != 0)//A CHECK SWITCH SAYING THE USER WAS IN A EVENT AND NOT IS SWITCH BACK TO NOT BEING IN IT BECASUE THEY ARE IN IT
 	            {
 				
@@ -4645,12 +4666,23 @@ void SmallPacket0x0DC(map_session_data_t* session, CCharEntity* PChar, int8* dat
 void SmallPacket0x0DB(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
 	//server_message server_message
-
-	char buf[110];
-    sprintf(buf,"THIS IS A TEST MESSAGE");
+	string_t server_message = "Welcome To Darkstar";
+			   const char * Query = "SELECT server_message FROM server_message WHERE id= '%u';"; //YOU CAN DO THIS WILL IT TO GET THE ID OF THE PLAYER LANGUAGE TO THEN SUBMIT THE CORRECT MESSAGE
+	           int32 ret3 = Sql_Query(SqlHandle,Query,PChar->search.language);
+			   if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)//START DATABASE SELECTION
+	            {
+				server_message =  Sql_GetData(SqlHandle,0);
+	             char buf[110];
+                  sprintf(buf,"%s",server_message.c_str());
 	 
-	PChar->search.language = RBUFB(data,(0x24));
-	PChar->pushPacket(new CServerMessagePacket(("%s",buf),PChar->search.language));
+	            PChar->search.language = RBUFB(data,(0x24));
+	            PChar->pushPacket(new CServerMessagePacket(("%s",buf),PChar->search.language));
+			   }
+			   else
+			   {
+                 PChar->search.language = RBUFB(data,(0x24));
+	            PChar->pushPacket(new CServerMessagePacket(("%s",server_message.c_str()),PChar->search.language));
+			   }
 	return;
 }
 

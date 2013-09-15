@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@
 #include "../status_effect.h"
 #include "../latent_effect.h"
 
-// типы событий, в которых участвует логика предмета
+// the types of events to which the object logic
 
 enum SCRIPTTYPE : uint16
 {
@@ -88,7 +88,7 @@ public:
     void    addModifier(CModifier* modifier);
 	void	addLatent(CLatentEffect* latent);
 
-	std::vector<CModifier*> modList;			// список модификаторов
+	std::vector<CModifier*> modList;			// list of modifiers
 	std::vector<CLatentEffect*> latentList;     // contains latents
 
 private:

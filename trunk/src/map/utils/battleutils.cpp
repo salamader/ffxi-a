@@ -2607,10 +2607,7 @@ uint16 SingSong(CBattleEntity* PCaster,CBattleEntity* PTarget,CSpell* PSpell){
 *                                                                       *
 ************************************************************************/
 
-bool IsParalised(CBattleEntity* PAttacker)
-{
-	return (rand()%100 < dsp_cap(PAttacker->getMod(MOD_PARALYZE) - PAttacker->getMod(MOD_PARALYZERES), 0, 100));
-}
+
 
 /*****************************************************************************
 Returns true if the Third Eye anticipates the attacks. Must specify various
@@ -4315,7 +4312,10 @@ WEATHER GetWeather(CBattleEntity* PEntity, bool ignoreScholar)
     else
         return scholarSpell;
 }
-
+bool IsParalyzed(CBattleEntity* PAttacker)
+{
+	return (rand()%100 < dsp_cap(PAttacker->getMod(MOD_PARALYZE) - PAttacker->getMod(MOD_PARALYZERES), 0, 100));
+}
 void DrawIn(CBattleEntity* PEntity, position_t* pos, float offset)
 {
 	// don't draw in dead players for now!

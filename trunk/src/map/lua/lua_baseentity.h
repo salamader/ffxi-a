@@ -132,7 +132,7 @@ public:
 	int32 getYPos(lua_State*);				// Get Entity Y position
 	int32 getZPos(lua_State*);				// Get Entity Z position
 	int32 getRotPos(lua_State*);			// Get Entity Rot position
-    int32 setPos(lua_State*);				// Set Entity position (x,y,z,rot) or (x,y,z,rot,zone)
+    int32 AirShips(lua_State*);				// Set Entity position (x,y,z,rot) or (x,y,z,rot,zone)
     int32 getPos(lua_State*);				// Get Entity position (x,y,z)
 	int32 getZone(lua_State*);				// Get Entity zone
     int32 getZoneName(lua_State*);          // Get Entity zone name

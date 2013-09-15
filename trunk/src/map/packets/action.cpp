@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -38,10 +38,10 @@
 
 /************************************************************************
 *																		*
-*  ActionTargetID содержит ID цели, над которой производится действие,	*
-*  Если над целью необходимо произвести несколько действий, то в		*
-*  последующих структурах это поле оставляется пустым (равным нулю),	*
-*  это говорит о том, что это действие над ранее указанной целью		*
+*  ActionTargetID ID contains objectives on which the action is,		*
+*  If the purpose of the need to make a few steps, then					*
+*  subsequent structures leave this field empty (zero),					*
+*  this suggests that this action of the previously stated purpose		*
 *																		*
 ************************************************************************/
 
@@ -379,24 +379,24 @@ CActionPacket::CActionPacket(CBattleEntity * PEntity)
 		{
 			TargetNum++;
 
-			bitOffset = packBitsBE(data, Action.ActionTarget->id, bitOffset, 32);	// тип совершаемого действия
-			bitOffset = packBitsBE(data, 1, bitOffset, 4);							// количество действий над целью, в данном случае одно
+			bitOffset = packBitsBE(data, Action.ActionTarget->id, bitOffset, 32);	// type performs actions
+			bitOffset = packBitsBE(data, 1, bitOffset, 4);							// the number of actions over the target, in this case one
 
 			ActionNum = 0;
 		}
 
-		bitOffset = packBitsBE(data, Action.reaction,   bitOffset,  5);				// физическая реакция на урон
-		bitOffset = packBitsBE(data, Action.animation+animOffset,  bitOffset, 11);	// анимация специальных эффектов (monster TP animations are 1800+)
+		bitOffset = packBitsBE(data, Action.reaction,   bitOffset,  5);				// physical reaction to loss
+		bitOffset = packBitsBE(data, Action.animation+animOffset,  bitOffset, 11);	// Animation Special Effects (monster TP animations are 1800+)
 		bitOffset += 1;
 		bitOffset = packBitsBE(data, Action.speceffect, bitOffset, 9);				// specialEffect
 		bitOffset += 1;
-		bitOffset = packBitsBE(data, Action.param, bitOffset, 17);					// параметр сообщения (урон)
-		bitOffset = packBitsBE(data, Action.messageID,  bitOffset, 10);				// сообщение
+		bitOffset = packBitsBE(data, Action.param, bitOffset, 17);					// Customize message (Done)
+		bitOffset = packBitsBE(data, Action.messageID,  bitOffset, 10);				// message
 		bitOffset += 31;
 
 
         if (Action.addEffectParam != SUBEFFECT_NONE)
-        {
+		{
             bitOffset = packBitsBE(data, 1, bitOffset, 1);
             bitOffset = packBitsBE(data, Action.additionalEffect, bitOffset, 10);
             bitOffset = packBitsBE(data, Action.addEffectParam, bitOffset, 17);
@@ -412,12 +412,12 @@ CActionPacket::CActionPacket(CBattleEntity * PEntity)
             bitOffset = packBitsBE(data, Action.spikesEffect, bitOffset, 10);
             bitOffset = packBitsBE(data, Action.spikesParam, bitOffset, 14);
             bitOffset = packBitsBE(data, Action.spikesMessage, bitOffset, 10);
-            battleutils::HandleSpikesStatusEffect(PEntity, &Action);
-        }
+				battleutils::HandleSpikesStatusEffect(PEntity, &Action);
+			}
         else
         {
-            bitOffset += 1;
-        }
+			bitOffset += 1;
+		}
 		ActionNum++;
 	}
     packBitsBE(data, ActionNum, 150, 4);
@@ -426,8 +426,8 @@ CActionPacket::CActionPacket(CBattleEntity * PEntity)
 
 	this->size = ((((WorkSize + 7) >> 1) + 1) & -2);
 
-	WBUFB(data,(0x04)-4) = WorkSize; 												// Workload Size - 0x23 с дополнительным эффектом - 0x29 два удара монаха
-	WBUFB(data,(0x09)-4) = TargetNum;												// количество атакуемых целей
+	WBUFB(data,(0x04)-4) = WorkSize; 												// Workload Size - 0x23 with the additional effect - 0x29 two hits monk
+	WBUFB(data,(0x09)-4) = TargetNum;												// number of attacked targets
 }
 
 // 0xE0 0x58 0xD8 0x1D 0x1A - White Magic Start
