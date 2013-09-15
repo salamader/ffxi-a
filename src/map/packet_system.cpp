@@ -1130,6 +1130,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				{
 					PNpc->animation = ANIMATION_CLOSE_DOOR;
 					PChar->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CEntityUpdatePacket(PNpc,ENTITY_UPDATE));
+					PChar->loc.zone->PushPacket(PNpc, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PNpc,ENTITY_UPDATE));
 					CTaskMgr::getInstance()->AddTask(new CTaskMgr::CTask("close_door", gettick()+7000, PNpc, CTaskMgr::TASK_ONCE, close_door));
 				}
 			}
@@ -4019,6 +4020,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			
             }
 			PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SYSTEM_1,     data+6)); 
+			PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SYSTEM_1,     data+6)); 
 			return;
 		}
 			
@@ -4029,18 +4031,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	{
 		if(PChar->Account_Level==1 || PChar->Account_Level==2 || PChar->Account_Level==3 || PChar->Account_Level==4)
 		{
-            for (uint16 zone = MIN_ZONEID; zone < MAX_ZONEID; ++zone)
-            {
-            zoneutils::GetZone(zone)->PushPacket(
-                PChar,
-                CHAR_INZONE,
-                new CServerMessagePacket(data+7,PChar->search.language));
-			ShowMessage("MESSAGE SENT TO  ZONE ID %u\n",zone);
-			
-            }
-			PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CServerMessagePacket(data+6,PChar->search.language)); 
-			//UPDATE THE DATABASE WITH THE NEW MESSAGE
-			//PChar->pushPacket(new CServerMessagePacket(data+6,PChar->search.language));
+           
 			return;
 		}
 			
@@ -4072,7 +4063,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			
             }
 		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SHOUT,     data+6)); 
-			
+		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SHOUT,     data+6)); 	
           return;
 		
 	}
@@ -4083,6 +4074,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
             if(RBUFB(data,(0x04)) == MESSAGE_SAY)
             {
                 PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY, data+6));
+				PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SAY, data+6));
 				return;
             }
             else

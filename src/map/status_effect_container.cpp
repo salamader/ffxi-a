@@ -412,6 +412,7 @@ void CStatusEffectContainer::RemoveStatusEffect(uint32 id, bool silent)
 		if (silent == false && PStatusEffect->GetIcon() != 0 && ((PStatusEffect->GetFlag() & EFFECTFLAG_NO_LOSS_MESSAGE) == 0) && !m_POwner->isDead())
 		{
 			m_POwner->loc.zone->PushPacket(m_POwner, CHAR_INRANGE, new CMessageBasicPacket(m_POwner, m_POwner, PStatusEffect->GetIcon(), 0, 206));
+			m_POwner->loc.zone->PushPacket(m_POwner, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_POwner, m_POwner, PStatusEffect->GetIcon(), 0, 206));
 		}
 	}
     delete PStatusEffect;
