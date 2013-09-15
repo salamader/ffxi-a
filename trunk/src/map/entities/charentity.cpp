@@ -126,7 +126,8 @@ CCharEntity::CCharEntity()
     m_EquipBlock = 0;
 	m_EquipSwap = false;
 
-
+	m_PlayTime = 0;
+	m_ZoneTimer = 0;
 	MeritMode = false;
 
 	m_isWeaponSkillKill = false;
@@ -359,6 +360,18 @@ bool CCharEntity::getMijinGakure()
 void CCharEntity::setMijinGakure(bool isMijinGakure)
 {
 	m_isMijinGakure = isMijinGakure;
+}
+
+void CCharEntity::SetPlayTime(uint32 setTime)
+{
+	m_PlayTime = setTime;
+}
+
+void CCharEntity::AddPlayTime()
+{
+	m_ZoneTimer++;
+	if((m_ZoneTimer % 2) == 0)
+		m_PlayTime++;
 }
 
 int32 CCharEntity::leavegame()

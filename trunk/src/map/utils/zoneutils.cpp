@@ -821,9 +821,9 @@ void LoadZoneList()
 		PZone->ZoneServer(-1);
 		g_PZoneList[ZoneID] = PZone;
 
-		if (PZone->GetIP() != 0)
+		if (PZone->GetLANIP() != 0 || PZone->GetWANIP() != 0 || PZone->GetPort() != 0)
 		{
-			luautils::OnZoneInitialise(PZone->GetID());
+			luautils::OnZoneInitialize(PZone->GetID());
 		}
 	}
     UpdateWeather();

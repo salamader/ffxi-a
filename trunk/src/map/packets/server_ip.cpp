@@ -25,6 +25,7 @@
 
 #include "server_ip.h"
 #include "../entities/charentity.h"
+#include "../utils/charutils.h"
 #include "../utils/zoneutils.h"
 
 CServerIPPacket::CServerIPPacket(CCharEntity* PChar, uint8 type)
@@ -38,8 +39,30 @@ CServerIPPacket::CServerIPPacket(CCharEntity* PChar, uint8 type)
 	so the code runs private network. found in accounts table field name
 	server_type = 0 is public allow all off network
 	server_type = 1 is private allow all on network
+
+	this->type = 0x0B;
+	this->size = 0x0E;
+
+	WBUFB(data,(0x04)-4) = type;
+	
+	uint16 clientIP = charutils::GetClientIP(PChar);
+
+	// if(PChar->id > 40000 && !(wildcmp("10.1.10.*",ip2str(clientIP,NULL)))) // External Accounts are assigned much higher IDs.
+	if(PChar->id > 40000) // External Accounts are assigned much higher IDs.
+	{
+		// ShowInfo("CServerIPPacket: WAN IP\n");
+		WBUFL(data,(0x08)-4) = PChar->loc.zone->GetWANIP();
+	}
+	else
+	{
+		// ShowInfo("CServerIPPacket: LAN IP\n");
+		WBUFL(data,(0x08)-4) = PChar->loc.zone->GetLANIP();
+	}
+	
+	WBUFW(data,(0x0C)-4) = PChar->loc.zone->GetPort();
 	
 	*/
+	uint16 clientIP = charutils::GetClientIP(PChar);
 	if(PChar->Is_Public_0_Or_Private_1 == 0)
 	{
 	 in_addr inaddr;

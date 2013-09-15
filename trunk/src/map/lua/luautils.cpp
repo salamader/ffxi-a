@@ -863,7 +863,7 @@ int32 OnServerStart()
 *																		*
 ************************************************************************/
 
-int32 OnZoneInitialise(uint16 ZoneID)
+int32 OnZoneInitialize(uint16 ZoneID)
 {
 	//ShowWarning("26\n");
 	CZone* PZone = zoneutils::GetZone(ZoneID);
@@ -895,7 +895,7 @@ int32 OnZoneInitialise(uint16 ZoneID)
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{
-	  //ShowError("luautils::OnZoneInitialise: %s\n",lua_tostring(LuaHandle,-1));
+	  //ShowError("luautils::OnZoneInitialize: %s\n",lua_tostring(LuaHandle,-1));
         lua_pop(LuaHandle, 1);
 		return -1;
 	}
@@ -903,7 +903,7 @@ int32 OnZoneInitialise(uint16 ZoneID)
     lua_getfield(LuaHandle, LUA_GLOBALSINDEX, "onInitialize");
 	if( lua_isnil(LuaHandle,-1) )
 	{
-		ShowError("luautils::OnZoneInitialise: undefined procedure onInitialize\n");
+		ShowError("luautils::OnZoneInitialize: undefined procedure onInitialize\n");
         lua_pop(LuaHandle, 1);
 		return -1;
 	}

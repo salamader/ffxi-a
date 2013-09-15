@@ -344,6 +344,9 @@ void LoadChar(CCharEntity* PChar)
                          PChar->targid = targid;
 					  }
 
+
+	
+
 	 fmtQuery =
         "SELECT "
           "charname,"				//  0
@@ -373,11 +376,12 @@ void LoadChar(CCharEntity* PChar)
 
 	int32 ret = Sql_Query(SqlHandle,fmtQuery,PChar->id);
 
-	if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	if (ret != SQL_ERROR &&
+		Sql_NumRows(SqlHandle) != 0 &&
+		Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 	{
-       // PChar->targid  = 1024;
-	
-	    PChar->SetName(Sql_GetData(SqlHandle,0));
+        PChar->targid = 0x400;
+		PChar->SetName(Sql_GetData(SqlHandle,0));
 
         PChar->loc.destination = (uint16)Sql_GetIntData(SqlHandle,1);
 		PChar->loc.prevzone    = (uint16)Sql_GetIntData(SqlHandle,2);
@@ -394,6 +398,8 @@ void LoadChar(CCharEntity* PChar)
 		PChar->profile.home_point.p.z = Sql_GetFloatData(SqlHandle,12);
 
         PChar->profile.nation  = (uint8)Sql_GetIntData(SqlHandle,13);
+
+		PChar->SetPlayTime(Sql_GetUIntData(SqlHandle, 21));
 
 		size_t length = 0;
 		int8* quests = NULL;
@@ -591,7 +597,7 @@ void LoadChar(CCharEntity* PChar)
 
 
 
-	fmtQuery = "SELECT nameflags, mjob, sjob, hp, mp, mhflag, title, bazaar_message, 2h, dex, vit, agi, ini, mnd, chr,str \
+	fmtQuery = "SELECT nameflags, mjob, sjob, hp, mp, mhflag, title, bazaar_message, 2h \
 				FROM char_stats \
 				WHERE charid = %u;";
 
@@ -627,13 +633,6 @@ void LoadChar(CCharEntity* PChar)
         {
             PChar->PRecastContainer->Add(RECAST_ABILITY, PAbility->getRecastId(), RecastTime - gettick());
         }
-		PChar->stats.DEX = Sql_GetIntData(SqlHandle,9);
-		PChar->stats.VIT = Sql_GetIntData(SqlHandle,10);
-		PChar->stats.AGI = Sql_GetIntData(SqlHandle,11);
-		PChar->stats.INT = Sql_GetIntData(SqlHandle,12);
-		PChar->stats.MND  = Sql_GetIntData(SqlHandle,13);
-		PChar->stats.CHR  = Sql_GetIntData(SqlHandle,14);
-		PChar->stats.STR  = Sql_GetIntData(SqlHandle,15);
 	}
 
 	fmtQuery = "SELECT skillid, value, rank \
@@ -705,13 +704,12 @@ void LoadChar(CCharEntity* PChar)
 	PChar->PMeritPoints->SetLimitPoints(limitPoints);
 
     blueutils::LoadSetSpells(PChar);
-    puppetutils::LoadAutomaton(PChar);
-	ShowDebug("BUILDING CHAR SKILL TABLE 3\n");
 	BuildingCharSkillsTable(PChar);
     PChar->PRecastContainer->ResetAbilities();
 	BuildingCharAbilityTable(PChar);
 	BuildingCharTraitsTable(PChar);
 	CalculateStats(PChar);
+    puppetutils::LoadAutomaton(PChar);
 
 	PChar->animation = (PChar->health.hp == 0 ? ANIMATION_DEATH : ANIMATION_NONE);
 
@@ -727,6 +725,8 @@ void LoadChar(CCharEntity* PChar)
 	{
 		PChar->m_GMlevel = (uint8)Sql_GetUIntData(SqlHandle,0);
 	}
+
+
 
 }
 
@@ -4472,6 +4472,11 @@ void SaveDeathTime(CCharEntity* PChar)
 	Sql_Query(SqlHandle, fmtQuery, (uint32)time(NULL), PChar->id);
 }
 
+void SavePlayTime(CCharEntity* PChar)
+{
+	Sql_Query(SqlHandle, "UPDATE chars SET playtime = '%u' WHERE charid = '%u' LIMIT 1;", PChar->GetPlayTime(), PChar->id);
+}
+
 /************************************************************************
 *																		*
 *  Checks which UnarmedItem to grant when SLOT_MAIN is empty.			*
@@ -4654,6 +4659,26 @@ void RemoveStratagems(CCharEntity* PChar, CSpell* PSpell)
             PChar->StatusEffectContainer->DelStatusEffect(EFFECT_MANIFESTATION);
         }
     }
+}
+
+uint32 GetClientIP(CCharEntity* PChar)
+{
+    const int8* Query = "SELECT client_addr FROM accounts_sessions WHERE charid = %u LIMIT 1;";
+
+	int32 ret = Sql_Query(SqlHandle,Query,PChar->id);
+	// ShowDebug(CL_CYAN"Start GetClientIP CharID: %u \n", PChar->id);
+	if (ret == SQL_ERROR || 
+		Sql_NumRows(SqlHandle) == 0 ||
+		Sql_NextRow(SqlHandle) != SQL_SUCCESS) 
+	{
+		ShowError(CL_RED"Cannot load client_addr for charid %u. Unable to pull Client IP!" CL_RESET, PChar->id);
+		return 0;
+	}
+	else
+	{
+		// ShowDebug(CL_CYAN"Else GetClientIP CharID: %u \n", PChar->id);
+		return Sql_GetIntData(SqlHandle,0);
+	}
 }
 
 } // namespace charutils

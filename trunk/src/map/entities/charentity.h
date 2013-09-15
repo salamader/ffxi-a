@@ -300,6 +300,10 @@ public:
 
     std::vector<AuctionHistory_t> m_ah_history;		// AH history list (в будущем нужно использовать UContainer)
 
+	void SetPlayTime(uint32);						// Set playtime from database
+	void AddPlayTime();								// Add playtime every second
+	uint32 __inline const&	GetPlayTime() { return m_PlayTime; };
+
 	 CCharEntity();									// конструктор
 	~CCharEntity();									// деструктор
 
@@ -317,6 +321,8 @@ private:
 	bool			m_isMijinGakure;
 
 	PacketList_t      PacketList;					// в этом списке хранятся все пакеты, предназначенные для отправки персонажу
+	uint32 m_ZoneTimer;
+	uint32 m_PlayTime;
 };
 
 #endif

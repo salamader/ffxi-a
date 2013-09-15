@@ -477,7 +477,28 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
         if(PChar->is_returning == 1)
 		{
 		
- 
+			
+         const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u, session_key = x'%s', server_addr = %u, client_port = %u WHERE charid = %u";
+		
+	// if(PChar->id > 40000 && !(wildcmp("10.1.10.*",ip2str(session->client_addr,NULL)))) // External Accounts are assigned much higher IDs.
+	if(PChar->id > 40000) // External Accounts are assigned much higher IDs.
+	{
+		ShowInfo("SmallPacket0x00A: WAN IP\n");
+		Sql_Query(SqlHandle,fmtQuery,
+			PChar->targid,
+			session_key,
+            PChar->loc.zone->GetWANIP(),
+			session->client_port,
+			PChar->id);
+	} else {
+		 ShowInfo("SmallPacket0x00A: LAN IP\n");
+		Sql_Query(SqlHandle,fmtQuery,
+			PChar->targid,
+			session_key,
+            PChar->loc.zone->GetLANIP(),
+			session->client_port,
+			PChar->id);
+	}
 
  
 		const int8* deathTsQuery = "SELECT death FROM char_stats where charid = %u;";
@@ -803,7 +824,7 @@ void SmallPacket0x00C(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		return;
 	}
 	PChar->pushPacket(new CInventorySizePacket(PChar));
-	PChar->pushPacket(new CMenuConfigPacket(PChar));
+	//PChar->pushPacket(new CMenuConfigPacket(PChar));
 	PChar->pushPacket(new CCharJobsPacket(PChar));
 	PChar->pushPacket(new CChocoboMusicPacket());
 
@@ -3137,7 +3158,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		}
 		else
 		{
-			if (zoneutils::GetZone(PZoneLine->m_toZone)->GetIP() == 0) 	// разворачиваем персонажа на 180° и отправляем туда, откуда пришел
+			if (zoneutils::GetZone(PZoneLine->m_toZone)->GetLANIP() == 0 || zoneutils::GetZone(PZoneLine->m_toZone)->GetWANIP() == 0) 	// we develop the character by 180 ° and send back where you came from
 			{
 				ShowDebug(CL_CYAN"SmallPacket0x5E: Zone %u closed to chars\n" CL_RESET, PZoneLine->m_toZone);
 

@@ -480,7 +480,8 @@ public:
 	ZONETYPE        GetType();
     REGIONTYPE      GetRegionID();
     CONTINENTTYPE   GetContinentID();
-	uint32			GetIP();
+	uint32			GetWANIP();
+	uint32			GetLANIP();
 	uint16			GetPort();
 	uint16			GetTax();
 	WEATHER			GetWeather();
@@ -543,13 +544,14 @@ public:
 	
 //private:
 
-	ZONEID			m_zoneID;				// ID зоны
-	ZONETYPE        m_zoneType;
-    REGIONTYPE      m_regionID;             // ID области
-    CONTINENTTYPE   m_continentID;          // ID континента
-	string_t		m_zoneName;				// имя зоны
-	uint16			m_zonePort;				// порт зоны
-	uint32			m_zoneIP;               // IP зоны
+	ZONEID			m_zoneID;				// ID area
+	ZONETYPE        m_zoneType;				// Type of area
+    REGIONTYPE      m_regionID;             // ID field
+    CONTINENTTYPE   m_continentID;          // ID of the continent
+	string_t		m_zoneName;				// area name
+	uint16			m_zonePort;				// port area
+	uint32			m_zoneLANIP;            // IP
+	uint32			m_zoneWANIP;            // IP
     bool 			m_useNavMesh;			// Use navmesh for roaming, chasing
 
 	WEATHER			m_Weather;              // текущая погода
