@@ -1011,7 +1011,7 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 	DSP_DEBUG_BREAK_IF(PChar->PTreasurePool != NULL);
 
     // ищем свободный targid для входящего в зону персонажа
-    PChar->targid  = 1024;
+   // PChar->targid  = 1024;
 	PChar->is_zoning = -1;
 	uint32 targid = 0;
 
@@ -1033,16 +1033,16 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 	{
         if (PChar->targid != it->first)
         {
-			PChar->targid++;
+			PChar->targid = 1024;
 			//ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid);
-			//const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
-           // Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
+			const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
+            Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
             break;
         }
         PChar->targid++;
 		//ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid++);
-		//const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
-        //Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
+		const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
+        Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
     }
     if (PChar->targid >= 0x700)
     {
