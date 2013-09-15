@@ -510,7 +510,70 @@ inline int32 CLuaBaseEntity::getXPos(lua_State *L)
 }
 
 //======================================================//
+inline int32 CLuaBaseEntity::setPos(lua_State *L)
+{
+	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
 
+    if( m_PBaseEntity->objtype != TYPE_PC)
+    {
+        m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_DESPAWN));
+    }
+
+	if(lua_isnumber(L, 1))
+	{
+
+	if( !lua_isnil(L,1) && lua_isnumber(L,1) )
+		m_PBaseEntity->loc.p.x = (float) lua_tonumber(L,1);
+	if( !lua_isnil(L,2) && lua_isnumber(L,2) )
+		m_PBaseEntity->loc.p.y = (float) lua_tonumber(L,2);
+	if( !lua_isnil(L,3) && lua_isnumber(L,3) )
+		m_PBaseEntity->loc.p.z = (float) lua_tonumber(L,3);
+	if( !lua_isnil(L,4) && lua_isnumber(L,4) )
+		m_PBaseEntity->loc.p.rotation = (uint8) lua_tointeger(L,4);
+	}
+	else
+	{
+		// its a table
+		lua_rawgeti(L, 1, 1);
+		m_PBaseEntity->loc.p.x = lua_tonumber(L, -1);
+		lua_pop(L,1);
+
+		lua_rawgeti(L, 1, 2);
+		m_PBaseEntity->loc.p.y = lua_tonumber(L, -1);
+		lua_pop(L,1);
+
+		lua_rawgeti(L, 1, 3);
+		m_PBaseEntity->loc.p.z = lua_tonumber(L, -1);
+		lua_pop(L,1);
+
+		lua_rawgeti(L, 1, 4);
+		m_PBaseEntity->loc.p.rotation = (uint8)lua_tointeger(L, -1);
+		lua_pop(L,1);
+	}
+
+
+	if( m_PBaseEntity->objtype == TYPE_PC)
+	{
+		if( !lua_isnil(L,5) && lua_isnumber(L,5) )
+		{
+            ((CCharEntity*)m_PBaseEntity)->loc.destination = (uint16)lua_tointeger(L,5);
+			((CCharEntity*)m_PBaseEntity)->status = STATUS_DISAPPEAR;
+			((CCharEntity*)m_PBaseEntity)->loc.boundary = 0;
+			((CCharEntity*)m_PBaseEntity)->clearPacketList();
+			((CCharEntity*)m_PBaseEntity)->pushPacket(new CServerIPPacket((CCharEntity*)m_PBaseEntity,2));
+			//((CCharEntity*)m_PBaseEntity)->loc.zone->DecreaseZoneCounter(((CCharEntity*)m_PBaseEntity));
+		}
+        else
+        {
+			((CCharEntity*)m_PBaseEntity)->pushPacket(new CPositionPacket((CCharEntity*)m_PBaseEntity));
+		}
+	}
+    else
+    {
+        m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_SPAWN));
+    }
+	return 0;
+}
 inline int32 CLuaBaseEntity::getYPos(lua_State *L)
 {
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
@@ -10018,6 +10081,9 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	char buf3[110];
 	sprintf(buf3,".gettarget .getpos .addmaps .leavegame .homepoint .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
+	char buf4[110];
+	sprintf(buf4,".addskills" );
+	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	return true;
 	}
 	if(PChar->Account_Level==2)
@@ -10035,7 +10101,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf3,".gettarget .getpos .addmaps .leavegame .homepoint .mobmorph .npcmorph" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf3)));
 	char buf4[110];
-	sprintf(buf4,".wallhack .zone .zonelist" );
+	sprintf(buf4,".addskills .wallhack .zone .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	
 	return true;
@@ -10058,7 +10124,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf4,".npcmove .npcmorph .mobmorph .setnpcpos .npclist .setmobpos .mobmove .wallhack .zone " );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	char buf5[110];
-	sprintf(buf5,".setypos .setzonepos .zonelist" );
+	sprintf(buf5,".addskills .spawnmob .setypos .setzonepos .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf5)));
 	return true;
 	}
@@ -10080,7 +10146,7 @@ inline int32 CLuaBaseEntity::show_Command_Menu(lua_State *L)
 	sprintf(buf4,".npcmove .npcmorph .mobmorph .setnpcpos .npclist .setmobpos .mobmove .wallhack .zone " );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf4)));
 	char buf5[110];
-	sprintf(buf5,".setypos .setzonepos .zonelist" );
+	sprintf(buf5,".addskills .setypos .setzonepos .zonelist" );
 	PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf5)));
 	
 	return true;
@@ -10311,6 +10377,64 @@ inline int32 CLuaBaseEntity::add_All_Spells(lua_State *L)
 					i++;
 				}
 
+	//uint16 elements = sizeof ValidSpells / sizeof ValidSpells[0];
+
+		// for(uint16 i = 1; i < elements; ++i)
+		// {
+			//if ()
+			//{
+				//charutils::SaveSpells(PChar);
+			//}
+		// }
+    
+    //PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 23));
+	
+	
+        //sprintf(buf,"Adding All Spells");
+	    //PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+	return 0;
+}
+inline int32 CLuaBaseEntity::add_All_Weaponskils(lua_State *L)
+{
+
+	//TODO MAKE A NEW SYSTEM FOR THIS USING DATABASE
+	//FOR EACH JOB CLASS THAT HAVE SPELLS EXAMPLE
+	//blu_spells whm_spells blm_spells and so on.
+	if(m_PBaseEntity == NULL){return false;}
+	if(m_PBaseEntity->objtype != TYPE_PC){return false;}
+
+    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+	char buf[110];
+	int32 spellid = 0;
+			  
+   string_t name ="none";
+   const char *pfmtQuery =  "SELECT weaponskillid,name FROM weapon_skills WHERE learnall = '1' ORDER BY id ASC LIMIT 255;";
+
+				int32 ret =  Sql_Query(SqlHandle,pfmtQuery);
+				if( ret == SQL_ERROR )
+				{
+					sprintf(buf,"No weaponskilllist found in the databse.");
+	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+					return false;;
+				}
+				int i = 0;
+				//Считывание информации о конкректном персонаже
+				//Загрузка всей необходимой информации о персонаже из базы
+				while(Sql_NextRow(SqlHandle) != SQL_NO_DATA) 
+				{
+					spellid    = Sql_GetIntData(SqlHandle,0);
+					
+					name    = Sql_GetData(SqlHandle,1);
+					charutils::addSpell(PChar, i);
+					sprintf(buf,"Learned New WeaponSkill: ID: %u NAME: %s",spellid , name.c_str() );
+	                PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
+					charutils::BuildingCharAbilityTable(PChar);
+	charutils::BuildingCharWeaponSkills(PChar);
+	PChar->pushPacket(new CCharSkillsPacket(PChar));
+	PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+					i++;
+				}
+				
 	//uint16 elements = sizeof ValidSpells / sizeof ValidSpells[0];
 
 		// for(uint16 i = 1; i < elements; ++i)
@@ -10730,7 +10854,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,getBaseMP),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,checkNameFlags),
 	
-	
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,setPos),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,PrintToPlayer),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,getBaseMP),
     LUNAR_DECLARE_METHOD(CLuaBaseEntity,pathThrough),
@@ -10789,6 +10913,7 @@ Lunar<CLuaBaseEntity>::Register_t CLuaBaseEntity::methods[] =
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,npcdespawn),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,toExplorerMoogle),
 	LUNAR_DECLARE_METHOD(CLuaBaseEntity,allkeyitems),
+	LUNAR_DECLARE_METHOD(CLuaBaseEntity,add_All_Weaponskils),
 
 	{NULL,NULL}
 };
