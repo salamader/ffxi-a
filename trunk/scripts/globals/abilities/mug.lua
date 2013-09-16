@@ -1,6 +1,5 @@
 -----------------------------------
 -- Ability: Mug
--- Steals gil from an enemy.
 -----------------------------------
 
 require("scripts/globals/settings");
@@ -17,7 +16,6 @@ end;
 function OnUseAbility(player, target, ability)
     local thfLevel;
     local gil = 0;
-    local head = player:getEquipID(SLOT_HEAD);
 
     if(player:getMainJob() == JOB_THF) then
         thfLevel = player:getMainLvl();
@@ -39,7 +37,7 @@ function OnUseAbility(player, target, ability)
         if(gil <= 0) then
             ability:setMsg(244);
         else
-            if(head == 15077 or head == 15250 or head == 10655) then
+            if(player:getEquipID(SLOT_HEAD) == 15077) then
                 gil = gil * 2;
             end
 

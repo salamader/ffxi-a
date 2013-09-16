@@ -18,12 +18,7 @@ function onSpellCast(caster,target,spell)
 	local curse = target:getStatusEffect(EFFECT_CURSE_I);
 	local curse2 = target:getStatusEffect(EFFECT_CURSE_II);
 	local bane = target:getStatusEffect(EFFECT_BANE);
-	local pEquipMods = 0.25;
-	
-	-- Equipment Bonuses
-	pEquipMods = pEquipMods + (caster:getMod(MOD_CURSNA_EFFECT)/100);
-	pEquipMods = pEquipMods + (target:getMod(MOD_CURSNA_RCVD)/100);
-	
+
 	spell:setMsg(75);
 	if(curse ~= nil and curse2 ~= nil and bane ~= nil) then
 		target:delStatusEffect(EFFECT_CURSE_I);
@@ -53,7 +48,7 @@ function onSpellCast(caster,target,spell)
 		target:delStatusEffect(EFFECT_BANE);
 		final = EFFECT_BANE;
 		spell:setMsg(83);
-	elseif(target:hasStatusEffect(EFFECT_DOOM) and math.random() <= pEquipMods) then
+	elseif(target:hasStatusEffect(EFFECT_DOOM) and math.random() <= 0.25) then
 		-- remove doom
 		final = EFFECT_DOOM;
 		target:delStatusEffect(EFFECT_DOOM);

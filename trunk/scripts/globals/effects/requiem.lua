@@ -1,6 +1,7 @@
 -----------------------------------
--- 	EFFECT_REQUIEM
---  Deals sonic dmg to enemies
+--
+-- 	EFFECT_NONE
+--
 -----------------------------------
 
 require("scripts/globals/status");

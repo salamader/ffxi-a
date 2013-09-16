@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4385
--- Item: Zafmlug Bass
--- Food Effect: 5 Min, Mithra only
+-- Item: zafmlug_bass
+-- Food Effect: 5Min, Mithra only
 -----------------------------------------
 -- Dexterity 2
 -- Mind -4

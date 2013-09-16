@@ -320,7 +320,7 @@ LapisLazuli = 0x31B;
   Turquoise = 0x31E;
      Zircon = 0x325;
 Description:
-	 Gil = Zone, { [1] Drop rate, [2] Minimum gil, [3] Maximum gil }
+	  Gil = Zone, { [1] Drop rate, [2] Minimum gil, [3] Maximum gil }
 	Gems = Zone, { [1] Drop rate, [2] gem1,        [3] gem2,       [4] gem3,  ... ,[10] gem10 }
    Items = Zone, { [1] Drop rate, [2] item1,       [3] item2}
    

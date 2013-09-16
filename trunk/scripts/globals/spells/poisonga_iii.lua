@@ -27,14 +27,8 @@ function onSpellCast(caster,target,spell)
 		if power > 25 then
 			power = 25;
 		end
-    
-		if (caster:hasStatusEffect(EFFECT_SABOTEUR) == true) then
-			duration = duration + (duration * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
-			power = power * 2;
-			caster:delStatusEffect(EFFECT_SABOTEUR);
-		end
 
-		local bonus = AffinityBonus(caster, spell:getElement());
+        local bonus = AffinityBonus(caster, spell:getElement());
         local resist = applyResistance(caster,spell,target,dINT,ENFEEBLING_MAGIC_SKILL,bonus);
         if(resist == 1 or resist == 0.5) then -- effect taken
             duration = duration * resist;

@@ -19,5 +19,5 @@ end;
 -----------------------------------------
 
 function onItemUse(target)
-	target:addStatusEffect(EFFECT_COSTUME,283,0,3600);
+	target:addStatusEffect(EFFECT_COSTUME,279,0,3600);
 end;

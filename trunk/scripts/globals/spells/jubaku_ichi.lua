@@ -1,8 +1,7 @@
 -----------------------------------------
 -- Spell: Jubaku: Ichi
--- Spell accuracy is most highly affected
--- by Enfeebling Magic Skill, Magic
--- Accuracy, and INT.
+-- Spell accuracy is most highly affected by Enfeebling Magic Skill, Magic Accuracy, and INT.
+-- taken from paralyze
 -----------------------------------------
 
 require("scripts/globals/status");

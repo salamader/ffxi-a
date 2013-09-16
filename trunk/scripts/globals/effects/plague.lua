@@ -1,8 +1,7 @@
 -----------------------------------
 --
 -- 	Plague
--- Plague is a harmful status effect that reduces a character's TP and MP over time.
--- Covered in Healing effect, can not regain HP or MP by /heal
+--Plague is a harmful status effect that reduces a character's TP and MP over time.
 -- Also, causes Steps to only grant One Finishing Move when Main Job is Dancer.
 -- Normal power is 5.
 -----------------------------------

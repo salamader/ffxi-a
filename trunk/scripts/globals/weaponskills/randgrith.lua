@@ -36,61 +36,6 @@ function OnUseWeaponSkill(player, target, wsID)
 	if damage > 0 and (target:hasStatusEffect(EFFECT_WEIGHT) == false) then
 		target:addStatusEffect(EFFECT_WEIGHT, 50, 0, 60);
 	end
-
-	local main = player:getEquipID(SLOT_MAIN);
-	local sub = player:getEquipID(SLOT_SUB);
-	local aftermath = 0;
-	local tp = player:getTP();
-	local duration = 0;
-	local zone = player:getZone();
-	
-	if (main == 18324 or sub == 18324) then
-		aftermath = 1;
-	elseif (main == 18325 or sub == 18325) then
-		aftermath = 1;
-	elseif (main == 18647 or sub == 18647) then
-		aftermath = 1;
-	elseif (main == 18661 or sub == 18661) then
-		damage = damage * 1.25;
-		aftermath = 1;
-	elseif (main == 18675 or sub == 18675) then
-		damage = damage * 1.25;
-		aftermath = 1;
-	elseif (main == 19756 or sub == 19756) then
-		damage = damage * 1.4;
-		aftermath = 1;
-	elseif (main == 19849 or sub == 19849) then
-		damage = damage * 1.4;
-		aftermath = 1;
-	elseif ((main == 18323 or sub == 18323) and (zone == 39 or zone == 40 or zone == 41 or zone == 42 or zone == 134 or 
-		zone ==135 or zone == 185 or zone == 186 or zone == 187 or zone == 188)) then
-		aftermath = 1;
-	end
-		
-	if (aftermath == 1) then
-		if (tp == 300) then
-			duration = 60;
-			player:delStatusEffect(EFFECT_AFTERMATH_LV1);
-			player:delStatusEffect(EFFECT_AFTERMATH_LV2);
-			player:delStatusEffect(EFFECT_AFTERMATH_LV3);
-			player:addStatusEffect(EFFECT_AFTERMATH_LV3,10,0,duration);
-		elseif (tp >= 200) then
-			duration = 40;
-			if (player:hasStatusEffect(EFFECT_AFTERMATH_LV3) == false) then
-				player:delStatusEffect(EFFECT_AFTERMATH_LV1);
-				player:delStatusEffect(EFFECT_AFTERMATH_LV2);
-				player:addStatusEffect(EFFECT_AFTERMATH_LV2,10,0,duration);
-			end
-		else
-			duration = 20;
-			if (player:hasStatusEffect(EFFECT_AFTERMATH_LV3) == false) then
-				if (player:hasStatusEffect(EFFECT_AFTERMATH_LV2) == false) then
-					player:delStatusEffect(EFFECT_AFTERMATH_LV1);
-					player:addStatusEffect(EFFECT_AFTERMATH_LV1,10,0,duration);
-				end
-			end
-		end
-	end
 	
 	return tpHits, extraHits, criticalHit, damage;
 	

@@ -4,8 +4,6 @@
 --      Teleports to Wajoam Woodlands Leypoint
 -----------------------------------------
  
-require("scripts/globals/teleports");
-require("scripts/globals/settings");
 require("scripts/globals/status");
  
 -----------------------------------------
@@ -13,16 +11,12 @@ require("scripts/globals/status");
 -----------------------------------------
  
 function onItemCheck(target)
-	result = 0;
-	if (target:isZoneVisited(51) == false) then
-        result = 56;
-    end
-	return result;
+	return 0;
 end;
 -----------------------------------------
 -- OnItemUse
 -----------------------------------------
  
 function onItemUse(target)
-	olduumRing(target);
+	target:setPos(-199, -10, 80, 94, 51);
 end;

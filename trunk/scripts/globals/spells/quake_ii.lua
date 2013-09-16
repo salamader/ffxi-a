@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Quake II
+-- Spell: Quake 2
 -- Deals earth damage to an enemy.
 -----------------------------------------
 

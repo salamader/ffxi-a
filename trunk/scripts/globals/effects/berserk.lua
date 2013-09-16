@@ -11,11 +11,9 @@ require("scripts/globals/status");
 -----------------------------------
 
 function onEffectGain(target,effect)
-	
-	target:addMod(MOD_DEFP, effect:getPower());
-	target:addMod(MOD_ATTP, effect:getSubPower());
-	target:addMod(MOD_RATTP, effect:getSubPower());
-	target:addMod(MOD_CRITHITRATE, effect:getTier());
+target:addMod(MOD_ATTP,25);
+target:addMod(MOD_RATTP, 25);
+target:addMod(MOD_DEFP,-25);
 end;
 
 -----------------------------------
@@ -30,9 +28,7 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
-
-	target:delMod(MOD_DEFP, effect:getPower());
-	target:delMod(MOD_ATTP, effect:getSubPower());
-	target:delMod(MOD_RATTP, effect:getSubPower());
-	target:delMod(MOD_CRITHITRATE, effect:getTier());
+target:delMod(MOD_ATTP,25);
+target:delMod(MOD_DEFP,-25);
+target:delMod(MOD_RATTP, 25);
 end;

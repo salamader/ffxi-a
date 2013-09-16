@@ -1,7 +1,7 @@
 -----------------------------------
--- 	EFFECT_DISEASE
--- Covered in Healing effect
--- Can not regain HP or MP by /heal
+--
+-- 	EFFECT_NONE
+-- 	
 -----------------------------------
 
 -----------------------------------

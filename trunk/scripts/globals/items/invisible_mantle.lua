@@ -1,8 +1,7 @@
 -----------------------------------------
--- ID: 13685
--- Item: Invisible Mantle
--- Item Effect: Invisible
--- Duration: 3 Mins  Charges: 20
+-- ID: 15170
+-- Item: Stoneskin torque
+-- Item Effect: gives invisible
 -----------------------------------------
 
 require("scripts/globals/settings");
@@ -21,13 +20,11 @@ end;
 
 function onItemUse(target)
 
-	if(target:hasStatusEffect(EFFECT_INVISIBLE)) then
-	        target:messageBasic(423);
-	else
-		local duration = 180;
-		duration = duration + (duration * target:getMod(MOD_INVIS_DUR));
-		if (not target:hasStatusEffect(EFFECT_INVISIBLE)) then
-			target:addStatusEffect(EFFECT_INVISIBLE,0,10,duration);
-		end
-	end
+    if(target:hasStatusEffect(EFFECT_INVISIBLE)) then
+        target:messageBasic(423);
+    else
+        -- delete old
+        target:delStatusEffect(EFFECT_INVISIBLE);
+        target:addStatusEffect(EFFECT_INVISIBLE, 0, 10, 180* SNEAK_INVIS_DURATION_MULTIPLIER);
+    end
 end;

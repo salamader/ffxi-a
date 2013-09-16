@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Sleepga II
+-- Spell: Sleep II
 -----------------------------------------
 require("scripts/globals/status");
 require("scripts/globals/magic");
@@ -15,10 +15,6 @@ function onSpellCast(caster,target,spell)
 	local duration = 90;
 	local typeEffect = EFFECT_SLEEP_II;
 	local bonus = AffinityBonus(caster, spell:getElement());
-	local body = caster:getEquipID(SLOT_BODY);
-	if (body == 11088) then -- Estoquers Sayon +2
-		bonus = bonus * 1.1;		
-	end
 	local pINT = caster:getStat(MOD_INT);
 	local mINT = target:getStat(MOD_INT);
 	local dINT = (pINT - mINT);

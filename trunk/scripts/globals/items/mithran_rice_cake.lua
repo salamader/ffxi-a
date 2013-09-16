@@ -1,8 +1,7 @@
 -----------------------------------------
 --	ID: 5297
---	Item: Mithran Rice Cake
---	Enchantment: 60 Min, Costume - Mithra
---  Child
+--	Mithran Rice Cake
+--	Enchantment: 60Min, Costume - Mithra Child
 -----------------------------------------
 
 require("scripts/globals/status");

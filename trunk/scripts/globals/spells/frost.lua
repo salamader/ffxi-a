@@ -1,8 +1,6 @@
 -----------------------------------------
 -- Spell: Frost
--- Deals ice damage that lowers an 
--- enemy's agility and gradually reduces
--- its HP.
+-- Deals ice damage that lowers an enemy's agility and gradually reduces its HP.
 -----------------------------------------
 
 require("scripts/globals/settings");

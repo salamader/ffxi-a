@@ -1,6 +1,7 @@
 -----------------------------------
--- EFFECT_NEGATE_POISON
--- Poison Resistance +100
+--
+--
+--
 -----------------------------------
 
 -----------------------------------
@@ -8,7 +9,6 @@
 -----------------------------------
 
 function onEffectGain(target,effect)
-	target:addMod(MOD_POISONRES, 100);
 end;
 
 -----------------------------------
@@ -23,5 +23,4 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
-	target:delMod(MOD_POISONRES, 100);
 end;

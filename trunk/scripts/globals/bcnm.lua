@@ -10,34 +10,32 @@ require("scripts/globals/quests");
 -- array to map (for each zone) the item id of the valid trade item with the bcnmid in the database
 -- e.g. zone,{itemid,bcnmid,itemid,bcnmid,itemid,bcnmid}
 -- DO NOT INCLUDE MAAT FIGHTS
-
-itemid_bcnmid_map = { 6,{640,0},									-- Bearclaw Pinnacle
-					  8,{672,0},									-- Boneyard
-					 10,{704,0,706,2},								-- The_Shrouded_Maw
-					 13,{736,0},									-- Mineshaft
-					 17,{0,0},										-- Spire of Holla
-					 19,{0,0},										-- Spire of Dem
-					 21,{0,0},										-- Spire of Mea
-					 23,{0,0},										-- Spire_of_Vahzl
-					 31,{0,0},										-- Monarch Linn
-					 32,{992,0,993,1},								-- Sealion Den
-					 35,{0,0},										-- The_Garden_of_RuHmet
-					 36,{0,0},										-- Empyreal Paradox
-					 139,{1553,11,1175,15,1180,17}, 				-- Horlais Peak
-					 140,{1551,34,1552,35,1552,36}, 				-- Ghelsba Outpost
+itemid_bcnmid_map = { 6,{0,0},--Bearclaw_Pinnacle
+                      8,{0,0},--Boneyard_Gully
+                     10,{0,0},--The_Shrouded_Maw
+					 13,{0,0},--Mine_Shaft_2716
+                     17,{0,0},--spire of holla
+					 19,{0,0},--spire of dem
+					 21,{0,0},--spire of mea
+					 23,{0,0},--Spire_of_Vahzl
+					 31,{0,0},--Monarch Linn
+					 32,{0,0},--Sealion's Den
+					 35,{0,0},--The_Garden_of_RuHmet
+					 36,{0,0},--empyreal paradox
+					 139,{1553,11,1175,15,1180,17}, -- Horlais Peak
+					 140,{1551,34,1552,35,1552,36}, -- Ghelsba Outpost
 					 144,{1166,68,1178,81,1553,76,1180,82,1130,79}, -- Waughroon Shrine
-					 146,{1553,107,1551,105}, 						-- Balgas Dias
-					 168,{0,0},										-- Chamber of Oracles
-					 170,{0,0}, 									-- Full Moon Fountain
-					 180,{1550,293}, 								-- LaLoff Amphitheater
-					 181,{0,0}, 									-- Celestial Nexus
-					 201,{1546,418,1174,417}, 						-- Cloister of Gales
-					 202,{1548,450,1172,449}, 						-- Cloister of Storms
-					 203,{1545,482,1171,481}, 						-- Cloister of Frost
-					 206,{0,0}, 									-- Qu'Bia Arena
-					 207,{1544,545}, 								-- Cloister of Flames
-					 209,{1547,578,1169,577}, 						-- Cloister of Tremors
-					 211,{1549,609}}; 								-- Cloister of Tides
+					 146,{1553,107,1551,105}, -- Balgas Dias
+					 168,{0,0}, -- Chamber of Oracles
+					 170,{0,0}, -- Full Moon Fountain
+					 180,{1550,293}, -- LaLoff Amphitheater
+					 201,{1546,418,1174,417}, -- Cloister of Gales
+					 202,{1548,450,1172,449}, -- Cloister of Storms
+					 203,{1545,482,1171,481}, -- Cloister of Frost
+					 206,{0,0}, -- Qu'Bia Arena
+					 207,{1544,545}, -- Cloister of Flames
+					 209,{1547,578,1169,577}, -- Cloister of Tremors
+					 211,{1549,609}}; -- Cloister of Tides
 
 -- array to map (for each zone) the BCNM ID to the Event Parameter corresponding to this ID.
 -- DO NOT INCLUDE MAAT FIGHTS (only included one for testing!)
@@ -46,9 +44,9 @@ itemid_bcnmid_map = { 6,{640,0},									-- Bearclaw Pinnacle
 -- The paramid is a bitmask which you need to find out. Being a bitmask, it will be one of:
 -- 0,1,2,3,4,5,...
 bcnmid_param_map = {6,{640,0},
-					8,{672,0},
-					10,{704,0,706,2},
-					13,{736,0},
+                    8,{672,0},
+                    10,{704,0,706,2},
+                    13,{736,0},
                     17,{768,0},
 					19,{800,0},
 					21,{832,0},
@@ -57,17 +55,16 @@ bcnmid_param_map = {6,{640,0},
 					32,{992,0,993,1},
 					35,{1024,0},
                     36,{1056,0},
-					139,{0,0,3,3,5,5,6,6,7,7,11,11,15,15,17,17},
+					139,{0,0,5,5,6,6,7,7,11,11,15,15,17,17},
 					140,{32,0,33,1,34,2,35,3,36,4},
 					144,{64,0,67,3,68,4,70,6,71,7,72,8,81,17,76,12,82,18,79,15},
-					146,{96,0,99,3,101,5,102,6,103,7,107,11,105,9},
+					146,{96,0,101,5,102,6,103,7,107,11,105,9},
 					163,{128,0},
-					165,{160,0,161,1},
+					165,{160,0},
 					168,{192,0,194,2,195,3,196,4},
 					170,{224,0},
 					179,{256,0},
 					180,{293,5,288,0,289,1,290,2,291,3,292,4},
-					181,{320,0},
 					201,{416,0,417,1,418,2},
 					202,{448,0,449,1,450,2},
 					203,{480,0,481,1,482,2},
@@ -362,12 +359,12 @@ function checkNonTradeBCNM(player,npc)
 	if(Zone == 6) then--Bearclaw_Pinnacle
 	   	if(player:getCurrentMission(COP) == THREE_PATHS  and  player:getVar("COP_Ulmia_s_Path") == 6) then --flames_for_the_dead
 	    	 mask = GetBattleBitmask(640,Zone,1);
-			player:setVar("trade_bcnmid",640);
+	         player:setVar("trade_bcnmid",640);
 		end
 	elseif(Zone == 8) then--Boneyard_Gully
 	   	if(player:getCurrentMission(COP) == THREE_PATHS  and  player:getVar("COP_Ulmia_s_Path") == 5) then --head_wind
 	    	 mask = GetBattleBitmask(672,Zone,1);
-			player:setVar("trade_bcnmid",672);
+	         player:setVar("trade_bcnmid",672);
 		end
 	elseif(Zone == 10) then--The_Shrouded_Maw
 	    if(player:getCurrentMission(COP) == DARKNESS_NAMED  and  player:getVar("PromathiaStatus") == 2) then--DARKNESS_NAMED
@@ -380,9 +377,8 @@ function checkNonTradeBCNM(player,npc)
     elseif(Zone == 13) then --Mine_Shaft_2716
 	    if(player:getCurrentMission(COP) == THREE_PATHS  and  player:getVar("COP_Louverance_s_Path") == 5) then --century_of_hardship
 	    	 mask = GetBattleBitmask(736,Zone,1);
-			player:setVar("trade_bcnmid",736);
+	         player:setVar("trade_bcnmid",736);
 		end
-
 	elseif(Zone == 17) then --Spire of Holla
 	    if(player:getCurrentMission(COP) == THE_MOTHERCRYSTALS and player:hasKeyItem(LIGHT_OF_HOLLA) == false) then -- light of holla
 	        mask = GetBattleBitmask(768,Zone,1);
@@ -410,7 +406,7 @@ function checkNonTradeBCNM(player,npc)
 		elseif(player:getCurrentMission(COP) == THE_SAVAGE and player:getVar("PromathiaStatus") == 1) then
 	      	mask = GetBattleBitmask(961,Zone,1);
 	        player:setVar("trade_bcnmid",961);
-		end
+	    end
 	elseif(Zone == 32) then --Sealion's Den
 	    if(player:getCurrentMission(COP) == ONE_TO_BE_FEARED and player:getVar("PromathiaStatus")==2) then -- one_to_be_feared
 	        mask = GetBattleBitmask(992,Zone,1);
@@ -424,7 +420,7 @@ function checkNonTradeBCNM(player,npc)
 	        mask = GetBattleBitmask(1024,Zone,1);
 	        player:setVar("trade_bcnmid",1024);
 	    end
-	elseif(Zone == 36) then --Empyreal Paradox
+	elseif(Zone == 36) then --empyreal paradox
 	    if(player:getCurrentMission(COP) ==  DAWN and player:getVar("PromathiaStatus")==2) then --dawn
 	        mask = GetBattleBitmask(1056,Zone,1);
 	        player:setVar("trade_bcnmid",1056);
@@ -435,9 +431,6 @@ function checkNonTradeBCNM(player,npc)
 			player:getCurrentMission(WINDURST) == THE_THREE_KINGDOMS_SANDORIA2) and player:getVar("MissionStatus") == 9) then -- Mission 2-3
 			mask = GetBattleBitmask(0,Zone,1);
 			player:setVar("trade_bcnmid",0);
-		elseif(player:getCurrentMission(SANDORIA) == THE_SECRET_WEAPON and player:getVar("MissionStatus") == 0) then
-			mask = GetBattleBitmask(3,Zone,1);
-			player:setVar("trade_bcnmid",3);
 		end
 	elseif(Zone == 140) then -- Ghelsba Outpost
 		MissionStatus = player:getVar("MissionStatus");
@@ -462,10 +455,7 @@ function checkNonTradeBCNM(player,npc)
 		if(player:hasKeyItem(DARK_KEY)) then -- Mission 2-3
 			mask = GetBattleBitmask(96,Zone,1);
 			player:setVar("trade_bcnmid",96);
-		elseif(player:getCurrentMission(WINDURST) == SAINTLY_INVITATION and player:getVar("WINDURST62") == 1 and player:hasKeyItem(HOLY_ONES_INVITATION))then
-			mask = GetBattleBitmask(99,Zone,1);
-			player:setVar("trade_bcnmid",99);
-		end 
+		end
 	elseif(Zone == 163) then -- Sacrificial Chamber
 		if(player:hasKeyItem(SACRIFICIAL_CHAMBER_KEY)) then -- Zilart Mission 4
 			mask = GetBattleBitmask(128,Zone,1);
@@ -475,9 +465,6 @@ function checkNonTradeBCNM(player,npc)
 		if(player:getCurrentMission(player:getNation()) == 15 and player:getVar("MissionStatus") == 2) then -- Mission 5-2
 			mask = GetBattleBitmask(160,Zone,1);
 			player:setVar("trade_bcnmid",160);
-		elseif(player:getCurrentMission(BASTOK) == WHERE_TWO_PATHS_CONVERGE and player:getVar("BASTOK92") == 1) then -- Mission 9-2
-			mask = GetBattleBitmask(161,Zone,1);
-			player:setVar("trade_bcnmid",161);
 		end
 	elseif(Zone == 168) then -- Chamber of Oracles
 		if(player:getCurrentMission(ZILART) == THROUGH_THE_QUICKSAND_CAVES or player:getCurrentMission(ZILART) == THE_CHAMBER_OF_ORACLES) then -- Zilart Mission 6
@@ -514,11 +501,6 @@ function checkNonTradeBCNM(player,npc)
 				player:setVar("trade_bcnmid",292);
 			end
 		end
-	elseif(Zone == 181) then
-		if(player:getCurrentMission(ZILART) == THE_CELESTIAL_NEXUS)then  
-			mask = GetBattleBitmask(320,Zone,1);
-			player:setVar("trade_bcnmid",320);
-		end	
 	elseif(Zone == 201) then -- Cloister of Gales
 		if(player:hasKeyItem(TUNING_FORK_OF_WIND)) then -- Trial by Wind
 			mask = GetBattleBitmask(416,Zone,1);

@@ -1,7 +1,7 @@
 -----------------------------------
--- EFFECT_ARIA
--- Increases Charm Resistance to 
--- Party Members within target AoE
+--
+--
+--
 -----------------------------------
 
 -----------------------------------
@@ -9,7 +9,6 @@
 -----------------------------------
 
 function onEffectGain(target,effect)
-	target:addMod(MOD_CHARMRES,effect:getPower());
 end;
 
 -----------------------------------
@@ -24,5 +23,4 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
-	target:delMod(MOD_CHARMRES,effect:getPower());
 end;

@@ -1,7 +1,6 @@
 -----------------------------------------
 -- Spell: Diaga III
--- Lowers an enemy's defense and 
--- gradually deals light elemental damage.
+-- Lowers an enemy's defense and gradually deals light elemental damage.
 -----------------------------------------
 
 require("scripts/globals/settings");
@@ -37,25 +36,13 @@ function onSpellCast(caster,target,spell)
 
 	-- Calculate duration.
 	local duration = 120;
-	
-	local diaPowerMod = 0;
-		
-	if(caster:getEquipID(SLOT_MAIN) == 17466 or caster:getEquipID(SLOT_SUB) == 17466) then -- Dia Wand
-		diaPowerMod = 1;
-	end
-	
-	if (caster:hasStatusEffect(EFFECT_SABOTEUR) == true) then
-	    duration = duration + (duration * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
-	    diaPowerMod = diaPowerMod + 3;
-		caster:delStatusEffect(EFFECT_SABOTEUR);
-	end
 
 	-- Check for Bio.
 	local bio = target:getStatusEffect(EFFECT_BIO);
 
 	-- Do it!
 	if(bio == nil or (DIA_OVERWRITE == 0 and bio:getPower() <= 3) or (DIA_OVERWRITE == 1 and bio:getPower() < 3)) then
-		target:addStatusEffect(EFFECT_DIA,3,3,duration,FLAG_ERASABLE, 0, 15, diaPowerMod);
+		target:addStatusEffect(EFFECT_DIA,3,3,duration,FLAG_ERASABLE, 0, 15);
 		spell:setMsg(2);
 	else
 		spell:setMsg(75);

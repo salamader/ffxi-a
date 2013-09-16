@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4402
--- Item: Red Terrapin
--- Food Effect: 5 Min, Mithra only
+-- Item: red_terrapin
+-- Food Effect: 5Min, Mithra only
 -----------------------------------------
 -- Dexterity 3
 -- Mind -5

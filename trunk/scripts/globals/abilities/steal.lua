@@ -1,6 +1,5 @@
 -----------------------------------
 -- Ability: Steal
--- Steals items from enemy.
 -----------------------------------
 
 require("scripts/globals/settings");

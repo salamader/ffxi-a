@@ -1,7 +1,5 @@
 -----------------------------------
---	Ability: Sublimation
---  Gradually creates a storage of 
---  MP while reducing your HP.
+-- Ability: Sublimation
 -----------------------------------
 
 require("scripts/globals/settings");

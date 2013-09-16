@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Massacre Elegy
+-- Spell: Battlefield Elegy
 -----------------------------------------
 require("scripts/globals/status");
 require("scripts/globals/magic");
@@ -12,10 +12,10 @@ function OnMagicCastingCheck(caster,target,spell)
 end;
 
 function onSpellCast(caster,target,spell)
-	local duration = 120;
-	local power = 768;
+    local duration = 240;
+    local power = 1024;
 
-	local bonus = AffinityBonus(caster, spell:getElement());
+    local bonus = AffinityBonus(caster, spell:getElement());
     local pCHR = caster:getStat(MOD_CHR);
     local mCHR = target:getStat(MOD_CHR);
     local dCHR = (pCHR - mCHR);
@@ -28,18 +28,34 @@ function onSpellCast(caster,target,spell)
     if(100 * math.random() < target:getMod(MOD_SLOWRES)) then
         spell:setMsg(85); -- resisted spell
     else
-    
- 	duration = duration + (duration * (caster:getMod(MOD_SONG_DURATION)/100));
- 	duration = duration + (duration * ((caster:getMod(MOD_ALL_SONGS) * 10)/100));
-	duration = duration + (duration * ((caster:getMod(MOD_ELEGY) * 10)/100));
-	
-	power = power + ((caster:getMod(MOD_ELEGY) + caster:getMod(MOD_ALL_SONGS)) * 5);
-	if (power > 1024) then
-		power = 1024;
-	end
-	
+        local sItem = caster:getEquipID(2);
+
+        -- horn +1
+        if(sItem == 17371) then
+            power = power + 20;
+            duration = duration * 1.2;
+        end
+
+        if(sItem == 17352) then
+            power = power + 11;
+            duration = duration * 1.1;
+        end
+
+        if(sItem == 18342) then
+            power = power + 20;
+            duration = duration * 1.2;
+        end
+
+        if(sItem == 17856) then
+            power = power + 30;
+            duration = duration * 1.3;
+        end
+
         -- Try to overwrite weaker elegy
-        if(target:addStatusEffect(EFFECT_ELEGY,power,0,duration)) then
+        if(canOverwrite(target, EFFECT_ELEGY, power)) then
+            -- overwrite them
+            target:delStatusEffect(EFFECT_ELEGY);
+            target:addStatusEffect(EFFECT_ELEGY,power,0,duration);
             spell:setMsg(237);
         else
             spell:setMsg(75); -- no effect

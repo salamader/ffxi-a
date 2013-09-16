@@ -1,18 +1,12 @@
 ---------------------------------------------
---  Mboskill: Dragon Breath
+--  Dragon Breath
 --
---  Description: Deals Fire damage to enemies
---  within a fan-shaped area.
+--  Description: Deals Fire damage to enemies within a fan-shaped area.
 --  Type: Breath
 --  Utsusemi/Blink absorb: Ignores shadows
 --  Range: Unknown cone
---  Notes: Used only by Fafnir, Nidhogg,
---  Cynoprosopi, and Wyrm. Because of the
---  high damage output from Fafnir/Nidhogg/
---  Wyrm, it is usually avoided by standing
---  on (or near) the wyrm's two front feet.
---  Cynoprosopi's breath attack is much less
---  painful.
+--  Notes: Used only by Fafnir, Nidhogg, Cynoprosopi, and Wyrm. Because of the high damage output from Fafnir/Nidhogg/Wyrm, it is usually avoided by
+--        standing on (or near) the wyrm's two front feet. Cynoprosopi's breath attack is much less painful.
 ---------------------------------------------
 require("/scripts/globals/settings");
 require("/scripts/globals/status");
@@ -21,10 +15,10 @@ require("/scripts/globals/utils");
 
 ---------------------------------------------
 function OnMobSkillCheck(target,mob,skill)
-	local mobID = mob:getID();
-	if (mobID == 16904202 or mobID == 16904203 or mobID == 16904204  )then -- dragon is not ouryu's mission
-		return 1;
-	end
+ local mobID = mob:getID();
+   if (mobID == 16904202 or mobID == 16904203 or mobID == 16904204  )then -- dragon is not ouryu's mission
+	  return 1;
+   end
     
 	return 0;
 end;

@@ -274,13 +274,13 @@ FOV_EVENT_QUFIM =0x0021;
 FOV_EVENT_YUHTUNGA =0x003d;
 FOV_EVENT_YHOATOR =0x003d;
 FOV_EVENT_WEST_ALTEPA =0x003d;
-FOV_EVENT_EAST_ALTEPA =0x003d;
+FOV_EVENT_EAST_ALTEPA =0x003d; --test
 FOV_EVENT_BEAUCEDINE =0x00da;
 FOV_EVENT_XARCABARD =0x0030;
 FOV_EVENT_BEHEMOTH =0x003d;
 FOV_EVENT_ZITAH =0x003d;
 FOV_EVENT_ROMAEVE =0x003d;
-FOV_EVENT_TERIGGAN =0x003d;
+FOV_EVENT_TERIGGAN =0x003d; --test
 FOV_EVENT_SORROWS =0x003d;
 
 ----------------------------------
@@ -377,7 +377,7 @@ elseif(option==FOV_MENU_PROTECT) then --Chose Protect, removes all other protect
             def=120;
         end
         --Add protect
-        player:addStatusEffect(EFFECT_PROTECT,def,0,3600);
+        player:addStatusEffect(EFFECT_PROTECT,def,0,1800);
     end
 elseif(option==FOV_MENU_SHELL) then --Chose Shell, removes all other shell.
 	--Decrease tabs
@@ -398,7 +398,7 @@ elseif(option==FOV_MENU_SHELL) then --Chose Shell, removes all other shell.
             def=56;
         end
         --Add shell
-        player:addStatusEffect(EFFECT_SHELL,def,0,3600);
+        player:addStatusEffect(EFFECT_SHELL,def,0,1800);
     end
 elseif (option==FOV_MENU_RERAISE) then --Reraise chosen.
 	--Decrease tabs
@@ -516,7 +516,10 @@ function checkRegime(killer,mob,rid,index)
 
 
 	if(killer:getVar("fov_regimeid") == rid) then --player is doing this regime
-		if(partyType < 2 and mob:checkBaseExp() and killer:checkDistance(mob) < 100) then
+		-- Need to add difference because a lvl1 can xp with a level 75 at ro'maeve
+		local difference = math.abs(mob:getMainLvl() - killer:getMainLvl());
+		
+		if(partyType < 2 and mob:checkBaseExp() and killer:checkDistance(mob) < 100 and difference <= 15) then
             --get the number of mobs needed/killed
             local needed = killer:getVar("fov_numneeded"..index);
             local killed = killer:getVar("fov_numkilled"..index);
@@ -552,7 +555,7 @@ function checkRegime(killer,mob,rid,index)
                         end
 
                         --TODO: display msgs (based on zone annoyingly, so will need killer:getZone() then a lookup)
-                        killer:addExp(reward*EXP_RATE);
+                        killer:addExp(reward);
                         if (k1 ~= 0) then killer:setVar("fov_numkilled1",0); end
                         if (k2 ~= 0) then killer:setVar("fov_numkilled2",0); end
                         if (k3 ~= 0) then killer:setVar("fov_numkilled3",0); end

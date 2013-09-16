@@ -24,5 +24,5 @@ end;
 
 function onItemUse(target)
 	target:addTP(100);
-	target:addStatusEffect(EFFECT_MEDICINE,0,0,3600);
+	target:addStatusEffect(EFFECT_MEDICINE,0,0,7200);
 end;

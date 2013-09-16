@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 5792
 -- Item: Bastore Sardine
--- Food Effect: 5 Min, Mithra only
+-- Food Effect: 5Min, Mithra only
 -----------------------------------------
 -- Dexterity 1
 -- Mind -3

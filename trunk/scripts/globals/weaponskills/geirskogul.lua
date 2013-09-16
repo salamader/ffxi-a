@@ -28,60 +28,6 @@ function OnUseWeaponSkill(player, target, wsID)
 	params.acc100 = 0.0; params.acc200= 0.0; params.acc300= 0.0;
 	params.atkmulti = 1;
 	local damage, criticalHit, tpHits, extraHits = doPhysicalWeaponskill(player, target, params);
-
-	local main = player:getEquipID(SLOT_MAIN);
-	local aftermath = 0;
-	local tp = player:getTP();
-	local duration = 0;
-	local zone = player:getZone();
-	
-	if (main == 18300) then
-		aftermath = 1;
-	elseif (main == 18301) then
-		aftermath = 1;
-	elseif (main == 18643) then
-		aftermath = 1;
-	elseif (main == 18657) then
-		damage = damage * 1.25;
-		aftermath = 1;
-	elseif (main == 18671) then
-		damage = damage * 1.25;
-		aftermath = 1;
-	elseif (main == 19752) then
-		damage = damage * 1.4;
-		aftermath = 1;
-	elseif (main == 19845) then
-		damage = damage * 1.4;
-		aftermath = 1;
-	elseif ((main == 18299) and (zone == 39 or zone == 40 or zone == 41 or zone == 42 or zone == 134 or 
-		zone ==135 or zone == 185 or zone == 186 or zone == 187 or zone == 188)) then
-		aftermath = 1;
-	end
-		
-	if (aftermath == 1) then
-		if (tp == 300) then
-			duration = 60;
-			player:delStatusEffect(EFFECT_AFTERMATH_LV1);
-			player:delStatusEffect(EFFECT_AFTERMATH_LV2);
-			player:delStatusEffect(EFFECT_AFTERMATH_LV3);
-			player:addStatusEffect(EFFECT_AFTERMATH_LV3,8,0,duration);
-		elseif (tp >= 200) then
-			duration = 40;
-			if (player:hasStatusEffect(EFFECT_AFTERMATH_LV3) == false) then
-				player:delStatusEffect(EFFECT_AFTERMATH_LV1);
-				player:delStatusEffect(EFFECT_AFTERMATH_LV2);
-				player:addStatusEffect(EFFECT_AFTERMATH_LV2,8,0,duration);
-			end
-		else
-			duration = 20;
-			if (player:hasStatusEffect(EFFECT_AFTERMATH_LV3) == false) then
-				if (player:hasStatusEffect(EFFECT_AFTERMATH_LV2) == false) then
-					player:delStatusEffect(EFFECT_AFTERMATH_LV1);
-					player:addStatusEffect(EFFECT_AFTERMATH_LV1,8,0,duration);
-				end
-			end
-		end
-	end
 	
 	return tpHits, extraHits, criticalHit, damage;
 	

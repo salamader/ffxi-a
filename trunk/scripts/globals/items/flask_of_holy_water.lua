@@ -24,16 +24,6 @@ function onItemUse(target)
     local curse2 = target:getStatusEffect(EFFECT_CURSE_II);
     local bane = target:getStatusEffect(EFFECT_BANE);
 	local final = 0;
-    local ring1 = target:getEquipID(SLOT_RING1);
-    local ring2 = target:getEquipID(SLOT_RING2);
-    local pEquipMods = 0.25;
-    
-    	if(ring1 == 10795 or ring2 == 10795) then -- Blenmot's & +1 Ring
-    		pEquipMods = pEquipMods + .10
-    	end
-    	if(ring1 == 10794 or ring2 == 10794) then
-    		pEquipMods = pEquipMods + .05
-	end
 
     if(curse ~= nil and curse2 ~= nil and bane ~= nil) then
         target:delStatusEffect(EFFECT_CURSE_I);
@@ -57,7 +47,7 @@ function onItemUse(target)
     elseif(bane ~= nil) then
         target:delStatusEffect(EFFECT_BANE);
         final = EFFECT_BANE;
-    elseif(target:hasStatusEffect(EFFECT_DOOM) and math.random() <= pEquipMods) then
+    elseif(target:hasStatusEffect(EFFECT_DOOM) and math.random() <= 0.25) then
         -- remove doom
         target:delStatusEffect(EFFECT_DOOM);
         target:messageBasic(359);

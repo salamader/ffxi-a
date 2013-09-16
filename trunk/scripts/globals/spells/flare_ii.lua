@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Flare II
+-- Spell: Flare 2
 -- Deals fire damage to an enemy.
 -----------------------------------------
 

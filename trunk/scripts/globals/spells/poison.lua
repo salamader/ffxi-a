@@ -1,5 +1,5 @@
 -----------------------------------------
---  Spell: Poison
+--	Spell: Poison
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -14,7 +14,7 @@ function OnMagicCastingCheck(caster,target,spell)
 end;
 
 function onSpellCast(caster,target,spell)
-    local effect = EFFECT_POISON;
+	local effect = EFFECT_POISON;
 	
     if(math.random(0,100) >= target:getMod(MOD_POISONRES)) then
 		local duration = 30;
@@ -28,26 +28,14 @@ function onSpellCast(caster,target,spell)
 			power = 4;
 		end
 		
-		local bonus = AffinityBonus(caster, spell:getElement());
-		local resist = applyResistance(caster,spell,target,dINT,ENFEEBLING_MAGIC_SKILL,bonus);
-	
-		local body = caster:getEquipID(SLOT_BODY);
-		if (body == 11088) then -- Estoquers Sayon +2
-			power = 5;		
-		end
-	
-		if (caster:hasStatusEffect(EFFECT_SABOTEUR) == true) then
-			duration = duration + (duration * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
-			power = power * 2;
-			caster:delStatusEffect(EFFECT_SABOTEUR);
-		end
-
+        local bonus = AffinityBonus(caster, spell:getElement());
+        local resist = applyResistance(caster,spell,target,dINT,ENFEEBLING_MAGIC_SKILL,bonus);
         if(resist == 1 or resist == 0.5) then -- effect taken
             duration = duration * resist;
 
             if(target:addStatusEffect(effect,power,3,duration)) then
                 spell:setMsg(236);
-			else
+            else
                 spell:setMsg(75);
             end
 

@@ -3,14 +3,9 @@
 -- Item: wizard_cookie
 -- Food Effect: 5Min, All Races
 -----------------------------------------
--- HP 3000
--- Character Stats AGI DEX STR +25
--- Attack +25
--- Accuracy +25
--- Ranged Accuracy +25
--- Store TP +25
--- Haste 70%
--- Regen 1400 1Tic
+-- MP Recovered While Healing 7
+-- Plantoid Killer 7
+-- Slow Resist 7
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -32,7 +27,7 @@ end;
 -----------------------------------------
 
 function onItemUse(target)
-	target:addStatusEffect(EFFECT_FOOD,0,0,600,4576);
+	target:addStatusEffect(EFFECT_FOOD,0,0,300,4576);
 end;
 
 -----------------------------------------
@@ -40,21 +35,9 @@ end;
 -----------------------------------------
 
 function onEffectGain(target,effect)
-	target:addMod(MOD_HP, 3000);
-	target:addMod(MOD_STR, 25);
-	target:addMod(MOD_DEX, 25);
-	target:addMod(MOD_AGI, 25);
-	target:addMod(MOD_ACC, 25);
-	target:addMod(MOD_RACC, 25);
-	target:addMod(MOD_STORETP, 25);
-	if(target:hasStatusEffect(EFFECT_HASTE) == false) then
-		target:addStatusEffect(EFFECT_HASTE,700,0,600)
-	end;
-	if(target:hasStatusEffect(EFFECT_REGEN) == false) then
-		target:addStatusEffect(EFFECT_REGEN,1400,1,600);
-	end;
-		
-	
+	target:addMod(MOD_MPHEAL, 7);
+	target:addMod(MOD_PLANTOID_KILLER, 7);
+	target:addMod(MOD_SLOWRES, 7);
 end;
 
 -----------------------------------------
@@ -62,11 +45,7 @@ end;
 -----------------------------------------
 
 function onEffectLose(target,effect)
-	target:delMod(MOD_HP, 3000);
-	target:delMod(MOD_STR, 25);
-	target:delMod(MOD_DEX, 25);
-	target:delMod(MOD_AGI, 25);
-	target:delMod(MOD_ACC, 25);
-	target:delMod(MOD_RACC, 25);
-	target:delMod(MOD_STORETP, 25);
+	target:delMod(MOD_MPHEAL, 7);
+	target:delMod(MOD_PLANTOID_KILLER, 7);
+	target:delMod(MOD_SLOWRES, 7);
 end;

@@ -1,4 +1,5 @@
 -----------------------------------
+--
 --  EFFECT_PAEON
 -- getPower returns the TIER (e.g. 1,2,3,4)
 -- DO NOT ALTER ANY OF THE EFFECT VALUES! DO NOT ALTER EFFECT POWER! 
@@ -17,10 +18,7 @@ end;
 -----------------------------------
 
 function onEffectTick(target,effect)
-
-	local hp = effect:getPower() + effect:getSubPower();
-	
-	target:addHP(hp);
+	target:addHP(effect:getPower());
 end;
 
 -----------------------------------

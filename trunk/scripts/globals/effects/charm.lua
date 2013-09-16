@@ -1,7 +1,7 @@
 -----------------------------------
---	EFFECT_CHARM
---	Causes entity to attack whoever
---	the Charmer is engaged with.
+--
+--
+--
 -----------------------------------
 
 -----------------------------------

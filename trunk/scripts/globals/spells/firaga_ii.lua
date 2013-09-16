@@ -1,6 +1,6 @@
 -----------------------------------------
--- Spell: Firaga II
--- Deals fire damage to an enemy.
+-- Spell: Firaga 2
+-- Deals wind damage to an enemy.
 -----------------------------------------
 
 require("scripts/globals/magic");

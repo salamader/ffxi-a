@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Blindga
+-- Spell: Blind
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -19,7 +19,7 @@ function onSpellCast(caster,target,spell)
 	dINT = (caster:getStat(MOD_INT) - target:getStat(MOD_INT));
 	bonus = AffinityBonus(caster,spell:getElement());
 
-	-- Base power.
+	-- Base power.  May need more research.
 	power = math.floor((dINT + 60) / 4);
 	if(power < 5) then
 		power = 5;
@@ -30,11 +30,6 @@ function onSpellCast(caster,target,spell)
 
 	-- Duration, including resistance.  Unconfirmed.
 	duration = 120 * applyResistance(caster,spell,target,dINT,35,bonus);
-
-	local body = caster:getEquipID(SLOT_BODY);
-	if (body == 11088) then -- Estoquers Sayon +2
-		power = power * 1.1;		
-	end
 
 	if(100 * math.random() >= target:getMod(MOD_BLINDRES)) then
 		if(duration >= 90) then --Do it!

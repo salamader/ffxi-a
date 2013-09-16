@@ -1,8 +1,6 @@
 -----------------------------------------
--- Spell: Bio IV
--- Deals dark damage that weakens an 
--- enemy's attacks and gruadually reduces
--- its HP.
+-- Spell: Bio III
+-- Deals dark damage that weakens an enemy's attacks and gruadually reduces its HP.
 -----------------------------------------
 
 require("scripts/globals/settings");
@@ -20,12 +18,12 @@ end;
 function onSpellCast(caster,target,spell)
 
 	--calculate raw damage
-	local basedmg = caster:getSkillLevel(DARK_MAGIC_SKILL) / 3;
+	local basedmg = caster:getSkillLevel(DARK_MAGIC_SKILL) / 4;
 	local dmg = calculateMagicDamage(basedmg,3,caster,spell,target,DARK_MAGIC_SKILL,MOD_INT,false);
 
-	-- Softcaps at 150, should always do at least 1
-	if(dmg > 150) then
-		dmg = 150;
+	-- Softcaps at 32, should always do at least 1
+	if(dmg > 80) then
+		dmg = 80;
 	end
 	if(dmg < 1) then
 		dmg = 1;

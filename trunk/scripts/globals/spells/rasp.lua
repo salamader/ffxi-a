@@ -1,8 +1,6 @@
 -----------------------------------------
 -- Spell: Rasp
--- Deals earth damage that lowers an 
--- enemy's dexterity and gradually 
--- reduces its HP. 
+-- Deals earth damage that lowers an enemy's dexterity and gradually reduces its HP. 
 -----------------------------------------
 
 require("scripts/globals/settings");

@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Blizzaga II
+-- Spell: Blizzaga 2
 -- Deals ice damage to an enemy.
 -----------------------------------------
 

@@ -11,9 +11,7 @@ require("scripts/globals/status");
 -----------------------------------
 
 function onEffectGain(target,effect)
-
 	target:addMod(MOD_WATERRES,effect:getPower());
-	target:addMod(MOD_MDEF, effect:getTier());
 end;
 
 -----------------------------------
@@ -28,7 +26,5 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
-
 	target:delMod(MOD_WATERRES,effect:getPower());
-	target:delMod(MOD_MDEF, effect:getTier());
 end;

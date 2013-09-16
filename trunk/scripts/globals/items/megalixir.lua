@@ -1,11 +1,10 @@
 -----------------------------------------
 -- ID: 4145
--- Item: Mega Elixir
+-- Item: Elixir
 -- Item Effect: Instantly restores 100% of HP and MP
 -----------------------------------------
 
 require("scripts/globals/settings");
-require("scripts/globals/status");
 
 -----------------------------------------
 -- OnItemCheck

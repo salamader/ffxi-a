@@ -1,26 +1,17 @@
 -----------------------------------------
 -- ID: 14491
 -- Item: Dominus Shield
--- Item Effect: Restores 60-85 MP
+-- Item Effect: Restores 20-35 MP
 -----------------------------------------
 
 require("scripts/globals/settings");
-require("scripts/globals/status");
 
 -----------------------------------------
 -- OnItemCheck
 -----------------------------------------
 
 function onItemCheck(target)
-	local result = 0;
-	local mMP = target:getMaxMP();
-	local cMP = target:getMP();
- 
-	if (mMP == cMP) then
-		result = 56; -- Does not let player use item if their mp is full
-	end
-	
-	return result;
+    return 0;
 end;
 
 -----------------------------------------

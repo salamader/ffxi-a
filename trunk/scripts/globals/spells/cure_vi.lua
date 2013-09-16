@@ -23,7 +23,6 @@ function onSpellCast(caster,target,spell)
 	local power = 0;
 	local basecure = 0;
 	local final = 0;
-	local recoverMP = 0;
 
 	local minCure = 600;
 	power = getCurePower(caster);
@@ -77,21 +76,6 @@ function onSpellCast(caster,target,spell)
 		if(final > diff) then
 			final = diff;
 		end
-		
-		local legs = caster:getEquipID(SLOT_LEGS);
-		if(legs == 11226) then -- Orison's Pantaloon's +1
-			recoverMP = final * .02;
-			caster:addMP(recoverMP);
-		end
-		if(legs == 11126) then -- Orison's Pantaloon's +2
-			recoverMP = final * .05;
-			caster:addMP(recoverMP);
-		end
-		-- printf("Cure MP Recovered %u",recoverMP);
-		if(recoverMP > 0) then
-			caster:messageBasic(25,0,recoverMP);
-		end
-		
 		target:restoreHP(final);
 
 		target:wakeUp();
@@ -106,22 +90,8 @@ function onSpellCast(caster,target,spell)
 			dmg = adjustForTarget(target,dmg);
 			dmg = finalMagicAdjustments(caster,target,spell,dmg);
 			final = dmg;
-			
-			if(legs == 11226) then -- Orison's Pantaloon's +1
-				recoverMP = final * .02;
-				caster:addMP(recoverMP);
-			end
-			if(legs == 11126) then -- Orison's Pantaloon's +2
-				recoverMP = final * .05;
-				caster:addMP(recoverMP);
-			end
-			-- printf("Cure MP Recovered %u",recoverMP);
-			if(recoverMP > 0) then
-				caster:messageBasic(25,0,recoverMP);
-			end
-			
 			target:delHP(final);
-			target:updateEnmityFromDamage(caster,final,true);
+			target:updateEnmityFromDamage(caster,final);
 		elseif(caster:getObjType() == TYPE_PC) then
 			spell:setMsg(75);
 		else

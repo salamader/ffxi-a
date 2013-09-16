@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4481
--- Item: Ogre Eel
--- Food Effect: 5 Min, Mithra only
+-- Item: ogre_eel
+-- Food Effect: 5Min, Mithra only
 -----------------------------------------
 -- Dexterity 2
 -- Mind -4

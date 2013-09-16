@@ -1,6 +1,7 @@
 -----------------------------------
+--
 -- 	EFFECT_LAST_RESORT
--- Enhances attacks - weakens defense
+-- 	
 -----------------------------------
 
 require("scripts/globals/status");
@@ -10,9 +11,9 @@ require("scripts/globals/status");
 -----------------------------------
 
 function onEffectGain(target,effect)
-
-	target:addMod(MOD_ATTP,20 + effect:getSubPower());
-	target:addMod(MOD_DEFP,((-15 - effect:getSubPower()) + effect:getTier()));
+	target:addMod(MOD_ATTP,15 + target:getMerit(MERIT_LAST_RESORT_EFFECT));
+	-- print(target:getMerit(MERIT_LAST_RESORT_EFFECT));
+	target:addMod(MOD_DEFP,-15 - target:getMerit(MERIT_LAST_RESORT_EFFECT));
 	target:addMod(MOD_HASTE_ABILITY, effect:getPower())
 end;
 
@@ -28,8 +29,7 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
-
-	target:delMod(MOD_ATTP,20 + effect:getSubPower());
-	target:delMod(MOD_DEFP,((-15 - effect:getSubPower()) + effect:getTier()));
+	target:delMod(MOD_ATTP,15 + target:getMerit(MERIT_LAST_RESORT_EFFECT));
+	target:delMod(MOD_DEFP,-15 - target:getMerit(MERIT_LAST_RESORT_EFFECT));
 	target:delMod(MOD_HASTE_ABILITY, effect:getPower())
 end;

@@ -5,7 +5,6 @@
 --      http://wiki.ffxiclopedia.org/wiki/Logging
 -------------------------------------------------
 
-require("scripts/globals/keyitems");
 require("scripts/globals/settings");
 require("scripts/globals/status");
 
@@ -61,26 +60,6 @@ function startLogging(player,zone,npc,trade,csid)
 		
 		if(item ~= 0 and full == 0) then
 			player:addItem(item);
-			if(zone == 104) then
-				if(player:hasKeyItem(TIMBER_SURVEY_CHECKLIST) == true) then
-					if(item == 698) then
-						player:setVar("timberChecklistAsh",1);
-						player:setVar("timberSurvey",1);
-					elseif(item == 688) then
-						player:setVar("timberChecklistArrow",1);
-						player:setVar("timberSurvey",1);
-					elseif(item == 696) then
-						player:setVar("timberChecklistYew",1);
-						player:setVar("timberSurvey",1);
-					elseif(item == 695) then
-						player:setVar("timberChecklistWillow",1);
-						player:setVar("timberSurvey",1);
-					elseif(item == 693) then
-						player:setVar("timberChecklistWalnut",1);
-						player:setVar("timberSurvey",1);
-					end
-				end
-			end
 			SetServerVariable("[LOGGING]Zone "..zone,GetServerVariable("[LOGGING]Zone "..zone) + 1);
 		end
 		
@@ -109,9 +88,7 @@ function hatchetBreak(player,trade)
 	Body = player:getEquipID(SLOT_BODY);
 	Hands = player:getEquipID(SLOT_HANDS);
 	Legs = player:getEquipID(SLOT_LEGS);
-	Waist = player:getEquipID(SLOT_WAIST);
-	Neck = player:getEquipID(SLOT_NECK);
-	
+
 	if(Body == 14374 or Body == 14375) then
 		hatchetbreak = hatchetbreak + 0.073;
 	end
@@ -119,12 +96,6 @@ function hatchetBreak(player,trade)
 		hatchetbreak = hatchetbreak + 0.073;
 	end
 	if(Hands == 14817 or Hands == 14818) then
-		hatchetbreak = hatchetbreak + 0.073;
-	end
-	if(Waist == 11769) then
-		hatchetbreak = hatchetbreak + 0.073;
-	end
-	if(Neck == 10926) then
 		hatchetbreak = hatchetbreak + 0.073;
 	end
 	

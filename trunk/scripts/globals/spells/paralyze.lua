@@ -21,10 +21,10 @@ function onSpellCast(caster,target,spell)
 	if(target:hasStatusEffect(EFFECT_PARALYSIS)) then --effect already on, do nothing
 		spell:setMsg(75);
 	elseif(math.random(0,100) >= target:getMod(MOD_PARALYZERES)) then
-	-- Calculate duration.
+		-- Calculate duration.
 		local double duration = 120;
 
-	-- Grabbing variables for paralyze potency
+		-- Grabbing variables for paralyze potency
 		local mLVL = caster:getMainLvl();
 		local pMND = caster:getStat(MOD_MND);
 		local mMND = target:getStat(MOD_MND);
@@ -32,22 +32,11 @@ function onSpellCast(caster,target,spell)
 		local dMND = (pMND - mMND);
 		local multiplier = 150 / mLVL;
 
-	-- Calculate potency.
+		-- Calculate potency.
 		local potency = (multiplier * dMND) / 10;
 
 		if potency > 25 then
 			potency = 25;
-		end
-
-		local body = caster:getEquipID(SLOT_BODY);
-		if (body == 11088) then -- Estoquers Sayon +2
-			potency = potency * 1.1;		
-		end
-	
-		if (caster:hasStatusEffect(EFFECT_SABOTEUR) == true) then
-			duration = duration + (duration * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
-			potency = potency + (potency * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
-			caster:delStatusEffect(EFFECT_SABOTEUR);
 		end
 		--printf("Duration : %u",duration);
 		--printf("Potency : %u",potency);

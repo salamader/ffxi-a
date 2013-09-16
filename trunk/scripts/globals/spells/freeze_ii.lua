@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Freeze II
+-- Spell: Freeze 2
 -- Deals ice damage to an enemy.
 -----------------------------------------
 

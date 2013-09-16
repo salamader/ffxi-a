@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4485
--- Item: Noble Lady
--- Food Effect: 5 Min, Mithra only
+-- Item: noble_lady
+-- Food Effect: 5Min, Mithra only
 -----------------------------------------
 -- Dexterity 3
 -- Mind -5

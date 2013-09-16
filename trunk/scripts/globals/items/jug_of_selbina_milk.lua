@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 5575
--- Item: Jug of Selbina Milk
--- Item Effect: Restores 60 HP / 180 secs
+-- Item: Yogurt
+-- Item Effect: Restores 60 HP over 180 seconds
 -----------------------------------------
 
 require("scripts/globals/status");

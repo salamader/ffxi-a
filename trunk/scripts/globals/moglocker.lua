@@ -5,8 +5,8 @@ require("scripts/globals/status")
 -- Mog Locker constants
 ------------------------------------
 MOGLOCKER_START_TS = 1009810800 -- unix timestamp for 2001/12/31 15:00
-MOGLOCKER_ALZAHBI_VALID_DAYS = 32
-MOGLOCKER_ALLAREAS_VALID_DAYS = 30
+MOGLOCKER_ALZAHBI_VALID_DAYS = 7
+MOGLOCKER_ALLAREAS_VALID_DAYS = 5
 MOGLOCKER_ACCESS_TYPE_ALZAHBI = 0
 MOGLOCKER_ACCESS_TYPE_ALLAREAS = 1
 MOGLOCKER_PLAYERVAR_ACCESS_TYPE = "mog-locker-access-type"
@@ -35,9 +35,9 @@ end
 -- Returns true if time was added successfully, false otherwise.
 function addMogLockerExpiryTime(player, numBronze)
     local accessType = getMogLockerAccessType(player);
-    local numDaysPerBronze = 30;
+    local numDaysPerBronze = 5;
     if (accessType == MOGLOCKER_ACCESS_TYPE_ALZAHBI) then
-        numDaysPerBronze = 32;
+        numDaysPerBronze = 7;
     end
     
     local currentTs = getMogLockerExpiryTimestamp(player)

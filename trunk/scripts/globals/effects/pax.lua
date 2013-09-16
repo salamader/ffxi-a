@@ -1,7 +1,6 @@
 -----------------------------------
 --
---	EFFECT_PAX
---	Reduces a player's enmity generation
+--
 --
 -----------------------------------
 
@@ -10,7 +9,6 @@
 -----------------------------------
 
 function onEffectGain(target,effect)
-    target:addMod(MOD_ENMITY,effect:getPower());
 end;
 
 -----------------------------------
@@ -25,5 +23,4 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
-    target:delMod(MOD_ENMITY,effect:getPower());
 end;

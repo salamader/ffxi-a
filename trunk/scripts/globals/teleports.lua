@@ -3,9 +3,6 @@
 -- 	by ReaperX
 -- 	coordinates marked {R} have been obtained by packet capture from retail. Don't change them.
 -----------------------------------
-require("scripts/globals/settings");
-require("scripts/globals/status");
-
 
 function toFeiYin(player)
 	player:setPos(280, 20, 543, 192, 0x6F);
@@ -22,7 +19,7 @@ end;
 function toBatalliaDowns(player)
 	player:setPos(180,8,-420,167,0x69); -- to main entrance of the Eldieme Necropolis.
 end;
-	
+
 function toThroneRoom(player)
 	player:setPos(72, -4, 0, 128, 0xA5);
 end;
@@ -109,7 +106,7 @@ end;
 
 function toCatBurglarsHideout(player)
 	player:setPos(-5, 0, 21, 128, 0xC0); -- to G-8 in Inner Horutoto Ruins, Beetle's Burrow, in front of Mahagony Door.
-end;	
+end;
 
 function toHouseOfTheHero(player)
 	player:setPos(-26, -12, 253, 194, 0xEF); -- to the House of the Hero, G-4 Windurst Walls.
@@ -129,8 +126,8 @@ end;
 
 function toPurgonorgoBibiki(player)
 	player:setPos(-382, -2, -428, 190, 0x04)  -- to Purgonorgo Isle (bibiki bay)
-end;	
-	
+end;
+
 function toWindurstMissionOverseer(player)
 	which = player:getVar("firstmissionguard");
 	if(which == 1) then
@@ -141,7 +138,7 @@ function toWindurstMissionOverseer(player)
 end;
 
 function toAltep(player)
-	player:setPos(-61.942,3.949,224.9,0,0x72); -- to Altep Telepoint {R} 
+	player:setPos(-61.942,3.949,224.9,0,0x72); -- to Altep Telepoint {R}
 end;
 
 function toYhoat(player)
@@ -175,7 +172,7 @@ end;
 function toChateaudOraguille(player)
 	player:setPos(0, 0, 0, 192, 0xE9);
 end;
-	
+
 function toGhelsba(player)
 	player:setPos(-156, -10, 80, 119, 0x8C); -- to the BCNM hut in Ghelsba Outpost.
 end;
@@ -185,7 +182,7 @@ function toDrogarogasSpine(player)
 end;
 
 function toSkyGreenPorterLeft(player)
-	player:setPos(-134.145, -32.327, -205.947, 215, 0x82); -- {R} 
+	player:setPos(-134.145, -32.327, -205.947, 215, 0x82); -- {R}
 end;
 
 function toHallofTransferenceDem(player)
@@ -207,7 +204,7 @@ end;
 function toHallofTransferenceMea(player)
 	player:setPos(280.066, -80.63337, -67.096, 192, 0xE); -- {R}
 end;
-	
+
 function toPalaceEntrance(player)
 	player:setPos(-25, 0, -615, 200, 0x21);	-- to Palace Entrance in Al'Taieu.
 end;
@@ -257,28 +254,28 @@ end;
 -- -----------------
 
 function toCampaignDestination(player, option)
-	if(option == 1) then 
+	if(option == 1) then
 		player:setPos(205.973,-23.5875,-206.606, 167, 0x89); -- Xarcabard [S] {R}
 	elseif(option == 2) then
 		player:setPos(-46.172,-60.1088,-38.487, 16, 0x88); -- Beaucedine Glacier [S] {R}
-	elseif(option == 3) then 
+	elseif(option == 3) then
 		player:setPos(306.939, -1, -141.567, 173, 0x54); -- Batallia Downs [S] {R}
-	elseif(option == 4) then 
+	elseif(option == 4) then
 		player:setPos(-4.701, 15.981, 235.996, 160, 0x5B); -- Rolanberry Fields [S] {R}
-	elseif(option == 5) then 
+	elseif(option == 5) then
 		player:setPos(-64.212, 7.579, -51.292, 192, 0x62); -- Sauromugue Champaign [S] {R}
-	elseif(option == 6) then 
+	elseif(option == 6) then
 		player:setPos(60.617, -3.952, 56.658, 64, 0x52); -- Jugner Forest [S] {R}
-	elseif(option == 7) then 
+	elseif(option == 7) then
 		player:setPos(504.088, 24.442, 628.36, 69, 0x5A); -- Pashhow Marshlands [S] {R}
-	elseif(option == 8) then 
+	elseif(option == 8) then
 		player:setPos(-447.084, 23.433, 586.847, 31, 0x61); -- Meriphataud Mountains [S] {R}
-	elseif(option == 9) then 
+	elseif(option == 9) then
 		player:setPos(-77.817, -47.234, -302.732, 135, 0x53); -- Vunkerl Inlet [S] {R}
-	elseif(option == 10) then 
+	elseif(option == 10) then
 		player:setPos(314.335, -36.368, -12.2, 192,0x59); -- Grauberg [S] {R}
-	elseif(option == 11) then 
-		player:setPos(141.021, -45, 19.543, 0, 0x60); -- Fort Karugo-Narugo [S] {R} 
+	elseif(option == 11) then
+		player:setPos(141.021, -45, 19.543, 0, 0x60); -- Fort Karugo-Narugo [S] {R}
 	elseif(option == 12) then
 		player:setPos(183.297, -19.9714, -240.895, 2, 0x51); -- East Ronfaure [S] {R}
 	elseif(option == 13) then
@@ -289,7 +286,7 @@ function toCampaignDestination(player, option)
 		player:setPos(-98, 1, -41, 224, 0x50);	-- Southern San d'Oria [S] {approximated from memory}
 	elseif(option == 16) then
 		player:setPos(-291, -10, -107, 212, 0x57); -- Bastok Markets [S] {appoximated from memory}
-	elseif(option == 17) then 
+	elseif(option == 17) then
 		player:setPos(-31.442, -5, 129.202, 128, 0x5E); --  Windurst Waters [S} {R}
 	elseif(option == 18) then
 		player:setPos(-194.095, 0, 30.009, 0, 0xA4); -- Garlaige Citdadel [S] {R}
@@ -338,65 +335,15 @@ function toMaw(player, option)
 	elseif(option == 18) then	-- Meriphataud Mountains
 		player:setPos(597,-32,279,95,0x77);
 	-- Abyessa Maws
-		--Tahrongi Canyon (H-12) 
-		--Konschtat Highlands (I-12) 
-		--La Theine Plateau (E-4) 
-		--Valkurm Dunes (I-9) 
-		--Jugner Forest (J-8) 
-		--Buburimu Peninsula (F-7) 
-		--South Gustaberg (J-10) 
-		--North Gustaberg (G-6) 
-		--Xarcabard (H-8) 
-	end;
-end;
-
-function toMaw(player, option)
-	if (option == 1) then 		-- Batallia Downs [S]
-		player:setPos(-48, 0, 437, 52, 0x54);
-	elseif (option == 2) then	-- Batallia Downs
-		player:setPos(-49, 0, 435, 1, 0x69);
-	elseif (option == 3) then	-- Rolanberry Fields [S]
-		player:setPos(-190, -8, 363, 11, 0x5b);
-	elseif (option == 4) then	-- Rolanberry Fields
-		player:setPos(-193, 8, 360, 0, 0x6e);
-	elseif (option == 5) then	-- Sauromugue Champaign [S]
-		player:setPos(372, 9, -228, 27, 0x62);
-	elseif (option == 6) then	-- Sauromugue Champaign
-		player:setPos(370, 8, -228, 0, 0x78);
-	elseif (option == 7) then	-- West Sarutabaruta [S]
-		player:setPos(0, 0, -164, 29, 0x5f);
-	elseif (option == 8) then	-- West Sarutabaruta
-		player:setPos(0, 0, -164, 29, 0x73);
-	elseif (option == 9) then	-- East Ronfaure [S]
-		player:setPos(320, -60, 500, 79, 0x51);
-	elseif (option == 10) then	-- East Ronfaure
-		player:setPos(320, -60, 500, 79, 0x65);
-	elseif (option == 11) then	-- North Gustaberg [S]
-		player:setPos(469, 0, 479, 254, 0x58);
-	elseif (option == 12) then	-- North Gustaberg
-		player:setPos(469, 0, 479, 254, 0x6A);
-	--elseif (option == 13) then	-- Jugner Forest [S]
-	--	player:setPos();
-	--elseif (option == 14) then	-- Jugner Forest
-	--	player:setPos();
-	--elseif (option == 15) then	-- Pashhow Marshlands [S]
-	--	player:setPos();
-	--elseif (option == 16) then	-- Pashhow Marshlands
-	--	player:setPos();
-	--elseif (option == 17) then	-- Meriphataud Mountains [S]
-	--	player:setPos();
-	--elseif (option == 18) then	-- Meriphataud Mountains
-	--	player:setPos();
-	-- Abyessa Maws
-		--Tahrongi Canyon (H-12) 
-		--Konschtat Highlands (I-12) 
-		--La Theine Plateau (E-4) 
-		--Valkurm Dunes (I-9) 
-		--Jugner Forest (J-8) 
-		--Buburimu Peninsula (F-7) 
-		--South Gustaberg (J-10) 
-		--North Gustaberg (G-6) 
-		--Xarcabard (H-8) 
+		--Tahrongi Canyon (H-12)
+		--Konschtat Highlands (I-12)
+		--La Theine Plateau (E-4)
+		--Valkurm Dunes (I-9)
+		--Jugner Forest (J-8)
+		--Buburimu Peninsula (F-7)
+		--South Gustaberg (J-10)
+		--North Gustaberg (G-6)
+		--Xarcabard (H-8)
 	end;
 end;
 
@@ -440,7 +387,7 @@ function toChamberOfPassage(player)
 	if(math.random(1,2) == 1) then
 		player:setPos(133.4, 1.485, 47.427, 96, 0x32); -- Aht Urhgan Whitegate Chamber of Passage Left {R}
 	else
-		player:setPos(116.67, 1.485, 47.427, 32, 0x32); -- Aht Urhgan Whitegate Chamber of Passage Right {R}		
+		player:setPos(116.67, 1.485, 47.427, 32, 0x32); -- Aht Urhgan Whitegate Chamber of Passage Right {R}
 	end
 end;
 
@@ -457,7 +404,7 @@ function LebrosCavernExit(player)
 end;
 
 function MamoolJaTrainingGround1(player)
-	player:setPos(-20, -2.271, -405, 63, 0x42); -- Mamool Ja Training Grounds Rank 1 
+	player:setPos(-20, -2.271, -405, 63, 0x42); -- Mamool Ja Training Grounds Rank 1
 end;
 
 function MamoolJaTrainingExit(player)
@@ -473,15 +420,15 @@ function LeujaoamSanctumExit(player)
 end;
 
 function toExplorerMoogle(player,zone)
-	if(zone == 231) then		
+	if(zone == 231) then
 		player:setPos(39.4, -0.2, 25, 253, zone);		-- Northern_San_d'Oria
-	elseif(zone == 234) then	
+	elseif(zone == 234) then
 		player:setPos(76.82, 0, -66.12, 232, zone);		-- Bastok_Mines
-	elseif(zone == 240) then	
+	elseif(zone == 240) then
 		player:setPos(185.6, -12, 223.5, 96, zone);		-- Port_Windurst
-	elseif(zone == 248) then	
+	elseif(zone == 248) then
 		player:setPos(14.67, -14.56, 66.69, 96, zone);	-- Selbina
-	elseif(zone == 249) then	
+	elseif(zone == 249) then
 		player:setPos(2.87, -4, 71.95, 0, zone);		-- Mhaura
 	end
 end;
@@ -494,28 +441,8 @@ function toRuLudeGardens(player)
 	player:setPos(0.000, 9.000, -38.670, -67, 243);
 end;
 
------------------------------------
---  debugTeleport
------------------------------------
-function debugTeleport(player,npcid)
-	if (DEBUG_MODE == 1) then
-		local npc = GetNPCByID(npcid);
-		if (npc ~= nil) then
-			player:setPos(npc:getXPos(), npc:getYPos(), npc:getZPos(), 0, npc:getZone());
-		end
-	end
-end;
 function toWajaomLaypoint(player)  -- Wajaom Woodlands Laypoint
 	player:setPos(-200,-10,80,125,0x33);
-end;
-
-function debugTeleport(player,npcid)
-	if(DEBUG_MODE == 1) then
-		local npc = GetNPCByID(npcid);
-		if(npc ~= nil) then
-			player:setPos(npc:getXPos(), npc:getYPos(), npc:getZPos(), 0, npc:getZone());
-		end
-	end
 end;
 
 -----------------------------------
@@ -550,28 +477,28 @@ function homingRing(player)
 	zone = player:getZone();
 	-- Ronfaure
 	if(zone == 100 or zone == 101 or zone == 139 or zone == 140 or zone == 141 or zone == 142 or zone == 190 or zone == 167 or zone == 230 or zone == 231 or zone == 232 or zone == 233) then
-		player:setPos(-446, -20 , -220, 0, 100); 
+		player:setPos(-446, -20 , -220, 0, 100);
 	-- Zulkheim
 	elseif(zone == 248 or zone == 102 or zone == 103 or zone == 108 or zone == 193 or zone == 196) then
-		player:setPos(149, -7 , 94, 154, 103); 
+		player:setPos(149, -7 , 94, 154, 103);
 	-- Norvallen
 	elseif(zone == 104 or zone == 105 or zone == 1 or zone == 2 or zone == 149 or zone == 150 or zone == 195) then
-		player:setPos(62, 0 , -1, 67, 104); 
+		player:setPos(62, 0 , -1, 67, 104);
 	-- Gustaberg
 	elseif(zone == 234 or zone == 235 or zone == 236 or zone == 237 or zone == 106 or zone == 107 or zone == 172 or zone == 191 or zone == 143 or zone == 173 or zone == 144) then
-		player:setPos(-579, 39 , 62, 89, 106); 
+		player:setPos(-579, 39 , 62, 89, 106);
 	-- Derfland
 	elseif(zone == 110 or zone == 109 or zone == 197 or zone == 148 or zone == 147) then
-		player:setPos(465, 24 , 422, 29, 109); 
+		player:setPos(465, 24 , 422, 29, 109);
 	-- Sarutabatura
 	elseif(zone == 238 or zone == 239 or zone == 240 or zone == 241 or zone == 242 or zone == 115 or zone == 116 or zone == 169 or zone == 170 or zone == 192 or zone == 194 or zone == 145 or zone == 146) then
-		player:setPos(-15, -13 , 318, 128, 115); 
+		player:setPos(-15, -13 , 318, 128, 115);
 	-- Kolshushu
 	elseif(zone == 249 or zone == 4 or zone == 117 or zone == 118 or zone == 198 or zone == 213) then
-		player:setPos(-480, -30 , 57, 62, 118); 
+		player:setPos(-480, -30 , 57, 62, 118);
 	-- Aragoneu
 	elseif(zone == 7 or zone == 119 or zone == 120 or zone == 200 or zone == 151 or zone == 152 or zone == 8) then
-		player:setPos(-298, 17 , 418, 98, 119); 
+		player:setPos(-298, 17 , 418, 98, 119);
 	-- Fauregandi
 	elseif(zone == 111 or zone == 166 or zone == 9 or zone == 204 or zone == 10 or zone == 206 or zone == 203) then
 		player:setPos(-18, -59, -108, 100, 111);
@@ -580,28 +507,28 @@ function homingRing(player)
 		player:setPos(210, -23, -206, 160, 112);
 	-- Qufim Island
 	elseif(zone == 127 or zone == 126 or zone == 157 or zone == 158 or zone == 184 or zone == 179) then
-		player:setPos(-246, -20 , 301, 192, 126); 
+		player:setPos(-246, -20 , 301, 192, 126);
 	-- Lil'Telor
 	elseif(zone == 122 or zone == 121 or zone == 251 or zone == 153 or zone == 154 or zone ==202) then
-		player:setPos(-38, 0, -140, 69, 121); 
+		player:setPos(-38, 0, -140, 69, 121);
 	-- Kuzotz
 	elseif(zone == 247 or zone == 114 or zone == 125 or zone == 208 or zone == 209 or zone == 168) then
-		player:setPos(-250, 8, -252, 122, 114); 
+		player:setPos(-250, 8, -252, 122, 114);
 	-- Vollbow
 	elseif(zone == 113 or zone == 128 or zone == 174 or zone == 212 or zone == 201) then
-		player:setPos(-184, 8, -66, 0, 113); 
+		player:setPos(-184, 8, -66, 0, 113);
 	-- Elshimo Lowlands
 	elseif(zone == 250 or zone == 252 or zone == 176 or zone == 123) then
-		player:setPos(-243, 0, -400, 192, 123); 
+		player:setPos(-243, 0, -400, 192, 123);
 	-- Elshimo Uplands
 	elseif(zone == 124 or zone == 159 or zone == 160 or zone == 205 or zone == 163 or zone == 211 or zone == 207) then
-		player:setPos(203, 0, -82, 36, 124); 
+		player:setPos(203, 0, -82, 36, 124);
 	-- Tulia ?!
 	elseif(zone == 130 or zone == 177 or zone == 178 or zone == 180 or zone == 181) then
-		player:setPos(4, -54, -600, 192, 130); 
+		player:setPos(4, -54, -600, 192, 130);
 	-- Tavnazia
 	elseif(zone == 26 or zone == 25 or zone ==24 or zone == 28 or zone == 29 or zone == 30 or zone == 31 or zone == 32 or zone == 27) then
-		player:setPos(-535, -6, -53, 122, 24); 
+		player:setPos(-535, -6, -53, 122, 24);
 	end
 end;
 
@@ -668,28 +595,28 @@ function returnRing(player)
 	zone = player:getZone();
 	-- Ronfaure
 	if(zone == 100 or zone == 101 or zone == 139 or zone == 140 or zone == 141 or zone == 142 or zone == 190 or zone == 167 or zone == 230 or zone == 231 or zone == 232 or zone == 233) then
-		player:setPos(-446, -20 , -220, 0, 100); 
+		player:setPos(-446, -20 , -220, 0, 100);
 	-- Zulkheim
 	elseif(zone == 248 or zone == 102 or zone == 103 or zone == 108 or zone == 193 or zone == 196) then
-		player:setPos(149, -7 , 94, 154, 103); 
+		player:setPos(149, -7 , 94, 154, 103);
 	-- Norvallen
 	elseif(zone == 104 or zone == 105 or zone == 1 or zone == 2 or zone == 149 or zone == 150 or zone == 195) then
-		player:setPos(62, 0 , -1, 67, 104); 
+		player:setPos(62, 0 , -1, 67, 104);
 	-- Gustaberg
 	elseif(zone == 234 or zone == 235 or zone == 236 or zone == 237 or zone == 106 or zone == 107 or zone == 172 or zone == 191 or zone == 143 or zone == 173 or zone == 144) then
-		player:setPos(-579, 39 , 62, 89, 106); 
+		player:setPos(-579, 39 , 62, 89, 106);
 	-- Derfland
 	elseif(zone == 110 or zone == 109 or zone == 197 or zone == 148 or zone == 147) then
-		player:setPos(465, 24 , 422, 29, 109); 
+		player:setPos(465, 24 , 422, 29, 109);
 	-- Sarutabatura
 	elseif(zone == 238 or zone == 239 or zone == 240 or zone == 241 or zone == 242 or zone == 115 or zone == 116 or zone == 169 or zone == 170 or zone == 192 or zone == 194 or zone == 145 or zone == 146) then
-		player:setPos(-15, -13 , 318, 128, 115); 
+		player:setPos(-15, -13 , 318, 128, 115);
 	-- Kolshushu
 	elseif(zone == 249 or zone == 4 or zone == 117 or zone == 118 or zone == 198 or zone == 213) then
-		player:setPos(-480, -30 , 57, 62, 118); 
+		player:setPos(-480, -30 , 57, 62, 118);
 	-- Aragoneu
 	elseif(zone == 7 or zone == 119 or zone == 120 or zone == 200 or zone == 151 or zone == 152 or zone == 8) then
-		player:setPos(-298, 17 , 418, 98, 119); 
+		player:setPos(-298, 17 , 418, 98, 119);
 	-- Fauregandi
 	elseif(zone == 111 or zone == 166 or zone == 9 or zone == 204 or zone == 10 or zone == 206 or zone == 203) then
 		player:setPos(-18, -59, -108, 100, 111);
@@ -698,28 +625,28 @@ function returnRing(player)
 		player:setPos(210, -23, -206, 160, 112);
 	-- Qufim Island
 	elseif(zone == 127 or zone == 126 or zone == 157 or zone == 158 or zone == 184 or zone == 179) then
-		player:setPos(-246, -20 , 301, 192, 126); 
+		player:setPos(-246, -20 , 301, 192, 126);
 	-- Lil'Telor
 	elseif(zone == 122 or zone == 121 or zone == 251 or zone == 153 or zone == 154 or zone ==202) then
-		player:setPos(-38, 0, -140, 69, 121); 
+		player:setPos(-38, 0, -140, 69, 121);
 	-- Kuzotz
 	elseif(zone == 247 or zone == 114 or zone == 125 or zone == 208 or zone == 209 or zone == 168) then
-		player:setPos(-250, 8, -252, 122, 114); 
+		player:setPos(-250, 8, -252, 122, 114);
 	-- Vollbow
 	elseif(zone == 113 or zone == 128 or zone == 174 or zone == 212 or zone == 201) then
-		player:setPos(-184, 8, -66, 0, 113); 
+		player:setPos(-184, 8, -66, 0, 113);
 	-- Elshimo Lowlands
 	elseif(zone == 250 or zone == 252 or zone == 176 or zone == 123) then
-		player:setPos(-243, 0, -400, 192, 123); 
+		player:setPos(-243, 0, -400, 192, 123);
 	-- Elshimo Uplands
 	elseif(zone == 124 or zone == 159 or zone == 160 or zone == 205 or zone == 163 or zone == 211 or zone == 207) then
-		player:setPos(203, 0, -82, 36, 124); 
+		player:setPos(203, 0, -82, 36, 124);
 	-- Tulia ?!
 	elseif(zone == 130 or zone == 177 or zone == 178 or zone == 180 or zone == 181) then
-		player:setPos(4, -54, -600, 192, 130); 
+		player:setPos(4, -54, -600, 192, 130);
 	-- Tavnazia
 	elseif(zone == 26 or zone == 25 or zone ==24 or zone == 28 or zone == 29 or zone == 30 or zone == 31 or zone == 32 or zone == 27) then
-		player:setPos(-535, -6, -53, 122, 24); 
+		player:setPos(-535, -6, -53, 122, 24);
 	end
 end;
 
@@ -741,55 +668,4 @@ end;
 
 function tavnzanianRing(player)
 	player:setPos(9,-9,11,0,26);
-end;
-
-function bastokMarketsGlyph(player)
-	player:setPos(-354,-10,-174,231,235);
-end;
-
-function bastokMinesGlyph(player)
-	player:setPos(-14,-1,-122,194,234);
-end;
-
-function bastokPortGlyph(player)
-	player:setPos(134,8,-10,92,236);
-end;
-
-function sandoriaEastGlyph(player)
-	player:setPos(101,1,-46,159,230);
-end;
-
-function sandoriaWestGlyph(player)
-	player:setPos(-103,1,-48,222,230);
-end;
-
-function sandoriaNorthGlyph(player)
-	player:setPos(-241,8,45,5,231);
-end;
-
-function windyWatersGlyph(player)
-	player:setPos(-40,-5,232,64,238);
-end;
-
-function windyPortGlyph(player)
-	player:setPos(-232,-8,200,252,240);
-end;
-
-function windyWoodsGlyph(player)
-	player:setPos(113,-5,-39,129,241);
-end;
-
-function chocoboMasque(player)
-	nation = player:getNation();
-	if(nation == 0) then -- Sandoria
-		player:setPos(443,24,23,74,102);
-	elseif(nation == 1) then -- Bastok
-		player:setPos(244,24,301,56,108);
-	elseif(nation == 2) then -- Windurst
-		player:setPos(97,40,361,4,117);
-	end
-end;
-
-function toChocoboCircuit(player)
-	player:setPos(-359,-4,-501,191,70);
 end;

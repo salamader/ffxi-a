@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4372
--- Item: Slice of Giant Sheep Meat
--- Food Effect: 5 Min, Galka only
+-- Item: slice_of_giant_sheep_meat
+-- Food Effect: 5Min, Galka only
 -----------------------------------------
 -- Strength 2
 -- Intelligence -4

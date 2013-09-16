@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4564
--- Item: Royal Omelette
--- Food Effect: 180 Mins, All Races
+-- Item: royal_omelette
+-- Food Effect: 180Min, All Races
 -----------------------------------------
 -- Strength 5
 -- Dexterity 2
@@ -9,19 +9,6 @@
 -- Mind 4
 -- Attack % 22
 -- Attack Cap 65
------------------------------------------
--- IF ELVAAN ONLY
--- HP 20
--- MP 20
--- Strength 6
--- Dexterity 2
--- Intelligence -2
--- Mind 5
--- Charisma 4
--- Attack % 22
--- Attack Cap 80
--- Ranged ATT % 22
--- Ranged ATT Cap 80
 -----------------------------------------
 -- IF ELVAAN ONLY
 -- HP 20

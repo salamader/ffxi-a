@@ -24,15 +24,13 @@ function onSpellCast(caster,target,spell)
 			duration = duration * 3;
 		end
 
-		-- Estoqueurs Bonus
-		duration = duration + (duration * caster:getMod(MOD_ENHANCING_DUR));
-		
 		if (target:getMainLvl() < 20) then
 			duration = duration * target:getMainLvl() / 20; -- level adjustment
 		end
-                -- Equip Bonus
-                duration = duration + (duration * target:getMod(MOD_INVIS_DUR));
-                
+		if (target:getEquipID(15) == 13692) then -- skulker's cape
+			duration = duration * 1.5;
+		end
+
 		spell:setMsg(230);
 		target:addStatusEffect(EFFECT_INVISIBLE,0,10,(math.floor(duration) * SNEAK_INVIS_DURATION_MULTIPLIER));
 	else

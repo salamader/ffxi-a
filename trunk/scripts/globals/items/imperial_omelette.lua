@@ -1,8 +1,8 @@
 
 -----------------------------------------
 -- ID: 4331
--- Item: Imperial Omelette
--- Food Effect: 240 Mins, All Races
+-- Item: imperial_omelette
+-- Food Effect: 240Min, All Races
 -----------------------------------------
 -- Non Elvaan Stats
 -- Strength 5
@@ -14,6 +14,9 @@
 -- Ranged ATT % 22
 -- Ranged ATT Cap 70
 -----------------------------------------
+-- Elvaan Stats
+-- Strength 6
+-- Health 20
 -- Elvaan Stats
 -- Strength 6
 -- Health 20

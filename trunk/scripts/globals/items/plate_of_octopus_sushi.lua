@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 5693
--- Item: Plate of Octopus Sushi
--- Food Effect: 30 Min, All Races
+-- Item: plate_of_octopus_sushi
+-- Food Effect: 30Min, All Races
 -----------------------------------------
 -- Strength 1
 -- Accuracy % 16

@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Waterja
+-- Spell: Water
 -- Deals water damage to an enemy.
 -----------------------------------------
 

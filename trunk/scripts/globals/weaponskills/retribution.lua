@@ -31,13 +31,7 @@ function OnUseWeaponSkill(player, target, wsID)
 	params.acc100 = 0.0; params.acc200= 0.0; params.acc300= 0.0;
 	params.atkmulti = 1;
 	local damage, criticalHit, tpHits, extraHits = doPhysicalWeaponskill(player, target, params);
-	local grip = player:getEquipID(SLOT_SUB);
-	local damageMod = damage;
 	
-	if (grip == 18813) then -- Ultio Grip
-		damageMod = damage * 1.1;
-	end
-
 	return tpHits, extraHits, criticalHit, damage;
 	
 end	

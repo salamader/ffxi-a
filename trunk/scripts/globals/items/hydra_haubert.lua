@@ -1,19 +1,17 @@
 -----------------------------------------
---	ID: 14517
---	Item: Hydra Haubert
---	Enchantment: Adds Auto Refresh
---	Duration: 30 Mins
+-- ID: 15170
+-- Item: Stoneskin torque
+-- Item Effect: gives refresh
 -----------------------------------------
 
 require("scripts/globals/settings");
-require("scripts/globals/status");
 
 -----------------------------------------
 -- OnItemCheck
 -----------------------------------------
 
 function onItemCheck(target)
-	return 0;
+    return 0;
 end;
 
 -----------------------------------------
@@ -21,7 +19,12 @@ end;
 -----------------------------------------
 
 function onItemUse(target)
-	duration = 1800;
-		target:delStatusEffect(EFFECT_AUTO_REFRESH);
-		target:addStatusEffect(EFFECT_AUTO_REFRESH,3,1,duration);
+
+    if(target:hasStatusEffect(EFFECT_REFRESH)) then
+        target:messageBasic(423);
+    else
+        -- delete old
+        target:delStatusEffect(EFFECT_REFRESH);
+        target:addStatusEffect(EFFECT_REFRESH, 3, 3, 180);
+    end
 end;

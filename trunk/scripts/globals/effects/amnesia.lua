@@ -1,9 +1,7 @@
 -----------------------------------
---	EFFECT_AMNESIA
--- Harmful Fire based status effect.
--- Victim loses combat memory,
--- preventing use of JAs WSs & Pet
--- Commands
+--
+--
+--
 -----------------------------------
 
 -----------------------------------

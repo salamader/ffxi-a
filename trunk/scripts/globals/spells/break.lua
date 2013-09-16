@@ -1,6 +1,6 @@
 -----------------------------------------
--- Spell: Break
--- Petrifies enemies.
+-- Spell: Breakga
+-- Temporarily blinds an enemy, greatly lowering its accuracy.
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -21,16 +21,6 @@ function onSpellCast(caster,target,spell)
     local resist = applyResistance(caster,spell,target,dINT,35,bonus);
     -- Duration, including resistance.  Unconfirmed.
     local duration = 30 * resist;
-
-	local body = caster:getEquipID(SLOT_BODY);
-	if (body == 11088) then -- Estoquers Sayon +2
-		bonus = bonus * 1.1;		
-	end
-	
-	if (caster:hasStatusEffect(EFFECT_SABOTEUR) == true) then
-		duration = duration + (duration * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
-		caster:delStatusEffect(EFFECT_SABOTEUR);
-	end
 
     if(resist > 0.0625) then
         if(target:addStatusEffect(EFFECT_PETRIFICATION,1,0,duration)) then

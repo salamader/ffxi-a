@@ -1,8 +1,7 @@
 -----------------------------------
--- EFFECT_RHAPSODY
--- Increases Confusion Resistance to 
--- Party Members within target AoE
--- Addle ??
+--
+--
+--
 -----------------------------------
 
 -----------------------------------
@@ -10,7 +9,6 @@
 -----------------------------------
 
 function onEffectGain(target,effect)
-	-- target:addMod(MOD_CONFUSIONRES,effect:getPower());
 end;
 
 -----------------------------------
@@ -25,5 +23,4 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
-	-- target:delMod(MOD_CONFUSIONRES,effect:getPower());
 end;

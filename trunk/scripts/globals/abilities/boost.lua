@@ -1,7 +1,5 @@
 -----------------------------------
 -- Ability: Boost
--- Enhances the power of your next
--- attack.
 -----------------------------------
 
 require("scripts/globals/status");
@@ -17,13 +15,9 @@ end;
 
 function OnUseAbility(player, target, ability)
 	local sHands = player:getEquipID(SLOT_HANDS);
-	local main = player:getEquipID(SLOT_MAIN);
 	local power = 12.5
-	if(sHands == 13962 or sHands == 14891) then -- Temple Gloves / +1
-		power = power + 6.25;
-	end
-	if(main == 18779) then -- Taurine Cesti
-		power = power + 6.25;
+	if(sHands == 13962 or sHands == 14891) then
+		power = power + 5.5;
 	end
 	
 	if(player:hasStatusEffect(EFFECT_BOOST) == true) then

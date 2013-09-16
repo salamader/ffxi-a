@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4403
--- Item: Yellow Globe
--- Food Effect: 5 Min, Mithra only
+-- Item: yellow_globe
+-- Food Effect: 5Min, Mithra only
 -----------------------------------------
 -- Dexterity 2
 -- Mind -4

@@ -1,6 +1,6 @@
 -----------------------------------------
--- Spell: Stone III
--- Deals earth damage to an enemy.
+-- Spell: Fire
+-- Deals fire damage to an enemy.
 -----------------------------------------
 
 require("scripts/globals/magic");
