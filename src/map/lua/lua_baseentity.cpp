@@ -562,6 +562,13 @@ inline int32 CLuaBaseEntity::setPos(lua_State *L)
 			((CCharEntity*)m_PBaseEntity)->loc.boundary = 0;
 			((CCharEntity*)m_PBaseEntity)->is_zoning = 1;
 			((CCharEntity*)m_PBaseEntity)->clearPacketList();
+			const int8* Query = "UPDATE chars SET returning = '1',deathstate = '0', pos_zone='%u', pos_x='%0.3f', pos_y='%0.3f', pos_z='%0.3f', pos_rot='%u' WHERE charid = %u";
+        Sql_Query(SqlHandle,Query,((CCharEntity*)m_PBaseEntity)->loc.destination,
+			((CCharEntity*)m_PBaseEntity)->loc.p.x,
+			((CCharEntity*)m_PBaseEntity)->loc.p.y,
+			((CCharEntity*)m_PBaseEntity)->loc.p.z,
+			((CCharEntity*)m_PBaseEntity)->loc.p.rotation,
+			((CCharEntity*)m_PBaseEntity)->id);
 			((CCharEntity*)m_PBaseEntity)->pushPacket(new CServerIPPacket((CCharEntity*)m_PBaseEntity,2));
 			//((CCharEntity*)m_PBaseEntity)->loc.zone->DecreaseZoneCounter(((CCharEntity*)m_PBaseEntity));
 		}
@@ -8650,30 +8657,30 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 	if(PChar->godmode==0)
 	{
 		PChar->godmode=1;
-		/*if(PChar->Account_Level==1)
+		if(PChar->Account_Level==1)
 		{
-		PChar->nameflags.flags ^=FLAG_GM_SUPPORT;
+		PChar->nameflags.flags =FLAG_GM_SUPPORT;
 		
 		
 		}
 		if(PChar->Account_Level==2)
 		{
-		PChar->nameflags.flags ^=FLAG_GM_SENIOR;
+		PChar->nameflags.flags =FLAG_GM_SENIOR;
 		
 		
 		}
 		if(PChar->Account_Level==3)
 		{
-		PChar->nameflags.flags ^=FLAG_GM_LEAD;
+		PChar->nameflags.flags =FLAG_GM_LEAD;
 		
 		
 		}
 		if(PChar->Account_Level==4)
 		{
-		PChar->nameflags.flags ^=FLAG_GM_PRODUCER;
+		PChar->nameflags.flags =FLAG_GM_PRODUCER;
 		
 		
-		}*/
+		}
 		
 		PChar->stats.STR  = 999;
             PChar->stats.DEX = 999;
@@ -8698,7 +8705,7 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 	{
 		//need a prevuis nameflag
 
-		/*if(PChar->Account_Level==1)
+		if(PChar->Account_Level==1)
 		{
 		PChar->nameflags.flags ^=FLAG_GM_SUPPORT;
 		
@@ -8721,7 +8728,7 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 		PChar->nameflags.flags ^=FLAG_GM_PRODUCER;
 		
 		
-		}*/
+		}
 		
 		PChar->godmode=0;
 		
