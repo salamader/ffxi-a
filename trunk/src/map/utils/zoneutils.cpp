@@ -196,6 +196,15 @@ CZone* GetZoneByChar(uint16 ZoneID, CCharEntity* PChar)
 				}
 	return g_PZoneList[ZoneID];
 }
+
+void SavePlayTime()
+{
+	for(int32 ZoneID = MIN_ZONEID; ZoneID < MAX_ZONEID; ZoneID++)
+	{
+		g_PZoneList[ZoneID]->SavePlayTime();
+	}
+	// ShowDebug(CL_CYAN"Player playtime saving finished\n" CL_RESET);
+}
 CZone* GetZone(uint16 ZoneID)
 {
     if(ZoneID >= MAX_ZONEID)
@@ -316,6 +325,68 @@ CCharEntity* GetCharFromRegion(uint32 charid, uint16 targid, uint8 RegionID)
     return NULL;
 }
 
+void LoadNPC(uint16 NpcID)
+{
+    const int8* Query = 
+        "SELECT \
+          npcid,\
+          name,\
+          pos_rot,\
+          pos_x,\
+          pos_y,\
+          pos_z,\
+          flag,\
+          speed,\
+          speedsub,\
+          animation,\
+          animationsub,\
+          namevis,\
+          status,\
+          unknown,\
+          look,\
+          name_prefix,\
+		  zoneid\
+        FROM npc_list \
+        WHERE npcid = %u;";
+					  
+    int32 ret = Sql_Query(SqlHandle, Query, NpcID);
+
+	if( ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0) 
+	{	
+		CNpcEntity* PNpc = new CNpcEntity;
+
+		PNpc->id = (uint32)Sql_GetUIntData(SqlHandle,0);
+		PNpc->targid = (uint16)PNpc->id & 0x0FFF;
+
+		PNpc->name.insert(0,Sql_GetData(SqlHandle,1));
+
+		PNpc->loc.p.rotation = (uint8)Sql_GetIntData(SqlHandle,2);
+		PNpc->loc.p.x = Sql_GetFloatData(SqlHandle,3);
+		PNpc->loc.p.y = Sql_GetFloatData(SqlHandle,4);
+		PNpc->loc.p.z = Sql_GetFloatData(SqlHandle,5);
+		PNpc->loc.p.moving  = (uint16)Sql_GetUIntData(SqlHandle,6);
+
+		PNpc->m_TargID = (uint32)Sql_GetUIntData(SqlHandle,6) >> 16; // вполне вероятно
+
+		PNpc->speed = (uint8)Sql_GetIntData(SqlHandle,7);
+		PNpc->speedsub = (uint8)Sql_GetIntData(SqlHandle,8);
+		PNpc->animation = (uint8)Sql_GetIntData(SqlHandle,9);
+		PNpc->animationsub = (uint8)Sql_GetIntData(SqlHandle,10);
+
+		PNpc->namevis = (uint8)Sql_GetIntData(SqlHandle,11);
+		PNpc->status  = (STATUSTYPE)Sql_GetIntData(SqlHandle,12);
+		PNpc->unknown = (uint32)Sql_GetUIntData(SqlHandle,13);
+
+		PNpc->name_prefix = (uint8)Sql_GetIntData(SqlHandle,15);
+
+		memcpy(&PNpc->look,Sql_GetData(SqlHandle,14),20);
+		
+		uint8 ZoneID = (uint8)Sql_GetIntData(SqlHandle,16);
+		CZone* PZone = new CZone((ZONEID)(uint8)ZoneID, GetCurrentRegion(ZoneID), GetCurrentContinent(ZoneID));
+	
+		PZone->InsertNPC(PNpc);
+	}
+}
 /************************************************************************
 *                                                                       *
 *  Загружаем список NPC в указанную зону                                *

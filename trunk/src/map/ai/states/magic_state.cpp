@@ -1,7 +1,7 @@
 /*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -69,7 +69,7 @@ STATESTATUS CMagicState::CastSpell(CSpell* PSpell, CBattleEntity* PTarget, uint8
     m_PEntity->m_ActionList.clear();
 	m_PEntity->m_ActionList.push_back(action);
 	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE_SELF, new CActionPacket(m_PEntity));
-	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE, new CActionPacket(m_PEntity));
+
 	return STATESTATUS_START;
 }
 
@@ -86,12 +86,12 @@ bool CMagicState::CanCastSpell(CSpell* PSpell, CBattleEntity* PTarget, uint8 fla
     {
         float distanceValue = distance(m_PEntity->loc.p, PTarget->loc.p);
         // pc has special messages
-        if(distanceValue > 25)
+        if(distanceValue > 25*map_config.magic_dist_mod)
         {
             PushError(MSGBASIC_TOO_FAR_AWAY, PSpell->getID());
             return false;
         }
-        else if(distanceValue > m_maxStartDistance)
+        else if(distanceValue > m_maxStartDistance*map_config.magic_dist_mod)
         {
             PushError(MSGBASIC_OUT_OF_RANGE_UNABLE_CAST, PSpell->getID());
             return false;
@@ -165,6 +165,8 @@ void CMagicState::Clear()
     m_startTime = 0;
 }
 
+int8 QuickMagicChance = 0;
+
 uint32 CMagicState::CalculateCastTime(CSpell* PSpell)
 {
     if(PSpell == NULL)
@@ -188,6 +190,15 @@ uint32 CMagicState::CalculateCastTime(CSpell* PSpell)
         {
             cast = cast * (1.0f + m_PEntity->getMod(MOD_BLACK_MAGIC_CAST)/100.0f);
         }
+		if(m_PEntity->objtype == TYPE_PC)
+    	{
+			int16 BlackCastMod = m_PEntity->getMod(MOD_BLACK_CAST);
+			cast = cast * ((float)(100-BlackCastMod)/100);
+			if (cast < 1000)
+			{
+				cast = 1000;
+			}
+		}
     }
     else if (PSpell->getSpellGroup() == SPELLGROUP_WHITE)
     {
@@ -201,7 +212,181 @@ uint32 CMagicState::CalculateCastTime(CSpell* PSpell)
         {
             cast = cast * (1.0f + m_PEntity->getMod(MOD_WHITE_MAGIC_CAST)/100.0f);
         }
-    }
+		if(m_PEntity->objtype == TYPE_PC)
+    	{
+			if ((PSpell->getID() >= 1 && PSpell->getID() <= 11) || (PSpell->getID() == 93 || PSpell->getID() == 474 || PSpell->getID() == 475))
+			{
+				int16 CureCastMod = m_PEntity->getMod(MOD_CURE_CAST);
+				if (PSpell->getID() >= 1 && PSpell->getID() <= 11) // Cure - Curaga Magic Cast Modifier
+				{
+					cast = cast * ((float)(100-CureCastMod)/100);
+					if (cast < 1000)
+					{
+						cast = 1000;
+					}
+				}
+				else if (PSpell->getID() == 93 || PSpell->getID() == 474 || PSpell->getID() == 475) // Cura Magic Cast Modifier
+				{
+					cast = cast * ((float)(100-CureCastMod)/100);
+					if (cast < 1000)
+					{
+						cast = 1000;
+					}
+				}
+			}
+			else if ((PSpell->getID() >= 14 && PSpell->getID() <= 20) || PSpell->getID() == 94 || PSpell->getID() == 95 || PSpell->getID() == 143) // Status Ailment Recovery Spells (Divine Benison)
+			{
+				int16 DivineBenisonCastMod = m_PEntity->getMod(MOD_DIVINE_BENISON_FASTCAST);
+				cast = cast * ((float)(100-DivineBenisonCastMod)/100);
+				if (cast < 1000)
+				{
+					cast = 1000;
+				}
+			}
+			else if (PSpell->getID() == 54) // Stoneskin Cast Modifier
+			{
+				int16 StoneskinCastMod = m_PEntity->getMod(MOD_STONESKIN_CAST);
+				cast = cast * ((float)(100-StoneskinCastMod)/100);
+				if (cast < 1000)
+				{
+					cast = 1000;
+				}
+			}
+		}
+		if(m_PEntity->objtype == TYPE_PC)
+    	{
+			if (PSpell->getSpellGroup() == SPELLGROUP_SUMMONING) // Summoning Magic Cast Modifiers
+			{
+				int16 SummoningCastMod = m_PEntity->getMod(MOD_SUMMON_CAST);
+				cast = cast * ((float)(100-SummoningCastMod)/100);
+				if (cast < 1000)
+				{
+					cast = 1000;
+				}
+			}
+			else if (PSpell->getSpellGroup() == SPELLGROUP_BLUE) // Blue Magic Cast Modifiers
+			{
+				int16 BlueCastMod = m_PEntity->getMod(MOD_BLUE_CAST);
+				cast = cast * ((float)(100-BlueCastMod)/100);
+				if (cast < 1000)
+				{
+					cast = 1000;
+				}
+			}
+			else if (PSpell->getSpellGroup() == SPELLGROUP_NINJUTSU) // Ninjutsu Cast Modifiers
+			{
+				if (PSpell->getID() >= 338 && PSpell->getID() <= 340) // Utsusemi Cast Modifier
+				{
+					int16 UtsusemiCastMod = m_PEntity->getMod(MOD_UTSUSEMI_CAST);
+					cast = cast * ((float)(100-UtsusemiCastMod)/100);
+					if (cast < 1000)
+					{
+						cast = 1000;
+					}
+				}
+			}
+			else if (PSpell->getSpellGroup() == SPELLGROUP_SONG) // Song Cast Modifiers
+			{
+				int16 SongCastMod = m_PEntity->getMod(MOD_SONG_CAST);
+				cast = cast * ((float)(100-SongCastMod)/100);
+				if (cast < 1000)
+				{
+					cast = 1000;
+				}
+				if (m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_TROUBADOUR) && m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_NIGHTINGALE))
+				{
+					cast = cast * .75;
+				}
+				else if (m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_NIGHTINGALE))
+				{
+					
+					cast = cast * .5;
+					int16 NightingaleMerit = (((CCharEntity*)m_PEntity)->PMeritPoints->GetMeritValue(MERIT_NIGHTINGALE,((CCharEntity*)m_PEntity))) - 25;
+					int8 NightingaleChance = (rand() % 99) + 1;
+					if (NightingaleChance <= NightingaleMerit)
+					{
+						cast = 0;
+					}
+				}
+				else if (m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_TROUBADOUR))
+				{
+					cast = cast * 1.5;
+				}
+			}
+	
+			// Grimoire Cast Modifier
+			if (m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_LIGHT_ARTS) || m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_DARK_ARTS))
+			{
+				if (!m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_ALACRITY) || !m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_MANIFESTATION))
+				{
+					int16 GrimoireCastMod = m_PEntity->getMod(MOD_GRIMOIRE_CAST);
+					cast = cast * ((float)(100-GrimoireCastMod)/100);
+					if (cast < 1000)
+					{
+						cast = 1000;
+					}
+				}
+			}
+	
+			// Magic Skill Type Casting Modifiers	
+			if (PSpell->getSkillType() == 34) // Enhancing Magic Cast Modifier
+			{
+				int16 EnhancingCastMod = m_PEntity->getMod(MOD_ENHANCING_CAST);
+				cast = cast * ((float)(100-EnhancingCastMod)/100);
+				if (cast < 1000)
+				{
+					cast = 1000;
+				}
+			}
+			else if (PSpell->getSkillType() == 37) // Dark Magic Cast Modifier
+			{
+				int16 DarkCastMod = m_PEntity->getMod(MOD_DARK_MAG_CAST);
+				cast = cast * ((float)(100-DarkCastMod)/100);
+				if (cast	< 1000)
+				{
+					cast = 1000;
+				}
+			}
+			else if (PSpell->getSkillType() == 33) // Healing Magic Cast Modifier
+			{
+				int16 HealingCastMod = m_PEntity->getMod(MOD_HEALING_CAST);
+				cast = cast * ((float)(100-HealingCastMod)/100);
+				if (cast < 1000)
+				{
+					cast = 1000;
+				}
+			}
+			else if (PSpell->getSkillType() == 36) // Elemental Magic Cast Modifier
+			{
+				int16 ElementalCastMod = m_PEntity->getMod(MOD_ELEMENTAL_CAST);
+				cast = cast * ((float)(100-ElementalCastMod)/100);
+				if (cast < 1000)
+				{
+					cast = 1000;
+				}
+			}
+			else if (PSpell->getSkillType() == 35) // Enfeebling Magic Cast Modifier
+			{
+				int16 EnfeeblingCastMod = m_PEntity->getMod(MOD_ENFEEBLING_CAST);
+				cast = cast * ((float)(100-EnfeeblingCastMod)/100);
+				if (cast < 1000)
+				{
+					cast = 1000;
+				}
+			}
+	
+			// Quick Magic
+			if (m_PEntity->getMod(MOD_QUICK_MAGIC) > 0)
+			{
+				QuickMagicChance = (rand() % 99) + 1;
+				if (QuickMagicChance < m_PEntity->getMod(MOD_QUICK_MAGIC))
+				{
+					cast = 0;
+					return cast;
+				}
+			}
+		}
+	}
 
     int8 fastCast = dsp_cap(m_PEntity->getMod(MOD_FASTCAST),-100,50);
     int8 uncappedFastCast = dsp_cap(m_PEntity->getMod(MOD_UFASTCAST),-100,100);
@@ -346,6 +531,176 @@ uint32 CMagicState::CalculateRecastTime(CSpell* PSpell)
         {
             recast *= (1.0f + m_PEntity->getMod(MOD_WHITE_MAGIC_RECAST)/100.0f);
         }
+		if(m_PEntity->objtype == TYPE_PC)
+    	{
+			if ((PSpell->getID() >= 1 && PSpell->getID() <= 11) || (PSpell->getID() == 93 || PSpell->getID() == 474 || PSpell->getID() == 475))
+			{
+				int16 CureCastMod = m_PEntity->getMod(MOD_CURE_CAST);
+				if (PSpell->getID() >= 1 && PSpell->getID() <= 11) // Cure - Curaga Magic Cast Modifier
+				{
+					recast = recast * ((float)(100-CureCastMod)/100);
+					if (recast < 1000)
+					{
+						recast = 1000;
+					}
+				}
+				else if (PSpell->getID() == 93 || PSpell->getID() == 474 || PSpell->getID() == 475) // Cura Magic Cast Modifier
+				{
+					recast = recast * ((float)(100-CureCastMod)/100);
+					if (recast < 1000)
+					{
+						recast = 1000;
+					}
+				}
+			}
+			else if ((PSpell->getID() >= 14 && PSpell->getID() <= 20) || PSpell->getID() == 94 || PSpell->getID() == 95 || PSpell->getID() == 143) // Status Ailment Recovery Spells (Divine Benison)
+			{
+				int16 DivineBenisonCastMod = m_PEntity->getMod(MOD_DIVINE_BENISON_FASTCAST);
+				recast = recast * ((float)(100-DivineBenisonCastMod)/100);
+				if (recast < 1000)
+				{
+					recast = 1000;
+				}
+			}
+			else if (PSpell->getID() == 54) // Stoneskin Cast Modifier
+			{
+				int16 StoneskinCastMod = m_PEntity->getMod(MOD_STONESKIN_CAST);
+				recast = recast * ((float)(100-StoneskinCastMod)/100);
+				if (recast < 1000)
+				{
+					recast = 1000;
+				}
+			}
+		}
+		if (PSpell->getSpellGroup() == SPELLGROUP_SUMMONING) // Summoning Magic Cast Modifiers
+		{
+			int16 SummoningCastMod = m_PEntity->getMod(MOD_SUMMON_CAST);
+			recast = recast * ((float)(100-SummoningCastMod)/100);
+			if (recast < 1000)
+			{
+				recast = 1000;
+			}
+		}
+		else if (PSpell->getSpellGroup() == SPELLGROUP_BLUE) // Blue Magic Cast Modifiers
+		{
+			int16 BlueCastMod = m_PEntity->getMod(MOD_BLUE_CAST);
+			recast = recast * ((float)(100-BlueCastMod)/100);
+			if (recast < 1000)
+			{
+				recast = 1000;
+			}
+		}
+		else if (PSpell->getSpellGroup() == SPELLGROUP_NINJUTSU) // Ninjutsu Cast Modifiers
+		{
+			if (PSpell->getID() >= 338 && PSpell->getID() <= 340) // Utsusemi Cast Modifier
+			{
+				int16 UtsusemiCastMod = m_PEntity->getMod(MOD_UTSUSEMI_CAST);
+				recast = recast * ((float)(100-UtsusemiCastMod)/100);
+				if (recast < 1000)
+				{
+					recast = 1000;
+				}
+			}
+		}
+		else if (PSpell->getSpellGroup() == SPELLGROUP_SONG) // Song Cast Modifiers
+		{
+			int16 SongCastMod = m_PEntity->getMod(MOD_SONG_CAST);
+			recast = recast * ((float)(100-SongCastMod)/100);
+			if (recast < 1000)
+			{
+				recast = 1000;
+			}
+			if (m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_TROUBADOUR) && m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_NIGHTINGALE))
+			{
+				recast = recast * .75;
+			}
+			else if (m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_NIGHTINGALE))
+			{
+				recast = recast * .5;
+				int16 NightingaleMerit = (((CCharEntity*)m_PEntity)->PMeritPoints->GetMeritValue(MERIT_NIGHTINGALE,((CCharEntity*)m_PEntity))) - 25;
+				int8 NightingaleChance = (rand() % 99) + 1;
+				if (NightingaleChance <= NightingaleMerit)
+				{
+					recast = 0;
+				}
+			}
+			else if (m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_TROUBADOUR))
+			{
+				recast = recast * 1.5;
+			}
+		}
+	
+		// Grimoire Cast Modifier
+		if (m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_LIGHT_ARTS) || m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_DARK_ARTS))
+		{
+			if (!m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_ALACRITY) || !m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_MANIFESTATION))
+			{
+				int16 GrimoireCastMod = m_PEntity->getMod(MOD_GRIMOIRE_CAST);
+				recast = recast * ((float)(100-GrimoireCastMod)/100);
+				if (recast < 1000)
+				{
+					recast = 1000;
+				}
+			}
+		}
+	
+		// Magic Skill Type Casting Modifiers	
+		if (PSpell->getSkillType() == 34) // Enhancing Magic Cast Modifier
+		{
+			int16 EnhancingCastMod = m_PEntity->getMod(MOD_ENHANCING_CAST);
+			recast = recast * ((float)(100-EnhancingCastMod)/100);
+			if (recast < 1000)
+			{
+				recast = 1000;
+			}
+		}
+		else if (PSpell->getSkillType() == 37) // Dark Magic Cast Modifier
+		{
+			int16 DarkCastMod = m_PEntity->getMod(MOD_DARK_MAG_CAST);
+			recast = recast * ((float)(100-DarkCastMod)/100);
+			if (recast	< 1000)
+			{
+				recast = 1000;
+			}
+		}
+		else if (PSpell->getSkillType() == 33) // Healing Magic Cast Modifier
+		{
+			int16 HealingCastMod = m_PEntity->getMod(MOD_HEALING_CAST);
+			recast = recast * ((float)(100-HealingCastMod)/100);
+			if (recast < 1000)
+			{
+				recast = 1000;
+			}
+		}
+		else if (PSpell->getSkillType() == 36) // Elemental Magic Cast Modifier
+		{
+			int16 ElementalCastMod = m_PEntity->getMod(MOD_ELEMENTAL_CAST);
+			recast = recast * ((float)(100-ElementalCastMod)/100);
+			if (recast < 1000)
+			{
+				recast = 1000;
+			}
+		}
+		else if (PSpell->getSkillType() == 35) // Enfeebling Magic Cast Modifier
+		{
+			int16 EnfeeblingCastMod = m_PEntity->getMod(MOD_ENFEEBLING_CAST);
+			recast = recast * ((float)(100-EnfeeblingCastMod)/100);
+			if (recast < 1000)
+			{
+				recast = 1000;
+			}
+		}
+	
+		// Quick Magic
+		if (m_PEntity->getMod(MOD_QUICK_MAGIC) > 0)
+		{
+			QuickMagicChance = (rand() % 99) + 1;
+			if (QuickMagicChance < m_PEntity->getMod(MOD_QUICK_MAGIC))
+			{
+				recast = 0;
+				return recast;
+			}
+		}
     }
 
     return recast;
@@ -366,7 +721,7 @@ bool CMagicState::CheckInterrupt()
     }
 
     // check if in same place
-    if(m_PEntity->objtype == TYPE_PC && HasMoved())
+    if((m_PEntity->objtype == TYPE_PC && HasMoved()) && map_config.magic_movement == 0)
     {
         PushError(MSGBASIC_IS_INTERRUPTED, m_PSpell->getID());
         return true;
@@ -413,7 +768,8 @@ bool CMagicState::ValidCast(CSpell* PSpell, CBattleEntity* PTarget)
         }
     }
     // check has mp available
-    else if(!m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_MANAFONT) && !(m_flags & MAGICFLAGS_IGNORE_MP) && CalculateMPCost(PSpell) > m_PEntity->health.mp)
+    else if((!m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_MANAFONT) || !m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_MANAWELL)) && 
+	!(m_flags & MAGICFLAGS_IGNORE_MP) && CalculateMPCost(PSpell) > m_PEntity->health.mp)
     {
         if(m_PEntity->objtype == TYPE_MOB && m_PEntity->health.maxmp == 0)
         {
@@ -453,7 +809,6 @@ void CMagicState::InterruptSpell()
     m_PEntity->m_ActionList.push_back(action);
 
     m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE_SELF, new CActionPacket(m_PEntity));
-	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE, new CActionPacket(m_PEntity));
     Clear();
 }
 
@@ -535,6 +890,20 @@ void CMagicState::FinishSpell()
         ce = m_PSpell->getCE();
         ve = m_PSpell->getVE();
 
+		if(m_PEntity->objtype == TYPE_PC)
+    	{
+			if ((m_PSpell->getID() >= 14 && m_PSpell->getID() <= 20) || m_PSpell->getID() == 94 || m_PSpell->getID() == 95 || m_PSpell->getID() == 143) // Status Ailment Recovery Spells (Divine Benison)
+			{
+				int16 DivineBenisonEnmityMod = m_PEntity->getMod(MOD_DIVINE_BENISON_ENMITY);
+				if(DivineBenisonEnmityMod > 0)
+				{
+					ce = ce * ((float)(100+DivineBenisonEnmityMod)/100);
+					ve = ve * ((float)(100+DivineBenisonEnmityMod)/100);
+					// ShowDebug(CL_CYAN"Divine Benison Proc \n");
+				}
+			}
+		}
+
         // take all shadows
         if(m_PSpell->canTargetEnemy() && aoeType > 0)
         {
@@ -591,7 +960,7 @@ void CMagicState::FinishSpell()
 
     DSP_DEBUG_BREAK_IF(m_PEntity->Check_Engagment->GetCurrentAction() != ACTION_MAGIC_FINISH);
 	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE_SELF, new CActionPacket(m_PEntity));
-	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE, new CActionPacket(m_PEntity));
+
 	Clear();
 }
 
@@ -762,7 +1131,8 @@ void CMagicState::SpendCost(CSpell* PSpell)
             battleutils::HasNinjaTool(m_PEntity, PSpell, true);
         }
     }
-    else if (PSpell->hasMPCost() && !m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_MANAFONT) && !(m_flags & MAGICFLAGS_IGNORE_MP))
+    else if (PSpell->hasMPCost() && (!m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_MANAFONT) ||
+	!m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_MANAFONT)) && !(m_flags & MAGICFLAGS_IGNORE_MP))
     {
         int16 cost = CalculateMPCost(PSpell);
 
@@ -797,7 +1167,8 @@ void CMagicState::SetRecast(CSpell* PSpell)
 
     uint32 RecastTime = 3000;
 
-    if (!PChar->StatusEffectContainer->HasStatusEffect(EFFECT_CHAINSPELL))
+    if (!PChar->StatusEffectContainer->HasStatusEffect(EFFECT_CHAINSPELL) ||
+	!PChar->StatusEffectContainer->HasStatusEffect(EFFECT_SPONTANEITY))
     {
         RecastTime = CalculateRecastTime(PSpell);
     }

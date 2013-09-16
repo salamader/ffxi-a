@@ -438,7 +438,360 @@ uint16	CalculateEnspellDamage(CBattleEntity* PAttacker, CBattleEntity* PDefender
 *  Handles damage multiplier, relic weapons ect				            *
 *                                                                       *
 ************************************************************************/
+uint32 CheckForDamageMultiplier(CItemWeapon* PWeapon, uint32 damage, uint8 hitNumber, CCharEntity* m_PChar)
+{
+	if (PWeapon==NULL)
+		return damage;
 
+	uint32 originalDamage = damage;
+	CItemWeapon* PAmmo = (CItemWeapon*)m_PChar->getStorage(LOC_INVENTORY)->GetItem(m_PChar->equip[SLOT_AMMO]);
+
+	switch (PWeapon->getID())
+	{
+		//relic weapons have 16% (ffxiclopedia) chance to do x times damage, cannot proc with weapon skills
+
+		// Relic: 2.5 times damage
+		case 18264:		// Spharai 75
+		case 18265:		// Spharai 80
+		case 18637:		// Spharai 85
+		case 18651:		// Spharai 90
+		case 18665:		// Spharai 95
+		case 19746:		// Spharai 99
+		case 19839:		// Spharai 99-2
+		
+		case 18276:		// Excalibur 75
+		case 18277:		// Excalibur 80
+		case 18639:		// Excalibur 85
+		case 18653:		// Excalibur 90
+		case 18667:		// Excalibur 95
+		case 19748:		// Excalibur 99
+		case 19841:		// Excalibur 99-2
+		
+		case 18282:		// Ragnarok 75
+		case 18283:		// Ragnarok 80
+		case 18640:		// Ragnarok 85
+		case 18654:		// Ragnarok 90
+		case 18668:		// Ragnarok 95
+		case 19749:		// Ragnarok 99
+		case 19842:		// Ragnarok 99-2
+		
+		case 18288:		// Guttler 75
+		case 18289:		// Guttler 80
+		case 18641:		// Guttler 85
+		case 18655:		// Guttler 90
+		case 18669:		// Guttler 95
+		case 19750:		// Guttler 99
+		case 19843:		// Guttler 99-2
+		
+		case 18300:		// Gungnir 75
+		case 18301:		// Gungnir 80
+		case 18643:		// Gungnir 85
+		case 18657:		// Gungnir 90
+		case 18671:		// Gungnir 95
+		case 19752:		// Gungnir 99
+		case 19845:		// Gungnir 99-2
+		
+		case 18318:		// Amanomurakumo 75
+		case 18319:		// Amanomurakumo 80
+		case 18646:		// Amanomurakumo 85
+		case 18660:		// Amanomurakumo 90
+		case 18674:		// Amanomurakumo 95
+		case 19755:		// Amanomurakumo 99
+		case 19848:		// Amanomurakumo 99-2
+		
+		case 18330:		// Claustrum 75
+		case 18331:		// Claustrum 80
+		case 18648:		// Claustrum 85
+		case 18662:		// Claustrum 90
+		case 18676:		// Claustrum 95
+		case 19757:		// Claustrum 99
+		case 19850:		// Claustrum 99-2
+			if (rand()%100 <= 16)
+			{
+				originalDamage = (damage * (float)2.5);
+			}
+			break;
+
+		// Relic: 3 times damage
+		case 18270:		// Mandau 75
+		case 18271:		// Mandau 80
+		case 18638:		// Mandau 85
+		case 18652:		// Mandau 90
+		case 18666:		// Mandau 95
+		case 19747:		// Mandau 99
+		case 19840:		// Mandau 99-2
+		
+		case 18312:		// Kikoku 75
+		case 18313:		// Kikoku 80
+		case 18645:		// Kikoku 85
+		case 18659:		// Kikoku 90
+		case 18673:		// Kikoku 95
+		case 19754:		// Kikoku 99
+		case 19847:		// Kikoku 99-2
+		
+		case 18324:		// Mjollnir 75
+		case 18325:		// Mjollnir 80
+		case 18647:		// Mjollnir 85
+		case 18661:		// Mjollnir 90
+		case 18675:		// Mjollnir 95
+		case 19756:		// Mjollnir 99
+		case 19849:		// Mjollnir 99-2
+		
+		case 18336:		// Annihilator 75
+		case 18337:		// Annihilator 80
+		case 18649:		// Annihilator 85
+		case 18663:		// Annihilator 90
+		case 18677:		// Annihilator 95
+		case 19758:		// Annihilator 99
+		case 19851:		// Annihilator 99-2
+		
+		case 18348:		// Yoichinoyumi 75
+		case 18349:		// Yoichinoyumi 80
+		case 18650:		// Yoichinoyumi 85
+		case 18664:		// Yoichinoyumi 90
+		case 18678:		// Yoichinoyumi 95
+		case 19759:		// Yoichinoyumi 99
+		case 19852:		// Yoichinoyumi 99-2
+			if (rand()%100 <= 16)
+			{
+				originalDamage = (damage * 3);
+			}
+			break;
+
+		// Relic: 2 times damage
+		case 18294:		// Bravura 75
+		case 18295:		// Bravura 80
+		case 18642:		// Bravura 85
+		case 18656:		// Bravura 90
+		case 18670:		// Bravura 95
+		case 19751:		// Bravura 99
+		case 19844:		// Bravura 99-2
+		
+		case 18306:		// Apocalypse 75
+		case 18307:		// Apocalypse 80
+		case 18644:		// Apocalypse 85
+		case 18658:		// Apocalypse 90
+		case 18672:		// Apocalypse 95
+		case 19753:		// Apocalypse 99
+		case 19846:		// Apocalypse 99-2
+		
+			if (rand()%100 <= 16)
+			{
+				originalDamage = (damage * 2);
+			}
+			break;
+			
+		// Aftermath Empyrean Weapons 2x Dmg
+		case 19460:		// Farsha 85
+		case 19538:		// Farsha 90
+		case 19636:		// Farsha 95
+		case 19809:		// Farsha 99
+		case 19857:		// Farsha 99-2
+		
+		case 19461:		// Ukonvasara 85
+		case 19539:		// Ukonvasara 90
+		case 19637:		// Ukonvasara 95
+		case 19810:		// Ukonvasara 99
+		case 19858:		// Ukonvasara 99-2
+		
+		case 19466:		// Gambanteinn 85
+		case 19544:		// Gambanteinn 90
+		case 19642:		// Gambanteinn 95
+		case 19815:		// Gambanteinn 99
+		case 19863:		// Gambanteinn 99-2
+		
+		case 19457:		// Twashtar 85
+		case 19535:		// Twashtar 90
+		case 19633:		// Twashtar 95
+		case 19806:		// Twashtar 99
+		case 19854:		// Twashtar 99-2
+		
+		case 19456:		// Verethragna 85
+		case 19534:		// Verethragna 90
+		case 19632:		// Verethragna 95
+		case 19805:		// Verethragna 99
+		case 19853:		// Verethragna 99-2
+		
+		case 19464:		// Kannagi 85
+		case 19542:		// Kannagi 90
+		case 19640:		// Kannagi 95
+		case 19813:		// Kannagi 99
+		case 19861:		// Kannagi 99-2
+		
+		case 19465:		// Masamune 85
+		case 19543:		// Masamune 90
+		case 19641:		// Masamune 95
+		case 19814:		// Masamune 99
+		case 19862:		// Masamune 99-2
+		
+		case 19463:		// Rhongomiant 85
+		case 19541:		// Rhongomiant 90
+		case 19639:		// Rhongomiant 95
+		case 19812:		// Rhongomiant 99
+		case 19860:		// Rhongomiant 99-2
+		
+		case 19462:		// Redemption 85
+		case 19540:		// Redemption 90
+		case 19638:		// Redemption 95
+		case 19811:		// Redemption 99
+		case 19859:		// Redemption 99-2
+		
+		case 19467:		// Hvergelmir 85
+		case 19545:		// Hvergelmir 90
+		case 19643:		// Hvergelmir 95
+		case 19816:		// Hvergelmir 99
+		case 19864:		// Hvergelmir 99-2
+		
+		case 19458:		// Almace 85
+		case 19536:		// Almace 90
+		case 19634:		// Almace 95
+		case 19807:		// Almace 99
+		case 19855:		// Almace 99-2
+		
+		case 19459:		// Caladbolg 85
+		case 19537:		// Caladbolg 90
+		case 19635:		// Caladbolg 95
+		case 19808:		// Caladbolg 99
+		case 19856:		// Caladbolg 99-2
+		
+		case 19468:		// Gandiva 85
+		case 19546:		// Gandiva 90
+		case 19644:		// Gandiva 95
+		case 19817:		// Gandiva 99
+		case 19865:		// Gandiva 99-2
+		
+		case 19469:		// Armageddon 85
+		case 19547:		// Armageddon 90
+		case 19645:		// Armageddon 95
+		case 19818:		// Armageddon 99
+		case 19866:		// Armageddon 99-2
+		
+			if(m_PChar->StatusEffectContainer->HasStatusEffect(EFFECT_AFTERMATH_LV1) == true)
+			{
+				if (rand()%100 <= 30)
+				{
+					// ShowDebug(CL_CYAN"Aftermath Lvl 1 Proc \n");
+					originalDamage = (damage * 2);
+				}
+			}
+			else if(m_PChar->StatusEffectContainer->HasStatusEffect(EFFECT_AFTERMATH_LV2) == true)
+			{
+				if (rand()%100 <= 40)
+				{
+					// ShowDebug(CL_CYAN"Aftermath Lvl 2 Proc \n");
+					originalDamage = (damage * 2);
+				}
+			}
+			else if(m_PChar->StatusEffectContainer->HasStatusEffect(EFFECT_AFTERMATH_LV3) == true)
+			{
+				if (rand()%100 <= 50)
+				{
+					// ShowDebug(CL_CYAN"Aftermath Lvl 3 Proc \n");
+					originalDamage = (damage * 2);
+				}
+			}
+			break;
+		
+		// Aftermath Lvl 3 Mythic Weapons: 2x Dmg
+		case 19001:		// Gastraphetes 75
+				
+		case 19007:		// Death Penalty 75
+		
+			if(m_PChar->StatusEffectContainer->HasStatusEffect(EFFECT_AFTERMATH_LV3) == true)
+			{
+				if (rand()%100 <= 40)
+				{
+					// ShowDebug(CL_CYAN"Aftermath Lvl 3 2x Proc 40 Percent \n");
+					originalDamage = (damage * 2);
+				}
+			}
+			break;
+		
+		case 19070:		// Gastraphetes 80
+		case 19090:		// Gastraphetes 85
+		case 19622:		// Gastraphetes 90
+				
+		case 19076:		// Death Penalty 80
+		case 19096:		// Death Penalty 85
+		case 19628:		// Death Penalty 90
+		
+			if(m_PChar->StatusEffectContainer->HasStatusEffect(EFFECT_AFTERMATH_LV3) == true)
+			{
+				if (rand()%100 <= 60)
+				{
+					// ShowDebug(CL_CYAN"Aftermath Lvl 3 2x Proc 60 Percent \n");
+					originalDamage = (damage * 2);
+				}
+			}
+			break;
+		
+		// Aftermath Lvl 3 Mythic Weapons: 2x-3x Dmg		
+		case 19720:		// Gastraphetes 95
+		case 19829:		// Gastraphetes 99
+		case 19958:		// Gastraphetes 99-2
+		
+		case 19726:		// Death Penalty 95
+		case 19835:		// Death Penalty 99
+		case 19964:		// Death Penalty 99-2
+
+			if(m_PChar->StatusEffectContainer->HasStatusEffect(EFFECT_AFTERMATH_LV3) == true)
+			{
+				if (rand()%100 <= 60)
+				{
+					// ShowDebug(CL_CYAN"Aftermath Lvl 3 2x-3x Proc 60 Percent \n");
+					if (rand()%100 < 50)
+					{
+						originalDamage = (damage * 2);
+					}
+					else
+					{
+						originalDamage = (damage * 3);
+					}
+				}
+			}
+			break;
+
+		// Magnus Stone Weapons	
+		case 18533:		// Magnus Axe
+		case 19168:		// Magnus Claymore
+		case 19131:		// Magnus Dagger
+		case 17047:		// Magnus Hammer
+		case 19313:		// Magnus Lance
+		case 18620:		// Magnus Pole
+		case 18777:		// Magnus Sainti
+		case 18967:		// Magnus Scythe
+		case 18893:		// Magnus Sword
+		case 18514:		// Magnus Toporok
+		case 19289:		// Toki
+		case 18456:		// Yoshihiro
+			if(PAmmo->getID() == 19262)
+			{
+				if (rand()%100 > 50)
+				{
+					// ShowDebug(CL_CYAN"Magnus Weapon Proc \n");
+					if ( (PAmmo->getQuantity()-1) < 1) // ammo will run out after this attack, make sure we remove it from equip
+					{
+						uint8 slot = m_PChar->equip[SLOT_AMMO];
+						charutils::UnequipItem(m_PChar,SLOT_AMMO);
+						charutils::UpdateItem(m_PChar, LOC_INVENTORY, slot, -1);
+					}
+					else
+					{
+						charutils::UpdateItem(m_PChar, LOC_INVENTORY, m_PChar->equip[SLOT_AMMO], -1);
+					}
+					m_PChar->pushPacket(new CInventoryFinishPacket());
+					originalDamage = (damage * 2);
+				}
+			}
+			break;
+
+		default:
+			break;
+	}
+	
+	return originalDamage;
+
+}
 uint32 CheckForDamageMultiplier(CItemWeapon* PWeapon, uint32 damage, uint8 hitNumber)
 {
 	if (PWeapon==NULL)
@@ -2108,9 +2461,9 @@ uint16 TakePhysicalDamage(CBattleEntity* PAttacker, CBattleEntity* PDefender, in
                 PDefender->addTP(TP);
             }
             if(taChar == NULL){
-                ((CMobEntity*)PDefender)->PEnmityContainer->UpdateEnmityFromDamage(PAttacker, damage);
+                ((CMobEntity*)PDefender)->PEnmityContainer->UpdateEnmityFromDamage(PAttacker, damage,false);
             }else{
-                ((CMobEntity*)PDefender)->PEnmityContainer->UpdateEnmityFromDamage(taChar, damage);
+                ((CMobEntity*)PDefender)->PEnmityContainer->UpdateEnmityFromDamage(taChar, damage,false);
             }
 
             //if the mob is charmed by player
@@ -3240,7 +3593,7 @@ uint16 TakeSkillchainDamage(CBattleEntity* PAttacker, CBattleEntity* PDefender, 
 
         case TYPE_MOB:
         {
-            ((CMobEntity*)PDefender)->PEnmityContainer->UpdateEnmityFromDamage(PAttacker, damage);
+            ((CMobEntity*)PDefender)->PEnmityContainer->UpdateEnmityFromDamage(PAttacker, damage,false);
         }
         break;
     }
@@ -3248,6 +3601,50 @@ uint16 TakeSkillchainDamage(CBattleEntity* PAttacker, CBattleEntity* PDefender, 
     return damage;
 }
 
+uint8 GetRetaliationRate(CBattleEntity* PAttacker, CBattleEntity* PDefender)
+{
+    CItemWeapon* PWeapon = GetEntityWeapon(PDefender, SLOT_MAIN);
+
+    if(PWeapon != NULL && battleutils::IsEngauged(PDefender))
+    {
+        if( PDefender->GetMJob() == JOB_WAR || PDefender->GetSJob() == JOB_WAR)
+        {
+			int chance = 20 + rand()%31;
+            return dsp_cap(chance, 20, 50);//50% max retaliation rate
+        }
+    }
+
+    return 0;
+}
+void HandleRetaliation(CBattleEntity* PAttacker, CBattleEntity* PDefender,apAction_t* Action, uint16 damage)
+{
+	//retaliation check (rate AND your hit rate makes it land, else its just a regular hit)
+	if (rand()%100 < battleutils::GetRetaliationRate(PAttacker, PDefender) &&
+	rand()%100 < battleutils::GetHitRate(PDefender,PAttacker) &&
+	PDefender->StatusEffectContainer->HasStatusEffect(EFFECT_RETALIATION))
+	{
+		Action->additionalEffect = SUBEFFECT_NONE;
+		Action->addEffectMessage = 536;
+
+		bool isCritical = ( rand()%100 < battleutils::GetCritHitRate(PDefender, PAttacker,false) );
+		float DamageRatio = battleutils::GetDamageRatio(PDefender, PAttacker,isCritical, 0);
+		damage = (uint16)((PDefender->GetMainWeaponDmg() + battleutils::GetFSTR(PDefender, PAttacker,SLOT_MAIN)) * DamageRatio);
+
+		damage = damage + (damage * (PDefender->getMod(MOD_RETALIATION_DMG)/100));	
+		Action->addEffectParam  = damage;	
+		if (battleutils::IsAbsorbByShadow(PAttacker))
+			{
+				Action->addEffectMessage = 535;
+				Action->addEffectParam  = 1;
+			}
+		else
+		{
+			Action->reaction   = REACTION_HIT;
+			// ShowDebug(CL_CYAN"Retaliation Damage %d \n", damage);
+			PAttacker->addHP(-damage);
+		}
+	}
+}
 CItemArmor* GetEntityArmor(CBattleEntity* PEntity, SLOTTYPE Slot)
 {
     DSP_DEBUG_BREAK_IF(Slot < SLOT_HEAD || Slot > SLOT_LINK);
@@ -3309,6 +3706,7 @@ bool IsEngauged(CBattleEntity* PEntity)
 *  Для всех сущностей, за исключением персонажей, по умолчанию true     *
 *                                                                       *
 ************************************************************************/
+
 
 bool HasNinjaTool(CBattleEntity* PEntity, CSpell* PSpell, bool ConsumeTool)
 {
@@ -3384,8 +3782,217 @@ bool HasNinjaTool(CBattleEntity* PEntity, CSpell* PSpell, bool ConsumeTool)
     }
     return true;
 }
+uint32 HandleDamageToMP(CCharEntity* PChar, uint32 damage, apAction_t* Action)
+{
+	// check for gear
+	CItemArmor* PEarring1 = (CItemWeapon*)PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->equip[SLOT_EAR1]);
+	CItemArmor* PEarring2 = (CItemWeapon*)PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->equip[SLOT_EAR2]);
+	CItemArmor* PWaist = (CItemWeapon*)PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->equip[SLOT_WAIST]);
+	CItemArmor* PHead = (CItemWeapon*)PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->equip[SLOT_HEAD]);
+	CItemArmor* PBody = (CItemWeapon*)PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->equip[SLOT_BODY]);
+
+	uint32 damageToMP = 0;
+	if(PEarring1 != NULL)
+	{
+		switch(PEarring1->getID())
+		{
+			//Ethereal Earring
+			case 15965:
+				damageToMP = damage * .03;
+				break;
 
 
+			default:
+				break;
+		}
+	}
+	if(PEarring2 != NULL)
+	{
+		switch(PEarring2->getID())
+		{
+			//Ethereal Earring
+			case 15965:
+				damageToMP = damage * .03;
+				break;
+
+
+			default:
+				break;
+		}
+	}
+	if(PBody != NULL)
+	{
+		switch(PBody->getID())
+		{
+			//Valor Surcoat
+			case 15093:
+			//Valor Surcoat +1
+			case 14506:
+				if(PChar->StatusEffectContainer->HasStatusEffect(EFFECT_COVER))
+				{
+					damageToMP = damage * .2;
+					break;
+				}
+				
+			//Valor Surcoat +2
+			case 10676:
+				if(PChar->StatusEffectContainer->HasStatusEffect(EFFECT_COVER))
+				{
+					damageToMP = damage * .3;
+					break;
+				}
+
+			default:
+				break;
+		}
+	}
+	if(PWaist != NULL)
+	{
+		switch(PWaist->getID())
+		{
+			//Flume Belt
+			case 10819:
+				damageToMP = damage * .02;
+				break;
+
+
+			default:
+				break;
+		}
+	}
+	if(PHead != NULL)
+	{
+		switch(PHead->getID())
+		{
+			//Creed Armet +1
+			case 11170:
+				damageToMP = damage * .03;
+				break;
+				
+			//Creed Armet +2
+			case 11070:
+				damageToMP = damage * .05;
+				break;
+
+			default:
+				break;
+		}
+	}
+	
+	return damageToMP;
+	
+}
+
+uint32 HandleDamageToTP(CCharEntity* PChar, uint32 damage, apAction_t* Action)
+{
+	// check for gear
+	CItemArmor* PShield = (CItemWeapon*)PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->equip[SLOT_EAR1]);
+    CItemArmor* PArmor = (CItemWeapon*)PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->equip[SLOT_BODY]);
+	
+	uint32 damageToTP = 0;
+	if(PShield != NULL)
+	{
+		switch(PShield->getID())
+		{
+			//Butznar Shield
+			case 28671:
+				damageToTP = damage * .005;
+				break;
+				
+			//Butznar Shield +1
+			case 28669:
+				damageToTP = damage * .005;
+				break;
+
+
+			default:
+				break;
+		}
+	}
+	if(PArmor != NULL)
+	{
+		switch(PArmor->getID())
+		{
+			//Mekira Toshugai
+			case 11865:
+				damageToTP = damage * .01;
+				break;
+				
+			//Mekira Toshugai +1
+			case 11871:
+				damageToTP = damage * .012;
+				break;
+				
+			//Mekira Meikogai
+			case 11868:
+				damageToTP = damage * .014;
+				break;
+				
+			//Myochin Domaru
+			case 13781:
+				if(rand()%100 <= 10)
+				{
+					damageToTP = damage * .01;
+				}
+				break;
+				
+			//Myochin Domaru +1
+			case 14484:
+				if(rand()%100 <= 15)
+				{
+					damageToTP = damage * .012;
+				}
+				break;
+
+
+			default:
+				break;
+		}
+	}
+	
+	return damageToTP;
+	
+}
+uint32 HandleBlockToMP(CCharEntity* PChar, uint32 damage, apAction_t* Action)
+{
+	if(PChar->objtype == TYPE_PC)
+	{
+		// check for gear
+		CItemArmor* PShield = (CItemWeapon*)PChar->getStorage(LOC_INVENTORY)->GetItem(PChar->equip[SLOT_SUB]);
+
+		uint32 blockToMP = 0;
+		if(PShield != NULL)
+		{
+			switch(PShield->getID())
+			{
+				//Ochain - 90
+				case 16193:
+					blockToMP = damage * .25;
+					break;
+				
+				//Ochain - 95
+				case 16194:
+					blockToMP = damage * .30;
+					break;
+				
+				//Ochain - 99
+				case 16199:
+				//Ochain - 99 - 2
+				case 11926:
+					blockToMP = damage * .35;
+					break;
+
+				default:
+					break;
+			}
+		}
+		return blockToMP;
+	}
+	else
+	{
+		return 0;
+	}
+}
 /*
  * Find if any party members are in position for trick attack.  Do this by making a narrow triangle:
  *  one endpoint at the mob, and the other two endpoints being equidistant from the TA user, perpendicular to

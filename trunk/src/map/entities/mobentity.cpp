@@ -48,6 +48,7 @@ CMobEntity::CMobEntity()
     memset(m_mobModStatSave,0, sizeof(m_mobModStatSave));
 
     m_AllowRespawn = 0;
+	m_ForceDespawn 		= false;
 	m_CallForHelp  = 0;
     m_DespawnTimer = 0;
     m_DropItemTime = 0;

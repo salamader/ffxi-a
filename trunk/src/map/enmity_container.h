@@ -51,7 +51,7 @@ public:
 	void	Clear(uint32 EntityID = 0);			// Removes Entries from list
     void	AddBaseEnmity(CBattleEntity* PEntity);
 	void	UpdateEnmity(CBattleEntity* PEntity, int16 CE, int16 VE, bool withMaster = true);
-	void	UpdateEnmityFromDamage(CBattleEntity* PEntity, uint16 Damage);
+	void	UpdateEnmityFromDamage(CBattleEntity* PEntity, uint16 Damage,bool isCure);
 	void	UpdateEnmityFromCure(CBattleEntity* PEntity, uint16 level, uint16 CureAmount, bool isCureV);
 	void	UpdateEnmityFromAttack(CBattleEntity* PEntity,uint16 Damage);
   void  AddLinkEnmity(CBattleEntity* PEntity);

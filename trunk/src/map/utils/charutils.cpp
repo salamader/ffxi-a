@@ -4150,6 +4150,7 @@ void SavePlayTime(CCharEntity* PChar)
 	Sql_Query(SqlHandle, "UPDATE chars SET playtime = '%u' WHERE charid = '%u' LIMIT 1;", PChar->GetPlayTime(), PChar->id);
 }
 
+
 /************************************************************************
 *																		*
 *  Checks which UnarmedItem to grant when SLOT_MAIN is empty.			*

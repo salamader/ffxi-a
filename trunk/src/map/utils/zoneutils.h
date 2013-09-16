@@ -47,10 +47,13 @@ namespace zoneutils
   void UpdateTreasureSpawnPoint(uint32 npcid, uint32 respawnTime = 300000);
     void UpdateWeather();                                                           // обновляем погоду в зонах
 	void TOTDCharnge(TIMETYPE TOTD);                                                // реакция мира на смену времени суток
+	void SavePlayTime();
+	void LoadNPC(uint16 NpcID);   
 
     REGIONTYPE    GetCurrentRegion(uint16 ZoneID);
     CONTINENTTYPE GetCurrentContinent(uint16 ZoneID);
 	CZone*       GetZoneByChar(uint16 ZoneID, CCharEntity* PChar);
+
 	CZone*		 GetZone(uint16 ZoneID);
 	CZone*       LoadPlayerMOBList(uint16 ZoneID,uint16 MobID);                                   // получаем указатель на зону
 	CNpcEntity*	 GetTrigger(uint16 TargID, uint16 ZoneID);		                    // триггер для старта событий (как побочный эффект - вероятность появления прозрачного орка)

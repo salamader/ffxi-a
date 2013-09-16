@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -33,12 +33,12 @@ CSpell::CSpell(uint16 id)
 {
 	m_ID = id;
 
-    m_radius          = 0;
+    m_radius          	= 0;
 	m_mpCost            = 0;
 	m_castTime          = 0;
 	m_recastTime        = 0;
 	m_animation         = 0;
-    m_AOE             = 0;
+    m_AOE             	= 0;
     m_animationTime     = 0;
     m_skillType         = 0;
     m_zoneMisc          = 0;
@@ -387,20 +387,20 @@ void CSpell::setMeritId(uint16 meritId)
 
 /************************************************************************
 *                                                                       *
-*  Реализация namespase для работы с заклинаниями                       *
+*  Implementing namespase to work with spells	                        *
 *                                                                       *
 ************************************************************************/
 
 namespace spell
 {
-    CSpell* PSpellList[MAX_SPELL_ID]; // список заклинаний
+    CSpell* PSpellList[MAX_SPELL_ID]; // Spell list
 	std::map<uint16, uint16> PMobSkillToBlueSpell[256]; // maps the skill id (key) to spell id (value).
 
-    /************************************************************************
-    *                                                                       *
-    *  Загружаем список заклинаний                                          *
-    *                                                                       *
-    ************************************************************************/
+/************************************************************************
+*                                                                       *
+*  Load the list of spells		                                        *
+*                                                                       *
+************************************************************************/
 
     void LoadSpellList()
     {
@@ -541,11 +541,11 @@ namespace spell
 		}
 	}
 
-    /************************************************************************
-    *                                                                       *
-    *  Get Spell By ID                                                      *
-    *                                                                       *
-    ************************************************************************/
+/************************************************************************
+*                                                                       *
+*  Get Spell By ID                                                      *
+*                                                                       *
+************************************************************************/
 
     CSpell* GetSpell(uint16 SpellID)
     {
@@ -557,11 +557,11 @@ namespace spell
 	    return NULL;
     }
 
-    /************************************************************************
-    *                                                                       *
-    *  Check If user can cast spell                                         *
-    *                                                                       *
-    ************************************************************************/
+/************************************************************************
+*                                                                       *
+*  Check If user can cast spell                                         *
+*                                                                       *
+************************************************************************/
 
     bool CanUseSpell(CBattleEntity* PCaster, uint16 SpellID)
     {

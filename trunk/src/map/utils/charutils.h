@@ -134,7 +134,7 @@ namespace charutils
 	void	SaveCharStats(CCharEntity* PChar);					        // сохраняем флаги, текущие значения жихней, маны и профессий
    
 	void	SaveCharNation(CCharEntity* PChar);							// Sace the character's nation of allegiance.
-	
+	void    SavePlayTime(CCharEntity* PChar);
 	void	SaveCharPoints(CCharEntity* PChar);							// Conquest point, Nation TP
 	void	SaveDeathTime(CCharEntity* PChar);							// Saves when this character last died.
 	void    SaveCharSystem(CCharEntity* PChar);

@@ -117,6 +117,7 @@ public:
 	STATUSTYPE		status;				// статус сущности (разные сущности - разные статусы)
 	uint16			m_TargID;			// targid объекта, на который смотрит сущность
 	string_t		name;				// имя сущности
+	string_t		npcSayName;			// NPC Say name
 	char            charname[17];
 	look_t			look;				// внешний вид всех сущностей
 	look_t			mainlook;			// only used if mob use changeSkin()
@@ -128,6 +129,7 @@ public:
 	uint8			namevis; 
 
 	virtual const int8* GetName();      // имя сущности
+	virtual const int8*		GetSayName();		// the entity name
 
 	uint16			getZone();			// текущая зона
 	float			GetXPos();			// позиция по координате X

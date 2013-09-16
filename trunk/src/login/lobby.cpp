@@ -142,6 +142,11 @@ int32 lobbydata_parse(int32 fd)
             return -1;
         }
 	}
+	else if(session[fd] == NULL)
+	{
+		ShowDebug("ELSE SHOW DEBUG");
+		return 0;
+	}
 
 	
 	if( session[fd]->flag.eof )
@@ -154,8 +159,11 @@ int32 lobbydata_parse(int32 fd)
 	if( RFIFOREST(fd) >= 1 )
 	{
 		unsigned char *buff = session[fd]->rdata;
-		if (RBUFB(buff,0) == 0x0d) ShowDebug(CL_RED"Posible Crash Attempt from IP: " CL_WHITE"<%s>\n" CL_RESET,ip2str(session[fd]->client_addr,NULL),NULL);
-		ShowDebug("lobbydata_parse:Incoming Packet:" CL_WHITE"<%x>" CL_RESET" from ip:<%s>\n",RBUFB(buff,0),ip2str(sd->client_addr,NULL));
+		if (RBUFB(buff,0) == 0x0d)
+		{
+
+		}
+			
 
 		int32 code = RBUFB(buff,0);
 		switch(code)
@@ -164,7 +172,7 @@ int32 lobbydata_parse(int32 fd)
 			{
 				if( RFIFOREST(fd) < 9 )
 				{
-					ShowError("lobbydata_parse:" CL_WHITE"<%s>" CL_RESET" sent less then 9 bytes\n",ip2str(session[fd]->client_addr,NULL));
+					
 					do_close_lobbydata(sd,fd);
 					return -1;
 				}
@@ -290,7 +298,7 @@ int32 lobbydata_parse(int32 fd)
 					
 				}
 				else{ //cleanup
-					ShowWarning("lobbydata_parse: char:(%i) login data corrupt (0xA1). Disconnecting client.\n",sd->accid);
+					
 					do_close_lobbydata(sd,fd);
 					return -1;
 				}
@@ -311,7 +319,7 @@ int32 lobbydata_parse(int32 fd)
 				RFIFOFLUSH(fd);
 
 				if(session[sd->login_lobbyview_fd]==NULL){
-					ShowWarning("lobbydata_parse: char:(%i) login data corrupt (0xA2). Disconnecting client.\n",sd->accid);
+					
 					do_close_lobbydata(sd,fd);
 					return -1;
 				}
@@ -518,7 +526,7 @@ int32 lobbydata_parse(int32 fd)
 				}
 
 				do_close_tcp(sd->login_lobbyview_fd);
-				ShowStatus("lobbydata_parse: client %s finished work with " CL_GREEN"lobbyview" CL_RESET"\n",ip2str(sd->client_addr,NULL));
+				
 				break;
 			}
 		default:
@@ -626,7 +634,7 @@ int32 lobbyview_parse(int32 fd)
 	if( RFIFOREST(fd) >= 9)
 	{
 		unsigned char *buff = session[fd]->rdata;
-		ShowDebug("lobbyview_parse:Incoming Packet:" CL_WHITE"<%x>" CL_RESET" from ip:<%s>\n",RBUFB(buff,8),ip2str(sd->client_addr,NULL));
+	
 		uint8 code = RBUFB(buff,8);
 		switch(code)
 		{
@@ -679,12 +687,11 @@ int32 lobbyview_parse(int32 fd)
 
 				//delete char
 				uint32 ContentID = RBUFL(session[fd]->rdata,0x1C);
-				//DebugPrint("[LViewServ]Content ID: %.8X (%d)",ContentID,ContentID);
+			
 				
 				uint32 CharID = RBUFL(session[fd]->rdata,0x20);
 
-				ShowInfo(CL_WHITE"lobbyview_parse" CL_RESET":attempt to delete char:<" CL_WHITE"%d" CL_RESET"> from ip:<%s>\n",CharID,ip2str(sd->client_addr,NULL));
-
+				
 				uint8 sendsize = 0x20;
 
 				LOBBY_ACTION_DONE(ReservePacket);
@@ -698,8 +705,7 @@ int32 lobbyview_parse(int32 fd)
 				RFIFOSKIP(fd,session[fd]->rdata_size);
 				RFIFOFLUSH(fd);
 
-				//Выполнение удаления персонажа из основных таблиц
-				//Достаточно удалить значение из таблицы chars, все остальное сделает mysql-сервер
+			
 				const char *  Query = "SELECT charid FROM chars WHERE accid = '%u';";
 	          int32  ret = Sql_Query(SqlHandle,Query,sd->accid);
 
@@ -832,11 +838,8 @@ int32 lobbyview_parse(int32 fd)
 					return -1;
 				}
 				char lobbydata_code[] = { 0x15, 0x07 };
-//				session[sd->login_lobbydata_fd]->wdata[0]  = 0x15;
-//				session[sd->login_lobbydata_fd]->wdata[1]  = 0x07;
-//				WFIFOSET(sd->login_lobbydata_fd,2);
-				ShowStatus(CL_WHITE"lobbyview_parse" CL_RESET": char <" CL_WHITE"%s" CL_RESET"> was successfully created\n",sd->charname);
-				/////////////////////////
+
+			
 				LOBBY_ACTION_DONE(ReservePacket);
 				unsigned char hash[16];
 
@@ -876,7 +879,7 @@ int32 lobbyview_parse(int32 fd)
 
 				if( Sql_NumRows(SqlHandle) != 0 )
 				{
-					ShowWarning(CL_WHITE"lobbyview_parse:" CL_RESET" character name " CL_WHITE"<%s>" CL_RESET"already taken\n",CharName);
+					
 					LOBBBY_ERROR_MESSAGE(ReservePacket);
 					// устанавливаем код ошибки
 
@@ -917,7 +920,7 @@ int32 lobbyview_parse(int32 fd)
 
 int32 do_close_lobbyview(login_session_data_t* sd, int32 fd)
 {
-	ShowInfo(CL_WHITE"lobbyview_parse" CL_RESET": " CL_WHITE"%s" CL_RESET" shutdown the socket\n",sd->login);
+	
 	do_close_lobbydata(sd,fd);
 	return 0;
 }
