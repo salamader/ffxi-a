@@ -950,26 +950,8 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
     // TODO: могут возникать проблемы с переходом между одной и той же зоной (zone == prevzone)
 
 	m_charList.erase(PChar->targid);
-	PChar->SpawnPCList.erase(PChar->targid);
-	//ShowMessage(CL_YELLOW"DECREASE THIS ZONE ID %u\n"CL_RESET,PChar->loc.destination);
-	 
-  /*string_t zonename = "noname";
-	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
-	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
-			
-
-	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	                {
-						
-				   zonename =  Sql_GetData(SqlHandle,0);
-				  // snprintf(file, sizeof(file), "scripts/zones/%s/NavMesh.nav", zonename.c_str());
-				   ShowMessage(CL_YELLOW"CZone:: %s DecreaseZoneCounter <%u> %s OK \n" CL_RESET, zonename.c_str(), m_charList.size(),PChar->GetName());
-				 }
-				 else
-				 {
-					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
-					 return;
-				 }*/
+	PChar->SpawnPCList.erase(PChar->id);
+	
 	
 
 	if (ZoneTimer && m_charList.empty())
@@ -1043,40 +1025,33 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
    // PChar->targid  = 1024;
 	PChar->is_zoning = -1;
 	uint32 targid = 0;
-
+	uint32 charid = 0;
 	                
 	
-	const char * Query = "SELECT targid FROM accounts_sessions WHERE charid= '%u';";
+	const char * Query = "SELECT charid, targid FROM accounts_sessions WHERE charid= '%u';";
 	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->id);
 			
 
 	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 	                {
-						
-				   targid =  Sql_GetUIntData(SqlHandle,0);
+						charid =  Sql_GetUIntData(SqlHandle,0);
+				        targid =  Sql_GetUIntData(SqlHandle,1);
 				  
 				 
                PChar->targid = targid;
-			   ShowMessage("%s targid = %u \n" CL_RESET,PChar->GetName(), PChar->targid);
-    for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
-	{
-        if (PChar->targid != it->first)
-        {
-			PChar->targid++;
-			ShowMessage(CL_BG_RED"IS NOT IT FRIST %s targid = %u \n" CL_RESET,PChar->GetName(), PChar->targid);
-			const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
-            Sql_Query(SqlHandle,fmtQuery,PChar->targid,PChar->id);
-            break;
-        }
-		else
-		{
-        PChar->targid++;
-		ShowMessage(CL_BG_RED"ELSE IT SECOND %s targid = %u \n" CL_RESET,PChar->GetName(), PChar->targid);
-		//ShowError(CL_RED"%u TARGET ID IS %u\n" CL_RESET,PChar->id, PChar->targid++);
-		const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
-        Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
-		}
-    }
+			   PChar->id = charid;
+    //for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
+	//{
+        
+			//PChar->targid++;
+			ShowMessage(CL_BG_RED"PLAYERS NAME %s PLAYERS TARGET ID = %u \n" CL_RESET,PChar->GetName(), PChar->targid);
+			ShowMessage(CL_BG_RED"PLAYER NAME %s PLAYERS ID = %u \n" CL_RESET,PChar->GetName(), PChar->id);
+			//const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
+           // Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
+           
+       
+		
+   // }
     if (PChar->targid >= 0x700)
     {
         ShowError(CL_RED"CZone::InsertChar : targid is high (03hX)\n" CL_RESET, PChar->targid);
@@ -1090,7 +1065,7 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 
 	
 	m_charList[PChar->targid] = PChar;
-	PChar->SpawnPCList[PChar->targid] = PChar;
+	PChar->SpawnPCList[PChar->id] = PChar;
 	
 
 	if (!ZoneTimer && !m_charList.empty())
@@ -1142,6 +1117,31 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 *  вычислять distance несколько раз (например в ZoneServer)				*
 *																		*
 ************************************************************************/
+void CZone::UpdateMOBs(CCharEntity* PChar)
+{
+	/*if(PChar != NULL && PChar->loc.zone != NULL)
+	{
+	for (EntityList_t::const_iterator it = m_mobList.begin() ; it != m_mobList.end() ; ++it)
+	{
+		CMobEntity* PCurrentMob = (CMobEntity*)it->second;
+		
+        CMobEntity* PMob = (CMobEntity*)PChar->loc.zone->GetEntity(PCurrentMob->targid, TYPE_MOB);
+
+		float CurrentDistance = distance(PChar->loc.p, PCurrentMob->loc.p);
+		if (CurrentDistance < 50)
+		{
+        ShowDebug(CL_CYAN"UPDATING MOBS: TARGET ID %u \n" CL_RESET,PCurrentMob->targid);
+		PChar->pushPacket(new CEntityUpdatePacket(PMob,ENTITY_UPDATE));
+		}
+		
+     
+	}
+	}
+	else
+	{
+     ShowDebug(CL_CYAN"UPDATING MOBS: WITH NO PLAYER \n" CL_RESET);
+	}*/
+}
 
 void CZone::SpawnMOBs(CCharEntity* PChar)
 {
@@ -1167,7 +1167,7 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 	            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PCurrentMob, ENTITY_UPDATE));
 			}
 
-			if (PChar->isDead() || PChar->godmode==1 || PCurrentMob->PMaster != NULL)
+			if (PChar->isDead() || PCurrentMob->PMaster != NULL)
 				continue;
 
         // проверка ночного/дневного сна монстров уже учтена в проверке CurrentAction, т.к. во сне монстры не ходят ^^
@@ -1770,11 +1770,19 @@ void CZone::ZoneServer(uint32 tick)
 	for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end() ; ++it)
 	{
 		CMobEntity* PMob = (CMobEntity*)it->second;
+		if(!m_charList.size() !=NULL)
+        {
 
+
+		//ShowMessage("THE CHAR LIST IS EMPTY MOB\n");
+	    }
+		else
+		{
 		
 		PMob->StatusEffectContainer->CheckEffects(tick);
 		PMob->Check_Engagment->CheckCurrentAction(tick);
 		PMob->StatusEffectContainer->CheckRegen(tick);
+		}
 		
 		
 	}
@@ -1840,21 +1848,6 @@ void CZone::ZoneServer(uint32 tick)
 
 void CZone::ZoneServerRegion(uint32 tick)
 {
-	for (EntityList_t::const_iterator it = m_mobList.begin() ; it != m_mobList.end() ; ++it)
-	{
-		CMobEntity* PMob = (CMobEntity*)it->second;
-
-		PMob->StatusEffectContainer->CheckEffects(tick);
-		PMob->Check_Engagment->CheckCurrentAction(tick);
-	}
-
-	for (EntityList_t::const_iterator it = m_petList.begin() ; it != m_petList.end() ; ++it)
-	{
-		CPetEntity* PPet = (CPetEntity*)it->second;
-
-		PPet->StatusEffectContainer->CheckEffects(tick);
-		PPet->Check_Engagment->CheckCurrentAction(tick);
-	}
 	if(!m_charList.empty())
     {
     for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
@@ -1911,6 +1904,38 @@ void CZone::ZoneServerRegion(uint32 tick)
 	  }
 	}
   }
+	for (EntityList_t::const_iterator it = m_mobList.begin() ; it != m_mobList.end() ; ++it)
+	{
+		CMobEntity* PMob = (CMobEntity*)it->second;
+		if(!m_charList.size() !=NULL)
+        {
+
+
+		//ShowMessage("THE CHAR LIST IS EMPTY MOB\n");
+	    }
+		else
+		{
+		PMob->StatusEffectContainer->CheckEffects(tick);
+		PMob->Check_Engagment->CheckCurrentAction(tick);
+		}
+	}
+
+	for (EntityList_t::const_iterator it = m_petList.begin() ; it != m_petList.end() ; ++it)
+	{
+		CPetEntity* PPet = (CPetEntity*)it->second;
+		if(!m_charList.size() !=NULL)
+        {
+
+
+		//ShowMessage("THE CHAR LIST IS EMPTY MOB\n");
+	    }
+		else
+		{
+		PPet->StatusEffectContainer->CheckEffects(tick);
+		PPet->Check_Engagment->CheckCurrentAction(tick);
+		}
+	}
+	
 }
 
 EntityList_t CZone::GetCharList()

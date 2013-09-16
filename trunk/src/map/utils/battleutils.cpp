@@ -341,7 +341,10 @@ uint8 GetEnmityMod(uint8 level, uint8 modType)
 
 CWeaponSkill* GetWeaponSkill(uint16 WSkillID)
 {
-    DSP_DEBUG_BREAK_IF(WSkillID >= MAX_WEAPONSKILL_ID);
+    if(WSkillID >= MAX_WEAPONSKILL_ID)
+	{
+     ShowDebug("WEAPONSKILLS MISSING %u\n",WSkillID);
+	}
 
     return g_PWeaponSkillList[WSkillID];
 }

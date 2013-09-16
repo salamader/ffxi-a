@@ -3344,7 +3344,26 @@ int32 OnUseWeaponSkill(CCharEntity* PChar, CBaseEntity* PMob, uint16* tpHitsLand
 
 	CWeaponSkill* wskill = PChar->Check_Engagment->GetCurrentWeaponSkill();
 
-	snprintf(File, sizeof(File), "scripts/globals/weaponskills/%s.lua", wskill->getName());
+	string_t name = "noname";
+	const char * Query = "SELECT name FROM weapon_skills WHERE weaponskillid = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,wskill);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   name =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/globals/weaponskills/%s.lua", name.c_str());
+				  // snprintf(File, sizeof(File), "scripts/globals/weaponskills/%s.lua", wskill->getName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+
+	//snprintf(File, sizeof(File), "scripts/globals/weaponskills/%s.lua", wskill->getName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{

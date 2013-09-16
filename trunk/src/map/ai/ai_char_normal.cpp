@@ -386,7 +386,7 @@ void CAICharNormal::ActionFall()
     m_PChar->pushPacket(new CRaiseTractorMenuPacket(m_PChar,TYPE_HOMEPOINT));
 
 	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CCharPacket(m_PChar,ENTITY_UPDATE));
-
+	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CCharPacket(m_PChar,ENTITY_UPDATE));
 	//influence for conquest system
 	conquest::LoseInfluencePoints(m_PChar);
 
@@ -507,7 +507,7 @@ void CAICharNormal::ActionItemStart()
 
 	m_PChar->m_ActionList.push_back(Action);
 	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-
+	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
 	m_ActionType = ACTION_ITEM_USING;
 }
 
@@ -599,7 +599,7 @@ void CAICharNormal::ActionItemUsing()
 		m_PChar->m_ActionList.push_back(Action);
 
 		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-
+		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
 		ActionItemFinish();
 	}
 }
@@ -620,6 +620,7 @@ void CAICharNormal::ActionItemFinish()
 	{
         if(battleutils::IsParalyzed(m_PChar)){
             m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_IS_PARALYZED));
+			 m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_IS_PARALYZED));
         } else {
 
             m_PChar->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_INVISIBLE);
@@ -857,7 +858,7 @@ void CAICharNormal::ActionRangedStart()
 	m_PChar->m_ActionList.push_back(Action);
 
 	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-
+	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
 	m_ActionType = ACTION_RANGED_FINISH;
 }
 
@@ -1086,6 +1087,7 @@ void CAICharNormal::ActionRangedFinish()
             Action.messageID  = 0;
             Action.reaction   = REACTION_EVADE;
             m_PBattleSubTarget->loc.zone->PushPacket(m_PBattleSubTarget,CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PBattleSubTarget,m_PBattleSubTarget,0,shadowsTaken, MSGBASIC_SHADOW_ABSORB));
+			m_PBattleSubTarget->loc.zone->PushPacket(m_PBattleSubTarget,CHAR_INRANGE, new CMessageBasicPacket(m_PBattleSubTarget,m_PBattleSubTarget,0,shadowsTaken, MSGBASIC_SHADOW_ABSORB));
 
             battleutils::ClaimMob(m_PBattleSubTarget, m_PChar);
         }
@@ -1172,7 +1174,7 @@ void CAICharNormal::ActionRangedInterrupt()
 	m_PChar->m_ActionList.push_back(Action);
 
 	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-
+	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
 	TransitionBack();
 }
 
@@ -1487,9 +1489,10 @@ void CAICharNormal::ActionJobAbilityFinish()
     }
 
     // check paralysis
-	if(battleutils::IsParalyzed(m_PChar)){
+    if(battleutils::IsParalyzed(m_PChar)){
         // display paralyzed
         m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_IS_PARALYZED));
+		 m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_IS_PARALYZED));
     } else {
 
         // remove invisible if aggresive
@@ -1871,6 +1874,7 @@ void CAICharNormal::ActionJobAbilityFinish()
 				m_PChar->health.hp = 0;
 		        charutils::UpdateHealth(m_PChar);
 				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
+				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
 			}
 
     		/* TODO: Handle post-Lv. 75 genkai job abilities from support jobs that
@@ -1888,7 +1892,9 @@ void CAICharNormal::ActionJobAbilityFinish()
     			{
     				Action.messageID = 0;
     				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_BUT_MISSES));
-    			}
+    				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_BUT_MISSES));
+    			
+				}
 				else if (Action.param >= m_PBattleSubTarget->health.hp)
 				{
 					m_PChar->setWeaponSkillKill(true);
@@ -1902,7 +1908,9 @@ void CAICharNormal::ActionJobAbilityFinish()
     			{
     				Action.messageID = 0;
     				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_BUT_MISSES));
-    			}
+    				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_BUT_MISSES));
+    			
+				}
 				else if (Action.param >= m_PBattleSubTarget->health.hp)
 				{
 					m_PChar->setWeaponSkillKill(true);
@@ -1914,7 +1922,9 @@ void CAICharNormal::ActionJobAbilityFinish()
     			battleutils::jumpAbility(m_PChar, m_PBattleSubTarget, 3);
     			Action.messageID = 0;
     			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_JA));
-    		}
+    		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_JA));
+    		
+			}
 
     		// handle enmity transfer abilities
     		if (m_PJobAbility->getID() == ABILITY_ACCOMPLICE)
@@ -1937,7 +1947,9 @@ void CAICharNormal::ActionJobAbilityFinish()
     				case TYPE_MOB:
     					((CMobEntity*)PTarget)->PEnmityContainer->LowerEnmityByPercent(m_PChar, 100, m_PBattleSubTarget);
     					m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, 528));  //528 - The <player> uses .. Enmity is transferred to the <player>'s pet.
-    					break;
+    					m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, 528));  //528 - The <player> uses .. Enmity is transferred to the <player>'s pet.
+    					
+						break;
 
     				case TYPE_PET:
     					// pets have no emnity container
@@ -1978,6 +1990,7 @@ void CAICharNormal::ActionJobAbilityFinish()
     		{
     			m_PChar->PPet->UpdateHealth();
     			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, value, MSGBASIC_USES_RECOVERS_HP));
+				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, value, MSGBASIC_USES_RECOVERS_HP));
 
     			//Reward gives enmity to the pet and not the Beastmaster.
     			CBattleEntity* PTarget = m_PChar->PPet->Check_Engagment->GetBattleTarget();
@@ -2046,7 +2059,7 @@ void CAICharNormal::ActionJobAbilityFinish()
     	}
 
     	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-
+		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
     	// Message "player uses..."  for most abilities
         // TODO: all abilities should display their own messages!
     	if(m_PJobAbility->getID() < ABILITY_HEALING_RUBY &&
@@ -2059,7 +2072,9 @@ void CAICharNormal::ActionJobAbilityFinish()
     	{
     		if (m_PJobAbility->getMessage() == 0)
     			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PChar, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_JA));
-    	}
+    			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PChar, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_JA));
+    	
+		}
 
     } // end paralysis if
 
@@ -2759,10 +2774,12 @@ void CAICharNormal::ActionAttack()
 		if (battleutils::IsParalyzed(m_PChar))
 		{
 			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleTarget,0,0,MSGBASIC_IS_PARALYZED));
+			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar,m_PBattleTarget,0,0,MSGBASIC_IS_PARALYZED));
 		}
 		else if (battleutils::IsIntimidated(m_PChar, m_PBattleTarget))
 		{
 			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleTarget,0,0,MSGBASIC_IS_INTIMIDATED));
+			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar,m_PBattleTarget,0,0,MSGBASIC_IS_INTIMIDATED));
 		}
 		else
 		{
@@ -2887,7 +2904,9 @@ void CAICharNormal::ActionAttack()
                         Action.messageID = 0;
                         Action.reaction = REACTION_EVADE;
                         m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,1,31));
-                    }
+                       m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,1,31));
+                   
+					}
                     else
                     {
 						bool ignoreSneakTrickAttack = (i != 0); // Sneak attack critical effect should only be given on the first swing.
@@ -3034,6 +3053,7 @@ void CAICharNormal::ActionAttack()
 
 			m_PChar->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_ATTACK | EFFECTFLAG_DETECTABLE);
 			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
+			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
 		}
 	}
 }

@@ -45,7 +45,7 @@ namespace jailutils
 
     bool InPrison(CCharEntity* PChar)
     {
-        if(!PChar->godmode == 1 && PChar->getZone() == ZONE_MORDION_GAOL)
+        if(PChar->getZone() == ZONE_MORDION_GAOL)
         {
             return true;
         }
