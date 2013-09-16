@@ -1,7 +1,7 @@
 -----------------------------------
--- EFFECT_ROUND
--- Increases Curse Resistance to 
--- Party Members within target AoE
+--
+--
+--
 -----------------------------------
 
 -----------------------------------
@@ -9,7 +9,6 @@
 -----------------------------------
 
 function onEffectGain(target,effect)
-	target:addMod(MOD_CURSERES,effect:getPower());
 end;
 
 -----------------------------------
@@ -24,5 +23,4 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
-	target:delMod(MOD_CURSERES,effect:getPower());
 end;

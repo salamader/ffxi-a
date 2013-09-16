@@ -1176,9 +1176,10 @@ PET_ODIN                  = 18;
 PET_ATOMOS                = 19;
 PET_CAIT_SITH             = 20;
 
+PET_AUTOMATON     = 69;
+
 PET_WYVERN                = 48;
 
-PET_AUTOMATON			  = 69;
 
 -----------------------------------
 --  Beastmaster

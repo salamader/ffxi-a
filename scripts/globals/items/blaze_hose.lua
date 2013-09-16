@@ -1,16 +1,17 @@
 -----------------------------------------
---	ID: 15652
---	Item: Blaze Hose
---	Enchantment: Blaze Spikes
---	Durration: 5 Mins
+-- ID: 15652
+-- Item: Blaze Hose
+-- Item Effect: Blaze Spikes
 -----------------------------------------
+
+require("scripts/globals/settings");
 
 -----------------------------------------
 -- OnItemCheck
 -----------------------------------------
 
 function onItemCheck(target)
-	return 0;
+    return 0;
 end;
 
 -----------------------------------------
@@ -18,6 +19,5 @@ end;
 -----------------------------------------
 
 function onItemUse(target)
-	target:delStatusEffect(EFFECT_BLAZE_SPIKES);
-	target:addStatusEffect(EFFECT_BLAZE_SPIKES,0,0,300);
+    target:addStatusEffect(EFFECT_BLAZE_SPIKES, 15, 0, 180);
 end;

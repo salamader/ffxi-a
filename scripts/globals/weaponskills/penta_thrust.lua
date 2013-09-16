@@ -2,8 +2,7 @@
 -- Penta Thrust	
 -- Polearm weapon skill	
 -- Skill Level: 150	
--- Delivers a five-hit attack. 
--- params.accuracy varies with TP.	
+-- Delivers a five-hit attack. params.accuracy varies with TP.	
 -- 0.875 Attack penalty	
 -- Will stack with Sneak Attack.	
 -- Aligned with the Shadow Gorget.	

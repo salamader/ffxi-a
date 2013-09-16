@@ -18,11 +18,7 @@ function onItemCheck(target)
 local result = 0;
 	if (target:getRace() ~= 7) then
 		result = 247;
-	end
-	if(target:getMod(MOD_EAT_RAW_FISH) == 1) then
-		result = 0;
-	end
-	if (target:hasStatusEffect(EFFECT_FOOD) == true) then
+	elseif (target:hasStatusEffect(EFFECT_FOOD) == true) then
 		result = 246;
 	end
 return result;

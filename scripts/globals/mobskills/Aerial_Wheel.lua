@@ -1,7 +1,6 @@
 ---------------------------------------------------
 -- Aerial Wheel
--- Deals a ranged attack to a single target.
--- Additional effect: stun
+-- Deals a ranged attack to a single target. Additional effect: stun
 ---------------------------------------------------
 
 require("/scripts/globals/settings");

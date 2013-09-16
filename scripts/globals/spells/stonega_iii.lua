@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Stonega III
+-- Spell: Stonega 3
 -- Deals earth damage to an enemy.
 -----------------------------------------
 

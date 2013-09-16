@@ -1,16 +1,14 @@
 -----------------------------------
 --
--- EFFECT_PASTORAL
--- Increases Poison Resistance to 
--- Party Members within target AoE
-----------------------------------
+--
+--
+-----------------------------------
 
 -----------------------------------
 -- onEffectGain Action
 -----------------------------------
 
 function onEffectGain(target,effect)
-	target:addMod(MOD_POISONRES,effect:getPower());
 end;
 
 -----------------------------------
@@ -25,5 +23,4 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
-	target:delMod(MOD_POISONRES,effect:getPower());
 end;

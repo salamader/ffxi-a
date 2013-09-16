@@ -1,7 +1,5 @@
 -----------------------------------
 -- Ability: Assassin's Charge
--- Will triple or quadruple your
--- next attack.
 -----------------------------------
 
 require("scripts/globals/settings");

@@ -1,7 +1,7 @@
 -----------------------------------
+--
 -- 	EFFECT_HOLY_CIRCLE
--- Grants resistance against undead
--- to party members within AoE.
+--
 -----------------------------------
 
 require("scripts/globals/status");
@@ -11,8 +11,7 @@ require("scripts/globals/status");
 -----------------------------------
 
 function onEffectGain(target,effect)
-   target:addMod(MOD_UNDEAD_KILLER,effect:getPower());
-   target:addMod(MOD_UNDEAD_DMG,effect:getPower());
+   target:addMod(MOD_UNDEAD_KILLER,8);
 end;
 
 -----------------------------------
@@ -27,6 +26,5 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
-   target:delMod(MOD_UNDEAD_KILLER,effect:getPower());
-   target:delMod(MOD_UNDEAD_DMG,effect:getPower());
+   target:delMod(MOD_UNDEAD_KILLER,8);
 end;

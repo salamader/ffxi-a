@@ -38,15 +38,6 @@ function OnUseAbility(player, target, ability)
 		end
 		multi = multi + 0.6;
 	end
-	if(hand == 10691) then -- Melee Gloves (+2) equipped
-		if(player:hasStatusEffect(EFFECT_DISEASE)) then
-			player:delStatusEffect(EFFECT_DISEASE);
-		end
-		if(player:hasStatusEffect(EFFECT_PLAUGE)) then
-			player:delStatusEffect(EFFECT_PLAUGE);
-		end
-		multi = multi + 0.8;
-	end
 	local recover = (multi * vit);
 	player:setHP((hp + recover));
 	

@@ -16,7 +16,6 @@ end;
 function OnUseAbility(player, target, ability)
 
 	local duration = math.random(30, 300);
-	duration = duration + (duration * target:getMod(MOD_INVIS_DUR));
 
 	if (target:getEquipID(SLOT_BODY) == 14224) then -- Hunter's Jerkin
 		duration = duration * 1.3;

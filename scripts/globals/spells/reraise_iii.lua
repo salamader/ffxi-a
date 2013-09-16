@@ -1,6 +1,5 @@
 -----------------------------------------
 -- Spell: Reraise 3
--- Durration: 1 Hr
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -14,8 +13,9 @@ function OnMagicCastingCheck(caster,target,spell)
 end;
 
 function onSpellCast(caster,target,spell)
+	--duration = 1800;
     target:delStatusEffect(EFFECT_RERAISE);
-    target:addStatusEffect(EFFECT_RERAISE,3,0,3600); --reraise 3, 1 hr duration
+    target:addStatusEffect(EFFECT_RERAISE,3,0,3600); --reraise 3, 30min duration
 
     return EFFECT_RERAISE;
 end;

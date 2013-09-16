@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 5208
--- Item: Slice of Tavnazian Ram Meat
--- Food Effect: 5 Min, Galka only
+-- Item: slice_of_tavnazian_ram_meat
+-- Food Effect: 5Min, Galka only
 -----------------------------------------
 -- Strength 2
 -- Mind -4

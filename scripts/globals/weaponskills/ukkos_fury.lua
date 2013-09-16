@@ -36,49 +36,7 @@ function OnUseWeaponSkill(player, target, wsID)
 		
 	if damage > 0 and (target:hasStatusEffect(EFFECT_SLOW) == false) then
 		target:addStatusEffect(EFFECT_SLOW, 150, 0, 60);
-	end
-	
-	local main = player:getEquipID(SLOT_MAIN);
-	local aftermath = 0;
-	local tp = player:getTP();
-	local duration = 0;
-	
-	if (main == 19461) then
-		aftermath = 1;
-	elseif (main == 19539) then
-		aftermath = 1;
-	elseif (main == 19637) then
-		aftermath = 1;
-	elseif (main == 19810) then
-		aftermath = 1;
-	elseif (main == 19858) then
-		aftermath = 1;
-	end
-		
-	if (aftermath == 1) then
-		if (tp == 300) then
-			duration = 90;
-			player:delStatusEffect(EFFECT_AFTERMATH_LV1);
-			player:delStatusEffect(EFFECT_AFTERMATH_LV2);
-			player:delStatusEffect(EFFECT_AFTERMATH_LV3);
-			player:addStatusEffect(EFFECT_AFTERMATH_LV3,1,0,duration);
-		elseif (tp >= 200) then
-			duration = 60;
-			if (player:hasStatusEffect(EFFECT_AFTERMATH_LV3) == false) then
-				player:delStatusEffect(EFFECT_AFTERMATH_LV1);
-				player:delStatusEffect(EFFECT_AFTERMATH_LV2);
-				player:addStatusEffect(EFFECT_AFTERMATH_LV2,1,0,duration);
-			end
-		else
-			duration = 30;
-			if (player:hasStatusEffect(EFFECT_AFTERMATH_LV3) == false) then
-				if (player:hasStatusEffect(EFFECT_AFTERMATH_LV2) == false) then
-					player:delStatusEffect(EFFECT_AFTERMATH_LV1);
-					player:addStatusEffect(EFFECT_AFTERMATH_LV1,1,0,duration);
-				end
-			end
-		end
-	end
+	end			
 		
 	return tpHits, extraHits, criticalHit, damage;
 end     

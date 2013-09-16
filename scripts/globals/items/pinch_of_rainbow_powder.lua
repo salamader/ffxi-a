@@ -23,10 +23,7 @@ end;
 -----------------------------------------
 
 function onItemUse(target)
-	local duration = 180;
-	duration = duration + (duration * target:getMod(MOD_INVIS_DUR));
-	if (not target:hasStatusEffect(EFFECT_INVISIBLE)) then
-		target:addStatusEffect(EFFECT_INVISIBLE,0,10,duration);
-		target:addStatusEffect(EFFECT_MEDICINE,0,0,180);
-	end
+    target:delStatusEffect(EFFECT_INVISIBLE);
+	target:addStatusEffect(EFFECT_INVISIBLE,0,10,180);
+	target:addStatusEffect(EFFECT_MEDICINE,0,0,180);
 end;

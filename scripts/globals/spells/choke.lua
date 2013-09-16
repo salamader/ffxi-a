@@ -1,8 +1,6 @@
 -----------------------------------------
 -- Spell: Choke
--- Deals wind damage that lowers an 
--- enemy's vitality and gradually reduces
--- its HP.
+-- Deals wind damage that lowers an enemy's vitality and gradually reduces its HP.
 -----------------------------------------
 
 require("scripts/globals/settings");

@@ -1,8 +1,7 @@
 -----------------------------------
---	EFFECT_TROUBADOUR
--- Increases casting time for songs
--- by 1.5 and double effect and 
--- duration
+--
+--
+--
 -----------------------------------
 
 -----------------------------------

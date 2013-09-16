@@ -1,7 +1,7 @@
 -----------------------------------
---	EFFECT_NETHER_VOID
--- Increases the absorption of your
--- next dark magic spell.
+--
+--
+--
 -----------------------------------
 
 -----------------------------------
@@ -9,7 +9,6 @@
 -----------------------------------
 
 function onEffectGain(target,effect)
-	target:addMod(MOD_ABSORB_POTENCY, effect:getPower());
 end;
 
 -----------------------------------
@@ -24,5 +23,4 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
-	target:delMod(MOD_ABSORB_POTENCY, effect:getPower());
 end;

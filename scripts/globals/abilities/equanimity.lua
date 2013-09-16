@@ -10,10 +10,8 @@ require("scripts/globals/status");
 -----------------------------------
 
 function OnAbilityCheck(player,target,ability)
-	if (player:hasStatusEffect(EFFECT_EQUANIMITY)) then
+	if player:hasStatusEffect(EFFECT_EQUANIMITY) then
 		return MSGBASIC_EFFECT_ALREADY_ACTIVE, 0;
-	elseif (player:hasStatusEffect(EFFECT_PAX)) then
-		return MSGBASIC_UNABLE_TO_USE_JA2,0;
 	end
 	return 0,0;
 end;

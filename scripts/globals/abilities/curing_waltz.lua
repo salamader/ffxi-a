@@ -42,9 +42,6 @@ function OnUseAbility(player, target, ability)
 		cure = (vit+chr)*0.125+60;
 	end
 
-	cure = cure + (cure * (player:getMod(MOD_WALTZ_POTENCY)/100));
-	cure = cure + (cure * (target:getMod(MOD_WALTZ_RCVD)/100));
-
 	--Reducing TP.
 
 	--Applying server mods....

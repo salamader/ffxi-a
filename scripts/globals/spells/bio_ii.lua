@@ -1,8 +1,6 @@
 -----------------------------------------
 -- Spell: Bio II
--- Deals dark damage that weakens an
--- enemy's attacks and gruadually reduces
--- its HP.
+-- Deals dark damage that weakens an enemy's attacks and gruadually reduces its HP.
 -----------------------------------------
 
 require("scripts/globals/settings");
@@ -23,9 +21,9 @@ function onSpellCast(caster,target,spell)
 	local basedmg = caster:getSkillLevel(DARK_MAGIC_SKILL) / 4;
 	local dmg = calculateMagicDamage(basedmg,2,caster,spell,target,DARK_MAGIC_SKILL,MOD_INT,false);
 
-	-- Softcaps at 50, should always do at least 1
-	if(dmg > 50) then
-		dmg = 50;
+	-- Softcaps at 8, should always do at least 1
+	if(dmg > 30) then
+		dmg = 30;
 	end
 	if(dmg < 1) then
 		dmg = 1;
@@ -49,19 +47,7 @@ function onSpellCast(caster,target,spell)
 	local dia = target:getStatusEffect(EFFECT_DIA);
 
 	-- Calculate DoT (rough, though fairly accurate)
-	local dotdmg = 0;
-	local darkSkill = caster:getSkillLevel(DARK_MAGIC_SKILL);
-	if(darkSkill <199)then
-	        dotdmg = 4;
-	elseif(darkSkill >=200 and darkSkill <=210)then
-	    	dotdmg = 5;
-	elseif(darkSkill >=211 and darkSkill <=268)then
-	    	dotdmg = 6;
-	elseif(darkSkill >=269 and darkSkill <=290)then
-	    	dotdmg = 7;
-	elseif(darkSkill >=291)then
-	    	dotdmg = 8;
-	end
+	local dotdmg = 3 + math.floor(caster:getSkillLevel(DARK_MAGIC_SKILL) / 60);
 
 	-- Do it!
 	if(dia == nil or (BIO_OVERWRITE == 0 and dia:getPower() <= 2) or (BIO_OVERWRITE == 1 and dia:getPower() < 2)) then

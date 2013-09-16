@@ -7,7 +7,6 @@ require("/scripts/globals/settings");
 require("scripts/globals/magic");
 require("scripts/globals/status");
 require("/scripts/globals/monstertpmoves");
-
 -----------------------------------------
 -- OnSpellCast
 -----------------------------------------
@@ -35,11 +34,6 @@ function onSpellCast(caster,target,spell)
 	dmg = adjustForTarget(target,dmg);
 	--add in final adjustments
 	dmg = finalMagicAdjustments(caster,target,spell,dmg);
-	if (caster:getID() == 17297441) then -- For King Behemoth
-		target:delHP(dmg*6);
-		return dmg*6;
-	else
-		return dmg;
-	end
+	return dmg;
 	
 end;

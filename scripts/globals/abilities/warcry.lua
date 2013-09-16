@@ -18,8 +18,6 @@ function OnUseAbility(player, target, ability)
 	local sHead = player:getEquipID(SLOT_HEAD)
 	if(sHead == 15072 or sHead == 15245) then
 		duration = duration + 10;
-	elseif(sHead == 15245) then
-		duration = duration + 15;
 	elseif(sHead == 10650) then
 		duration = duration + 20;
 	end

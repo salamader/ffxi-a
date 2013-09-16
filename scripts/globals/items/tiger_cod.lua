@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4483
--- Item: Tiger Cod
--- Food Effect: 5 Min, Mithra only
+-- Item: tiger_cod
+-- Food Effect: 5Min, Mithra only
 -----------------------------------------
 -- Dexterity 2
 -- Mind -4

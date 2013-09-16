@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4401
--- Item: Moat Carp
--- Food Effect: 5 Min, Mithra only
+-- Item: moat_carp
+-- Food Effect: 5Min, Mithra only
 -----------------------------------------
 -- Dexterity 2
 -- Mind -4

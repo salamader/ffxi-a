@@ -1,7 +1,7 @@
 -----------------------------------
--- EFFECT SUBLIMATION_ACTIVATED
--- Gradually creates a storage of 
--- MP while reducing your HP.
+--
+--
+--
 -----------------------------------
 
 -----------------------------------

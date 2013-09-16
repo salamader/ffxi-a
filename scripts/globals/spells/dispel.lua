@@ -1,10 +1,10 @@
------------------------------------------
--- Spell: Dispel
------------------------------------------
 
 require("scripts/globals/magic");
 require("scripts/globals/status");
-require("scripts/globals/settings");
+-----------------------------------------
+-- Spell: Dispel
+--
+-----------------------------------------
 
 -----------------------------------------
 -- OnSpellCast
@@ -20,12 +20,6 @@ function onSpellCast(caster,target,spell)
     local dINT = (caster:getStat(MOD_INT) - target:getStat(MOD_INT));
 
     local resist = applyResistance(caster,spell,target,dINT,ENFEEBLING_MAGIC_SKILL);
-
-	local body = caster:getEquipID(SLOT_BODY);
-	if (body == 11088) then -- Estoquers Sayon +2
-		dINT = dINT * 1.1;		
-	end
-
     local effect = EFFECT_NONE;
 
     if(resist > 0.0625) then

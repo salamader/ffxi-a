@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Paralyze II
+-- Spell: Paralyze
 -- Spell accuracy is most highly affected by Enfeebling Magic Skill, Magic Accuracy, and MND.
 -- Slow's potency is calculated with the formula (150 + dMND*2)/1024, and caps at 300/1024 (~29.3%).
 -- And MND of 75 is neccessary to reach the hardcap of Slow.
@@ -40,18 +40,6 @@ function onSpellCast(caster,target,spell)
 		if potency > 30 then
 			potency = 30;
 		end
-
-		local body = caster:getEquipID(SLOT_BODY);
-		if (body == 11088) then -- Estoquers Sayon +2
-			potency = potency * 1.1;		
-		end
-
-		if (caster:hasStatusEffect(EFFECT_SABOTEUR) == true) then
-			duration = duration + (duration * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
-			potency = potency + (potency * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
-			caster:delStatusEffect(EFFECT_SABOTEUR);
-		end
-
 		--printf("Duration : %u",duration);
 		--printf("Potency : %u",potency);
         local bonus = AffinityBonus(caster, spell:getElement());

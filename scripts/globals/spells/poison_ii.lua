@@ -1,5 +1,5 @@
 -----------------------------------------
---  Spell: Poison II
+--  Spell: Poison
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -26,17 +26,6 @@ function onSpellCast(caster,target,spell)
 		local power = caster:getSkillLevel(ENFEEBLING_MAGIC_SKILL) / 20 + 1;
 		if power > 10 then
 			power = 10;
-		end
-
-		local body = caster:getEquipID(SLOT_BODY);
-		if (body == 11088) then -- Estoquers Sayon +2
-			power = power * 1.1;		
-		end
-
-		if (caster:hasStatusEffect(EFFECT_SABOTEUR) == true) then
-			duration = duration + (duration * (1 + (caster:getMod(MOD_SABOTEUR)/100)));
-			power = power * 2;
-			caster:delStatusEffect(EFFECT_SABOTEUR);
 		end
 
         local bonus = AffinityBonus(caster, spell:getElement());

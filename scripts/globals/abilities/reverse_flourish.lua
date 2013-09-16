@@ -1,5 +1,5 @@
 -----------------------------------
--- Ability: Reverse Flourish
+-- Ability: Animated Flourish
 -----------------------------------
 
 require("scripts/globals/settings");

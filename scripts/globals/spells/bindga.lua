@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Bindga
+-- Spell: Bind
 -----------------------------------------
 require("scripts/globals/status");
 require("scripts/globals/magic");
@@ -22,14 +22,8 @@ function onSpellCast(caster,target,spell)
 
 	--Resist
 	resist = applyResistance(caster,spell,target,dINT,35,bonus);
-	
-	local resistMod = 100 * math.random();
-	local body = caster:getEquipID(SLOT_BODY);
-	if (body == 11088) then -- Estoquers Sayon +2
-		resistMod = resistMod + 10;
-	end
-	
-	if(resistMod >= target:getMod(MOD_BINDRES)) then
+
+	if(100 * math.random() >= target:getMod(MOD_BINDRES)) then
 		if(resist >= 0.5) then --Do it!
 			--Try to erase a weaker bind.
 			if(target:addStatusEffect(EFFECT_BIND,target:speed(),0,duration)) then
@@ -37,9 +31,11 @@ function onSpellCast(caster,target,spell)
 					else
 						spell:setMsg(75);
 			end
+		else
+			spell:setMsg(85);
 		end
 	else
-		spell:setMsg(85);
+        spell:setMsg(284);
 	end
 
 

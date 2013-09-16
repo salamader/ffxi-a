@@ -1,7 +1,5 @@
 -----------------------------------
 -- Ability: Wild Flourish
--- Readies target for skillchain.
--- Requires at least 2 finish moves.
 -----------------------------------
 
 require("scripts/globals/settings");

@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4157
 -- Item: Cursed Beverage
--- Item Effect: Removes 25 HP / 180 secs
+-- Item Effect: Removes 25 HP over 180 seconds
 -----------------------------------------
 
 require("scripts/globals/status");

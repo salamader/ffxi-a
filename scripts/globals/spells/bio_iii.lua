@@ -1,8 +1,6 @@
 -----------------------------------------
 -- Spell: Bio III
--- Deals dark damage that weakens an 
--- enemy's attacks and gruadually reduces
--- its HP.
+-- Deals dark damage that weakens an enemy's attacks and gruadually reduces its HP.
 -----------------------------------------
 
 require("scripts/globals/settings");
@@ -23,9 +21,9 @@ function onSpellCast(caster,target,spell)
 	local basedmg = caster:getSkillLevel(DARK_MAGIC_SKILL) / 4;
 	local dmg = calculateMagicDamage(basedmg,3,caster,spell,target,DARK_MAGIC_SKILL,MOD_INT,false);
 
-	-- Softcaps at 100, should always do at least 1
-	if(dmg > 100) then
-		dmg = 100;
+	-- Softcaps at 32, should always do at least 1
+	if(dmg > 62) then
+		dmg = 62;
 	end
 	if(dmg < 1) then
 		dmg = 1;
@@ -52,7 +50,7 @@ function onSpellCast(caster,target,spell)
 	local dia = target:getStatusEffect(EFFECT_DIA);
 
 	-- Calculate DoT (rough, though fairly accurate)
-	local dotdmg = math.floor((caster:getSkillLevel(DARK_MAGIC_SKILL) + 59) / 27);
+	local dotdmg = 4 + math.floor(caster:getSkillLevel(DARK_MAGIC_SKILL) / 60);
 
 	-- Do it!
 	if(dia == nil or (BIO_OVERWRITE == 0 and dia:getPower() <= 3) or (BIO_OVERWRITE == 1 and dia:getPower() < 3)) then

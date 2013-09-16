@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4470
--- Item: Icefish
--- Food Effect: 5 Min, Mithra only
+-- Item: icefish
+-- Food Effect: 5Min, Mithra only
 -----------------------------------------
 -- Dexterity 3
 -- Mind -5

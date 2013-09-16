@@ -10,12 +10,11 @@ require("scripts/globals/status");
 -- onEffectGain Action
 -----------------------------------
 
-function onEffectGain(target,effect)	
-
+function onEffectGain(target,effect)
 	if(effect:getPower()==1) then
-		target:addMod(MOD_EVA, 15 + (effect:getSubPower() * 3));
+		target:addMod(MOD_EVA, 15);
 	elseif(effect:getPower()==2) then
-		target:addMod(MOD_EVA, 28 + (effect:getSubPower() * 7));
+		target:addMod(MOD_EVA, 28);
 	end
 end;
 
@@ -31,10 +30,9 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
-
 	if(effect:getPower()==1) then
-		target:delMod(MOD_EVA, 15 + (effect:getSubPower() * 3));
+		target:delMod(MOD_EVA, 15);
 	elseif(effect:getPower()==2) then
-		target:delMod(MOD_EVA, 28 + (effect:getSubPower() * 7));
+		target:delMod(MOD_EVA, 28);
 	end
 end;

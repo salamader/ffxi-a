@@ -36,10 +36,10 @@ THE_SHADOW_LORD         = 15; -- ± --
 LEAUTE_S_LAST_WISHES    = 16; -- ± --
 RANPERRE_S_FINAL_REST   = 17; -- ± --
 PRESTIGE_OF_THE_PAPSQUE = 18; -- ± --
-THE_SECRET_WEAPON       = 19; -- ± --
-COMING_OF_AGE           = 20; -- ± --
-LIGHTBRINGER            = 21; -- ± --
-BREAKING_BARRIERS       = 22; -- ± --
+THE_SECRET_WEAPON       = 19;
+COMING_OF_AGE           = 20;
+LIGHTBRINGER            = 21;
+BREAKING_BARRIERS       = 22;
 THE_HEIR_TO_THE_LIGHT   = 23;
 
 -----------------------------------
@@ -107,16 +107,16 @@ MOON_READING                  = 23;
 THE_NEW_FRONTIER              = 0;  -- ± --
 WELCOME_TNORG                 = 4;  -- ± --
 KAZAMS_CHIEFTAINESS           = 6;  -- ± --
-THE_TEMPLE_OF_UGGALEPIH		  = 8;  -- ± --
-HEADSTONE_PILGRIMAGE		  = 10; -- ± --
-THROUGH_THE_QUICKSAND_CAVES	  = 12; -- ± --
-THE_CHAMBER_OF_ORACLES		  = 14; -- ± --
-RETURN_TO_DELKFUTTS_TOWER	  = 16; -- ± --
+THE_TEMPLE_OF_UGGALEPIH       = 8;  -- ± --
+HEADSTONE_PILGRIMAGE          = 10; -- ± --
+THROUGH_THE_QUICKSAND_CAVES   = 12; -- ± --
+THE_CHAMBER_OF_ORACLES        = 14; -- ± --
+RETURN_TO_DELKFUTTS_TOWER     = 16; -- ± --
 ROMAEVE                       = 18; -- ± --
-THE_TEMPLE_OF_DESOLATION	  = 20; -- ± --
-THE_HALL_OF_THE_GODS		  = 22; -- ± --
-THE_MITHRA_AND_THE_CRYSTAL	  = 23; -- ± --
-THE_GATE_OF_THE_GODS		  = 24; -- ± --
+THE_TEMPLE_OF_DESOLATION      = 20; -- ± --
+THE_HALL_OF_THE_GODS          = 22; -- ± --
+THE_MITHRA_AND_THE_CRYSTAL    = 23; -- ± --
+THE_GATE_OF_THE_GODS          = 24; -- ± --
 ARK_ANGELS                    = 26; -- ± --
 THE_SEALED_SHRINE             = 27; -- ± --
 THE_CELESTIAL_NEXUS           = 28;
@@ -133,18 +133,18 @@ BELOW_THE_ARKS                   = 2  -- ± --
 THE_MOTHERCRYSTALS               = 3  -- ± --
 -- THE_ISLE_OF_FORGOTTEN_SAINTS  =    -- Category
 AN_INVITATION_WEST               = 5  -- ± --
-THE_LOST_CITY	                 = 15 -- ± --
-DISTANT_BELIEFS	                 = 16 -- ± --
-AN_ETERNAL_MELODY                = 17 -- ± --
-ANCIENT_VOWS	                 = 18 -- ± --
+THE_LOST_CITY                    = 15  -- ± --
+DISTANT_BELIEFS                  = 16  -- ± --
+AN_ETERNAL_MELODY                = 17  -- ± --
+ANCIENT_VOWS                     = 18  -- ± --
 A_TRANSIENT_DREAM                = 19 -- Category
 THE_CALL_OF_THE_WYRMKING         = 20 -- ± --
 A_VESSEL_WITHOUT_A_CAPTAIN       = 27 -- ± --
 THE_ROAD_FORKS                   = 28 -- ± --
 -- EMERALD_WATERS                =    -- Sub-category
--- VICISSITUDES	                 =    -- ± --
+-- VICISSITUDES                  =    -- ± --
 DESCENDANTS_OF_A_LINE_LOST       = 29 -- ± --
--- LOUVERANCE                      =  -- ± --
+-- LOUVERANCE                    =    -- ± --
 -- MEMORIES_OF_A_MAIDEN          =    -- Sub-category
 COMEDY_OF_ERRORS_ACT_I           = 30 -- ± --
 -- COMEDY_OF_ERRORS_ACT_II       =    -- ± --
@@ -176,7 +176,7 @@ WHERE_MESSENGERS_GATHER          = 57 -- ± --
 FLAMES_FOR_THE_DEAD              = 58 -- ± --
 -- ECHOES_OF_TIME                =  -- ± --   -- Category
 FOR_WHOM_THE_VERSE_IS_SUNG       = 60 -- ± --
-A_PLACE_TO_RETURN                = 65 -- ± --
+A_PLACE_TO_RETURN                = 65 -- ± ---- It's necessary to increase MAX_MISSIONID in charentity.h to reach values > 63
 MORE_QUESTIONS_THAN_ANSWERS      = 66 -- ± --
 ONE_TO_BE_FEARED                 = 67 -- ± --
 -- IN_THE_LIGHT_OF_THE_CRYSTAL   =  -- ± --   -- Category
@@ -249,82 +249,82 @@ ETERNAL_MERCENARY       = 47;
 --  Wings of the Goddess (5)
 -----------------------------------
 
-CAVERNOUS_MAWS              = 0;
-BACK_TO_THE_BEGINNING		= 1;
-CAIT_SITH                   = 2;
-THE_QUEEN_OF_THE_DANCE		= 3;
-WHILE_THE_CAT_IS_AWAY		= 4;
-A_TIMESWEPT_BUTTERFLY		= 5;
-PURPLE,_THE_NEW_BLACK		= 6;
-IN_THE_NAME_OF_THE_FATHER	= 7;
-DANCERS_IN_DISTRESS         = 8;
-DAUGHTER_OF_A_KNIGHT		= 9;
-A_SPOONFUL_OF_SUGAR         = 10;
-AFFAIRS_OF_STATE            = 11;
-BORNE_BY_THE_WIND           = 12;
-A_NATION_ON_THE_BRINK		= 13;
-CROSSROADS_OF_TIME          = 14;
-SANDSWEPT_MEMORIES          = 15;
-NORTHLAND_EXPOSURE          = 16;
-TRAITOR_IN_THE_MIDST		= 17;
-BETRAYAL_AT_BEAUCEDINE		= 18;
-ON_THIN_ICE                 = 19;
-PROOF_OF_VALOR              = 20;
-A_SANGUINARY_PRELUDE		= 21;
-DUNGEONS_AND_DANCERS		= 22;
-DISTORTER_OF_TIME           = 23;
-THE_WILL_OF_THE_WORLD		= 24;
-FATE_IN_HAZE                = 25;
-THE_SCENT_OF_BATTLE         = 26;
-ANOTHER_WORLD               = 27;
-A_HAWK_IN_REPOSE            = 28;
-THE_BATTLE_OF_XARCABARD		= 29;
-PRELUDE_TO_A_STORM          = 30;
-STORM_S_CRESCENDO           = 31;
-INTO_THE_BEAST_S_MAW		= 32;
-THE_HUNTER_ENSNARED         = 33;
-FLIGHT_OF_THE_LION          = 34;
-FALL_OF_THE_HAWK            = 35;
-DARKNESS_DESCENDS           = 36;
-ADIEU__LILISETTE            = 37;
-BY_THE_FADING_LIGHT         = 38;
-EDGE_OF_EXISTENCE           = 39;
-HER_MEMORIES                = 40;
-FORGET_ME_NOT               = 41;
-PILLAR_OF_HOPE              = 42;
-GLIMMER_OF_LIFE             = 43;
-TIME_SLIPS_AWAY             = 44;
-WHEN_WILLS_COLLIDE          = 45;
-WHISPERS_OF_DAWN            = 46;
-A_DREAMY_INTERLUDE          = 47;
-CAIT_IN_THE_WOODS           = 48;
-FORK_IN_THE_ROAD            = 49;
-MAIDEN_OF_THE_DUSK          = 50;
-WHERE_IT_ALL_BEGAN          = 51;
-A_TOKEN_OF_TROTH            = 52;
-LEST_WE_FORGET              = 53;
+CAVERNOUS_MAWS             = 0;
+BACK_TO_THE_BEGINNING      = 1;
+CAIT_SITH                  = 2;
+THE_QUEEN_OF_THE_DANCE     = 3;
+WHILE_THE_CAT_IS_AWAY      = 4;
+A_TIMESWEPT_BUTTERFLY      = 5;
+PURPLE,_THE_NEW_BLACK      = 6;
+IN_THE_NAME_OF_THE_FATHER  = 7;
+DANCERS_IN_DISTRESS        = 8;
+DAUGHTER_OF_A_KNIGHT       = 9;
+A_SPOONFUL_OF_SUGAR        = 10;
+AFFAIRS_OF_STATE           = 11;
+BORNE_BY_THE_WIND          = 12;
+A_NATION_ON_THE_BRINK      = 13;
+CROSSROADS_OF_TIME         = 14;
+SANDSWEPT_MEMORIES         = 15;
+NORTHLAND_EXPOSURE         = 16;
+TRAITOR_IN_THE_MIDST       = 17;
+BETRAYAL_AT_BEAUCEDINE     = 18;
+ON_THIN_ICE                = 19;
+PROOF_OF_VALOR             = 20;
+A_SANGUINARY_PRELUDE       = 21;
+DUNGEONS_AND_DANCERS       = 22;
+DISTORTER_OF_TIME          = 23;
+THE_WILL_OF_THE_WORLD      = 24;
+FATE_IN_HAZE               = 25;
+THE_SCENT_OF_BATTLE        = 26;
+ANOTHER_WORLD              = 27;
+A_HAWK_IN_REPOSE           = 28;
+THE_BATTLE_OF_XARCABARD    = 29;
+PRELUDE_TO_A_STORM         = 30;
+STORM_S_CRESCENDO          = 31;
+INTO_THE_BEAST_S_MAW       = 32;
+THE_HUNTER_ENSNARED        = 33;
+FLIGHT_OF_THE_LION         = 34;
+FALL_OF_THE_HAWK           = 35;
+DARKNESS_DESCENDS          = 36;
+ADIEU__LILISETTE           = 37;
+BY_THE_FADING_LIGHT        = 38;
+EDGE_OF_EXISTENCE          = 39;
+HER_MEMORIES               = 40;
+FORGET_ME_NOT              = 41;
+PILLAR_OF_HOPE             = 42;
+GLIMMER_OF_LIFE            = 43;
+TIME_SLIPS_AWAY            = 44;
+WHEN_WILLS_COLLIDE         = 45;
+WHISPERS_OF_DAWN           = 46;
+A_DREAMY_INTERLUDE         = 47;
+CAIT_IN_THE_WOODS          = 48;
+FORK_IN_THE_ROAD           = 49;
+MAIDEN_OF_THE_DUSK         = 50;
+WHERE_IT_ALL_BEGAN         = 51;
+A_TOKEN_OF_TROTH           = 52;
+LEST_WE_FORGET             = 53;
 
 
 -----------------------------------
---  Assault (7)
+--  Assualt (7)
 -----------------------------------
 
 LEUJAOAM_CLEANSING                = 1;
 ORICHALCUM_SURVEY                 = 2;
-ESCORT_PROFESSOR_CHANOIX		  = 3;
-SHANARHA_GRASS_CONSERVATION		  = 4;
+ESCORT_PROFESSOR_CHANOIX          = 3;
+SHANARHA_GRASS_CONSERVATION       = 4;
 COUNTING_SHEEP                    = 5;
 SUPPLIES_RECOVERY                 = 6;
 AZURE_EXPERIMENTS                 = 7;
 IMPERIAL_CODE                     = 8;
 RED_VERSUS_BLUE                   = 9;
 BLOODY_RONDO                      = 10;
-IMPERIAL_AGENT_RESCUE			  = 11;
+IMPERIAL_AGENT_RESCUE             = 11;
 PREEMPTIVE_STRIKE                 = 12;
-SAGELORD_ELIMINATION			  = 13;
+SAGELORD_ELIMINATION              = 13;
 BREAKING_MORALE                   = 14;
 THE_DOUBLE_AGENT                  = 15;
-IMPERIAL_TREASURE_RETRIEVAL		  = 16;
+IMPERIAL_TREASURE_RETRIEVAL       = 16;
 BLITZKRIEG                        = 17;
 MARIDS_IN_THE_MIST                = 18;
 AZURE_AILMENTS                    = 19;
@@ -333,20 +333,20 @@ EXCAVATION_DUTY                   = 21;
 LEBROS_SUPPLIES                   = 22;
 TROLL_FUGITIVES                   = 23;
 EVADE_AND_ESCAPE                  = 24;
-SIEGEMASTER_ASSASSINATION		  = 25;
+SIEGEMASTER_ASSASSINATION         = 25;
 APKALLU_BREEDING                  = 26;
 WAMOURA_FARM_RAID                 = 27;
 EGG_CONSERVATION                  = 28;
-OPERATION__BLACK_PEARL			  = 29;
+OPERATION__BLACK_PEARL            = 29;
 BETTER_THAN_ONE                   = 30;
 SEAGULL_GROUNDED                  = 31;
 REQUIEM                           = 32;
-SAVING_PRIVATE_RYAAF			  = 33;-- ± --
-SHOOTING_DOWN_THE_BARON			  = 34;
+SAVING_PRIVATE_RYAAF              = 33;
+SHOOTING_DOWN_THE_BARON           = 34;
 BUILDING_BRIDGES                  = 35;
 STOP_THE_BLOODSHED                = 36;
 DEFUSE_THE_THREAT                 = 37;
-OPERATION__SNAKE_EYES			  = 38;
+OPERATION__SNAKE_EYES             = 38;
 WAKE_THE_PUPPET                   = 39;
 THE_PRICE_IS_RIGHT                = 40;
 GOLDEN_SALVAGE                    = 41;
@@ -359,7 +359,7 @@ LOST_AND_FOUND                    = 47;
 DESERTER                          = 48;
 DESPERATELY_SEEKING_CEPHALOPODS   = 49;
 BELLEROPHON_S_BLISS               = 50;
-NYZUL_ISLE_INVESTIGATION		  = 51;
+NYZUL_ISLE_INVESTIGATION          = 51;
 NYZUL_ISLE_UNCHARTED_AREA_SURVEY  = 52;
 
 -----------------------------------
@@ -369,9 +369,9 @@ NYZUL_ISLE_UNCHARTED_AREA_SURVEY  = 52;
 -----------------------------------
 --  ACP (9)
 -----------------------------------
-A_CRYSTALLINE_PROPHECY	=  0;
-THE_ECHO_AWAKENS		=  1;
-GATHERER_OF_LIGHT		=  3;
+A_CRYSTALLINE_PROPHECY  =  0;
+THE_ECHO_AWAKENS        =  1;
+GATHERER_OF_LIGHT       =  3;
 
 function rankPointMath(rank)
 	return 0.372*rank^2 - 1.62*rank + 6.2;
@@ -590,7 +590,7 @@ function getMissionMask(player)
 			if(player:hasCompletedMission(SANDORIA,COMING_OF_AGE) == false and getMissionRankPoints(player,20) == 1) then
 				-- 8-1
 				first_mission = first_mission + 1048576;
-			elseif(player:hasCompletedMission(SANDORIA,LIGHTBRINGER) == false and getMissionRankPoints(player,21) == 1 and player:getVar("Mission8-1Completed") == 1) then
+			elseif(player:hasCompletedMission(SANDORIA,LIGHTBRINGER) == false and getMissionRankPoints(player,21) == 1) then
 				-- 8-2
 				first_mission = first_mission + 2097152;
 			end
@@ -599,7 +599,7 @@ function getMissionMask(player)
 			if(player:hasCompletedMission(SANDORIA,BREAKING_BARRIERS) == false and getMissionRankPoints(player,22) == 1) then
 				-- 9-1
 				first_mission = first_mission + 4194304;
-			elseif(player:hasCompletedMission(SANDORIA,BREAKING_BARRIERS) == false and getMissionRankPoints(player,22) == 1 and player:getVar("Cutscenes_8-2") == 2) then
+			elseif(player:hasCompletedMission(SANDORIA,THE_HEIR_TO_THE_LIGHT) == false and getMissionRankPoints(player,23) == 1) then
 				-- 9-2
 				first_mission = first_mission + 8388608;
 			end
@@ -825,7 +825,7 @@ function finishMissionTimeline(player,guard,csid,option)
 			timeline = {
 				 -- MissionID,{Guard#1 DialogID, option},{Guard#2 DialogID, option},{NPC#1 DialogID, option},{NPC#2 DialogID, option},{function list}
 				 0,{0x03e8,0},{0x07d0,0},{0,0},		{0,0},{{1},{2}}, 													-- MISSION 1-1 (First Mission [START])
-				 0,{0x03fc,0},{0x07e4,0},{0,0},		{0,0},{{4},{5,150},{12},{14,0}}, 									-- MISSION 1-1
+				 0,{0x03fc,0},{0x07e4,0},{0,0},		{0,0},{{4},{5,150},{12},{14,0}}, 											-- MISSION 1-1
 				 0,{0x03ea,0},{0x07d2,0},{0,0},		{0,0},{{4},{5,150},{12}},											-- MISSION 1-1 [Repeat]
 				 1,{0x03ff,0},{0x07e7,0},{0,0},		{0,0},{{4},{14,0},{5,200},{12}}, 									-- MISSION 1-2
 				 1,{0x03eb,0},{0x07d3,0},{0,0},		{0,0},{{4},{14,0},{5,200},{12}},									-- MISSION 1-2 [Repeat]
@@ -845,15 +845,10 @@ function finishMissionTimeline(player,guard,csid,option)
 				14,{0,0},	  {0,0},	 {0x0216,0},{0,0},{{9,73},{5,400},{14,0},{13,10},{12}}, 						-- MISSION 5-1 (Finish (Halver))
 				15,{0,0},	  {0,0},	 {0x0224,0},{0,0},{{11,6},{14,4}}, 												-- MISSION 5-2 (Finish 1st Part (Halver))
 				15,{0,0},	  {0,0},	 {0x003D,0},{0,0},{{14,0},{9,74},{8,20000},{6},{12}}, 							-- MISSION 5-2 (Finish 2nd Part (Trion in Great Hall))
-				16,{0,0},	  {0,0},	 {0x006f,0},{0,0},{{14,0},{5,600},{9,268},{10,270},{12}}, 						-- MISSION 6-1 (Finish (Chalvatot))
-				17,{0x040a,0},{0x0409,0},{0,0},{0,0},{{14,0},{11,7},{8,40000},{6},{12}},								-- MISSION 6-2 (Finish (Guard))
+				16,{0,0},	  {0,0},	 {0x006f,0},{0,0},{{14,0},{9,268},{10,270},{12}}, 								-- MISSION 6-1 (Finish (Chalvatot))
+				17,{0x040a,0},{0x0409,0},{0,0},{0,0},{{14,0},{11,7},{8,40000},{6},{12}},									-- MISSION 6-2 (Finish (Guard))
 				18,{0,0},	  {0,0},	 {0x0007,0},{0,0},{{14,1}}, 													-- MISSION 7-1 (setVar("MissionStatus",1) (Door: Papal Chambers))
-				18,{0,0},	  {0,0},	 {0x0008,0},{0,0},{{14,0},{9,283},{5,700},{12}}, 								-- MISSION 7-1 (Finish (Door: Papal Chambers))
-				19,{0x0414,0},{0x0413,0},{0,0},{0,0},{{14,0},{6},{3,"SecretWeapon",0},{9,284},{11,8},{8,60000},{12}}, 	-- MISSION 7-2 (Finish (Guard))	
-				20,{0,0},	  {0,0},	 {0x0066,0},{0,0},{{14,0},{9,288},{5,800},{12}}, 	                			-- MISSION 8-1 (Finish (Halver))
-				21,{0,0},     {0,0},     {0x0068,0},{0,0},{{14,0},{9,284},{11,9},{8,80000},{6},{12}},					-- MISSION 8-2 (Finish (Door: Great Hall))
-				22,{0,0},	  {0,0},	 {0x0020,0},{0,0},{{14,1}}, 													-- MISSION 9-1 (setVar("MissionStatus",1) (Door: Great Hall))
-				22,{0,0},	  {0,0},	 {0x004c,0},{0,0},{{14,0},{9,481},{9,482},{9,483},{5,900},{12}} 	        	-- MISSION 9-1 (Finish (Door: Great Hall))
+				18,{0,0},	  {0,0},	 {0x0008,0},{0,0},{{14,0},{9,283},{5,1000},{12}} 								-- MISSION 7-1 (Finish (Door: Papal Chambers))
 				--[[0,{0,0},{0,0},{0,0},{0,0},{0},{0,0},{0,0},{0,0},{0,0},{0},
 				0,{0,0},{0,0},{0,0},{0,0},{0},{0,0},{0,0},{0,0},{0,0},{0}, ]]--
 						};
@@ -863,27 +858,26 @@ function finishMissionTimeline(player,guard,csid,option)
 			timeline = {option,{0x03E9,option},{0,0},{0,0},{0,0},{{1},{2}}};
 		else
 			timeline = {
-				 0,{0x03e8,0},{0,0},{0,0},{0,0},{{1},{2}}, 													-- MISSION 1-1 (First Mission [START])
-				 1,{0x01f8,0},{0,0},{0,0},{0,0},{{9,4},{12}}, 												-- MISSION 1-2 (Finish Mission)
-				 2,{0x03F0,0},{0,0},{0,0},{0,0},{{4},{11,2},{8,1000},{12}}, 								-- MISSION 1-3
-				 2,{0x03ED,0},{0,0},{0,0},{0,0},{{4},{8,1000},{12}}, 										-- MISSION 1-3 [Repeat]
-				 3,{0x02c8,0},{0,0},{0,0},{0,0},{{9,12},{14,0},{5,200},{12}}, 								-- MISSION 2-1 (Finish (Ayame))
-				 4,{0x0174,0},{0,0},{0,0},{0,0},{{4},{5,250},{12}}, 										-- MISSION 2-2 (Finish (Alois))
-				 4,{0x0175,0},{0,0},{0,0},{0,0},{{4},{5,250},{12}}, 										-- MISSION 2-2 (Finish (Alois)) [Repeat]
-				 5,{0x02ca,0},{0,0},{0,0},{0,0},{{10,35},{6},{13,207},{8,3000},{11,3},{9,29},{14,0},{12}}, 	-- MISSION 2-3 (Finish (Naji))
-				10,{0x000b,0},{0,0},{0,0},{0,0},{{14,0},{5,350},{12}}, 										-- MISSION 3-1 (Pashhow Marshlands Zone)
-				11,{0x03F2,0},{0,0},{0,0},{0,0},{{4},{5,400},{12}}, 										-- MISSION 3-2
-				11,{0x03EE,0},{0,0},{0,0},{0,0},{{4},{5,400},{12}}, 										-- MISSION 3-2 [Repeat]
-				12,{0x0026,0},{0,0},{0,0},{0,0},{{11,4},{14,0},{6},{8,5000},{12}}, 							-- MISSION 3-3 (Finish (Goggehn))
-				13,{0x0023,0},{0,0},{0,0},{0,0},{{11,5},{14,0},{13,212},{10,70},{6},{8,10000},{12},{1,14}}, -- MISSION 4-1 (Finish (Goggehn))
-				14,{0x02d2,0},{0,0},{0,0},{0,0},{{14,0},{9,73},{5,600},{12}}, 								-- MISSION 5-1 (Finish (Naji))
-				15,{0x025b,0},{0,0},{0,0},{0,0},{{11,6},{14,0},{9,74},{8,20000},{6},{12}}, 					-- MISSION 5-2 (Finish (Naji))
-				16,{0x00b6,0},{0,0},{0,0},{0,0},{{14,0},{9,266},{5,650},{12}}, 								-- MISSION 6-1 (Finish (Tall Mountain))
-				17,{0x02fa,0},{0,0},{0,0},{0,0},{{14,0},{6},{11,7},{8,40000},{12}}, 						-- MISSION 6-2 (Finish (Naji))
+				 0,{0x03e8,0},{0,0},{0,0},{0,0},{{1},{2}}, 																-- MISSION 1-1 (First Mission [START])
+				 1,{0x01f8,0},{0,0},{0,0},{0,0},{{9,4},{12}}, 															-- MISSION 1-2 (Finish Mission)
+				 2,{0x03F0,0},{0,0},{0,0},{0,0},{{4},{11,2},{8,1000},{12}}, 											-- MISSION 1-3
+				 2,{0x03ED,0},{0,0},{0,0},{0,0},{{4},{8,1000},{12}}, 													-- MISSION 1-3 [Repeat]
+				 3,{0x02c8,0},{0,0},{0,0},{0,0},{{9,12},{14,0},{5,200},{12}}, 											-- MISSION 2-1 (Finish (Ayame))
+				 4,{0x0174,0},{0,0},{0,0},{0,0},{{4},{5,250},{12}}, 													-- MISSION 2-2 (Finish (Alois))
+				 4,{0x0175,0},{0,0},{0,0},{0,0},{{4},{5,250},{12}}, 													-- MISSION 2-2 (Finish (Alois)) [Repeat]
+				 5,{0x02ca,0},{0,0},{0,0},{0,0},{{10,35},{6},{13,207},{8,3000},{11,3},{9,29},{14,0},{12}}, 				-- MISSION 2-3 (Finish (Naji))
+				10,{0x000b,0},{0,0},{0,0},{0,0},{{14,0},{5,350},{12}}, 													-- MISSION 3-1 (Pashhow Marshlands Zone)
+				11,{0x03F2,0},{0,0},{0,0},{0,0},{{4},{5,400},{12}}, 													-- MISSION 3-2
+				11,{0x03EE,0},{0,0},{0,0},{0,0},{{4},{5,400},{12}}, 													-- MISSION 3-2 [Repeat]
+				12,{0x0026,0},{0,0},{0,0},{0,0},{{11,4},{14,0},{6},{8,5000},{12}}, 										-- MISSION 3-3 (Finish (Goggehn))
+				13,{0x0023,0},{0,0},{0,0},{0,0},{{11,5},{14,0},{13,212},{10,70},{6},{8,10000},{12},{1,14}}, 			-- MISSION 4-1 (Finish (Goggehn))
+				14,{0x02d2,0},{0,0},{0,0},{0,0},{{14,0},{9,73},{5,600},{12}}, 											-- MISSION 5-1 (Finish (Naji))
+				15,{0x025b,0},{0,0},{0,0},{0,0},{{11,6},{14,0},{9,74},{8,20000},{6},{12}}, 								-- MISSION 5-2 (Finish (Naji))
+				16,{0x00b6,0},{0,0},{0,0},{0,0},{{14,0},{9,266},{5,650},{12}}, 											-- MISSION 6-1 (Finish (Tall Mountain))
+				17,{0x02fa,0},{0,0},{0,0},{0,0},{{14,0},{6},{11,7},{8,40000},{12}}, 									-- MISSION 6-2 (Finish (Naji))
 				18,{0x02fc,0},{0,0},{0,0},{0,0},{{14,0},{9,289},{5,700},{12}}, 											-- MISSION 7-1 (Finish (Cid))
 				19,{0x02fe,0},{0,0},{0,0},{0,0},{{14,0},{6},{11,8},{8,60000},{3,"OptionalCSforOMW",1},{12}}, 			-- MISSION 7-2 (Finish (Karst))
 				20,{0x0300,0},{0,0},{0,0},{0,0},{{14,0},{5,1133},{12}}                                                  -- MISSION 8-1 (Finish (Iron Eater))
-				
 						};
 		end
 	elseif(nation == WINDURST) then
@@ -892,26 +886,26 @@ function finishMissionTimeline(player,guard,csid,option)
 			timeline = {option,{guardlist[guard],option},{guardlist[guard],option},{guardlist[guard],option},{guardlist[guard],option},{{1},{2}}};
 		else
 			timeline = {
-				 0,{0x0079,1},{0x0076,1},{0x0053,1},{0x0060,1},{{1},{2}}, 													-- MISSION 1-1 (First Mission [START])
-				 0,{0x005e,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{5,150},{9,28},{12}}, 								-- MISSION 1-1 (Finish (Hakkuru-Rinkuru))
-				 1,{0x0084,1},{0x0082,1},{0x0068,1},{0x006a,1},{{1},{2}}, 													-- MISSION 1-2 [START]
-				 1,{0x008f,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{5,200},{12}}, 										-- MISSION 1-2 (Finish (Apururu)) [WITHOUT ORB]
-				 1,{0x0091,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{5,250},{12}}, 										-- MISSION 1-2 (Finish (Apururu)) [WITH ORB]
-				 2,{0x0095,2},{0x0083,2},{0x006d,2},{0x006f,2},{{1},{2}}, 													-- MISSION 1-3 [START]
-				 2,{0x009A,0},{0x0094,0},{0x0072,0},{0x0074,0},{{11,2},{14,0},{5,300},{8,1000},{12}}, 						-- MISSION 1-3
-				 3,{0x00a8,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{5,350},{12}}, 										-- MISSION 2-1 (Finish (Tosuka-Porika))
-				 4,{0x00C9,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{9,38},{5,400},{12}}, 								-- MISSION 2-2 (Finish (Moreno-Toeno)) (+35 mob killed)
-				 4,{0x00CE,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{9,38},{5,400},{12}}, 								-- MISSION 2-2 (Finish (Moreno-Toeno)) (+35 mob killed) [Repeat]
-				 4,{0x00C8,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{9,38},{5,250},{12}}, 								-- MISSION 2-2 (Finish (Moreno-Toeno)) (30-34 mob killed)
-				 4,{0x00D1,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{9,38},{5,250},{12}}, 								-- MISSION 2-2 (Finish (Moreno-Toeno)) (30-34 mob killed) [Repeat]
-				 5,{0x0065,0},{0,0},	 {0,0},		{0,0},	   {{10,35},{6},{13,207},{8,3000},{11,3},{9,29},{14,0},{12}},	-- MISSION 2-3 (Finish (Kupipi))
-				10,{0,0},	  {0x0072,0},{0,0},		{0,0},	   {{5,450},{14,0},{12}}, 										-- MISSION 3-1 (Finish (Rhy Epocan))
-				11,{0x0087,0},{0,0},	 {0,0},		{0,0},	   {{5,500},{14,0},{12}}, 										-- MISSION 3-2 (Finish (Zubaba))
-				11,{0x0097,0},{0,0},	 {0,0},		{0,0},	   {{5,400},{14,0},{12}},										-- MISSION 3-2 (Finish (Zubaba)) [Repeat]
-				12,{0x0028,0},{0,0},	 {0,0},		{0,0},	   {{11,4},{9,30},{14,0},{6},{8,5000},{12}}, 					-- MISSION 3-3 (Finish (Ambassador's door))
-				13,{0x0025,0},{0,0},	 {0,0},		{0,0},	   {{11,5},{14,0},{13,212},{10,71},{6},{8,10000},{12}}, 		-- MISSION 4-1 (Finish (Pakh Jatalfih))
-				14,{0x00C0,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{9,73},{5,600},{12}}, 								-- MISSION 5-1 (Finish (Star Sibyl))
-				15,{0x00D8,0},{0,0},	 {0,0},		{0,0},	   {{11,6},{14,0},{9,74},{8,20000},{6},{12}} 					-- MISSION 5-2 (Finish (Star Sibyl))
+				 0,{0x0079,1},{0x0076,1},{0x0053,1},{0x0060,1},{{1},{2}}, 												-- MISSION 1-1 (First Mission [START])
+				 0,{0x005e,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{5,150},{9,28},{12}}, 							-- MISSION 1-1 (Finish (Hakkuru-Rinkuru))
+				 1,{0x0084,1},{0x0082,1},{0x0068,1},{0x006a,1},{{1},{2}}, 												-- MISSION 1-2 [START]
+				 1,{0x008f,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{5,200},{12}}, 									-- MISSION 1-2 (Finish (Apururu)) [WITHOUT ORB]
+				 1,{0x0091,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{5,250},{12}}, 									-- MISSION 1-2 (Finish (Apururu)) [WITH ORB]
+				 2,{0x0095,2},{0x0083,2},{0x006d,2},{0x006f,2},{{1},{2}}, 												-- MISSION 1-3 [START]
+				 2,{0x009A,0},{0x0094,0},{0x0072,0},{0x0074,0},{{11,2},{14,0},{5,300},{8,1000},{12}}, 					-- MISSION 1-3
+				 3,{0x00a8,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{5,350},{12}}, 									-- MISSION 2-1 (Finish (Tosuka-Porika))
+				 4,{0x00C9,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{9,38},{5,400},{12}}, 							-- MISSION 2-2 (Finish (Moreno-Toeno)) (+35 mob killed)
+				 4,{0x00CE,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{9,38},{5,400},{12}}, 							-- MISSION 2-2 (Finish (Moreno-Toeno)) (+35 mob killed) [Repeat]
+				 4,{0x00C8,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{9,38},{5,250},{12}}, 							-- MISSION 2-2 (Finish (Moreno-Toeno)) (30-34 mob killed)
+				 4,{0x00D1,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{9,38},{5,250},{12}}, 							-- MISSION 2-2 (Finish (Moreno-Toeno)) (30-34 mob killed) [Repeat]
+				 5,{0x0065,0},{0,0},	 {0,0},		{0,0},	   {{10,35},{6},{13,207},{8,3000},{11,3},{9,29},{14,0},{12}},-- MISSION 2-3 (Finish (Kupipi))
+				10,{0,0},	  {0x0072,0},{0,0},		{0,0},	   {{5,450},{14,0},{12}}, 									-- MISSION 3-1 (Finish (Rhy Epocan))
+				11,{0x0087,0},{0,0},	 {0,0},		{0,0},	   {{5,500},{14,0},{12}}, 									-- MISSION 3-2 (Finish (Zubaba))
+				11,{0x0097,0},{0,0},	 {0,0},		{0,0},	   {{5,400},{14,0},{12}},									-- MISSION 3-2 (Finish (Zubaba)) [Repeat]
+				12,{0x0028,0},{0,0},	 {0,0},		{0,0},	   {{11,4},{9,30},{14,0},{6},{8,5000},{12}}, 				-- MISSION 3-3 (Finish (Ambassador's door))
+				13,{0x0025,0},{0,0},	 {0,0},		{0,0},	   {{11,5},{14,0},{13,212},{10,71},{6},{8,10000},{12}}, 	-- MISSION 4-1 (Finish (Pakh Jatalfih))
+				14,{0x00C0,0},{0,0},	 {0,0},		{0,0},	   {{14,0},{9,73},{5,600},{12}}, 							-- MISSION 5-1 (Finish (Star Sibyl))
+				15,{0x00D8,0},{0,0},	 {0,0},		{0,0},	   {{11,6},{14,0},{9,74},{8,20000},{6},{12}} 				-- MISSION 5-2 (Finish (Star Sibyl))
 						};
 		end
 	end

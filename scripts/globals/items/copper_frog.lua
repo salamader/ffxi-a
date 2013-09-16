@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4515
--- Item: Copper Frog
--- Food Effect: 5 Min, Mithra only
+-- Item: copper_frog
+-- Food Effect: 5Min, Mithra only
 -----------------------------------------
 -- Dexterity 2
 -- Agility 2

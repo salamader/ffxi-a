@@ -34,17 +34,17 @@ function onServerStart()
 
 	SetRegionalConquestOverseers()
 
-	-- Charybdis PH alternates, remove one
-	DespawnMob(17498518);
+  -- Charybdis PH alternates, remove one
+  DespawnMob(17498518);
 
-	-- Timed Spawns
-	SetTimedSpawns();
+  -- Timed Spawns
+  SetTimedSpawns();
 
   -- Treasure Spawns;
   SetTreasureSpawns();
 
-	-- Spawns Silk Caterpillar (temporary until someone implements a way to make it spawn properly)
-	SpawnMob(17227782,300,660);
+  -- Spawns Silk Caterpillar (temporary until someone implements a way to make it spawn properly)
+  SpawnMob(17227782,300,660);
 end;
 
 -----------------------------------
@@ -157,7 +157,7 @@ function SetTimedSpawns()
     if(mob == nil) then
       printf("Error trying to load undefined mob (%d)", NMs[i]);
     else
-    UpdateNMSpawnPoint(NMs[i]);
+      UpdateNMSpawnPoint(NMs[i]);
       mob:setRespawnTime(math.random((900),(10800))); -- 15-180 minute
     end
     i = i + 1;

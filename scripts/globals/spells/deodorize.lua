@@ -27,9 +27,6 @@ function onSpellCast(caster,target,spell)
             duration = duration * target:getMainLvl() / 15; -- level adjustment
         end
 
-	-- Estoqueurs Bonus
-	duration = duration + (duration * caster:getMod(MOD_ENHANCING_DUR));
-		
         spell:setMsg(230);
         target:addStatusEffect(EFFECT_DEODORIZE,0,10,(math.floor(duration) * SNEAK_INVIS_DURATION_MULTIPLIER));
     else

@@ -1,7 +1,5 @@
 -----------------------------------
--- Ability: Afflatus Solace
--- Inspires you to draw strength 
--- from the healing spells you cast.
+-- Ability: Arcane Circle
 -----------------------------------
 
 require("scripts/globals/status");

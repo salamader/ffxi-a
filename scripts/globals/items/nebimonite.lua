@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4361
--- Item: Nebimonite
--- Food Effect: 5 Min, Mithra only
+-- Item: nebimonite
+-- Food Effect: 5Min, Mithra only
 -----------------------------------------
 -- Dexterity -3
 -- Vitality 2

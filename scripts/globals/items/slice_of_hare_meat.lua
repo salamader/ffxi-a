@@ -1,7 +1,7 @@
 -----------------------------------------
 --	ID: 4358
---	Item: Hare Meat
---	Food Effect: 5 Mins, Galka Only
+--	Hare Meat
+--	5 Minutes, food effect, Galka Only
 -----------------------------------------
 --	Strength +1
 --	Intelligence -3

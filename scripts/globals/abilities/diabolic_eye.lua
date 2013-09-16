@@ -1,6 +1,5 @@
 -----------------------------------
--- Ability: Diabolic Eye
--- Reduces Max HP, Increases Acc
+-- Ability: Berserk
 -----------------------------------
 
 require("scripts/globals/settings");

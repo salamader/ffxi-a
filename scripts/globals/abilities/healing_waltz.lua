@@ -1,5 +1,5 @@
 -----------------------------------
--- Ability: Healing Waltz
+-- Ability: Divine Waltz
 -----------------------------------
  
 require("scripts/globals/settings");

@@ -1,7 +1,6 @@
 -----------------------------------------
 -- Spell: Aquaveil
--- Reduces chance of having a spell
--- interrupted.
+-- Reduces chance of having a spell interrupted.
 -----------------------------------------
 
 require("scripts/globals/settings");
@@ -24,23 +23,12 @@ function onSpellCast(caster,target,spell)
 	-- tests that quantify the relationship so I'm using 5 minutes for now.
 
 	local duration = 300;
-	local power = AQUAVEIL_INTERR_RATE;
-	
+
 	if (caster:hasStatusEffect(EFFECT_COMPOSURE) == true and caster:getID() == target:getID()) then
 		duration = duration * 3;
 	end
-	-- Estoqueurs Bonus
-	duration = duration + (duration * caster:getMod(MOD_ENHANCING_DUR));
 
-	if (caster:getEquipID(SLOT_WAIST) == 11753) then -- Emphatikos Rope
-		power = power + 12;
-	end
-	
-	if (caster:getEquipID(SLOT_LEGS) == 10329) then -- Shedir Seraweels
-		power = power + 12;
-	end
-	
-	target:addStatusEffect(EFFECT_AQUAVEIL,power,0,duration);
+	target:addStatusEffect(EFFECT_AQUAVEIL,AQUAVEIL_INTERR_RATE,0,duration);
 		spell:setMsg(230);
 
 	return EFFECT_AQUAVEIL;

@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Aeroga III
+-- Spell: Aeroga 3
 -- Deals wind damage to an enemy.
 -----------------------------------------
 

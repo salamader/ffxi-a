@@ -1,8 +1,7 @@
 -----------------------------------
 --
--- EFFECT_HYMNUS
--- Grants Reraise to Party Members 
--- within target AoE
+--
+--
 -----------------------------------
 
 -----------------------------------
@@ -10,7 +9,6 @@
 -----------------------------------
 
 function onEffectGain(target,effect)
-	-- power level is the raise number (3)
 end;
 
 -----------------------------------
@@ -18,9 +16,6 @@ end;
 -----------------------------------
 
 function onEffectTick(target,effect)
-    if(target:getHP() <= 0) then
-		target:sendRaise(effect:getPower());
-    end
 end;
 
 -----------------------------------

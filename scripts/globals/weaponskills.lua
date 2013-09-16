@@ -190,55 +190,11 @@ function doPhysicalWeaponskill(attacker, target, params)
 		end
 	end
 	finaldmg = finaldmg + souleaterBonus(attacker, (tpHitsLanded+extraHitsLanded));
-	if(attacker:getMod(MOD_WS_DMG) > 0) then
-		finaldmg = finaldmg + (finaldmg * (attacker:getMod(MOD_WS_DMG)/100));
-	end
-	
-	-- Overwhelm Bonus beyond 1 merit 
-	if(attacker:getObjType() == TYPE_PC) then
-		local job = attacker:getMainJob();
-		local sjob = attacker:getSubJob();
-		if(job == JOB_SAM or sjob == JOB_SAM) then
-			local overwhelmBonus = 0;
-			local merit = 0;
-			merit = attacker:getMerit(MERIT_OVERWHELM);
-			if(merit == 10) then
-				overwhelmBonus = 0.05;
-			elseif(merit == 15) then
-				overwhelmBonus = 0.1;
-			elseif(merit == 20) then
-				overwhelmBonus = 0.12;
-			elseif(merit == 25) then
-				overwhelmBonus = 0.14;
-			end
-			finaldmg = finaldmg + (finaldmg * overwhelmBonus);
-			-- print("Overwhelm Bonus Dmg Percent:",overwhelmBonus);
-		end
-	end
-	
-	if(attacker:hasStatusEffect(EFFECT_SCARLET_DELIRIUM_II) == true) then
-			finaldmg = finaldmg + (finaldmg * attacker:getMod(MOD_SCARLET_DMG)/100);
-	end
-	
-	if(attacker:getObjType() == TYPE_PC) then
-		if((attacker:getEquipID(SLOT_MAIN) == 19174) and (math.random(100) <= 8)) then -- Borealis Greatsword
-			finaldmg = finaldmg * 1.5;
-		end
-	end
-		
 	-- print("Landed " .. hitslanded .. "/" .. numHits .. " hits with hitrate " .. hitrate .. "!");
 
 	if(target:hasStatusEffect(EFFECT_FORMLESS_STRIKES) == false) then
 		utils.dmgTaken(target, finaldmg);
 		utils.physicalDmgTaken(target, finaldmg);
-		if(target:hasStatusEffect(EFFECT_MANA_WALL) == true) then
-			finaldmg = utils.manawall(target, finaldmg);
-		end
-		if(target:hasStatusEffect(EFFECT_SCARLET_DELIRIUM_I) == true) then
-			utils.scarletDelirium(target, finaldmg);
-		end
-		utils.dmgToMP(target, finaldmg);
-		utils.dmgToTP(target, finaldmg);
 	end
 	attacker:delStatusEffectSilent(EFFECT_BUILDING_FLOURISH);
 	return finaldmg, criticalHit, tpHitsLanded, extraHitsLanded;
@@ -251,7 +207,7 @@ function souleaterBonus(attacker, numhits)
 		if attacker:getMainJob() ~= 8 then
 			percent = percent / 2;
 		end
-		if attacker:getEquipID(SLOT_HEAD) == 12516 or attacker:getEquipID(SLOT_MAIN) == 18947 or attacker:getEquipID(SLOT_RING1) == 15818 or attacker:getEquipID(SLOT_RING2) == 15818 or attacker:getEquipID(SLOT_HEAD) == 15232 or attacker:getEquipID(SLOT_BODY) == 14409 or attacker:getEquipID(SLOT_LEGS) == 15370 then
+		if attacker:getEquipID(SLOT_HEAD) == 12516 or attacker:getEquipID(SLOT_HEAD) == 15232 or attacker:getEquipID(SLOT_BODY) == 14409 or attacker:getEquipID(SLOT_LEGS) == 15370 then
 			percent = percent + 0.02;
 		end
 		local hitscounted = 0;
@@ -725,13 +681,8 @@ return alpha;
 	end
 	--print("Landed " .. hitslanded .. "/" .. numHits .. " hits with hitrate " .. hitrate .. "!");
 
-	if(target:hasStatusEffect(EFFECT_MANA_WALL) == true) then
-		finaldmg = utils.manawall(target, finaldmg);
-	end
 	utils.dmgTaken(target, finaldmg);
 	utils.rangedDmgTaken(target, finaldmg);
-	utils.dmgToMP(target, finaldmg);
-	utils.dmgToTP(target, finaldmg);
 
 	return finaldmg, tpHitsLanded, extraHitsLanded;
 end;
@@ -739,31 +690,22 @@ end;
 function getMultiAttacks(attacker, numHits)
 	local bonusHits = 0;
 	local tripleChances = 1;
-	local quadrupleChances = 1;
 	local doubleRate = attacker:getMod(MOD_DOUBLE_ATTACK)/100;
 	local tripleRate = attacker:getMod(MOD_TRIPLE_ATTACK)/100;
-	local quadrupleRate = attacker:getMod(MOD_QUADRUPLE_ATTACK)/100;
 
-	--triple and quadruple only procs on first hit, or first two hits if dual wielding
+	--triple only procs on first hit, or first two hits if dual wielding
 	if(attacker:getOffhandDmg() > 0) then
 		tripleChances = 2;
-		quadrupleChance = 2;
 	end
 
 	for i = 1, numHits, 1 do
 		chance = math.random();
-		if (chance < quadrupleRate and i <= quadrupleChances) then
-			bonusHits = bonusHits + 3;
-		elseif (chance < tripleRate and i <= tripleChances) then
+		if (chance < tripleRate and i <= tripleChances) then
 			bonusHits = bonusHits + 2;
 		else
-			--have to check if triples and quadruples are possible, or else double attack chance
+			--have to check if triples are possible, or else double attack chance
 			-- gets accidentally increased by triple chance (since it can only proc on 1 or 2)
-			if (i <= quadrupleChances) then
-				if (chance < quadrupleRate + tripleRate) then
-					bonusHits = bonusHits + 2;
-				end
-			elseif (i <= tripleChances) then
+			if (i <= tripleChances) then
 				if (chance < tripleRate + doubleRate) then
 					bonusHits = bonusHits + 1;
 				end
@@ -780,7 +722,6 @@ function getMultiAttacks(attacker, numHits)
 			-- recalculate mods
 			doubleRate = attacker:getMod(MOD_DOUBLE_ATTACK)/100;
 			tripleRate = attacker:getMod(MOD_TRIPLE_ATTACK)/100;
-			quadrupleRate = attacker:getMod(MOD_QUADRUPLE_ATTACK)/100;
 		end
 	end
 	if ((numHits + bonusHits ) > 8) then

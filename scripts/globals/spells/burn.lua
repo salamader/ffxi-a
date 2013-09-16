@@ -1,8 +1,6 @@
 -----------------------------------------
 -- Spell: Burn
--- Deals fire damage that lowers an
--- enemy's intelligence and gradually
--- reduces its HP.
+-- Deals fire damage that lowers an enemy's intelligence and gradually reduces its HP.
 -----------------------------------------
 
 require("scripts/globals/settings");

@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Waterga II
+-- Spell: Water
 -- Deals water damage to an enemy.
 -----------------------------------------
 

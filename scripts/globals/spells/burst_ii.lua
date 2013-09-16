@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Burst II
+-- Spell: Burst 2
 -- Deals thunder damage to an enemy.
 -----------------------------------------
 

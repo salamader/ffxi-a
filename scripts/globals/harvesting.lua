@@ -82,8 +82,6 @@ function sickleBreak(player,trade)
 	Body = player:getEquipID(SLOT_BODY);
 	Legs = player:getEquipID(SLOT_LEGS);
 	Feet = player:getEquipID(SLOT_FEET);
-	Waist = player:getEquipID(SLOT_WAIST);
-	Neck = player:getEquipID(SLOT_NECK);
 	
 	if(Body == 14374 or Body == 14375) then
 		sicklebreak = sicklebreak + 0.073;
@@ -92,12 +90,6 @@ function sickleBreak(player,trade)
 		sicklebreak = sicklebreak + 0.073;
 	end
 	if(Feet == 14176 or Feet == 14177) then
-		sicklebreak = sicklebreak + 0.073;
-	end
-	if(Waist == 11769) then
-		sicklebreak = sicklebreak + 0.073;
-	end
-	if(Neck == 10926) then
 		sicklebreak = sicklebreak + 0.073;
 	end
 	
@@ -117,7 +109,6 @@ end
 function getItem(player,zone)	
 	
 	Rate = math.random();
-
 
 	for zon = 1, table.getn(drop), 2 do
 		if(drop[zon] == zone) then

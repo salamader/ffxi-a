@@ -1,6 +1,7 @@
 -----------------------------------
---	EFFECT_ENFIRE
--- Enchants weapon with fire dmg
+--
+--
+--
 -----------------------------------
 
 require("scripts/globals/status");

@@ -1,6 +1,6 @@
 -----------------------------------------
 -- Spell: Breakga
--- Petrifies enemies within AoE
+-- Temporarily blinds an enemy, greatly lowering its accuracy.
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -19,12 +19,6 @@ function onSpellCast(caster,target,spell)
     local dINT = (caster:getStat(MOD_INT) - target:getStat(MOD_INT));
     local bonus = AffinityBonus(caster, spell:getElement());
     local resist = applyResistance(caster,spell,target,dINT,35,bonus);
-	local body = caster:getEquipID(SLOT_BODY);
-
-    if (body == 11088) then -- Estoquers Sayon +2
-		bonus = bonus * 1.1;		
-    end
-	
     -- Duration, including resistance.  Unconfirmed.
     local duration = 30 * resist;
 

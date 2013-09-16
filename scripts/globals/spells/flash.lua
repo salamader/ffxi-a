@@ -1,7 +1,6 @@
 -----------------------------------------
 -- Spell: Flash
--- Temporarily blinds an enemy, greatly
--- lowering its accuracy.
+-- Temporarily blinds an enemy, greatly lowering its accuracy.
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -19,10 +18,7 @@ function onSpellCast(caster,target,spell)
     -- Pull base stats.
     local dINT = (caster:getStat(MOD_MND) - target:getStat(MOD_MND));
 
-    -- apply bonus, flash is hard to fully resist
-    local bonus = AffinityBonus(caster, spell:getElement()) + 200;
-
-    local resist = applyResistance(caster,spell,target,dINT,DIVINE_MAGIC_SKILL,bonus);
+    local resist = applyResistance(caster,spell,target,dINT,DIVINE_MAGIC_SKILL);
     local duration = 12 * resist;
 
     if(resist > 0.0625) then

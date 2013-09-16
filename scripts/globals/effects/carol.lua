@@ -1,6 +1,6 @@
 -----------------------------------
--- Carol
--- Increases a targets given elemental resistance
+--
+--
 --
 -----------------------------------
 
@@ -9,7 +9,6 @@
 -----------------------------------
 
 function onEffectGain(target,effect)
-	target:addMod(effect:getSubPower(), effect:getPower());
 end;
 
 -----------------------------------
@@ -24,5 +23,4 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
-	target:delMod(effect:getSubPower(), effect:getPower());
 end;

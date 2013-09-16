@@ -17,8 +17,7 @@ end;
 function onSpellCast(caster,target,spell)
 	if (target:hasStatusEffect(EFFECT_SNEAK) == false) then
 		spell:setMsg(230);
-		local duration = 180;
-		target:addStatusEffect(EFFECT_SNEAK,0,10,duration);
+		target:addStatusEffect(EFFECT_SNEAK,0,10,180);
 	else
 		spell:setMsg(75); -- no effect.
 	end

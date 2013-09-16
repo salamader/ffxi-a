@@ -1,8 +1,7 @@
 ---------------------------------------------
 --  Aegis Schism
 --
---  Description: Damage varies with TP.
---  Additional effect: defense down
+--  Description: Damage varies with TP. Additional effect: defense down
 --  Type: Physical (Blunt)
 --
 --

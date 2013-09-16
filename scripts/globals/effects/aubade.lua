@@ -1,8 +1,7 @@
 -----------------------------------
 --
--- EFFECT_AUBADE
--- Increases Sleep Resistance to 
--- Party Members within target AoE
+--
+--
 -----------------------------------
 
 -----------------------------------
@@ -10,7 +9,6 @@
 -----------------------------------
 
 function onEffectGain(target,effect)
-	target:addMod(MOD_SLEEPRES,effect:getPower());
 end;
 
 -----------------------------------
@@ -25,5 +23,4 @@ end;
 -----------------------------------
 
 function onEffectLose(target,effect)
-	target:delMod(MOD_SLEEPRES,effect:getPower());
 end;

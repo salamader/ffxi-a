@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Slowga
+-- Spell: Slow
 -- Spell accuracy is most highly affected by Enfeebling Magic Skill, Magic Accuracy, and MND.
 -- Slow's potency is calculated with the formula (150 + dMND*2)/1024, and caps at 300/1024 (~29.3%).
 -- And MND of 75 is neccessary to reach the hardcap of Slow.
@@ -26,11 +26,6 @@ function onSpellCast(caster,target,spell)
 		local power = 150 + dMND * 2;
 		if(power > 350) then
 			power = 350;
-		end
-
-		local body = caster:getEquipID(SLOT_BODY);
-		if (body == 11088) then -- Estoquers Sayon +2
-			power = power * 1.1;		
 		end
 
 		--Duration, including resistance.

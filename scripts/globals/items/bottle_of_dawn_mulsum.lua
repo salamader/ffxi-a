@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 5411
--- Item: Bottle of Dawn Mulsum
--- Item Effect: Restores 20-35% HP to Pet
+-- Item: bottle_of_dawn_mulsum
+-- Item Effect: Instantly restores 20%-35% of pet HP
 -----------------------------------------
 
 require("scripts/globals/settings");

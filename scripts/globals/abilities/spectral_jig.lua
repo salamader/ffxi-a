@@ -1,8 +1,5 @@
 -----------------------------------
 -- Ability: Spectral jig
--- Allows you to evade enemies by
--- making you undetectable by sight
--- and sound.
 -----------------------------------
 
 require("scripts/globals/settings");
@@ -13,7 +10,7 @@ require("scripts/globals/status");
 -----------------------------------
 
 function OnAbilityCheck(player,target,ability)
-	return 0,0;
+   return 0,0;
 end;
 
 function OnUseAbility(player, target, ability)
@@ -31,16 +28,13 @@ function OnUseAbility(player, target, ability)
       finalDuration = finalDuration + baseDuration;
    end
 
-	-- Jig Duration Bonus
-	finalDuration = finalDuration + player:getMod(MOD_JIG_TIME);
-
-	if(player:hasStatusEffect(EFFECT_SNEAK) == false) then
+   if(player:hasStatusEffect(EFFECT_SNEAK) == false) then
       player:addStatusEffect(EFFECT_SNEAK,0,10,finalDuration * SNEAK_INVIS_DURATION_MULTIPLIER);
       player:addStatusEffect(EFFECT_INVISIBLE,0,10,finalDuration * SNEAK_INVIS_DURATION_MULTIPLIER);
       ability:setMsg(532); -- Gains the effect of sneak and invisible
-	else
+   else
       ability:setMsg(283); -- no effect on player.
-	end
+   end
 
-	return 1;
+   return 1;
 end;

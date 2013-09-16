@@ -1,5 +1,5 @@
 -----------------------------------------
--- Spell: Blizzard IV
+-- Spell: Blizzard
 -- Deals ice damage to an enemy.
 -----------------------------------------
 

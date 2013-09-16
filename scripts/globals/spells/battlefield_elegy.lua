@@ -1,10 +1,8 @@
 -----------------------------------------
 -- Spell: Battlefield Elegy
 -----------------------------------------
-
 require("scripts/globals/status");
 require("scripts/globals/magic");
-
 -----------------------------------------
 -- OnSpellCast
 -----------------------------------------
@@ -30,13 +28,29 @@ function onSpellCast(caster,target,spell)
     if(100 * math.random() < target:getMod(MOD_SLOWRES)) then
         spell:setMsg(85); -- resisted spell
     else
- 
-		duration = duration + (duration * (caster:getMod(MOD_SONG_DURATION)/100));
-		duration = duration + (duration * ((caster:getMod(MOD_ALL_SONGS) * 10)/100));
-		duration = duration + (duration * ((caster:getMod(MOD_ELEGY) * 10)/100));
-	
-		power = power + ((caster:getMod(MOD_ELEGY) + caster:getMod(MOD_ALL_SONGS)) * 5);
-	
+        local sItem = caster:getEquipID(SLOT_RANGED);
+
+        -- horn +1
+        if(sItem == 17371) then
+            power = power + 20;
+            duration = duration * 1.2;
+        end
+
+        if(sItem == 17352) then
+            power = power + 11;
+            duration = duration * 1.1;
+        end
+
+        if(sItem == 18342) then
+            power = power + 20;
+            duration = duration * 1.2;
+        end
+
+        if(sItem == 17856) then
+            power = power + 30;
+            duration = duration * 1.3;
+        end
+
         -- Try to overwrite weaker elegy
         if(target:addStatusEffect(EFFECT_ELEGY,power,0,duration)) then
             spell:setMsg(237);

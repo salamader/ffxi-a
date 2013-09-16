@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4384
 -- Item: Black Sole
--- Food Effect: 5 Min, Mithra only
+-- Food Effect: 5Min, Mithra only
 -----------------------------------------
 -- Dexterity 4
 -- Mind -6

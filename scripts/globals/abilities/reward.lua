@@ -15,35 +15,10 @@ function OnAbilityCheck(player,target,ability)
 		return MSGBASIC_REQUIRES_A_PET,0;
 	else
 		local id = player:getEquipID(SLOT_AMMO);
-		if(id >= 17016 and id <= 17023 or id == 19252) then
+		if(id >= 17016 and id <= 17023) then
 			player:setBattleSubTarget(player:getPet());
 			return 0,0;
-		elseif(id == 19251) then
-		local pet = player:getPet();
-			player:setBattleSubTarget(player:getPet());
-			pet:delStatusEffect(EFFECT_PARALYSIS);
-			pet:delStatusEffect(EFFECT_POISON);
-			pet:delStatusEffect(EFFECT_BLINDNESS);
-			pet:delStatusEffect(EFFECT_WEIGHT);
-			pet:delStatusEffect(EFFECT_SLOW);
-			pet:delStatusEffect(EFFECT_SILENCE);
-			pet:delStatusEffect(EFFECT_CHOKE);
-			pet:delStatusEffect(EFFECT_RASP);
-			pet:delStatusEffect(EFFECT_PLAGUE);
-			pet:delStatusEffect(EFFECT_DISEASE);
-			pet:delStatusEffect(EFFECT_FROST);
-			pet:delStatusEffect(EFFECT_BURN);
-			pet:delStatusEffect(EFFECT_STUN);
-			pet:delStatusEffect(EFFECT_PETRIFICATION);
-			pet:delStatusEffect(EFFECT_ADDLE);
-			pet:delStatusEffect(EFFECT_BIND);
-			pet:delStatusEffect(EFFECT_CURSE_I);
-			pet:delStatusEffect(EFFECT_CURSE_II);
-			pet:delStatusEffect(EFFECT_ATTACK_DOWN);
-			pet:delStatusEffect(EFFECT_DEFENSE_DOWN);
-			return 0;
 		else
-
 			return MSGBASIC_MUST_HAVE_FOOD,0;
 		end
 	end
@@ -119,14 +94,6 @@ function OnUseAbility(player, target, ability)
 			regenAmount = 20;
 			totalHealing = math.floor(minimumHealing + 4*(playerMnd-55));
 			end,
-		[19252] = function (x) -- pet poultice
-			-- printf("Food: pet Poultice.");
-			minimumHealing = 0;
-			regenAmount = math.floor(petMaxHP / 100);
-			totalHealing = 0;
-			regenTime = 300;
-			end,
-
 	}
 	
 	
@@ -160,17 +127,7 @@ function OnUseAbility(player, target, ability)
 			pet:delStatusEffect(EFFECT_SLOW);
 			pet:delStatusEffect(EFFECT_SILENCE);
 			end,
-		[14508] = function (x) -- monster jackcoat +1
-			-- This will remove Paralyze, Poison, Blind, Weight, Slow and Silence from the pet.
-			-- printf("Monster jackcoat +1 detected.");
-			pet:delStatusEffect(EFFECT_PARALYSIS);
-			pet:delStatusEffect(EFFECT_POISON);
-			pet:delStatusEffect(EFFECT_BLINDNESS);
-			pet:delStatusEffect(EFFECT_WEIGHT);
-			pet:delStatusEffect(EFFECT_SLOW);
-			pet:delStatusEffect(EFFECT_SILENCE);
-			end,
-		[10678] = function (x) -- monster jackcoat +2
+		[14481] = function (x) -- monster jackcoat +1
 			-- This will remove Paralyze, Poison, Blind, Weight, Slow and Silence from the pet.
 			-- printf("Monster jackcoat +1 detected.");
 			pet:delStatusEffect(EFFECT_PARALYSIS);
@@ -194,21 +151,11 @@ function OnUseAbility(player, target, ability)
 		totalHealing = diff;
 	end
 
-	-- Applying server mods
-	totalHealing = totalHealing * PETFOOD_POWER;
-	regenAmount = regenAmount * PETFOOD_POWER;
-	
-	-- Apply healing.
-	if (petCurrentHP + totalHealing <= petMaxHP) then
-		pet:addHP(totalHealing);
-		pet:wakeUp();
+	pet:addHP(totalHealing);
+	pet:wakeUp();
 
-	else
-		pet:setHP(petMaxHP);
-		pet:wakeUp();
-	end
-	
 	-- Apply regen effect.
+
 	pet:delStatusEffect(EFFECT_REGEN);
 	pet:addStatusEffect(EFFECT_REGEN,regenAmount,3,regenTime); -- 3 = tick, each 3 seconds.
 	

@@ -16,8 +16,6 @@ function OnMagicCastingCheck(caster,target,spell)
 end;
 
 function onSpellCast(caster,target,spell)
-	
-    local amountMods = caster:getMod(MOD_ABSORB_POTENCY)/100;
 
 	local dmg = math.random();
 	dmg = math.random();
@@ -36,8 +34,6 @@ function onSpellCast(caster,target,spell)
     if (dmg > cap) then
         dmg = cap;
     end
-    
-    dmg = dmg + (dmg * amountMods); -- for Equipment Bonus above cap
 
     if(resist <= 0.125) then
         spell:setMsg(85);

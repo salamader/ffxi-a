@@ -3,7 +3,7 @@
 -- Gradually restores target's MP.
 -----------------------------------------
 
--- NOTE: THIS SCRIPT IS CURRENTLY IGNORED.  See battleutils:SingSong()
+require("scripts/globals/status");
 
 -----------------------------------------
 -- OnSpellCast
@@ -14,5 +14,13 @@ function OnMagicCastingCheck(caster,target,spell)
 end;
 
 function onSpellCast(caster,target,spell)
-end;
 
+    local mp = 2;
+
+    -- Until someone finds a way to delete Effects by tier we should not allow bard spells to stack.
+    -- Since all the tiers use the same effect buff it is hard to delete a specific one.
+    target:addStatusEffect(EFFECT_BALLAD,mp,3,120);
+
+    spell:setMsg(230);
+    return EFFECT_BALLAD;
+end;

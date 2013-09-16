@@ -1,7 +1,7 @@
 -----------------------------------------
 -- ID: 4482
--- Item: Nosteau Herring
--- Food Effect: 5 Min, Mithra only
+-- Item: nosteau_herring
+-- Food Effect: 5Min, Mithra only
 -----------------------------------------
 -- Dexterity 2
 -- Mind -4

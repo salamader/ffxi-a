@@ -1,8 +1,7 @@
 -----------------------------------------
--- ID: 5242
--- Item: Bottle of Wizard's Drink
+-- ID: 4172
+-- Item: Wizards Drink
 -- Item Effect: +100% MP
--- Durration: 15 mins
 -----------------------------------------
 
 require("scripts/globals/status");
@@ -12,11 +11,7 @@ require("scripts/globals/status");
 -----------------------------------------
 
 function onItemCheck(target)
-local result = 0;
-	if (target:hasStatusEffect(EFFECT_MEDICINE)) then
-		result = 111;
-	end
-return result;
+    return 0;
 end;
 
 -----------------------------------------
@@ -24,26 +19,7 @@ end;
 -----------------------------------------
 
 function onItemUse(target)
-
-	if(target:addStatusEffect(EFFECT_MEDICINE,0,0,900,5242)) then
-		target:messageBasic(205);
-	else
-        	target:messageBasic(423); -- no effect
-        end
-end;
-
------------------------------------------
--- onEffectGain Action
------------------------------------------
-
-function onEffectGain(target,effect)
-	target:addMod(MOD_MPP, 100);
-end;
-
------------------------------------------
--- onEffectLose Action
------------------------------------------
-
-function onEffectLose(target,effect)
-	target:delMod(MOD_MPP, 100);
+    local duration = 900;
+        target:delStatusEffect(EFFECT_MAX_MP_BOOST);
+        target:addStatusEffect(EFFECT_MAX_MP_BOOST,100,0,duration);
 end;
