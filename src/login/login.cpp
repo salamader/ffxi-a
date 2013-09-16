@@ -157,7 +157,7 @@ while(it != login_sd_list.end())
 				if(on_map == 1)
 				{
 					//lobby_session  accounts_sessions accid
-               // ShowMessage("THIS PLAYER IS ON MAP SO LETS COUNT OUT TARGET %u\n",it);
+                ShowMessage("THIS PLAYER IS ON MAP SO LETS COUNT OUT ACCOUNT ID %u\n",(*it)->accid);
 				/*
 				orderby lobby session list and update targetid by 1 for each user.
 				const char* Query = "UPDATE accounts_sessions SET lobby_session ='%u' WHERE accid = %u";
@@ -214,7 +214,9 @@ while(it != login_sd_list.end())
                 Sql_Query(SqlHandle,Query,(*it)->accid);
 				  Query = "UPDATE chars SET online = '0',shutdown='1' WHERE accid = %u";
                 Sql_Query(SqlHandle,Query,(*it)->accid);
-				ShowMessage("ERRASE THE ACCOUNT FROM LOBBY SERVER NOW %u\n",(*it)->accid);
+				ShowMessage("ERASE THE ACCOUNT FROM LOBBY SERVER NOW %u\n",(*it)->accid);
+				do_close_lobbydata((*it),(*it)->login_fd);
+				//login_sd_list.erase(it);
 				
 				}
 				return false;

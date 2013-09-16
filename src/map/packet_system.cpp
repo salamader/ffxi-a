@@ -981,7 +981,7 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 	if (PChar->shutdown_status == 0 && PChar->loc.zone != NULL)
 		//IT COULD ALSO MAYBE USE THE POINTER PCHAR->IS_ZONING = -1  meaning they are not zoning so its ok to update
 	{
-		//ShowMessage(CL_GREEN"UPDATE: IN =%u \n"CL_RESET,PChar->shutdown_status);
+		//ShowMessage(CL_GREEN"UPDATE: PLAYER ID =%u \n"CL_RESET,PChar->id);
 		
 		
         
@@ -1001,7 +1001,7 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
             PChar->loc.zone->SpawnPCs(PChar);
 			PChar->loc.zone->SpawnNPCs(PChar);
 		
-
+			
 		PChar->loc.zone->SpawnMOBs(PChar);
 		PChar->loc.zone->SpawnPETs(PChar);
 	if(PChar->godmode==1)
@@ -4944,7 +4944,7 @@ void SmallPacket0x0E7(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	//ShowMessage(CL_YELLOW"SmallPacket0x0E7: PLAYER LOGOUT\n"CL_RESET);
 	
 	
-	if (PChar->getZone() == 0 ||PChar->godmode == 1)
+	if (PChar->getZone() == 0 )
 	{
 		//ShowMessage(CL_YELLOW"SmallPacket0x0E7: RETURN DO NOTHING\n"CL_RESET);
 		//TO DO MAKE A FUNCTION TO EXIT THE GAME IN PLAYERS DUPLCATE CODE IN MANY LOCATIONS

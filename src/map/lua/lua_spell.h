@@ -1,7 +1,7 @@
 /*
 ===========================================================================
 
-  Copyright (c) 2010-2013 Darkstar Dev Teams
+  Copyright (c) 2010-2012 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -55,10 +55,6 @@ public:
 	int32 getElement(lua_State*);
 	int32 getID(lua_State*);
     int32 getSpellGroup(lua_State*);
-	int32 getSkillType(lua_State*);
-	int32 getMPCost(lua_State*);
-	int32 getCE(lua_State*);
-	int32 getVE(lua_State*);
 };
 
 #endif

@@ -502,6 +502,7 @@ public:
     void            SetWeather(WEATHER weatherCondition);
 
 	void			SpawnPCs(CCharEntity* PChar);									// отображаем персонажей в зоне
+	void            UpdateMOBs(CCharEntity* PChar);
 	void			SpawnMOBs(CCharEntity* PChar);									// отображаем MOBs в зоне
 	void			SpawnPETs(CCharEntity* PChar);									// отображаем PETs в зоне
 	void			SpawnNPCs(CCharEntity* PChar);									// отображаем NPCs в зоне

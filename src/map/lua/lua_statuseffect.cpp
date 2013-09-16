@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2013 Darkstar Dev Teams
+  Copyright (c) 2010-2012 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -115,9 +115,9 @@ inline int32 CLuaStatusEffect::getStartTime(lua_State* L)
 
 /************************************************************************
 *                                                                       *
-*  Return the number of clock cycles before the end of the effect. This	*
-*  expression can not stand divider for the bracket, it will a 			*
-*  violation of logic, because we will be faced with an error timer.	*
+*  Возвращаем количество тактов до окончания действия эффекта.          *
+*  В данном выражении нельзя выносить делитель за скобку, это приведет 	*
+*  к нарушению логики, т.к. мы сталкнемся с погрешностью таймера        *
 *																		*	
 ************************************************************************/
 
@@ -137,7 +137,7 @@ inline int32 CLuaStatusEffect::getLastTick(lua_State* L)
 
 /************************************************************************
 *                                                                       *
-*  Return the number of ticks since the beginning of the effect         *
+*  Возвращаем количество тактов с начала действия эффекта	            *
 *                                                                       *
 ************************************************************************/
 
@@ -231,7 +231,7 @@ inline int32 CLuaStatusEffect::setTick(lua_State* L)
 
 /************************************************************************
 *                                                                       *
-*  restart effect		                                                *
+*  Перезапускаем эффект                                                 *
 *                                                                       *
 ************************************************************************/
 

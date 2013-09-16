@@ -513,7 +513,7 @@ inline int32 CLuaBaseEntity::getXPos(lua_State *L)
 inline int32 CLuaBaseEntity::setPos(lua_State *L)
 {
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
-
+	
     if( m_PBaseEntity->objtype != TYPE_PC)
     {
         m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_DESPAWN));
@@ -560,6 +560,7 @@ inline int32 CLuaBaseEntity::setPos(lua_State *L)
             ((CCharEntity*)m_PBaseEntity)->loc.destination = (uint16)lua_tointeger(L,5);
 			((CCharEntity*)m_PBaseEntity)->status = STATUS_DISAPPEAR;
 			((CCharEntity*)m_PBaseEntity)->loc.boundary = 0;
+			((CCharEntity*)m_PBaseEntity)->is_zoning = 1;
 			((CCharEntity*)m_PBaseEntity)->clearPacketList();
 			((CCharEntity*)m_PBaseEntity)->pushPacket(new CServerIPPacket((CCharEntity*)m_PBaseEntity,2));
 			//((CCharEntity*)m_PBaseEntity)->loc.zone->DecreaseZoneCounter(((CCharEntity*)m_PBaseEntity));
@@ -8649,7 +8650,7 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 	if(PChar->godmode==0)
 	{
 		PChar->godmode=1;
-		if(PChar->Account_Level==1)
+		/*if(PChar->Account_Level==1)
 		{
 		PChar->nameflags.flags ^=FLAG_GM_SUPPORT;
 		
@@ -8672,7 +8673,7 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 		PChar->nameflags.flags ^=FLAG_GM_PRODUCER;
 		
 		
-		}
+		}*/
 		
 		PChar->stats.STR  = 999;
             PChar->stats.DEX = 999;
@@ -8697,7 +8698,7 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 	{
 		//need a prevuis nameflag
 
-		if(PChar->Account_Level==1)
+		/*if(PChar->Account_Level==1)
 		{
 		PChar->nameflags.flags ^=FLAG_GM_SUPPORT;
 		
@@ -8720,7 +8721,7 @@ inline int32 CLuaBaseEntity::god_mode(lua_State *L)
 		PChar->nameflags.flags ^=FLAG_GM_PRODUCER;
 		
 		
-		}
+		}*/
 		
 		PChar->godmode=0;
 		
@@ -10415,7 +10416,7 @@ inline int32 CLuaBaseEntity::add_All_Weaponskils(lua_State *L)
 	//TODO MAKE A NEW SYSTEM FOR THIS USING DATABASE
 	//FOR EACH JOB CLASS THAT HAVE SPELLS EXAMPLE
 	//blu_weapon whm_weapon blm_weapon and so on.
- /*	if(m_PBaseEntity == NULL){return false;}
+ 	if(m_PBaseEntity == NULL){return false;}
 	if(m_PBaseEntity->objtype != TYPE_PC){return false;}
 
     CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
@@ -10425,7 +10426,7 @@ inline int32 CLuaBaseEntity::add_All_Weaponskils(lua_State *L)
 	int32 spellid = 0;
 	uint8 type = 0; 		  
    string_t name ="none";
-   const char *pfmtQuery =  "SELECT weaponskillid,name,type FROM weapon_skills WHERE learnall = '1' ORDER BY id ASC LIMIT 255;";
+   const char *pfmtQuery =  "SELECT weaponskillid,name FROM weapon_skills WHERE learnall = '1' ORDER BY id ASC LIMIT 255;";
 
 				int32 ret =  Sql_Query(SqlHandle,pfmtQuery);
 				if( ret == SQL_ERROR )
@@ -10435,13 +10436,14 @@ inline int32 CLuaBaseEntity::add_All_Weaponskils(lua_State *L)
 					return false;;
 				}
 				int i = 0;
-				//Считывание информации о конкректном персонаже
-				//Загрузка всей необходимой информации о персонаже из базы
+				
 				while(Sql_NextRow(SqlHandle) != SQL_NO_DATA) 
 				{
 					spellid    = Sql_GetIntData(SqlHandle,0);
 					name    = Sql_GetData(SqlHandle,1);
-					type    = Sql_GetIntData(SqlHandle,2);
+				
+	                charutils::addWeaponSkill(PChar, spellid);
+                    PChar->pushPacket(new CCharAbilitiesPacket(PChar));
 					sprintf(buf,"Learned New WeaponSkill: ID: %u NAME: %s",spellid , name.c_str() );
 	                PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 					
@@ -10449,7 +10451,7 @@ inline int32 CLuaBaseEntity::add_All_Weaponskils(lua_State *L)
 	
 
 					i++;
-				}*/
+				}
 				
 	
 	return 0;
