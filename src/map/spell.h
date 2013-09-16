@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@
 #include "entities/charentity.h"
 
 #define CANNOT_USE_SPELL	0
-#define MAX_SPELL_ID		800
+#define MAX_SPELL_ID		901
 
 enum SPELLGROUP
 {
@@ -72,8 +72,8 @@ public:
 
     bool        canTargetEnemy();
     bool        isBuff();
-    bool        dealsDamage(); // checks if the spell deals hp damage to target, this is relative to message
-    void        resetMessage(); // resets spell to normal state
+    bool        dealsDamage();							// checks if the spell deals hp damage to target, this is relative to message
+    void        resetMessage();							// resets spell to normal state
 
     float       getMaxRange();
     uint16      getTotalTargets();
@@ -99,14 +99,14 @@ public:
 	uint16		getVE();
 	uint32		getModifiedRecast();
     uint8       getRadius();
-    uint16      getAoEMessage(); // returns the single target message for AoE moves
+    uint16      getAoEMessage();						// returns the single target message for AoE moves
     uint8       getRequirements();
     uint16      getMeritId();
-    bool        tookEffect(); // returns true if the spell landed, not resisted or missed
-    bool        hasMPCost(); // checks if spell costs mp to use
+    bool        tookEffect();							// returns true if the spell landed, not resisted or missed
+    bool        hasMPCost();							// checks if spell costs mp to use
     bool        isHeal(); // is a heal spell
     bool        isNa(); // is a -na spell
-    bool        canHitShadow(); // check if spell ignores shadows
+    bool        canHitShadow(); 						// check if spell ignores shadows
 
     void        setRadius(uint8 radius);
     void        setTotalTargets(uint16 total);
@@ -151,8 +151,8 @@ private:
 	uint8		m_job[MAX_JOBTYPE];						// job
 	uint8		m_ValidTarget;							// target pc/npc/both
 	SPELLGROUP  m_spellGroup;							// spellgroup
-    uint16      m_zoneMisc;                             // условия чтения заклинаний в зонах
-	uint8		m_AOE;								// aoe or single target spell
+    uint16      m_zoneMisc;                             // conditions in the areas of spell casting
+	uint8		m_AOE;									// aoe or single target spell
 	uint16		m_base;									// spell base damage
 	float		m_multiplier;							// multiplier for upper tier spells
 	uint16		m_element;								// element of spell
@@ -169,7 +169,7 @@ private:
 
 /************************************************************************
 *                                                                       *
-*  namespase для работы с заклинаниями                                  *
+*  Namespase to work with spells		                                *
 *                                                                       *
 ************************************************************************/
 

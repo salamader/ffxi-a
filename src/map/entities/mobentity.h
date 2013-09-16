@@ -114,6 +114,7 @@ class CMobEntity : public CBattleEntity
 public:
 
   bool        m_AllowRespawn;						// монстру разрешено возрождаться
+  	bool		m_ForceDespawn;
   uint32		m_RespawnTime;						// отрезок времени, через который монстр возрождается после смерти
   uint32      m_DropItemTime;						// время анимации смерти монстра
 

@@ -525,7 +525,7 @@ public:
     void            TransportDepart(CBaseEntity* PTransportNPC);                    // транспотр отправляется, необходимо собрать пассажиров
 
 	void			InsertRegion(CRegion* Region);									// добавляем в зону активную область
-
+	void			SavePlayTime();
 	void			TOTDChange(TIMETYPE TOTD);										// обработка реакции мира на смену времени суток
 	void			PushPacket(CBaseEntity*, GLOBAL_MESSAGE_TYPE, CBasicPacket*);	// отправляем глобальный пакет в пределах зоны
 

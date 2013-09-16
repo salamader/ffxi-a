@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,6 +28,8 @@
 #include "../utils/blueutils.h"
 #include "../utils/charutils.h"
 #include "../utils/itemutils.h"
+#include "../entities/battleentity.h"
+#include "../entities/charentity.h"
 #include "../mobskill.h"
 #include "../utils/mobutils.h"
 #include "../status_effect.h"
@@ -50,35 +52,35 @@
 
 /************************************************************************
 *																		*
-*  Инициализируем владельца интеллекта (может добавить проверку на		*
-*  пустой указатель с выводом FatalError ?)								*
+*  Initialize the owner intelligence (can add a check to				*
+*  Null pointer with output FatalError?)								*
 *																		*
 ************************************************************************/
 
 CAIMobDummy::CAIMobDummy(CMobEntity* PMob)
 {
-	m_PMob = PMob;
-    m_PTargetFind = new CTargetFind(PMob);
-    m_PPathFind = new CPathFind(PMob);
+	m_PMob				= PMob;
+    m_PTargetFind		= new CTargetFind(PMob);
+    m_PPathFind			= new CPathFind(PMob);
 
-    m_PMagicState = new CMagicState(PMob, m_PTargetFind);
+    m_PMagicState		= new CMagicState(PMob, m_PTargetFind);
 
-    m_checkDespawn = false;
-	m_PSpecialSkill = NULL;
-	m_firstSpell = true;
-	m_LastSpecialTime = 0;
-	m_skillTP = 0;
-	m_ChaseThrottle = 0;
+    m_checkDespawn		= false;
+	m_PSpecialSkill		= NULL;
+	m_firstSpell		= true;
+	m_LastSpecialTime	= 0;
+	m_skillTP			= 0;
+	m_ChaseThrottle		= 0;
 	m_LastStandbackTime = 0;
-	m_DeaggroTime = 0;
-	m_NeutralTime = 0;
-	m_CanStandback = false;
+	m_DeaggroTime		= 0;
+	m_NeutralTime		= 0;
+	m_CanStandback		= false;
 	m_drawnIn = false;
 }
 
 /************************************************************************
 *																		*
-*  Основная часть интеллекта - главный цикл								*
+*  The bulk of intelligence - the main loop								*
 *																		*
 ************************************************************************/
 
@@ -116,8 +118,9 @@ void CAIMobDummy::CheckCurrentAction(uint32 tick)
 
 /************************************************************************
 *																		*
-*  Здесь должен быть алгоритм путешествия по зоне, а также переход в	*
-*  режим боевой стойки, если его обладатель (атакующий) не равен нулю.	*
+*  There must be an algorithm travel zone, and the transition to		*
+*  mode of fighting stance, if the holder (the attacker) is not equal 	*
+*  to zero.																*
 *																		*
 ************************************************************************/
 
@@ -137,7 +140,7 @@ void CAIMobDummy::ActionRoaming()
 
 		battleutils::ClaimMob(m_PMob, m_PBattleTarget);
 
-        // TODO: возможно необходимо добавлять цели базовое количество ненависти
+        // TODO: may be added to basic amount of hate
 
 		m_ActionType = ACTION_ENGAGE;
 		ActionEngage();
@@ -269,17 +272,16 @@ void CAIMobDummy::ActionRoaming()
 
 	}
 
-	// call every 3 seconds
-	// NOTE: a lot of NMs use this like Taisai
-	if ((m_Tick - m_SpawnTime) % 3000 <= 400)
-	{
-		luautils::OnMobRoam(m_PMob);
-	}
+	// this is called way too often and consumes too many resources
+	// if ((m_Tick - m_SpawnTime) % 3000 <= 400)
+	// {
+	// 	luautils::OnMobRoam(m_PMob);
+	// }
 }
 
 /************************************************************************
 *                                                                       *
-*  Монстр переходит в боевую стойку, включается режим атаки             *
+*  Monster goes into a fighting stance, the movie Attack	            *
 *                                                                       *
 ************************************************************************/
 
@@ -317,8 +319,8 @@ void CAIMobDummy::ActionEngage()
 
 /************************************************************************
 *																		*
-*  Монстр выходит из режима атаки по каким-либо причинам. Если при этом	*
-*  он слишком далеко от точки появления, то запускается перерождение.	*
+*  Monster exits attack for some reason. If this it is too far from the *
+*  point of introduction, is started degeneration.						*
 *																		*
 ************************************************************************/
 
@@ -352,7 +354,7 @@ void CAIMobDummy::ActionDisengage()
 
 /************************************************************************
 *																		*
-*  Монстр падает на землю после получения смертельного удара.			*
+*  Monster falls to the ground after the fatal blow.					*
 *																		*
 ************************************************************************/
 
@@ -377,8 +379,8 @@ void CAIMobDummy::ActionFall()
 
 /************************************************************************
 *																		*
-*  Здесь выполняется скрипт после смерти монстра, распределяется опыт	*
-*  и определяются выпавшие предметы										*
+*  This script is executed after the death of the monster, the 			*
+*  experience is distributed and are determined by fallen objects		*
 *																		*
 ************************************************************************/
 
@@ -400,7 +402,7 @@ void CAIMobDummy::ActionDropItems()
 
 				if(m_PMob->m_giveExp)
 				{
-	                charutils::DistributeExperiencePoints(PChar, m_PMob);
+					charutils::DistributeExperiencePoints(PChar, m_PMob);
 				}
 
                 DropList_t* DropList = itemutils::GetDropList(m_PMob->m_DropID);
@@ -415,7 +417,7 @@ void CAIMobDummy::ActionDropItems()
 						uint8 tries = 0;
 						while(tries < 1+highestTH)
 						{
-							if(rand()%100 < DropList->at(i).DropRate)
+							if(rand()%100 < (DropList->at(i).DropRate + map_config.drop_rate_bonus)) 
 							{
 								PChar->PTreasurePool->AddItem(DropList->at(i).ItemID, m_PMob);
 								break;
@@ -427,72 +429,76 @@ void CAIMobDummy::ActionDropItems()
 			    }
 
 				//check for gil (beastmen drop gil, some NMs drop gil)
-				if(m_PMob->CanDropGil())
-                {
+				if(m_PMob->CanDropGil() || map_config.all_mobs_drop_gil == 1)
+				{
 					charutils::DistributeGil(PChar, m_PMob); // TODO: REALISATION MUST BE IN TREASUREPOOL
 				}
 				//check for seal drops
-				/* MobLvl >= 1 = Beastmen Seals ID=1126
-				          >= 50 = Kindred Seals ID=1127
-						  >= 75 = Kindred Crests ID=2955
-						  >= 90 = High Kindred Crests ID=2956
+				// ffxiclopedia
+				/* via http://wiki.ffxiclopedia.org/wiki/Beastmen%27s_Seal
+				   MobLvl >= 1 = Beastmen Seals ID=1126
+				   http://wiki.ffxiclopedia.org/wiki/Kindred%27s_Seal
+				   >= 50 = Kindred Seals ID=1127
+				   http://wiki.ffxiclopedia.org/wiki/Kindred%27s_Crest
+				   >= 70 = Kindred Crests ID=2955
+				   http://wiki.ffxiclopedia.org/wiki/High_Kindred%27s_Crest
+				   >= 75 = High Kindred Crests ID=2956
 				*/
 
 				uint8 Pzone = PChar->getZone();
 				bool validZone = ((Pzone > 0 && Pzone < 39) || (Pzone > 42 && Pzone < 134) || (Pzone > 135 && Pzone < 185) || (Pzone > 188 && Pzone < 255));
 
-				if(validZone && charutils::GetRealExp(PChar->GetMLevel(),m_PMob->GetMLevel())>0 && m_PMob->m_Type == MOBTYPE_NORMAL){ //exp-yielding monster and drop is successful
-					//TODO: The drop is actually based on a 5 minute timer, and not a probability of dropping!
+				if(validZone && ((charutils::GetRealExp(PChar->GetMLevel(),m_PMob->GetMLevel())>0) || map_config.always_seal_crest == 1) && m_PMob->m_Type == MOBTYPE_NORMAL) //exp-yielding monster and drop is successful
+				{	//TODO: The drop is actually based on a 5 minute timer, and not a probability of dropping!
 
-					if (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_SIGNET) && m_PMob->m_Element > 0 && rand()%100 < 20) // Need to move to SIGNET_CHANCE constant
+					if (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_SIGNET) && m_PMob->m_Element > 0 && rand()%100 < (20 - PChar->getMod(MOD_CRYSTAL_DROP))) // Need to move to SIGNET_CHANCE constant
 					{
 						PChar->PTreasurePool->AddItem(4095 + m_PMob->m_Element, m_PMob);
 					}
-					if(rand()%100 < 20)
+					if(rand()%100 < (20 + map_config.seal_crest_bonus))
 					{
 
-						//RULES: Only 1 kind may drop per mob
-						if(m_PMob->GetMLevel() < 50){ //b.seal only
+					//RULES: Only 1 kind may drop per mob
+					if(m_PMob->GetMLevel() < 50){ //b.seal only
+						PChar->PTreasurePool->AddItem(1126, m_PMob);
+					}
+					else if(m_PMob->GetMLevel() < 70){ //b.seal & k.seal only
+						if(rand()%2 == 0){
 							PChar->PTreasurePool->AddItem(1126, m_PMob);
 						}
-						else if(m_PMob->GetMLevel() < 70){ //b.seal & k.seal only
-							if(rand()%2 == 0){
-								PChar->PTreasurePool->AddItem(1126, m_PMob);
-							}
-							else{
-								PChar->PTreasurePool->AddItem(1127, m_PMob);
+						else{
+							PChar->PTreasurePool->AddItem(1127, m_PMob);
+						}
+					}
+					else if(m_PMob->GetMLevel() < 75){ //b.seal & k.seal & k.crest
+						switch(rand()%3){
+						case 0:
+							PChar->PTreasurePool->AddItem(1126, m_PMob);
+							break;
+						case 1:
+							PChar->PTreasurePool->AddItem(1127, m_PMob);
+							break;
+						case 2:
+							PChar->PTreasurePool->AddItem(2955, m_PMob);
+							break;
+						}
+					}
+					else if(m_PMob->GetMLevel() >= 75){ //all 4
+						switch(rand()%4){
+						case 0:
+							PChar->PTreasurePool->AddItem(1126, m_PMob);
+							break;
+						case 1:
+							PChar->PTreasurePool->AddItem(1127, m_PMob);
+							break;
+						case 2:
+							PChar->PTreasurePool->AddItem(2955, m_PMob);
+							break;
+						case 3:
+							PChar->PTreasurePool->AddItem(2956, m_PMob);
+							break;
 							}
 						}
-						else if(m_PMob->GetMLevel() < 75){ //b.seal & k.seal & k.crest
-							switch(rand()%3){
-							case 0:
-								PChar->PTreasurePool->AddItem(1126, m_PMob);
-								break;
-							case 1:
-								PChar->PTreasurePool->AddItem(1127, m_PMob);
-								break;
-							case 2:
-								PChar->PTreasurePool->AddItem(2955, m_PMob);
-								break;
-							}
-						}
-						else if(m_PMob->GetMLevel() >= 75){ //all 4
-							switch(rand()%4){
-							case 0:
-								PChar->PTreasurePool->AddItem(1126, m_PMob);
-								break;
-							case 1:
-								PChar->PTreasurePool->AddItem(1127, m_PMob);
-								break;
-							case 2:
-								PChar->PTreasurePool->AddItem(2955, m_PMob);
-								break;
-							case 3:
-								PChar->PTreasurePool->AddItem(2956, m_PMob);
-								break;
-							}
-						}
-
 					}
 				}
 			}
@@ -509,7 +515,7 @@ void CAIMobDummy::ActionDropItems()
 
 /************************************************************************
 *																		*
-*  Время ожидания до исчезновения (монстр не обязательно мертв) 		*
+*  Waiting time until extinction (the monster does not necessarily dead)*
 *																		*
 ************************************************************************/
 
@@ -530,10 +536,10 @@ void CAIMobDummy::ActionDeath()
 
 /************************************************************************
 *                                                                       *
-*  Здесь модель пропадает после постепенного ичезновения, так же        *
-*  решается вопрос, а нужно ли включать процесс возрождения монстра.    *
-*  Если его тип возрождения равен нулю, значит он был вызван и в        *
-*  возрождении не нуждается, иначе запускаем процесс                    *
+*  Here, the model after gradually disappears icheznoveniya as well 	*
+* Solved the problem, and whether to include the revival of the monster.*
+* If the type of revival is zero, then it is called in 					*
+* Does not need revival, or run processesс                    			*
 *                                                                       *
 ************************************************************************/
 
@@ -570,11 +576,11 @@ void CAIMobDummy::ActionDespawn()
 
 /************************************************************************
 *                                                                       *
-*  Возрождение монстра                                                  *
+*  revival monster		                                                *
 *                                                                       *
 ************************************************************************/
 
-// TODO: ночные монстры должны появляться только ночью
+// TODO: nocturnal monsters appear only at night
 
 void CAIMobDummy::ActionSpawn()
 {
@@ -657,7 +663,7 @@ void CAIMobDummy::ActionSpawn()
 
 /************************************************************************
 *                                                                       *
-*  Начало специальной атаки монстра (эффект начала)                     *
+*  Start special attack monster (the effect of start)                   *
 *                                                                       *
 ************************************************************************/
 
@@ -675,7 +681,7 @@ void CAIMobDummy::ActionAbilityStart()
     	return;
     }
 
-    // не у всех монстов прописаны способности, так что выходим из процедуры, если способность не найдена
+	// Not all registered Monster ability, so get out of the procedure, if the ability is not found
 	// We don't have any skills we can use, so let's go back to attacking
     if (MobSkills.size() == 0)
     {
@@ -848,9 +854,9 @@ void CAIMobDummy::ActionAbilityUsing()
 
 /************************************************************************
 *                                                                       *
-*  Окончание специальной атаки монстра (анимация эффекта).              *
-*  После выполения специальной атаки не обнуляем m_PMobSkill, позднее   *
-*  по этому значению blu будет учить заклинания.                        *
+*  Closing special attack monster (animation effect). 					*
+* If this is done the special attack is not zero out m_PMobSkill, later *
+* This value blu will teach spells.                        				*
 *                                                                       *
 ************************************************************************/
 
@@ -967,7 +973,7 @@ void CAIMobDummy::ActionAbilityFinish()
 
 /************************************************************************
 *																		*
-*  Прерывание специальной атаки монстра                 				*
+*  Interrupting a special monster attacks                 				*
 *																		*
 ************************************************************************/
 
@@ -1053,11 +1059,11 @@ void CAIMobDummy::ActionMagicStart()
 	STATESTATUS status = m_PMagicState->CastSpell(m_PSpell, m_PBattleSubTarget);
 
 	if(status == STATESTATUS_START)
-	{
+				{
 		m_ActionType = ACTION_MAGIC_CASTING;
 
 		m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE));
-	}
+			}
 	else
 	{
 		TransitionBack(true);
@@ -1073,22 +1079,22 @@ void CAIMobDummy::ActionMagicCasting()
 
 	if(status == STATESTATUS_INTERRUPT)
 	{
-		m_ActionType = ACTION_MAGIC_INTERRUPT;
-		ActionMagicInterrupt();
-	}
+			m_ActionType = ACTION_MAGIC_INTERRUPT;
+			ActionMagicInterrupt();
+		}
 	else if(status == STATESTATUS_ERROR)
-	{
+        {
 		TransitionBack(true);
-	}
+		}
 	else if(status == STATESTATUS_FINISH)
-	{
+		{
 		m_ActionType = ACTION_MAGIC_FINISH;
 		ActionMagicFinish();
-	}
+		}
 	else
-	{
+		{
 		m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE));
-	}
+		}
 }
 
 void CAIMobDummy::ActionMagicFinish()
@@ -1137,7 +1143,7 @@ void CAIMobDummy::ActionMagicInterrupt()
 
 /************************************************************************
 *																		*
-*  Обычная физическая атака без нанесения какого-либо урона				*
+*  Normal physical attack without causing any damage					*
 *																		*
 ************************************************************************/
 
@@ -1364,7 +1370,8 @@ void CAIMobDummy::ActionAttack()
 									meritCounter = ((CCharEntity*)m_PBattleTarget)->PMeritPoints->GetMeritValue(MERIT_COUNTER_RATE,(CCharEntity*)m_PBattleTarget);
 							}
 
-
+							int16 naturalh2hDMG = 0;
+							
 							//counter check (rate AND your hit rate makes it land, else its just a regular hit)
 							if (rand()%100 < (m_PBattleTarget->getMod(MOD_COUNTER) + meritCounter) &&
 								rand()%100 < battleutils::GetHitRate(m_PBattleTarget,m_PMob) &&
@@ -1382,23 +1389,31 @@ void CAIMobDummy::ActionAttack()
 								{
 									isHTH = true;
 								}
-								int16 naturalh2hDMG = 0;
 								if (isHTH)
 								{
 									naturalh2hDMG = (float)(m_PBattleTarget->GetSkill(SKILL_H2H) * 0.11f)+3;
 								}
 
 								float DamageRatio = battleutils::GetDamageRatio(m_PBattleTarget, m_PMob,isCritical, 0);
-								damage = (uint16)((m_PBattleTarget->GetMainWeaponDmg() + naturalh2hDMG + battleutils::GetFSTR(m_PBattleTarget, m_PMob,SLOT_MAIN)) * DamageRatio);
+								damage = (uint16)(((m_PBattleTarget->GetMainWeaponDmg() + naturalh2hDMG + m_PBattleTarget->getMod(MOD_COUNTER_BASE_DMG))+ battleutils::GetFSTR(m_PBattleTarget, m_PMob,SLOT_MAIN)) * DamageRatio);
 
                                 Action.spikesParam = damage;
                                 Action.spikesEffect = SUBEFFECT_COUNTER;
 
 							}
 							else if (m_PBattleTarget->StatusEffectContainer->HasStatusEffect(EFFECT_PERFECT_COUNTER))
-							{ //Perfect Counter only counters hits that normal counter misses
+							{
 								isCountered = true;
+								Action.messageID = 33; //counter msg  32
+								Action.reaction   = REACTION_HIT;
+								Action.speceffect = SPECEFFECT_NONE;
 
+								float DamageRatio = battleutils::GetDamageRatio(m_PBattleTarget, m_PMob,true, 0);
+								damage = (uint16)(((m_PBattleTarget->GetMainWeaponDmg() + naturalh2hDMG + m_PBattleTarget->getMod(MOD_COUNTER_BASE_DMG) 
+								+ m_PBattleTarget->getMod(MOD_PFT_COUNTER_DMG))+ battleutils::GetFSTR(m_PBattleTarget, m_PMob,SLOT_MAIN)) * DamageRatio);
+
+								Action.addEffectParam = (damage * 2);
+								m_PBattleTarget->StatusEffectContainer->DelStatusEffect(EFFECT_PERFECT_COUNTER);
 							}
 							else
 							{
@@ -1432,6 +1447,7 @@ void CAIMobDummy::ActionAttack()
 								//  Guard skill up
 								if(m_PBattleTarget->objtype == TYPE_PC && isGuarded || ((map_config.newstyle_skillups & NEWSTYLE_GUARD) > 0))
 								{
+									m_PBattleTarget->addTP(m_PBattleTarget->getMod(MOD_TACTICAL_GUARD));
 									if(battleutils::GetGuardRate(m_PMob, m_PBattleTarget) > 0)
 									{
 										charutils::TrySkillUP((CCharEntity*)m_PBattleTarget,SKILL_GRD, m_PBattleTarget->GetMLevel());
@@ -1446,14 +1462,46 @@ void CAIMobDummy::ActionAttack()
 								if (m_PBattleTarget->objtype == TYPE_PC)
 								{
 									damage = battleutils::HandleSpecialPhysicalDamageReduction((CCharEntity*)m_PBattleTarget,damage,&Action);
+									uint16 recoverMP = battleutils::HandleDamageToMP((CCharEntity*)m_PBattleTarget,damage,&Action);
+									if (recoverMP > 0)
+									{
+										// ShowDebug(CL_CYAN"Damage to MP %d", recoverMP);
+										m_PBattleTarget->addMP(recoverMP);
+										m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,recoverMP, 276));
+										charutils::UpdateHealth((CCharEntity*)m_PBattleTarget);
+									}
+									uint16 recoverTP = battleutils::HandleDamageToTP((CCharEntity*)m_PBattleTarget,damage,&Action);
+									if (recoverTP > 0)
+									{
+										// ShowDebug(CL_CYAN"Damage to TP %d", recoverTP);
+										m_PBattleTarget->addTP(recoverTP);
+										charutils::UpdateHealth((CCharEntity*)m_PBattleTarget);
+									}
 								}
 
 								Action.param = battleutils::TakePhysicalDamage(m_PMob, m_PBattleTarget, damage, isBlocked ,SLOT_MAIN, 1, NULL, true);
 								m_PMob->PEnmityContainer->UpdateEnmityFromAttack(m_PBattleTarget, Action.param);
-
+						
+								if(m_PBattleTarget->StatusEffectContainer->HasStatusEffect(EFFECT_SCARLET_DELIRIUM_I) && (damage > 0))
+								{
+									m_PBattleTarget->StatusEffectContainer->DelStatusEffect(EFFECT_SCARLET_DELIRIUM_I);
+									uint16 scarletDeliriumBonus = ceil((float)(((float)damage / (float)m_PBattleTarget->GetMaxHP()) / 2.0f) * 100);
+									// ShowDebug(CL_CYAN"Scarlet Delirium Bonus %d", scarletDeliriumBonus);
+									m_PBattleTarget->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_SCARLET_DELIRIUM_II,EFFECT_SCARLET_DELIRIUM_II,scarletDeliriumBonus,0,60));
+								}
+						
 								// Block skill up
 								if(m_PBattleTarget->objtype == TYPE_PC && isBlocked || ((map_config.newstyle_skillups & NEWSTYLE_BLOCK) > 0))
 								{
+									m_PBattleTarget->addTP(m_PBattleTarget->getMod(MOD_SHIELD_MASTERY));
+									uint16 blockMP = battleutils::HandleBlockToMP((CCharEntity*)m_PBattleTarget,damage,&Action);
+									if (blockMP > 0)
+									{
+										// ShowDebug(CL_CYAN"Damage to MP %d", blockMP);
+										m_PBattleTarget->addMP(blockMP);
+										m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,blockMP, 276));
+										charutils::UpdateHealth((CCharEntity*)m_PBattleTarget);
+									}
 									if(battleutils::GetBlockRate(m_PMob, m_PBattleTarget) > 0)
 									{
 										charutils::TrySkillUP((CCharEntity*)m_PBattleTarget, SKILL_SHL, m_PMob->GetMLevel());
@@ -1465,17 +1513,25 @@ void CAIMobDummy::ActionAttack()
 			                    battleutils::HandleEnspell(m_PMob, m_PBattleTarget, &Action, i, WeaponDelay, damage);
 
 								battleutils::HandleSpikesDamage(m_PMob, m_PBattleTarget, &Action, damage);
+								battleutils::HandleRetaliation(m_PMob, m_PBattleTarget, &Action, damage);
 							}
+
 							else
 							{
 								Action.param = battleutils::TakePhysicalDamage(m_PBattleTarget, m_PMob, damage, false, SLOT_MAIN, 1, NULL, true);
+								if(m_PBattleTarget->StatusEffectContainer->HasStatusEffect(EFFECT_SCARLET_DELIRIUM_I) && (damage > 0))
+								{
+									m_PBattleTarget->StatusEffectContainer->DelStatusEffect(EFFECT_SCARLET_DELIRIUM_I);
+									uint16 scarletDeliriumBonus = ceil((float)(((float)damage / (float)m_PBattleTarget->GetMaxHP()) / 2.0f) * 100);
+									// ShowDebug(CL_CYAN"Scarlet Delirium Bonus %d", scarletDeliriumBonus);
+									m_PBattleTarget->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_SCARLET_DELIRIUM_II,EFFECT_SCARLET_DELIRIUM_II,scarletDeliriumBonus,0,60));
+								}
 								if(m_PBattleTarget->objtype == TYPE_PC)
 								{
 									uint8 skilltype = (m_PBattleTarget->m_Weapons[SLOT_MAIN] == NULL ? SKILL_H2H : m_PBattleTarget->m_Weapons[SLOT_MAIN]->getSkillType());
 									charutils::TrySkillUP((CCharEntity*)m_PBattleTarget, (SKILLTYPE)skilltype, m_PMob->GetMLevel());
 								}
 							}
-
 						}
 
 						// Parry skill up
@@ -1621,18 +1677,18 @@ void CAIMobDummy::TryLink()
 		        	// force into attack action
 					PPartyMember->Check_Engagment->SetCurrentAction(ACTION_ENGAGE);
 		        }
-            }
-        }
-    }
+			}
+		}
+	}
 
     // ask my master for help
     if(m_PMob->PMaster != NULL && m_PMob->PMaster->Check_Engagment->GetCurrentAction() == ACTION_ROAMING)
-    {
+	{
     	CMobEntity* PMaster = (CMobEntity*)m_PMob->PMaster;
 
         if(PMaster->Check_Engagment->GetCurrentAction() == ACTION_ROAMING && PMaster->CanLink(&m_PMob->loc.p, m_PMob->getMobMod(MOBMOD_SUPERLINK))){
 	        PMaster->PEnmityContainer->AddLinkEnmity(m_PBattleTarget);
-        }
+		}
     }
 
 }
@@ -1644,7 +1700,8 @@ bool CAIMobDummy::CanCastSpells()
 
 	// check for spell blockers e.g. silence
 	if(m_PMob->StatusEffectContainer->HasStatusEffect(EFFECT_SILENCE) ||
-		m_PMob->StatusEffectContainer->HasStatusEffect(EFFECT_MUTE)) {
+		m_PMob->StatusEffectContainer->HasStatusEffect(EFFECT_MUTE))
+	{
 		return false;
 	}
 

@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@
 
 /************************************************************************
 *																		*
-*  Конструктор															*
+*  Designer																*
 *																		*
 ************************************************************************/
 
@@ -46,7 +46,7 @@ CLuaSpell::CLuaSpell(lua_State *L)
 
 /************************************************************************
 *																		*
-*  Конструктор															*
+*  Designer																*
 *																		*
 ************************************************************************/
 
@@ -57,7 +57,7 @@ CLuaSpell::CLuaSpell(CSpell* PSpell)
 
 /************************************************************************
 *                                                                       *
-*  Устанавливаем сообщение заклинания                                   *
+*  Set the message spells			                                    *
 *                                                                       *
 ************************************************************************/
 
@@ -126,9 +126,37 @@ inline int32 CLuaSpell::getSpellGroup(lua_State *L)
 	return 1;
 }
 
+inline int32 CLuaSpell::getSkillType(lua_State *L)
+{
+	DSP_DEBUG_BREAK_IF(m_PLuaSpell == NULL);
+	lua_pushinteger(L,m_PLuaSpell->getSkillType());
+	return 1;
+}
+
+inline int32 CLuaSpell::getMPCost(lua_State *L)
+{
+	DSP_DEBUG_BREAK_IF(m_PLuaSpell == NULL);
+	lua_pushinteger(L,m_PLuaSpell->getMPCost());
+	return 1;
+}
+
+inline int32 CLuaSpell::getCE(lua_State *L)
+{
+	DSP_DEBUG_BREAK_IF(m_PLuaSpell == NULL);
+	lua_pushinteger(L,m_PLuaSpell->getCE());
+	return 1;
+}
+
+inline int32 CLuaSpell::getVE(lua_State *L)
+{
+	DSP_DEBUG_BREAK_IF(m_PLuaSpell == NULL);
+	lua_pushinteger(L,m_PLuaSpell->getVE());
+	return 1;
+}
+
 /************************************************************************
 *																		*
-*  Инициализация методов в lua											*
+*  Initialization methods in lua										*
 *																		*
 ************************************************************************/
 
@@ -139,9 +167,13 @@ Lunar<CLuaSpell>::Register_t CLuaSpell::methods[] =
     LUNAR_DECLARE_METHOD(CLuaSpell,isAoE),
     LUNAR_DECLARE_METHOD(CLuaSpell,getDefaultMessage),
     LUNAR_DECLARE_METHOD(CLuaSpell,getMagicBurstMessage),
-    LUNAR_DECLARE_METHOD(CLuaSpell,getElement),
+	LUNAR_DECLARE_METHOD(CLuaSpell,getElement),
 	LUNAR_DECLARE_METHOD(CLuaSpell,getTotalTargets),
 	LUNAR_DECLARE_METHOD(CLuaSpell,getID),
 	LUNAR_DECLARE_METHOD(CLuaSpell,getSpellGroup),
+	LUNAR_DECLARE_METHOD(CLuaSpell,getSkillType),
+	LUNAR_DECLARE_METHOD(CLuaSpell,getMPCost),
+	LUNAR_DECLARE_METHOD(CLuaSpell,getCE),
+	LUNAR_DECLARE_METHOD(CLuaSpell,getVE),
 	{NULL,NULL}
 };

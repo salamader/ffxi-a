@@ -227,7 +227,45 @@ bool CEnmityContainer::HasTargetID(uint16 TargetID){
 *                                                                       *
 *                                                                       *
 ************************************************************************/
+void CEnmityContainer::UpdateEnmityFromDamage(CBattleEntity* PEntity, uint16 Damage, bool isCure)
+{
+	float tranquilHeart = 0;
+	// Crash fix, PEntity was in ACTION_FALL
+	if (PEntity->Check_Engagment->GetCurrentAction() == ACTION_FALL)
+		return;
 
+	Damage = (Damage < 1 ? 1 : Damage);
+
+	uint16 mod = battleutils::GetEnmityMod(PEntity->GetMLevel(), 1); //default fallback
+
+	if(m_EnmityHolder != NULL) {//use the correct mod value
+		mod = battleutils::GetEnmityMod(m_EnmityHolder->GetMLevel(), 1);
+	}
+
+	uint16 CE =  (80.0f / mod) * Damage;
+	uint16 VE = (240.0f / mod) * Damage;
+
+	if(isCure)
+	{
+		if(PEntity->getMod(MOD_TRANQUIL_HEART) > 0)
+		{
+			// ShowDebug(CL_CYAN"Tranquil Heart Proc\n");
+			// ShowDebug(CL_CYAN"Original CE: %u\n", CE);
+			// ShowDebug(CL_CYAN"Original VE: %u\n", VE);
+			tranquilHeart = (float)(PEntity->GetSkill(SKILL_HEA) / 10.0f) * 0.5f; // 0.5% per 10 Healing Skill reduction
+			if(tranquilHeart > .25)
+			{
+				tranquilHeart = .25;
+			}
+			CE = floor((float)CE * (1.0f - tranquilHeart));
+			VE = floor((float)VE * (1.0f - tranquilHeart));
+			// ShowDebug(CL_CYAN"Modded CE: %u\n", CE);
+			// ShowDebug(CL_CYAN"Modded VE: %u\n", VE);
+		}
+	}
+
+	UpdateEnmity(PEntity, CE, VE);
+}
 void CEnmityContainer::UpdateEnmityFromCure(CBattleEntity* PEntity, uint16 level, uint16 CureAmount, bool isCureV)
 {
 	if(isCureV){
@@ -294,37 +332,7 @@ void CEnmityContainer::LowerEnmityByPercent(CBattleEntity* PEntity, uint8 percen
 	}
 }
 
-/************************************************************************
-*                                                                       *
-*                                                                       *
-*                                                                       *
-************************************************************************/
 
-void CEnmityContainer::UpdateEnmityFromDamage(CBattleEntity* PEntity, uint16 Damage)
-{
-	// Crash fix, PEntity was in ACTION_FALL
-	if (PEntity->Check_Engagment->GetCurrentAction() == ACTION_FALL)
-		return;
-
-	Damage = (Damage < 1 ? 1 : Damage);
-
-	uint16 mod = battleutils::GetEnmityMod(PEntity->GetMLevel(), 1); //default fallback
-
-	if(m_EnmityHolder != NULL) {//use the correct mod value
-		mod = battleutils::GetEnmityMod(m_EnmityHolder->GetMLevel(), 1);
-	}
-
-	uint16 CE =  (80.0f / mod) * Damage;
-	uint16 VE = (240.0f / mod) * Damage;
-
-	UpdateEnmity(PEntity, CE, VE);
-}
-
-/************************************************************************
-*                                                                       *
-*                                                                       *
-*                                                                       *
-************************************************************************/
 
 void CEnmityContainer::UpdateEnmityFromAttack(CBattleEntity* PEntity, uint16 Damage)
 {
