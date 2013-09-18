@@ -283,7 +283,13 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	if (PChar->is_zoning == 1)//WE ARE INCREASEING OUR ZONE ENTERING INTO THE WORLD
     {
  ShowNotice(CL_RED"PChar->status == STATUS_DISAPPEAR iz_zoning==1 %u\n"CL_RESET,PChar->loc.zone);
-        
+        //if (PChar->loc.zone != NULL)
+ 
+        //{
+// ShowNotice(CL_RED"MY ZONE IS NOT NULL %u\n"CL_RESET,PChar->loc.zone);
+          //  PacketParser[0x00D](session, PChar, NULL);
+ 
+       // }
  
 
  
@@ -472,7 +478,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		{
 		
 			
-         const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u, session_key = x'%s', server_addr = %u, client_port = %u WHERE charid = %u";
+       /*  const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u, session_key = x'%s', server_addr = %u, client_port = %u WHERE charid = %u";
 		
 	// if(PChar->id > 40000 && !(wildcmp("10.1.10.*",ip2str(session->client_addr,NULL)))) // External Accounts are assigned much higher IDs.
 	if(PChar->id > 40000) // External Accounts are assigned much higher IDs.
@@ -492,7 +498,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
             PChar->loc.zone->GetLANIP(),
 			session->client_port,
 			PChar->id);
-	}
+	}*/
 
  
 		const int8* deathTsQuery = "SELECT death FROM char_stats where charid = %u;";
@@ -994,8 +1000,8 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 			
             PChar->loc.zone->SpawnPCs(PChar);
 			PChar->loc.zone->SpawnNPCs(PChar);
-		
-			
+		PChar->loc.zone->UpdateMOBs(PChar);
+			PChar->loc.zone->UpdatePChars(PChar);
 		PChar->loc.zone->SpawnMOBs(PChar);
 		PChar->loc.zone->SpawnPETs(PChar);
 	if(PChar->godmode==1)
@@ -1342,100 +1348,96 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				ShowDebug(CL_RED"PLAYER %s SPAWNING MOGGLE %u\n"CL_RESET,PChar->GetName(),PChar->getZone());
 				
 
-				          if(PChar->loc.prevzone == ZONE_OPEN_SEA_ROUTE_TO_MHAURA )
+				          if(PChar->loc.prevzone == 48)
 	                       {
 		                  
-		                  zoneutils::GetZone(ZONE_OPEN_SEA_ROUTE_TO_MHAURA)->SpawnMoogle(PChar);
+		                  zoneutils::GetZone(48)->SpawnMoogle(PChar);
 		                   }
-						  else if(PChar->loc.prevzone == ZONE_AHT_URHGAN_WHITEGATE )
+						  if(PChar->loc.prevzone == 50)
 	                       {
 		                  
-		                   zoneutils::GetZone(ZONE_AHT_URHGAN_WHITEGATE)->SpawnMoogle(PChar);
+		                   zoneutils::GetZone(50)->SpawnMoogle(PChar);
 		                   }
-						else if(PChar->loc.prevzone == ZONE_SOUTHERN_SANDORIA)
+						 if(PChar->loc.prevzone == 230)
 	                       {
 		                  
-		                   zoneutils::GetZone(ZONE_SOUTHERN_SANDORIA)->SpawnMoogle(PChar);
+		                   zoneutils::GetZone(230)->SpawnMoogle(PChar);
 		                   }
-	                    else if(PChar->loc.prevzone== ZONE_NORTHERN_SANDORIA )
+	                     if(PChar->loc.prevzone== 231)
 	                       {
 		                   
-		                  zoneutils::GetZone(ZONE_NORTHERN_SANDORIA )->SpawnMoogle(PChar);
+		                  zoneutils::GetZone(231)->SpawnMoogle(PChar);
 		                   }
-	                    else if(PChar->loc.prevzone == ZONE_PORT_SANDORIA )
+	                     if(PChar->loc.prevzone == 232)
 	                       {
 		                   
-		                   zoneutils::GetZone(ZONE_PORT_SANDORIA )->SpawnMoogle(PChar);
+		                   zoneutils::GetZone(232)->SpawnMoogle(PChar);
 		                   }
-						 else if(PChar->loc.prevzone == ZONE_BASTOK_MINES)
+						  if(PChar->loc.prevzone == 234)//BASTOK MINE CS 0x7534
 	                       {
 		                 
-		                   zoneutils::GetZone(ZONE_BASTOK_MINES)->SpawnMoogle(PChar);
+		                   zoneutils::GetZone(234)->SpawnMoogle(PChar);
 		                   }
-						 else if(PChar->loc.prevzone == ZONE_BASTOK_MARKETS)
+						  if(PChar->loc.prevzone == 235)//BASTOK MARKETS CS 0x7534
 	                       {
 		                   
-		                  zoneutils::GetZone(ZONE_BASTOK_MARKETS)->SpawnMoogle(PChar);
+		                  zoneutils::GetZone(235)->SpawnMoogle(PChar);
 		                   }
-						 else  if(PChar->loc.prevzone == ZONE_PORT_BASTOK)
+						   if(PChar->loc.prevzone == 236)//BASTOK PORT CS 0x7534
 	                       {
 		                   
-		                  zoneutils::GetZone(ZONE_PORT_BASTOK)->SpawnMoogle(PChar);
+		                  zoneutils::GetZone(236)->SpawnMoogle(PChar);
 		                   }
-						 else  if(PChar->loc.prevzone == ZONE_WINDURST_WATERS)
+						   if(PChar->loc.prevzone == 238)
 	                       {
 		                 
-		                   zoneutils::GetZone(ZONE_WINDURST_WATERS)->SpawnMoogle(PChar);
+		                   zoneutils::GetZone(238)->SpawnMoogle(PChar);
 		                   }
-						 else  if(PChar->loc.prevzone == ZONE_WINDURST_WALLS)
+						   if(PChar->loc.prevzone == 239)
 	                       {
 		                  
-		                   zoneutils::GetZone(ZONE_WINDURST_WALLS)->SpawnMoogle(PChar);
+		                   zoneutils::GetZone(239)->SpawnMoogle(PChar);
 		                   }
-						 else  if(PChar->loc.prevzone == ZONE_PORT_WINDURST)
+						   if(PChar->loc.prevzone == 240)
 	                       {
 		                   
-		                  zoneutils::GetZone(ZONE_PORT_WINDURST)->SpawnMoogle(PChar);
+		                  zoneutils::GetZone(240)->SpawnMoogle(PChar);
 		                   }
-						 else  if(PChar->loc.prevzone == ZONE_WINDURST_WOODS)
+						   if(PChar->loc.prevzone == 241)
 	                       {
 		                   
-		                    zoneutils::GetZone(ZONE_WINDURST_WOODS)->SpawnMoogle(PChar);
+		                    zoneutils::GetZone(241)->SpawnMoogle(PChar);
 		                   }
-						 else  if(PChar->loc.prevzone == ZONE_RULUDE_GARDENS)
+						   if(PChar->loc.prevzone == 243)
 	                       {
 		               
-						  zoneutils::GetZone(ZONE_RULUDE_GARDENS)->SpawnMoogle(PChar);
+						  zoneutils::GetZone(243)->SpawnMoogle(PChar);
 		                   }
-						  else if(PChar->loc.prevzone == ZONE_UPPER_JEUNO)
+						   if(PChar->loc.prevzone == 244)
 	                       {
 		                 
-		                   zoneutils::GetZone(ZONE_UPPER_JEUNO)->SpawnMoogle(PChar);
+		                   zoneutils::GetZone(244)->SpawnMoogle(PChar);
 		                   }
-						 else  if(PChar->loc.prevzone == ZONE_LOWER_JEUNO)
+						   if(PChar->loc.prevzone == 245)
 	                       {
 		                   
-		                   zoneutils::GetZone(ZONE_LOWER_JEUNO)->SpawnMoogle(PChar);
+		                   zoneutils::GetZone(245)->SpawnMoogle(PChar);
 		                   }
-						 else  if(PChar->loc.prevzone == ZONE_PORT_JEUNO)
+						   if(PChar->loc.prevzone == 246)
 	                       {
 		                   
-		                   zoneutils::GetZone(ZONE_PORT_JEUNO)->SpawnMoogle(PChar);
+		                   zoneutils::GetZone(246)->SpawnMoogle(PChar);
 		                   }
-						  else if(PChar->loc.prevzone == ZONE_WESTERN_ADOULIN)
+						   if(PChar->loc.prevzone == 256)
 	                       {
 							   
-		                   zoneutils::GetZone(ZONE_WESTERN_ADOULIN)->SpawnMoogle(PChar);
+		                   zoneutils::GetZone(256)->SpawnMoogle(PChar);
 		                   }
-						else   if(PChar->loc.prevzone == ZONE_EASTERN_ADOULIN)
+						   if(PChar->loc.prevzone == 257)
 	                       {
 							   
-		                   zoneutils::GetZone(ZONE_EASTERN_ADOULIN)->SpawnMoogle(PChar);
+		                   zoneutils::GetZone(257)->SpawnMoogle(PChar);
 		                   }
-						else
-						{
-							zoneutils::GetZone(ZONE_OPEN_SEA_ROUTE_TO_MHAURA)->SpawnMoogle(PChar);
-						}
 						   
 				
 			}
@@ -4939,10 +4941,46 @@ void SmallPacket0x0E2(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0E7(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	//ShowMessage(CL_YELLOW"SmallPacket0x0E7: PLAYER LOGOUT\n"CL_RESET);
 	
-	ShowDebug(CL_BG_RED"EXIT THE GAME\n"CL_RESET);
-	PChar->leavegame();
 	
+	if (PChar->getZone() == 0 )
+	{
+		//ShowMessage(CL_YELLOW"SmallPacket0x0E7: RETURN DO NOTHING\n"CL_RESET);
+		//TO DO MAKE A FUNCTION TO EXIT THE GAME IN PLAYERS DUPLCATE CODE IN MANY LOCATIONS
+		PChar->is_zoning = 1;
+	   
+		PChar->leavegame();
+	}
+	
+	if (PChar->animation == ANIMATION_NONE)
+	{
+		//ShowMessage(CL_YELLOW"SmallPacket0x0E7: ANIMATION_NONE\n"CL_RESET);
+		uint8 ExitType = (RBUFB(data,(0x06)) == 1 ? 7 : 35);
+
+		if (PChar->PPet == NULL ||(PChar->PPet->m_EcoSystem != SYSTEM_AVATAR && PChar->PPet->m_EcoSystem != SYSTEM_ELEMENTAL))
+		{
+			PChar->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_HEALING,0,0,10,0));
+		}
+		PChar->status = STATUS_UPDATE;
+		PChar->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_LEAVEGAME,0,ExitType,5,0));
+	}
+	
+	if (PChar->animation == ANIMATION_HEALING)
+	{
+		//ShowMessage(CL_YELLOW"SmallPacket0x0E7: ANIMATION_HEALING\n"CL_RESET);
+		if (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_LEAVEGAME))
+		{
+			PChar->status = STATUS_UPDATE;
+			PChar->StatusEffectContainer->DelStatusEffect(EFFECT_HEALING);
+		} 
+		else 
+		{
+			uint8 ExitType = (RBUFB(data,(0x06)) == 1 ? 7 : 35);
+
+			PChar->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_LEAVEGAME,0,ExitType,5,0));
+		}
+	}
 	
 	return;
 }

@@ -976,14 +976,14 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 	{
 		PChar->PTreasurePool->DelMember(PChar);
 	}
-    for (regionList_t::const_iterator region = m_regionList.begin(); region != m_regionList.end(); ++region)
-    {
-        if ((*region)->GetRegionID() == PChar->m_InsideRegionID)
-        {
-            luautils::OnRegionLeave(PChar, *region);
-            break;
-        }
-    }
+    //for (regionList_t::const_iterator region = m_regionList.begin(); region != m_regionList.end(); ++region)
+   // {
+       // if ((*region)->GetRegionID() == PChar->m_InsideRegionID)
+       // {
+       //     luautils::OnRegionLeave(PChar, *region);
+       //     break;
+       // }
+  //  }
 
     PChar->loc.zone = NULL;
     PChar->loc.prevzone = m_zoneID;
@@ -1040,18 +1040,10 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 				 
                PChar->targid = targid;
 			   PChar->id = charid;
-    //for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
-	//{
-        
-			//PChar->targid++;
+    
 			ShowMessage(CL_BG_RED"PLAYERS NAME %s PLAYERS TARGET ID = %u \n" CL_RESET,PChar->GetName(), PChar->targid);
 			ShowMessage(CL_BG_RED"PLAYER NAME %s PLAYERS ID = %u \n" CL_RESET,PChar->GetName(), PChar->id);
-			//const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u WHERE charid = %u";
-           // Sql_Query(SqlHandle,fmtQuery,PChar->targid++,PChar->id);
-           
-       
-		
-   // }
+			
     if (PChar->targid >= 0x700)
     {
         ShowError(CL_RED"CZone::InsertChar : targid is high (03hX)\n" CL_RESET, PChar->targid);
@@ -1070,13 +1062,7 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 
 	if (!ZoneTimer && !m_charList.empty())
 	{
-		ZoneTimer = CTaskMgr::getInstance()->AddTask(
-			m_zoneName,
-			gettick(),
-			this,
-			CTaskMgr::TASK_INTERVAL,
-			m_regionList.empty() ? zone_server : zone_server_region,
-			500);
+		ZoneTimer = CTaskMgr::getInstance()->AddTask(m_zoneName,gettick(),this,CTaskMgr::TASK_INTERVAL,m_regionList.empty() ? zone_server : zone_server_region,500);
 	}
 
 	
@@ -1119,8 +1105,9 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 ************************************************************************/
 void CZone::UpdateMOBs(CCharEntity* PChar)
 {
-	/*if(PChar != NULL && PChar->loc.zone != NULL)
+	if(PChar != NULL && PChar->loc.zone != NULL)
 	{
+		/*UNKOWN NEED THIS FOR NETWORK COULD NOT SEE MOBS MOVE OR DO ANY ACTION WITH OUT IT*/
 	for (EntityList_t::const_iterator it = m_mobList.begin() ; it != m_mobList.end() ; ++it)
 	{
 		CMobEntity* PCurrentMob = (CMobEntity*)it->second;
@@ -1128,9 +1115,9 @@ void CZone::UpdateMOBs(CCharEntity* PChar)
         CMobEntity* PMob = (CMobEntity*)PChar->loc.zone->GetEntity(PCurrentMob->targid, TYPE_MOB);
 
 		float CurrentDistance = distance(PChar->loc.p, PCurrentMob->loc.p);
-		if (CurrentDistance < 50)
+		if (CurrentDistance < 20)
 		{
-        ShowDebug(CL_CYAN"UPDATING MOBS: TARGET ID %u \n" CL_RESET,PCurrentMob->targid);
+       // ShowDebug(CL_CYAN"UPDATING MOBS: TARGET ID %u \n" CL_RESET,PCurrentMob->targid);
 		PChar->pushPacket(new CEntityUpdatePacket(PMob,ENTITY_UPDATE));
 		}
 		
@@ -1140,7 +1127,52 @@ void CZone::UpdateMOBs(CCharEntity* PChar)
 	else
 	{
      ShowDebug(CL_CYAN"UPDATING MOBS: WITH NO PLAYER \n" CL_RESET);
-	}*/
+	}
+}
+void CZone::UpdatePChars(CCharEntity* PChar)
+{
+	if(m_charList.empty())
+	{
+		//ShowDebug(CL_RED" THE PLAYER LIST EMPTY??\n"CL_RESET);
+		return;
+	}
+	if(!m_charList.size() != NULL)
+	{
+		//ShowDebug(CL_RED"IS THE PLAYER LIST SIZE NULL??\n"CL_RESET);
+		return;
+	}
+	if(PChar != NULL && PChar->loc.zone != NULL)
+	{
+		/*UNKOWN NEED THIS FOR NETWORK COULD NOT SEE PLAYERS LOGING OUT CORRECTLY MOVE
+		NORMAL WAY SEEN LOGOUT CORRECTLY ON IP 10.0 .0.2 BUT ON IP 10.0.0.4 THE OTHER USERS WAS STILL ON MAP*/
+	for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
+	{
+		CCharEntity* PCurrentPChar = (CCharEntity*)it->second;
+		
+        CCharEntity* PCharTarget = (CCharEntity*)PChar->loc.zone->GetEntity(PCurrentPChar->targid, TYPE_PC);
+
+		float CurrentDistance = distance(PChar->loc.p, PCurrentPChar->loc.p);
+		if (CurrentDistance < 20)
+		{
+			if(PCurrentPChar->shutdown_status == 1)
+			{
+				 ShowDebug(CL_CYAN"UPDATING PCHARS: TARGET ID %u IS SHUTING DOWN \n" CL_RESET,PCurrentPChar->targid);
+				 PChar->pushPacket(new CEntityUpdatePacket(PCharTarget,ENTITY_DESPAWN));
+			}
+			else
+			{
+        ShowDebug(CL_CYAN"UPDATING PCHARS: TARGET ID %u \n" CL_RESET,PCurrentPChar->targid);
+		PChar->pushPacket(new CEntityUpdatePacket(PCharTarget,ENTITY_UPDATE));
+			}
+		}
+		
+     
+	}
+	}
+	else
+	{
+     ShowDebug(CL_CYAN"UPDATING MOBS: WITH NO PLAYER \n" CL_RESET);
+	}
 }
 
 void CZone::SpawnMOBs(CCharEntity* PChar)
@@ -1154,8 +1186,7 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 
 		float CurrentDistance = distance(PChar->loc.p, PCurrentMob->loc.p);
 
-		if (PCurrentMob->status == STATUS_UPDATE &&
-			CurrentDistance < 50)
+		if (PCurrentMob->status == STATUS_UPDATE && CurrentDistance < 50)
 		{
 			if( MOB == PChar->SpawnMOBList.end() ||
 				PChar->SpawnMOBList.key_comp()(PCurrentMob->id, MOB->first))
@@ -1295,6 +1326,11 @@ void CZone::SpawnNPCs(CCharEntity* PChar)
 
 void CZone::SpawnPCs(CCharEntity* PChar)
 {
+	if(m_charList.empty())
+	{
+		ShowDebug(CL_RED" THE PLAYER LIST EMPTY??\n"CL_RESET);
+		return;
+	}
 	if(!m_charList.size() != NULL)
 	{
 		//ShowDebug(CL_RED"IS THE PLAYER LIST SIZE NULL??\n"CL_RESET);
@@ -1313,7 +1349,7 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 				//ShowDebug(CL_CYAN"SPAWNING PC 2 \n" CL_RESET);
 				if( PC == PChar->SpawnPCList.end() )
 				{
-					//ShowDebug(CL_CYAN"SPAWNING PC THISONE \n" CL_RESET);
+					ShowDebug(CL_CYAN"SPAWNING PC THISONE \n" CL_RESET);
 					PChar->SpawnPCList[PCurrentChar->id] = PCurrentChar;
 					PChar->pushPacket(new CCharPacket(PCurrentChar,ENTITY_SPAWN));
 
@@ -1330,7 +1366,7 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 				//ShowDebug(CL_CYAN"ELSE SPAWNING PC THISONE \n" CL_RESET);
 				if( PC != PChar->SpawnPCList.end() )
 				{
-					//ShowDebug(CL_CYAN"ELSE SPAWNING PC THISONE ERACE \n" CL_RESET);
+					ShowDebug(CL_CYAN"ELSE SPAWNING PC THISONE ERACE \n" CL_RESET);
 					PChar->SpawnPCList.erase(PC);
 					PChar->pushPacket(new CCharPacket(PCurrentChar,ENTITY_DESPAWN));
 
@@ -1580,18 +1616,6 @@ void CZone::TOTDChange(TIMETYPE TOTD)
     luautils::OnTOTDChange(m_zoneID, TOTD);
 }
 
-
-void CZone::SavePlayTime()
-{
-	if(!m_charList.empty())
-	{
-		for(EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
-		{
-			CCharEntity* PChar = (CCharEntity*)it->second;
-			charutils::SavePlayTime(PChar);
-		}
-	}
-}
 /************************************************************************
 *                                                                       *
 *                                                                       *
@@ -1739,6 +1763,7 @@ void CZone::WideScan(CCharEntity* PChar, uint16 radius)
 
 void CZone::ZoneServer(uint32 tick)
 {
+	
 	if(!m_charList.empty())
     {
 	 for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
@@ -1902,13 +1927,15 @@ void CZone::ZoneServerRegion(uint32 tick)
 
                     if ((*region)->GetRegionID() != PChar->m_InsideRegionID)
                     {
-                        luautils::OnRegionEnter(PChar, *region);
+						ShowDebug("REEGION ENTER %s %u\n",PChar->GetName(),PChar->m_InsideRegionID );
+                      // luautils::OnRegionEnter(PChar, *region);
                     }
                     if (PChar->m_InsideRegionID == 0) break;
                 }
                 else if ((*region)->GetRegionID() == PChar->m_InsideRegionID)
                 {
-                    luautils::OnRegionLeave(PChar, *region);
+					ShowDebug("REEGION LEAVE %s %u\n",PChar->GetName(),PChar->m_InsideRegionID );
+                 // luautils::OnRegionLeave(PChar, *region);
                 }
             }
             PChar->m_InsideRegionID = RegionID;

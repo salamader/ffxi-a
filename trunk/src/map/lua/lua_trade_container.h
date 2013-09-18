@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2013 Darkstar Dev Teams
+  Copyright (c) 2010-2012 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -51,8 +51,8 @@ public:
 	int32 getItemSubId(lua_State*);
 	int32 getItemQty(lua_State*);
 	int32 hasItemQty(lua_State*);
-	int32 getSlotQty(lua_State*);		// the number of items in the specified cell
-	int32 getItemCount(lua_State*);		// the total number of subjects
+	int32 getSlotQty(lua_State*);		// количество предметов в указанной ячейке
+	int32 getItemCount(lua_State*);		// общее количество предметов
 	int32 confirmItem(lua_State*);
 };
 

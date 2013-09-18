@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2013 Darkstar Dev Teams
+  Copyright (c) 2010-2012 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -58,10 +58,11 @@
 #include "../packets/char_update.h"
 #include "../packets/entity_update.h"
 #include "../packets/char.h"
-#include "../packets/chat_message.h"
 #include "../packets/menu_raisetractor.h"
 #include "../packets/message_basic.h"
-//#include "../packets/unknown_39.h"
+#include "../packets/uncnown_39.h"
+#include "../packets/char_skills.h"
+#include "../packets/zone_visited.h"
 
 namespace luautils
 {
@@ -69,7 +70,7 @@ lua_State*  LuaHandle = NULL;
 
 /************************************************************************
 *																		*
-*  Initialization lua, custom classes and global functions				*
+*  Инициализация lua, пользовательских классов и глобальных функций		*
 *																		*
 ************************************************************************/
 
@@ -88,7 +89,6 @@ int32 init()
 	lua_register(LuaHandle,"setMobPos",luautils::setMobPos);
 	lua_register(LuaHandle,"SpawnMob",luautils::SpawnMob);
 	lua_register(LuaHandle,"DespawnMob",luautils::DespawnMob);
-	lua_register(LuaHandle,"SpawnNPC",luautils::SpawnNPC);
 	lua_register(LuaHandle,"GetPlayerByName",luautils::GetPlayerByName);
 	lua_register(LuaHandle,"GetMobAction",luautils::GetMobAction);
 	lua_register(LuaHandle,"VanadielTOTD",luautils::VanadielTOTD);
@@ -102,13 +102,12 @@ int32 init()
 	lua_register(LuaHandle,"VanadielMoonPhase",luautils::VanadielMoonPhase);
 	lua_register(LuaHandle,"VanadielMoonDirection", luautils::VanadielMoonDirection);
     lua_register(LuaHandle,"SetVanadielTimeOffset",luautils::SetVanadielTimeOffset);
-	lua_register(LuaHandle,"IsMoonNew",luautils::IsMoonNew);
 	lua_register(LuaHandle,"IsMoonFull",luautils::IsMoonFull);
-	lua_register(LuaHandle,"RunElevator",luautils::StartElevator);
+	
 	lua_register(LuaHandle,"GetServerVariable",luautils::GetServerVariable);
 	lua_register(LuaHandle,"SetServerVariable",luautils::SetServerVariable);
 	lua_register(LuaHandle,"clearVarFromAll",luautils::clearVarFromAll);
-    lua_register(LuaHandle,"SendUnknown0x39Packet",luautils::SendUnknown0x39Packet);
+    lua_register(LuaHandle,"SendUncnown0x39Packet",luautils::SendUncnown0x39Packet);
 	lua_register(LuaHandle,"UpdateServerMessage",luautils::UpdateServerMessage);
 	lua_register(LuaHandle,"UpdateTreasureSpawnPoint",luautils::UpdateTreasureSpawnPoint);
 	lua_register(LuaHandle,"GetMobRespawnTime",luautils::GetMobRespawnTime);
@@ -118,7 +117,6 @@ int32 init()
 
 	lua_register(LuaHandle,"getCorsairRollEffect",luautils::getCorsairRollEffect);
     lua_register(LuaHandle,"getSpell",luautils::getSpell);
-	lua_register(LuaHandle,"SendMobMessage",luautils::SendMobMessage);
 
     Lunar<CLuaAbility>::Register(LuaHandle);
 	Lunar<CLuaBaseEntity>::Register(LuaHandle);
@@ -136,7 +134,7 @@ int32 init()
 
 /************************************************************************
 *																		*
-*  Release lua															*
+*  Освобождение lua														*
 *																		*
 ************************************************************************/
 
@@ -148,20 +146,11 @@ int32 free()
 	return 0;
 }
 
-int32 garbageCollect()
-{
 
-    int32 top = lua_gettop( LuaHandle );
-    ShowDebug(CL_CYAN"[Lua] Garbage Collected. Current State Top: %d\n" CL_RESET, top);
-
-    lua_gc(LuaHandle, LUA_GCSTEP, 10);
-
-    return 0;
-}
 
 /************************************************************************
 *																		*
-*  Overriding the official lua function print							*
+*  Переопределение официальной lua функции print						*
 *																		*
 ************************************************************************/
 
@@ -180,9 +169,9 @@ int32 print(lua_State* LuaHandle)
 *                                                                       *
 ************************************************************************/
 
-int32 SendUnknown0x39Packet(lua_State* L)
+int32 SendUncnown0x39Packet(lua_State* L)
 {
-    if((!lua_isnil(L,1) && lua_isnumber(L,1)) &&
+    /*if((!lua_isnil(L,1) && lua_isnumber(L,1)) &&
        (!lua_isnil(L,2) && lua_isnumber(L,2)) )
 	{
 		uint32 npcid = (uint32)lua_tointeger(L,1);
@@ -192,11 +181,12 @@ int32 SendUnknown0x39Packet(lua_State* L)
 
         if (PNpc != NULL)
         {
-           // PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CUnknown0x39Packet(PNpc, param));
+            PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CUncnown0x39Packet(PNpc, param));
         }
 		return 0;
 	}
-	lua_pushnil(L);
+	lua_pushnil(L);*/
+	ShowDebug("UNKOWN WAS CALLED \n");
 	return 1;
 }
 
@@ -208,12 +198,13 @@ int32 SendUnknown0x39Packet(lua_State* L)
 
 int32 GetNPCByID(lua_State* L)
 {
+	ShowWarning("1\n");
 	if( !lua_isnil(L,-1) && lua_isnumber(L,-1) )
 	{
 		uint32 npcid = (uint32)lua_tointeger(L, -1);
 
 		CBaseEntity* PNpc = zoneutils::GetEntity(npcid, TYPE_NPC);
-
+		
 		if(PNpc == NULL){
 			ShowWarning("luautils::GetNPCByID NPC doesn't exist (%d)\n", npcid);
 			lua_pushnil(L);
@@ -241,6 +232,7 @@ int32 GetNPCByID(lua_State* L)
 
 int32 GetMobByID(lua_State* L)
 {
+	ShowWarning("2\n");
 	if( !lua_isnil(L,-1) && lua_isnumber(L,-1) )
 	{
 		uint32 mobid = (uint32)lua_tointeger(L, -1);
@@ -274,6 +266,7 @@ int32 GetMobByID(lua_State* L)
 
 int32 GetMobIDByJob(lua_State *L)
 {
+	ShowWarning("3\n");
 	DSP_DEBUG_BREAK_IF(lua_isnil(L,1) || !lua_isnumber(L,1) || lua_isnil(L,2) || !lua_isnumber(L,2) || lua_isnil(L,3) || !lua_isnumber(L,3));
 
 	uint32 id_min = (uint32)lua_tointeger(L,1);
@@ -306,6 +299,7 @@ int32 GetMobIDByJob(lua_State *L)
 
 int32 WeekUpdateConquest(lua_State* L)
 {
+	ShowWarning("4\n");
     conquest::UpdateConquestGM();
 
     return 0;
@@ -313,12 +307,13 @@ int32 WeekUpdateConquest(lua_State* L)
 
 /************************************************************************
 *                                                                       *
-*  Know the country that owns the current region                        *
+*  Узнаем страну, владеющую текущим регионом                            *
 *                                                                       *
 ************************************************************************/
 
 int32 GetRegionOwner(lua_State* L)
 {
+	ShowWarning("5\n");
     DSP_DEBUG_BREAK_IF(lua_isnil(L,1) || !lua_isnumber(L,1));
 
     lua_pushinteger(L, conquest::GetRegionOwner((REGIONTYPE)lua_tointeger(L,1)));
@@ -333,6 +328,7 @@ int32 GetRegionOwner(lua_State* L)
 
 int32 SetRegionalConquestOverseers()
 {
+	ShowWarning("6\n");
 	int8 File[255];
 	memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
@@ -374,12 +370,13 @@ int32 SetRegionalConquestOverseers()
 
 /************************************************************************
 *																		*
-*  Get the current time of day Vana'diel								*
+*  Получаем текущее время суток Vana'diel								*
 *																		*
 ************************************************************************/
 
 int32 VanadielTOTD(lua_State* L)
 {
+	ShowWarning("7\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->GetCurrentTOTD());
 	return 1;
 }
@@ -392,6 +389,7 @@ int32 VanadielTOTD(lua_State* L)
 
 int32 VanadielYear(lua_State* L)
 {
+	ShowWarning("8\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getYear());
 	return 1;
 }
@@ -405,6 +403,7 @@ int32 VanadielYear(lua_State* L)
 
 int32 VanadielMonth(lua_State* L)
 {
+	ShowWarning("9\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getMonth());
 	return 1;
 }
@@ -417,6 +416,7 @@ int32 VanadielMonth(lua_State* L)
 
 int32 VanadielDayOfTheYear(lua_State* L)
 {
+	ShowWarning("10\n");
 	int32 day;
 	int32 month;
 
@@ -435,6 +435,7 @@ int32 VanadielDayOfTheYear(lua_State* L)
 
 int32 VanadielDayOfTheMonth(lua_State* L)
 {
+	ShowWarning("11\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getDayOfTheMonth());
 	return 1;
 }
@@ -447,6 +448,7 @@ int32 VanadielDayOfTheMonth(lua_State* L)
 
 int32 VanadielHour(lua_State* L)
 {
+	ShowWarning("12\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getHour());
 	return 1;
 }
@@ -459,6 +461,7 @@ int32 VanadielHour(lua_State* L)
 
 int32 VanadielMinute(lua_State* L)
 {
+	ShowWarning("13\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getMinute());
 	return 1;
 }
@@ -471,54 +474,20 @@ int32 VanadielMinute(lua_State* L)
 
 int32 VanadielDayElement(lua_State* L)
 {
+	ShowWarning("14\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getWeekday());
 	return 1;
 }
 
-
 /************************************************************************
 *																		*
-*	Is new moon?														*
-*																		*
-************************************************************************/
-	
-int32 IsMoonNew(lua_State* L)
-{
-		// New moon occurs when:
-		// Waning (decreasing) from 10% to 0%,
-		// Waxing (increasing) from 0% to 5%.
-	
-		uint8 phase = CVanaTime::getInstance()->getMoonPhase();
-	
-		switch (CVanaTime::getInstance()->getMoonDirection())
-		{
-			case 0: // None
-				lua_pushboolean(L, false);
-				return 0;
-	
-			case 1: // Waning (decending)
-				if (phase <= 10 && phase >= 0) {
-					lua_pushboolean(L, true);
-					return 1;
-				}
-	
-			case 2: // Waxing (increasing)
-				if (phase >= 0 && phase <= 5) {
-					lua_pushboolean(L, true);
-					return 1;
-				}
-		}
-		lua_pushboolean(L, false);
-		return 0;
-}
-/************************************************************************
-*                                                                       *
 *	Return Moon Phase													*
 *																		*
 ************************************************************************/
 
 int32 VanadielMoonPhase(lua_State* L)
 {
+	ShowWarning("15\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getMoonPhase());
 	return 1;
 }
@@ -526,7 +495,8 @@ int32 VanadielMoonPhase(lua_State* L)
 
 int32 SetVanadielTimeOffset(lua_State* L)
 {
-    if( !lua_isnil(L,1) && lua_isnumber(L,1) )
+	ShowWarning("16\n");
+   /* if( !lua_isnil(L,1) && lua_isnumber(L,1) )
     {
         int32 offset = (int32)lua_tointeger(L,1);
 
@@ -535,7 +505,7 @@ int32 SetVanadielTimeOffset(lua_State* L)
         lua_pushboolean(L, true);
         return 1;
     }
-    lua_pushnil(L);
+    lua_pushnil(L);*/
     return 0;
 }
 
@@ -547,6 +517,7 @@ int32 SetVanadielTimeOffset(lua_State* L)
 
 int32 VanadielMoonDirection(lua_State* L)
 {
+	ShowWarning("17\n");
 	lua_pushinteger(L, CVanaTime::getInstance()->getMoonDirection());
 	return 1;
 }
@@ -560,6 +531,7 @@ int32 VanadielMoonDirection(lua_State* L)
 
 int32 IsMoonFull(lua_State* L)
 {
+	ShowWarning("18\n");
 	// Full moon occurs when:
 	// Waxing (increasing) from 90% to 100%,
 	// Waning (decending) from 100% to 95%.
@@ -596,6 +568,7 @@ int32 IsMoonFull(lua_State* L)
 ************************************************************************/
 int32 SpawnMob(lua_State* L)
 {
+	ShowWarning("19\n");
 	if( !lua_isnil(L,1) && lua_isnumber(L,1) )
 	{
 		uint32 mobid = (uint32)lua_tointeger(L,1);
@@ -654,6 +627,7 @@ int32 SpawnMob(lua_State* L)
 
 int32 DespawnMob(lua_State* L)
 {
+	ShowWarning("20\n");
 	if( !lua_isnil(L,1) && lua_isnumber(L,1) )
 	{
 		uint32 mobid = (uint32)lua_tointeger(L, 1);
@@ -664,7 +638,6 @@ int32 DespawnMob(lua_State* L)
 			if(!lua_isnil(L,2) && lua_isnumber(L,2))
 			{
 				PMob->SetDespawnTimer((uint32)lua_tointeger(L,2));
-				PMob->m_ForceDespawn = false;
 			}
 			else
 			{
@@ -681,50 +654,17 @@ int32 DespawnMob(lua_State* L)
 
 /************************************************************************
 *                                                                       *
-*  Spawn a NPC using mob ID.											*
-*                                                                       *
-************************************************************************/
-
-int32 SpawnNPC(lua_State* L)
-{
-	if( !lua_isnil(L,1) && lua_isnumber(L,1) )
-	{
-		uint32 npcid = (uint32)lua_tointeger(L,1);
-		
-		zoneutils::LoadNPC(npcid);
-		
-        CNpcEntity* PNpc = (CNpcEntity*)zoneutils::GetEntity(npcid, TYPE_NPC);
-        if (PNpc != NULL)
-        {
-		    lua_pushstring(L,CLuaBaseEntity::className);
-		    lua_gettable(L,LUA_GLOBALSINDEX);
-		    lua_pushstring(L,"new");
-		    lua_gettable(L,-2);
-		    lua_insert(L,-2);
-		    lua_pushlightuserdata(L,(void*)PNpc);
-		    lua_pcall(L,2,1,0);
-		    return 1;
-        } else {
-            ShowDebug(CL_RED"SpawnNPC: npc <%u> not found\n" CL_RESET, npcid);
-        }
-        return 0;
-    }
-    lua_pushnil(L);
-    return 1;
-}
-
-/************************************************************************
-*                                                                       *
 *  set a mobs position			                                        *
 *                                                                       *
 ************************************************************************/
 
 int32 setMobPos(lua_State *L)
 {
+	ShowWarning("21\n");
 	if( !lua_isnil(L,1) && lua_isnumber(L,1) )
 	{
 		uint32 mobid = (uint32)lua_tointeger(L,1);
-
+		
         CMobEntity* PMob = (CMobEntity*)zoneutils::GetEntity(mobid, TYPE_MOB);
         if (PMob != NULL)
         {
@@ -765,6 +705,7 @@ int32 setMobPos(lua_State *L)
 
 int32 GetPlayerByName(lua_State* L)
 {
+	ShowWarning("22\n");
 	if( !lua_isnil(L,-1) && lua_isstring(L,-1))
 	{
 		int8* name = (int8*)lua_tolstring(L,-1,NULL);
@@ -796,6 +737,7 @@ int32 GetPlayerByName(lua_State* L)
 
 int32 GetMobAction(lua_State* L)
 {
+	ShowWarning("23\n");
     DSP_DEBUG_BREAK_IF(lua_isnil(L,-1) || !lua_isnumber(L,-1));
 
     uint32 mobid = (uint32)lua_tointeger(L,-1);
@@ -812,45 +754,38 @@ int32 GetMobAction(lua_State* L)
     return 1;
 }
 
-int32 SendMobMessage(lua_State* L)
-{
-	uint32 mobid = (uint32)lua_tointeger(L,1);
-	uint32 CharID = (uint32)lua_tointeger(L,2);
-	CBaseEntity* PNPC = (CBaseEntity*)zoneutils::GetEntity(mobid, TYPE_MOB | TYPE_NPC);
-    if (PNPC != NULL)
-    {
-		const int8* Query = "SELECT targid, pos_zone FROM chars INNER JOIN accounts_sessions USING(charid) WHERE charid = %u LIMIT 1";
-		int32 ret = Sql_Query(SqlHandle, Query, CharID);
-		if (ret != SQL_ERROR &&
-		Sql_NumRows(SqlHandle) != 0 &&
-		Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-		{
-			uint16 TargID = (uint16)Sql_GetUIntData(SqlHandle,0);
-			uint8  ZoneID = (uint8) Sql_GetUIntData(SqlHandle,1);
-			CCharEntity* PTellRecipient = (CCharEntity*)zoneutils::GetZone(ZoneID)->GetEntity(TargID, TYPE_PC);
-			int8* data = (int8*)lua_tolstring(L,3,NULL);
-			int8* name = (int8*)PNPC->GetSayName();
-			uint8 size = (uint8)PNPC->name.size();
-			PTellRecipient->pushPacket(new CNPCMessagePacket(name,ZoneID,data,size));
-		}
-    }
-	return 1;
-}
-
 /************************************************************************
 *                                                                       *
-*  Load the value of the specified zone TextID			                *
+*  Загружаем значение переменной TextID указанной зоны                  *
 *                                                                       *
 ************************************************************************/
 
 int32 GetTextIDVariable(uint16 ZoneID, const char* variable)
 {
+	ShowWarning("24\n");
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, variable);
 
     int8 File[255];
 	memset(File,0,sizeof(File));
-    snprintf(File, sizeof(File), "scripts/zones/%s/TextIDs.lua", zoneutils::GetZone(ZoneID)->GetName());
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,ZoneID);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/TextIDs.lua", zonename.c_str());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+    //snprintf(File, sizeof(File), "scripts/zones/%s/TextIDs.lua", zoneutils::GetZone(ZoneID)->GetName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{
@@ -874,13 +809,13 @@ int32 GetTextIDVariable(uint16 ZoneID, const char* variable)
 
 /************************************************************************
 *																		*
-*  Execute the script when the server starts (all monsters, npc already *
-*  been downloaded) 													*
+*  Выполняем скрипт при старте сервера (все монстры, npc уже загружены) *
 *																		*
 ************************************************************************/
 
 int32 OnServerStart()
 {
+	ShowWarning("25\n");
 	int8 File[255];
 	memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
@@ -922,13 +857,15 @@ int32 OnServerStart()
 
 /************************************************************************
 *																		*
-*  Run the script file for the zone. Performed at startup time when 	*
-*  loading zones. When separated lua stacks create them here.			*
+*  Запускаем скрипт инициализации зоны.									*
+*  Выполняется во время старта сервера при загрузке зон.				*
+*  При разделенных lua стеках необходимо создавать их здесь				*
 *																		*
 ************************************************************************/
 
 int32 OnZoneInitialize(uint16 ZoneID)
 {
+	//ShowWarning("26\n");
 	CZone* PZone = zoneutils::GetZone(ZoneID);
 
 	int8 File[255];
@@ -937,8 +874,24 @@ int32 OnZoneInitialize(uint16 ZoneID)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onInitialize");
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,ZoneID);
+			
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PZone->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PZone->GetName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{
@@ -975,7 +928,7 @@ int32 OnZoneInitialize(uint16 ZoneID)
 
 /************************************************************************
 *																		*
-*  Execute the script by entering the character in the game				*
+*  Выполняем скрипт при входе персонажа в зону							*
 *																		*
 ************************************************************************/
 
@@ -1090,12 +1043,13 @@ int32 OnGameIn(CCharEntity* PChar)
 
 /************************************************************************
 *																		*
-*  Execute the script by entering the character in the zone				*
+*  Выполняем скрипт при входе персонажа в зону							*
 *																		*
 ************************************************************************/
 
 int32 OnZoneIn(CCharEntity* PChar)
 {
+	ShowWarning("28\n");
 	int8 File[255];
 	memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
@@ -1103,7 +1057,27 @@ int32 OnZoneIn(CCharEntity* PChar)
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onZoneIn");
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				   PChar->pushPacket(new CCharUpdatePacket(PChar));
+				   PChar->pushPacket(new CCharSkillsPacket(PChar));
+				   PChar->pushPacket(new CCharPacket(PChar,ENTITY_UPDATE));
+				   PChar->pushPacket(new CZoneVisitedPacket(PChar));
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	
 
 	PChar->m_event.reset();
 	PChar->m_event.Script.insert(0,File);
@@ -1152,20 +1126,36 @@ int32 OnZoneIn(CCharEntity* PChar)
 
 /************************************************************************
 *																		*
-*  Character enters the active region									*
+*  Персонаж входит в активный регион									*
 *																		*
 ************************************************************************/
 
 int32 OnRegionEnter(CCharEntity* PChar, CRegion* PRegion)
 {
+	ShowWarning("29\n");
 	int8 File[255];
 	memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onRegionEnter");
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				 }
+				 else
+				 {
+					// snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
 
 	PChar->m_event.reset();
 	PChar->m_event.Script.insert(0,File);
@@ -1207,20 +1197,36 @@ int32 OnRegionEnter(CCharEntity* PChar, CRegion* PRegion)
 
 /************************************************************************
 *																		*
-*  Character leaves the active region									*
+*  Персонаж покидает активный регион									*
 *																		*
 ************************************************************************/
 
 int32 OnRegionLeave(CCharEntity* PChar, CRegion* PRegion)
 {
+	ShowWarning("30\n");
 	int8 File[255];
 	memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onRegionLeave");
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				 }
+				 else
+				 {
+					// snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
 
 	PChar->m_event.reset();
 	PChar->m_event.Script.insert(0,File);
@@ -1262,12 +1268,14 @@ int32 OnRegionLeave(CCharEntity* PChar, CRegion* PRegion)
 
 /************************************************************************
 *																		*
-*  The character refers to any npc. We try to respond to its action.	*															*
+*  Персонаж обращается к какому-либо npc. Пытаемся отреагировать на		*
+*  его действие															*
 *																		*
 ************************************************************************/
 
 int32 OnTrigger(CCharEntity* PChar, CBaseEntity* PNpc)
 {
+	ShowWarning("31\n");
 	int8 File[255];
 	memset(File,0,sizeof(File));
 
@@ -1275,8 +1283,24 @@ int32 OnTrigger(CCharEntity* PChar, CBaseEntity* PNpc)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onTrigger");
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
 
-	snprintf( File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", PChar->loc.zone->GetName(),PNpc->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", zonename.c_str(),PNpc->GetName());
+				 }
+				 else
+				 {
+					// snprintf(File, sizeof(File), "scripts/zones/Residential_Area/npcs/Moogle.lua");
+					 return false;
+				 }
+
+	//snprintf( File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", PChar->loc.zone->GetName(),PNpc->GetName());
 
 	PChar->m_event.reset();
     PChar->m_event.Target = PNpc;
@@ -1338,12 +1362,13 @@ int32 OnTrigger(CCharEntity* PChar, CBaseEntity* PNpc)
 
 /************************************************************************
 *																		*
-*  Running event in need of additional options							*
+*  Запущенное событие нуждается в дополнительных параметрах				*
 *																		*
 ************************************************************************/
 
 int32 OnEventUpdate(CCharEntity* PChar, uint16 eventID, uint32 result)
 {
+	ShowWarning("32\n");
     int32 oldtop = lua_gettop(LuaHandle);
 
     lua_pushnil(LuaHandle);
@@ -1353,7 +1378,23 @@ int32 OnEventUpdate(CCharEntity* PChar, uint16 eventID, uint32 result)
 	if (luaL_loadfile(LuaHandle, PChar->m_event.Script.c_str()) || lua_pcall(LuaHandle, 0, 0, 0))
 	{
 		memset(File,0,sizeof(File));
-		snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+		string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+		//snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
 
 		if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 		{
@@ -1395,12 +1436,13 @@ int32 OnEventUpdate(CCharEntity* PChar, uint16 eventID, uint32 result)
 
 /************************************************************************
 *																		*
-*  The event ended with the result of the event is stored in the result	*
+*  Событие завершилось, результат события хранится в result				*
 *																		*
 ************************************************************************/
 
 int32 OnEventFinish(CCharEntity* PChar, uint16 eventID, uint32 result)
 {
+	ShowWarning("33\n");
     int32 oldtop = lua_gettop(LuaHandle);
 
     lua_pushnil(LuaHandle);
@@ -1410,7 +1452,23 @@ int32 OnEventFinish(CCharEntity* PChar, uint16 eventID, uint32 result)
 	if (luaL_loadfile(LuaHandle, PChar->m_event.Script.c_str()) || lua_pcall(LuaHandle, 0, 0, 0))
 	{
 		memset(File,0,sizeof(File));
-		snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+		string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				 }
+				 else
+				 {
+					// snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+		//snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
 
 		if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 		{
@@ -1457,7 +1515,7 @@ int32 OnEventFinish(CCharEntity* PChar, uint16 eventID, uint32 result)
 
 /************************************************************************
 *																		*
-*  The character is trying to convey the subject npc					*
+*  Персонаж пытается передать предмет npc								*
 *																		*
 ************************************************************************/
 
@@ -1469,8 +1527,23 @@ int32 OnTrade(CCharEntity* PChar, CBaseEntity* PNpc)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onTrade");
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", PChar->loc.zone->GetName(),PNpc->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", zonename.c_str(),PNpc->GetName());
+				 }
+				 else
+				 {
+					// snprintf(File, sizeof(File), "scripts/zones/Residential_Area/npcs/Moogle.lua");
+					 return false;
+				 }
+	//snprintf(File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", PChar->loc.zone->GetName(),PNpc->GetName());
 
 	PChar->m_event.reset();
     PChar->m_event.Target = PNpc;
@@ -1518,15 +1591,31 @@ int32 OnTrade(CCharEntity* PChar, CBaseEntity* PNpc)
 int32 OnNpcSpawn(CBaseEntity* PNpc)
 {
     DSP_DEBUG_BREAK_IF(PNpc == NULL);
-
+	//ShowDebug("NPC ZONE LOCATION IS %u\n",PNpc->loc.destination);
     int8 File[255];
     memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onSpawn");
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PNpc->loc.destination);
+			
 
-    snprintf( File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", PNpc->loc.zone->GetName(), PNpc->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", zonename.c_str(), PNpc->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+   // snprintf( File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", PNpc->loc.zone->GetName(), PNpc->GetName());
 
     if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
     {
@@ -1562,7 +1651,7 @@ int32 OnNpcSpawn(CBaseEntity* PNpc)
 int32 OnNpcPath(CBaseEntity* PNpc)
 {
     DSP_DEBUG_BREAK_IF(PNpc == NULL);
-
+	//ShowDebug("NPC ZONE LOCATION IS %u\n",PNpc->loc.destination);
     int8 File[255];
     memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
@@ -1570,7 +1659,24 @@ int32 OnNpcPath(CBaseEntity* PNpc)
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onPath");
 
-    snprintf( File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", PNpc->loc.zone->GetName(), PNpc->GetName());
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PNpc->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", zonename.c_str(), PNpc->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+    //snprintf( File, sizeof(File), "scripts/zones/%s/npcs/%s.lua", PNpc->loc.zone->GetName(), PNpc->GetName());
 
     if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
     {
@@ -1605,7 +1711,8 @@ int32 OnNpcPath(CBaseEntity* PNpc)
 
 /************************************************************************
 *																		*
-*  Starting the status effect. The return value is 0 or number posts	*															*
+*  Начало работы статус-эффекта. Возвращаемое значение 0 или номер		*
+*  сообщения															*
 *																		*
 ************************************************************************/
 
@@ -1658,7 +1765,7 @@ int32 OnEffectGain(CBattleEntity* PEntity, CStatusEffect* PStatusEffect)
 
 /************************************************************************
 *																		*
-*  Repeated action in the course of work status effect	 				*
+*  Повторяемое действие в процессе работы статус-оффекта 				*
 *																		*
 ************************************************************************/
 
@@ -1711,7 +1818,8 @@ int32 OnEffectTick(CBattleEntity* PEntity, CStatusEffect* PStatusEffect)
 
 /************************************************************************
 *																		*
-*  Completing the status effect. The return value is -1 or Message #	*													*
+*  Завершение работы статус-эффекта. Возвращаемое значение -1 или		*
+*  номер сообщения														*
 *																		*
 ************************************************************************/
 
@@ -1764,8 +1872,8 @@ int32 OnEffectLose(CBattleEntity* PEntity, CStatusEffect* PStatusEffect)
 
 /************************************************************************
 *																		*
-*  Check the possibility of using the object. If all is well, then 		*
-*  Return value - 0, in case of failure - the number of error messages  *
+*  Проверяем возможность использования предмета. Если все хорошо, то    *
+*  возвращаемое значение - 0, в случае отказа - номер сообщения ошибки  *
 *																		*
 ************************************************************************/
 
@@ -1834,9 +1942,9 @@ int32 OnItemCheck(CBaseEntity* PTarget, CItem* PItem, uint32 param)
 
 /************************************************************************
 *																		*
-*  Use the subject. The return value - the number of messages, or 0. 	*
-*  You need to somehow convey the message parameter (such as number of 	*
-*  recovered MP)														*
+*  Используем предмет. Возврадаемое значение - номер сообщения или 0.	*
+*  Так же необходимо как-то передавать параметр сообщения (например,	*
+*  количество восстановленных MP)										*
 *																		*
 ************************************************************************/
 
@@ -1941,7 +2049,7 @@ int32 CheckForGearSet(CBaseEntity* PTarget)
 
 /************************************************************************
 *																		*
-*  Spellcasting						 									*
+*  Чтение заклинаний				 									*
 *																		*
 ************************************************************************/
 
@@ -2014,15 +2122,32 @@ int32 OnSpellCast(CBattleEntity* PCaster, CBattleEntity* PTarget, CSpell* PSpell
 int32 OnMonsterMagicPrepare(CBattleEntity* PCaster, CBattleEntity* PTarget)
 {
 	DSP_DEBUG_BREAK_IF(PCaster == NULL || PTarget == NULL);
-
+	
 	int8 File[255];
     memset(File,0,sizeof(File));
     int32 oldtop = lua_gettop(LuaHandle);
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onMonsterMagicPrepare");
+	ShowDebug("PCASTER ZONE LOCATION IS %u\n",PCaster->loc.destination);
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PCaster->loc.destination);
+			
 
-    snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PCaster->loc.zone->GetName(), PCaster->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", zonename.c_str(), PCaster->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+   // snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PCaster->loc.zone->GetName(), PCaster->GetName());
 
     if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
     {
@@ -2067,7 +2192,6 @@ int32 OnMonsterMagicPrepare(CBattleEntity* PCaster, CBattleEntity* PTarget)
 }
 
 /************************************************************************
-*																		*
 *  OnMobInitialise                                                      *
 *  Used for passive trait                                               *
 *                                                                       *
@@ -2083,7 +2207,24 @@ int32 OnMobInitialize(CBaseEntity* PMob)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onMobInitialize");
+	//ShowDebug("PMOB ZONE LOCATION IS %u\n",PMob->loc.destination);
+	/*string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PMob->loc.destination);
+			
 
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", zonename.c_str(), PMob->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }*/
     snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
     if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
@@ -2128,8 +2269,25 @@ int32 OnMobPath(CBaseEntity* PMob)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "OnMobPath");
+	//ShowDebug("PMOB ZONE LOCATION IS %u\n",PMob->loc.destination);
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PMob->loc.destination);
+			
 
-    snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", zonename.c_str(), PMob->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+    //snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
     if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
     {
@@ -2166,7 +2324,6 @@ int32 OnMobPath(CBaseEntity* PMob)
 *																		*
 *  Сalled when a monster engages a target for the first time			*
 *		Added by request (for doing stuff when mobs first engage)		*
-*																		*
 ************************************************************************/
 
 int32 OnMobEngaged(CBaseEntity* PMob, CBaseEntity* PTarget)
@@ -2185,8 +2342,25 @@ int32 OnMobEngaged(CBaseEntity* PMob, CBaseEntity* PTarget)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onMobEngaged");
+	//ShowDebug("PMOB ZONE LOCATION IS %u\n",PMob->loc.destination);
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PMob->loc.destination);
+			
 
-	snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", zonename.c_str(), PMob->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
 	if(PTarget->objtype != TYPE_PET && PTarget->objtype != TYPE_MOB)
 	{
@@ -2244,8 +2418,25 @@ int32 OnMobDisengage(CBaseEntity* PMob)
 	lua_setglobal(LuaHandle, "onMobDisengage");
 
 	uint8 weather = PMob->loc.zone->GetWeather();
+	//ShowDebug("PMOB ZONE LOCATION IS %u\n",PMob->loc.destination);
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PMob->loc.destination);
+			
 
-	snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", zonename.c_str(), PMob->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{
@@ -2297,7 +2488,25 @@ int32 OnMobDrawIn(CBaseEntity* PMob, CBaseEntity* PTarget)
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onMobDrawIn");
 
-	snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+	//ShowDebug("PMOB ZONE LOCATION IS %u\n",PMob->loc.destination);
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PMob->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", zonename.c_str(), PMob->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
 	if(PTarget->objtype != TYPE_PET && PTarget->objtype != TYPE_MOB)
 	{
@@ -2358,7 +2567,25 @@ int32 OnMobFight(CBaseEntity* PMob, CBaseEntity* PTarget)
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onMobFight");
 
-	snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+	//ShowDebug("PMOB ZONE LOCATION IS %u\n",PMob->loc.destination);
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PMob->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", zonename.c_str(), PMob->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{
@@ -2403,8 +2630,25 @@ int32 OnCriticalHit(CBattleEntity* PMob)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "OnCriticalHit");
+	//ShowDebug("PMOB ZONE LOCATION IS %u\n",PMob->loc.destination);
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PMob->loc.destination);
+			
 
-	snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", zonename.c_str(), PMob->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{
@@ -2438,7 +2682,7 @@ int32 OnCriticalHit(CBattleEntity* PMob)
 
 /************************************************************************
 *																		*
-*  The script is executed after the death of any monster in the game	*
+*  Скрипт выполняется после смерти любого монстра в игре				*
 *																		*
 ************************************************************************/
 
@@ -2447,6 +2691,7 @@ int32 OnMobDeath(CBaseEntity* PMob, CBaseEntity* PKiller)
 	DSP_DEBUG_BREAK_IF(PKiller == NULL || PMob == NULL);
 
     CCharEntity* PChar = (CCharEntity*)PKiller;
+	
 
 	CLuaBaseEntity LuaMobEntity(PMob);
 	CLuaBaseEntity LuaKillerEntity(PKiller);
@@ -2475,8 +2720,25 @@ int32 OnMobDeath(CBaseEntity* PMob, CBaseEntity* PKiller)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onMobDeath");
+	//ShowDebug("PMOB ZONE LOCATION IS %u\n",PMob->loc.destination);
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PMob->loc.destination);
+			
 
-	snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", zonename.c_str(), PMob->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
     PChar->m_event.reset();
     PChar->m_event.Target = PMob;
@@ -2603,8 +2865,25 @@ int32 OnMobSpawn(CBaseEntity* PMob)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onMobSpawn");
+	//ShowDebug("PMOB ZONE LOCATION IS %u\n",PMob->loc.destination);
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PMob->loc.destination);
+			
 
-    snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", zonename.c_str(), PMob->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+    //snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
     if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
     {
@@ -2651,7 +2930,25 @@ int32 OnMobRoamAction(CBaseEntity* PMob)
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "OnMobRoamAction");
 
-	snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+	//ShowDebug("PMOB ZONE LOCATION IS %u\n",PMob->loc.destination);
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PMob->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", zonename.c_str(), PMob->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{
@@ -2690,7 +2987,11 @@ int32 OnMobRoamAction(CBaseEntity* PMob)
 
 int32 OnMobRoam(CBaseEntity* PMob)
 {
-    DSP_DEBUG_BREAK_IF(PMob == NULL || PMob->objtype != TYPE_MOB)
+    if(PMob == NULL || PMob->objtype != TYPE_MOB)
+	{
+		ShowMessage("ON MOB ROAM LUA FUNCTION HAS A NULL PMOB");
+		return false;
+	}
 
 	CLuaBaseEntity LuaMobEntity(PMob);
 
@@ -2700,8 +3001,25 @@ int32 OnMobRoam(CBaseEntity* PMob)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "OnMobRoam");
+	//ShowDebug("PMOB ZONE LOCATION IS %u\n",PMob->loc.destination);
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PMob->loc.destination);
+			
 
-	snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", zonename.c_str(), PMob->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{
@@ -2750,8 +3068,25 @@ int32 OnMobDespawn(CBaseEntity* PMob)
 
 	lua_pushnil(LuaHandle);
 	lua_setglobal(LuaHandle, "onMobDespawn");
+	//ShowDebug("PMOB ZONE LOCATION IS %u\n",PMob->loc.destination);
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PMob->loc.destination);
+			
 
-	snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", zonename.c_str(), PMob->GetName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf( File, sizeof(File), "scripts/zones/%s/mobs/%s.lua", PMob->loc.zone->GetName(), PMob->GetName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{
@@ -2785,7 +3120,6 @@ int32 OnMobDespawn(CBaseEntity* PMob)
 }
 
 /************************************************************************
-*																		*
 *	OnGameDayAutomatisation()											*
 *   used for creating action of npc every game day						*
 *																		*
@@ -2833,7 +3167,6 @@ int32 OnGameDayAutomatisation()
 }
 
 /************************************************************************
-*																		*
 *	OnGameHourAutomatisation()											*
 *   used for creating action of npc every game hour						*
 *																		*
@@ -2880,14 +3213,6 @@ int32 OnGameHourAutomatisation()
 	return 0;
 }
 
-/************************************************************************
-*																		*
-*	OnZoneWeatherChange													*
-*   used to allow scripted Npcs and mobs to spawn under specific		*
-*	weather conditions													*
-*                                                                       *
-************************************************************************/
-
 int32 OnZoneWeatherChange(uint16 ZoneID, uint8 weather)
 {
 	int8 File[255];
@@ -2897,7 +3222,25 @@ int32 OnZoneWeatherChange(uint16 ZoneID, uint8 weather)
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "OnZoneWeatherChange");
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zoneutils::GetZone(ZoneID)->GetName());
+	
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,ZoneID);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zoneutils::GetZone(ZoneID)->GetName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{
@@ -2936,8 +3279,24 @@ int32 OnTOTDChange(uint16 ZoneID, uint8 TOTD)
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "OnTOTDChange");
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,ZoneID);
+			
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zoneutils::GetZone(ZoneID)->GetName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zoneutils::GetZone(ZoneID)->GetName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{
@@ -2985,7 +3344,26 @@ int32 OnUseWeaponSkill(CCharEntity* PChar, CBaseEntity* PMob, uint16* tpHitsLand
 
 	CWeaponSkill* wskill = PChar->Check_Engagment->GetCurrentWeaponSkill();
 
-	snprintf(File, sizeof(File), "scripts/globals/weaponskills/%s.lua", wskill->getName());
+	string_t name = "noname";
+	const char * Query = "SELECT name FROM weapon_skills WHERE weaponskillid = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,wskill);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   name =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/globals/weaponskills/%s.lua", name.c_str());
+				  // snprintf(File, sizeof(File), "scripts/globals/weaponskills/%s.lua", wskill->getName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+
+	//snprintf(File, sizeof(File), "scripts/globals/weaponskills/%s.lua", wskill->getName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{
@@ -3534,19 +3912,12 @@ int32 OnUseAbilityRoll(CCharEntity* PChar, CBattleEntity* PTarget, CAbility* PAb
 *                                                                       *
 ************************************************************************/
 
-int32 StartElevator(lua_State* L)
-{
-    DSP_DEBUG_BREAK_IF(lua_isnil(L,-1) || !lua_isnumber(L,-1));
 
-	uint32 ElevatorID = (uint32)lua_tointeger(L, -1);
-    //CTransportHandler::getInstance()->startElevator(ElevatorID);
-	return 0;
-}
 
 /************************************************************************
 *                                                                       *
-*  Get the value of a global variable server. The variable is only 		*
-*  valid within the zone in which the set 								*
+*  Получаем значение глобальной переменной сервера.                     *
+*  Переменная действительна лишь в пределах зоны, в которой установлена *
 *                                                                       *
 ************************************************************************/
 
@@ -3570,7 +3941,7 @@ int32 GetServerVariable(lua_State *L)
 
 /************************************************************************
 *                                                                       *
-*  Set the value of the global server variable.    			            *
+*  Устанавливаем значение глобальной переменной сервера.                *
 *                                                                       *
 ************************************************************************/
 
@@ -3607,7 +3978,24 @@ int32 OnTransportEvent(CCharEntity* PChar, uint32 TransportID)
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "onTransportEvent");
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", zonename.c_str());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf(File, sizeof(File), "scripts/zones/%s/Zone.lua", PChar->loc.zone->GetName());
 
 	PChar->m_event.reset();
 	PChar->m_event.Script.insert(0,File);
@@ -3648,10 +4036,7 @@ int32 OnTransportEvent(CCharEntity* PChar, uint32 TransportID)
 }
 
 /********************************************************************
-*																	*
-*  onBcnmEnter - callback when you enter a BCNM via a lua call to 	*
-*  bcnmEnter(bcnmid)												*
-*																	*
+	onBcnmEnter - callback when you enter a BCNM via a lua call to bcnmEnter(bcnmid)
 *********************************************************************/
 int32 OnBcnmEnter(CCharEntity* PChar, CInstance* PInstance){
 	int8 File[255];
@@ -3661,7 +4046,24 @@ int32 OnBcnmEnter(CCharEntity* PChar, CInstance* PInstance){
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "OnBcnmEnter");
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/bcnms/%s.lua", PChar->loc.zone->GetName(),PInstance->getBcnmName());
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/bcnms/%s.lua", zonename.c_str(),PInstance->getBcnmName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf(File, sizeof(File), "scripts/zones/%s/bcnms/%s.lua", PChar->loc.zone->GetName(),PInstance->getBcnmName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{
@@ -3699,18 +4101,16 @@ int32 OnBcnmEnter(CCharEntity* PChar, CInstance* PInstance){
 	return 0;
 }
 
-/************************************************************************
-*																		*
-*	onBcnmLeave - callback when you leave a BCNM via multiple means.	*
-*	The method of leaving is given by the LeaveCode as follows:			*
-*	1 - Leaving via burning circle e.g. "run away"						*
-*	2 - Leaving via warp or d/c											*
-*	3 - Leaving via win													*
-*	4 - Leaving via lose												*
-*	This callback is executed for everyone in the BCNM when they leave	*
-*	so if they leave via win, this will be called for each char.		*
-*																		*
-************************************************************************/
+/********************************************************************
+	onBcnmLeave - callback when you leave a BCNM via multiple means.
+	The method of leaving is given by the LeaveCode as follows:
+	1 - Leaving via burning circle e.g. "run away"
+	2 - Leaving via warp or d/c
+	3 - Leaving via win
+	4 - Leaving via lose
+	This callback is executed for everyone in the BCNM when they leave
+	so if they leave via win, this will be called for each char.
+*********************************************************************/
 int32 OnBcnmLeave(CCharEntity* PChar, CInstance* PInstance, uint8 LeaveCode){
 	int8 File[255];
 	memset(File,0,sizeof(File));
@@ -3719,7 +4119,24 @@ int32 OnBcnmLeave(CCharEntity* PChar, CInstance* PInstance, uint8 LeaveCode){
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "OnBcnmLeave");
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/bcnms/%s.lua", PChar->loc.zone->GetName(),PInstance->getBcnmName());
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/bcnms/%s.lua", zonename.c_str(),PInstance->getBcnmName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf(File, sizeof(File), "scripts/zones/%s/bcnms/%s.lua", PChar->loc.zone->GetName(),PInstance->getBcnmName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{
@@ -3764,13 +4181,11 @@ int32 OnBcnmLeave(CCharEntity* PChar, CInstance* PInstance, uint8 LeaveCode){
 }
 
 /********************************************************************
-*																	*
-*	onBcnmRegister - callback when you successfully register a BCNM.*
-*	For example, trading an orb, selecting the battle.				*
-*	Called AFTER assigning BCNM status to all valid characters.		*
-*	This callback is called only for the character initiating the	*
-*	registration, and after CInstance:init() procedure.				*
-*																	*
+	onBcnmRegister - callback when you successfully register a BCNM.
+	For example, trading an orb, selecting the battle.
+	Called AFTER assigning BCNM status to all valid characters.
+	This callback is called only for the character initiating the
+	registration, and after CInstance:init() procedure.
 *********************************************************************/
 int32 OnBcnmRegister(CCharEntity* PChar, CInstance* PInstance){
 	int8 File[255];
@@ -3780,7 +4195,24 @@ int32 OnBcnmRegister(CCharEntity* PChar, CInstance* PInstance){
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "OnBcnmRegister");
 
-	snprintf(File, sizeof(File), "scripts/zones/%s/bcnms/%s.lua", PChar->loc.zone->GetName(),PInstance->getBcnmName());
+	string_t zonename = "noname";
+	const char * Query = "SELECT name FROM zonesystem WHERE zone = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PChar->loc.destination);
+			
+
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   zonename =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/zones/%s/bcnms/%s.lua", zonename.c_str(),PInstance->getBcnmName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+	//snprintf(File, sizeof(File), "scripts/zones/%s/bcnms/%s.lua", PChar->loc.zone->GetName(),PInstance->getBcnmName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{

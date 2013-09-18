@@ -35,23 +35,13 @@ CChatMessagePacket::CChatMessagePacket(CCharEntity* PChar, CHAT_MESSAGE_TYPE Mes
 	this->type = 0x17;
 	this->size = 32 + strlen(buff) + strlen(buff)%2;
 
-	if (PChar->nameflags.flags & FLAG_GM)
-	{
-		WBUFB(data,(0x05)-4) = 0x01;
-	}
+	//if (PChar->godmode == 1)
+	//{
+	//	WBUFB(data,(0x05)-4) = 0x01;
+	//}
 	WBUFB(data,(0x04)-4) = MessageType;
     WBUFW(data,(0x06)-4) = PChar->getZone();
 
 	memcpy(data+(0x08)-4, PChar->GetName(), PChar->name.size());
 	memcpy(data+(0x18)-4, buff, strlen(buff));
-}
-
-CNPCMessagePacket::CNPCMessagePacket(int8* name, uint8 zone, int8* dat, uint8 size) 
-{
-	this->type = 0x17;
-	this->size = 32 + strlen(dat) + strlen(dat)%2;
-	WBUFB(data,(0x04)-4) = 0x03;
-    WBUFB(data,(0x06)-4) = zone;
-	memcpy(data+(0x08)-4, name,size);
-	memcpy(data+(0x18)-4, dat, strlen(dat));
 }

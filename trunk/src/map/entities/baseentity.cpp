@@ -58,18 +58,6 @@ const int8* CBaseEntity::GetName()
 	return name.c_str();
 }
 
-const int8* CBaseEntity::GetSayName()
-{
-	//Strip out the _ in names
-	npcSayName = name;
-	size_t start_pos = npcSayName.find("_");
-	if (start_pos < name.size())
-	{
-		npcSayName.replace(start_pos,1," ");
-	}
-	return npcSayName.c_str();
-}
-
 uint16 CBaseEntity::getZone()
 {
     return loc.zone != NULL ? loc.zone->GetID() : loc.destination;

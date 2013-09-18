@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2013 Darkstar Dev Teams
+  Copyright (c) 2010-2012 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -57,13 +57,11 @@
 #include "ai_char_normal.h"
 #include "ai_pet_dummy.h"
 
-#include <string.h>
-
 
 /************************************************************************
 *																		*
-*  Initialize the owner of the intellectual (can add a check on the		*
-*  null pointer with output FatalError ?)								*
+*  Инициализируем владельца интеллекта (может добавить проверку на		*
+*  пустой указатель с выводом FatalError ?)								*
 *																		*
 ************************************************************************/
 
@@ -79,7 +77,7 @@ CAICharNormal::CAICharNormal(CCharEntity* PChar)
 
 /************************************************************************
 *																		*
-*  The bulk of intelligence - the main loop								*
+*  Основная часть интеллекта - главный цикл								*
 *																		*
 ************************************************************************/
 
@@ -241,7 +239,7 @@ bool CAICharNormal::IsMobOwner(CBattleEntity* PBattleTarget)
 
 /************************************************************************
 *																		*
-*  The character goes into a fighting stance, included attack mode		*
+*  Персонаж переходит в боевую стойку, включается прежим атаки			*
 *																		*
 ************************************************************************/
 
@@ -253,7 +251,7 @@ void CAICharNormal::ActionEngage()
 	{
 		if(IsMobOwner(m_PBattleTarget))
 		{
-			if (distance(m_PChar->loc.p, m_PBattleTarget->loc.p) <= 30*map_config.engage_dist_mod)
+			if (distance(m_PChar->loc.p, m_PBattleTarget->loc.p) <= 30)
 			{
 				if ((m_Tick - m_LastMeleeTime) > m_PChar->m_Weapons[SLOT_MAIN]->getDelay())
 				{
@@ -301,7 +299,7 @@ void CAICharNormal::ActionEngage()
 
 /************************************************************************
 *																		*
-*  The main character is changing their target of attack				*
+*  Персонаж меняет основную цель атаки									*
 *																		*
 ************************************************************************/
 
@@ -318,7 +316,7 @@ void CAICharNormal::ActionChangeBattleTarget()
 		{
 			if (IsMobOwner(PBattleTarget))
 			{
-				if (distance(m_PChar->loc.p, PBattleTarget->loc.p) <= 30*map_config.engage_dist_mod)
+				if (distance(m_PChar->loc.p, PBattleTarget->loc.p) <= 30)
 				{
 					m_LastActionTime = m_Tick;
 					m_PBattleTarget = PBattleTarget;
@@ -342,7 +340,7 @@ void CAICharNormal::ActionChangeBattleTarget()
 
 /************************************************************************
 *																		*
-*  Character exits attack for some reason								*
+*  Персонаж выходит из режима атаки по каким-либо причинам				*
 *																		*
 ************************************************************************/
 
@@ -360,7 +358,7 @@ void CAICharNormal::ActionDisengage()
 
 /************************************************************************
 *                                                                       *
-*  character death                                                      *
+*  Смерть персонажа                                                     *
 *                                                                       *
 ************************************************************************/
 
@@ -388,7 +386,7 @@ void CAICharNormal::ActionFall()
     m_PChar->pushPacket(new CRaiseTractorMenuPacket(m_PChar,TYPE_HOMEPOINT));
 
 	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CCharPacket(m_PChar,ENTITY_UPDATE));
-
+	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CCharPacket(m_PChar,ENTITY_UPDATE));
 	//influence for conquest system
 	conquest::LoseInfluencePoints(m_PChar);
 
@@ -402,21 +400,16 @@ void CAICharNormal::ActionFall()
 
 /************************************************************************
 *                                                                       *
-*  Remove the corresponding effects with the expectation of one second  *
+*  Удаляем соответствующие эффекты с ожиданием в одну секунду           *
 *                                                                       *
 ************************************************************************/
 
 void CAICharNormal::ActionDeath()
 {
-    // Immediately remove the effects are not always properly handled by the client
+    // без задержки удаление эффектов не всегда правильно обрабатывается клиентом
     if ((m_Tick - m_LastActionTime) >= 1000)
     {
         m_PChar->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DEATH, true);
-	
-        // Auto reraise
-        if( m_PChar->m_hasRaise < m_PChar->getMod(MOD_AUTO_RERAISE) ){
-            m_PChar->m_hasRaise = m_PChar->getMod(MOD_AUTO_RERAISE);
-        }
 
         if(m_PChar->m_PVPFlag)
         {
@@ -448,7 +441,7 @@ void CAICharNormal::ActionDeath()
 *																		*
 ************************************************************************/
 
-// TODO: there is no check for the charges of the object (in the case of equipment)
+// TODO: нет проверки на наличие зарядов у предмета (в случае использования экипировки)
 
 void CAICharNormal::ActionItemStart()
 {
@@ -514,13 +507,13 @@ void CAICharNormal::ActionItemStart()
 
 	m_PChar->m_ActionList.push_back(Action);
 	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-
+	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
 	m_ActionType = ACTION_ITEM_USING;
 }
 
 /************************************************************************
 *																		*
-*  The process of using the item										*
+*  Процесс использовани предмета										*
 *																		*
 ************************************************************************/
 
@@ -550,7 +543,7 @@ void CAICharNormal::ActionItemUsing()
 
 	if ((m_Tick - m_LastActionTime) >= m_PItemUsable->getActivationTime())
 	{
-        // update the time required for proper operation of the delay animation
+        // обновление времени необходимо для правильной работы задержки анимации
         m_LastMeleeTime += (m_Tick - m_LastActionTime);
         m_LastActionTime = m_Tick;
 		m_ActionType = ACTION_ITEM_FINISH;
@@ -584,7 +577,7 @@ void CAICharNormal::ActionItemUsing()
             }
 			m_PItemUsable = new CItemUsable(*m_PItemUsable);
 		}
-		else // unlock all items, except for equipment
+		else // разблокируем все предметы, кроме экипирвоки
 		{
             m_PItemUsable->setSubType(ITEM_UNLOCKED);
 			m_PItemUsable = new CItemUsable(*m_PItemUsable);
@@ -606,15 +599,15 @@ void CAICharNormal::ActionItemUsing()
 		m_PChar->m_ActionList.push_back(Action);
 
 		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-
+		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
 		ActionItemFinish();
 	}
 }
 
 /************************************************************************
 *																		*
-*  Ending the use of the object.										*
-*  Here gets a copy of the object to be deleted.						*
+*  Окончание использования предмета.									*
+*  Сюда попадает копия предмета, которую нужно удалить.					*
 *																		*
 ************************************************************************/
 
@@ -627,6 +620,7 @@ void CAICharNormal::ActionItemFinish()
 	{
         if(battleutils::IsParalyzed(m_PChar)){
             m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_IS_PARALYZED));
+			 m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_IS_PARALYZED));
         } else {
 
             m_PChar->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_INVISIBLE);
@@ -697,14 +691,13 @@ void CAICharNormal::ActionItemInterrupt()
 
 /************************************************************************
 *																		*
-*  Start a ranged attack. Logic: 										*
-* 	- If the target is dead, the attack begins. no reports 				*
-*   - Check the visibility of the target (if you do not see, we can not *
-*     determine distance to the target or to find out whether the 		*
-*     purpose in battle) 												*
-*   - In a battle to determine the target (not relevant to determine    *
-*     the distance, if purpose of attacking another character) 			*
-*   - And finally determine the distance to the target					*
+*  Начало дальней атаки. Логика:										*
+*  - если цель мертва, то атака не начинается. никаких сообщений 		*
+*  - проверяем видимость цели (если не видим, то не можем определить 	*
+*    дистанцию до цели или узнать, в бою ли цель)						*
+*  - определяем в бою ли цель (нет смысла определять дистанцию, если 	*
+*    цель атакует другой персонаж)										*
+*  - и наконец определяем дистанцию до цели								*
 *																		*
 ************************************************************************/
 
@@ -762,7 +755,7 @@ void CAICharNormal::ActionRangedStart()
 		{
 			uint16 chance = (m_PChar->getMod(MOD_RAPID_SHOT) + m_PChar->PMeritPoints->GetMeritValue(MERIT_RAPID_SHOT_RATE, m_PChar));
 			if (rand()%100 < chance)
-				m_PChar->m_rangedDelay = 1;
+				m_PChar->m_rangedDelay = 0;
 		}
 
         if(m_PChar->m_rangedDelay <= 0){
@@ -831,7 +824,7 @@ void CAICharNormal::ActionRangedStart()
 			m_PBattleSubTarget = NULL;
 			return;
 		}
-		if (distance(m_PChar->loc.p, m_PBattleSubTarget->loc.p) > 25*map_config.ranged_dist_mod)
+		if (distance(m_PChar->loc.p, m_PBattleSubTarget->loc.p) > 25)
 		{
 			m_PChar->pushPacket(new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_TOO_FAR_AWAY));
 
@@ -847,7 +840,7 @@ void CAICharNormal::ActionRangedStart()
 		return;
 	}
 
-	// TODO: m_LastActionTime likely to exhibit only at ANIMATION_ATTACK, otherwise use for LastRangedTime
+	// TODO: скорее всего m_LastActionTime нужно выставлять лишь при ANIMATION_ATTACK, иначе использовать LastRangedTime для
 
 	m_LastActionTime = m_Tick;
 	m_PChar->m_StartActionPos = m_PChar->loc.p;
@@ -865,13 +858,13 @@ void CAICharNormal::ActionRangedStart()
 	m_PChar->m_ActionList.push_back(Action);
 
 	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-
+	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
 	m_ActionType = ACTION_RANGED_FINISH;
 }
 
 /************************************************************************
 *																		*
-*  Closing ranged attack												*
+*  Окончание дальней атаки												*
 *																		*
 ************************************************************************/
 
@@ -982,11 +975,6 @@ void CAICharNormal::ActionRangedFinish()
     					if(rand()%100 < battleutils::GetCritHitRate(m_PChar,m_PBattleSubTarget, true))
     					{
     						pdif *= 1.25; //uncapped
-							if(m_PChar->getMod(MOD_DEAD_AIM) > 0)
-							{
-								pdif *= (float)(1.0f + m_PChar->getMod(MOD_DEAD_AIM)/100.0f);
-								// ShowDebug(CL_CYAN"Dead Aim Proc PDIF: %g \n", pdif);
-							}
     						Action.speceffect = SPECEFFECT_CRITICAL_HIT;
     						Action.messageID = 353;
     					}
@@ -1004,7 +992,7 @@ void CAICharNormal::ActionRangedFinish()
 
                         if(slot == SLOT_RANGED)
                         {
-        					damage = battleutils::CheckForDamageMultiplier(PItem,damage, 0,m_PChar);
+        					damage = battleutils::CheckForDamageMultiplier(PItem,damage, 0);
 
                             if(PItem != NULL)
                             {
@@ -1047,15 +1035,6 @@ void CAICharNormal::ActionRangedFinish()
 
 				if(PAmmo != NULL && rand()%100 > recycleChance)
 				{
-					CItemWeapon* PAmmo = (CItemWeapon*)m_PChar->getStorage(LOC_INVENTORY)->GetItem(m_PChar->equip[SLOT_AMMO]);
-					// Set a variable for each ammo to hold the amount of shots used with that ammo.
-					int varname = PAmmo->getID();
-					int32 value = 1;
-
-					const int8* Query = "INSERT INTO char_vars SET charid = %u, varname = 'Ammo%u', value = %i ON DUPLICATE KEY UPDATE value = value + %i;";
-					// ShowDebug(CL_CYAN"Ammo ID %d Printed to Char_Var \n", PAmmo->getID());
-
-					Sql_Query(SqlHandle, Query,m_PChar->id,varname,value,value);
 
 					if ( (PAmmo->getQuantity()-1) < 1) // ammo will run out after this shot, make sure we remove it from equip
 					{
@@ -1108,6 +1087,7 @@ void CAICharNormal::ActionRangedFinish()
             Action.messageID  = 0;
             Action.reaction   = REACTION_EVADE;
             m_PBattleSubTarget->loc.zone->PushPacket(m_PBattleSubTarget,CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PBattleSubTarget,m_PBattleSubTarget,0,shadowsTaken, MSGBASIC_SHADOW_ABSORB));
+			m_PBattleSubTarget->loc.zone->PushPacket(m_PBattleSubTarget,CHAR_INRANGE, new CMessageBasicPacket(m_PBattleSubTarget,m_PBattleSubTarget,0,shadowsTaken, MSGBASIC_SHADOW_ABSORB));
 
             battleutils::ClaimMob(m_PBattleSubTarget, m_PChar);
         }
@@ -1118,8 +1098,8 @@ void CAICharNormal::ActionRangedFinish()
         m_PChar->m_ActionList.push_back(Action);
 		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
 
-		// TODO: what is this? ....
-        // If I am not mistaken, the TREASURE_HUNTER works only when the last stroke
+        // TODO: что это ? ....
+        // если не ошибаюсь, то TREASURE_HUNTER работает лишь при последнем ударе
 
 		CMobEntity* Monster = (CMobEntity*)m_PBattleSubTarget;
 
@@ -1194,7 +1174,7 @@ void CAICharNormal::ActionRangedInterrupt()
 	m_PChar->m_ActionList.push_back(Action);
 
 	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-
+	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
 	TransitionBack();
 }
 
@@ -1215,10 +1195,10 @@ void CAICharNormal::ActionMagicStart()
 	DSP_DEBUG_BREAK_IF(m_ActionTargetID == 0);
 
     if(m_PMagicState->IsOnCoolDown(m_Tick))
-	{
+    {
         MagicStartError();
-		return;
-	}
+        return;
+    }
 
     STATESTATUS status = m_PMagicState->CastSpell(m_PSpell, m_PTargetFind->getValidTarget(m_ActionTargetID, m_PSpell->getValidTarget()));
 
@@ -1229,15 +1209,15 @@ void CAICharNormal::ActionMagicStart()
         m_LastActionTime = m_Tick;
         m_ActionType = ACTION_MAGIC_CASTING;
     }
-		else
-		{
+    else
+    {
         MagicStartError();
-			}
+    }
 }
 
 /************************************************************************
 *                                                                       *
-*  Can not start to cast			                                    *
+*  Невозможно начать читать заклинание                                  *
 *                                                                       *
 ************************************************************************/
 
@@ -1264,19 +1244,19 @@ void CAICharNormal::ActionMagicCasting()
     STATESTATUS status = m_PMagicState->Update(m_Tick);
 
     if(status == STATESTATUS_INTERRUPT)
-	{
-		m_ActionType = ACTION_MAGIC_INTERRUPT;
-		ActionMagicInterrupt();
-	}
+    {
+        m_ActionType = ACTION_MAGIC_INTERRUPT;
+        ActionMagicInterrupt();
+    }
     else if(status == STATESTATUS_ERROR)
-	{
+    {
         TransitionBack();
-	}
+    }
     else if(status == STATESTATUS_FINISH)
-	{
-		m_ActionType = ACTION_MAGIC_FINISH;
-		ActionMagicFinish();
-	}
+    {
+        m_ActionType = ACTION_MAGIC_FINISH;
+        ActionMagicFinish();
+    }
 }
 
 /************************************************************************
@@ -1289,7 +1269,7 @@ void CAICharNormal::ActionMagicFinish()
 {
     m_PMagicState->FinishSpell();
 
-	m_LastMeleeTime += (m_Tick - m_LastActionTime);
+    m_LastMeleeTime += (m_Tick - m_LastActionTime);
 
     m_PMagicState->SetLastCoolTime(m_Tick);
 
@@ -1300,16 +1280,16 @@ void CAICharNormal::ActionMagicFinish()
 }
 
 /************************************************************************
-*																		*
-*																		*
-*																		*
+*                                                                       *
+*                                                                       *
+*                                                                       *
 ************************************************************************/
 
 void CAICharNormal::ActionMagicInterrupt()
 {
     m_PMagicState->InterruptSpell();
 
-	m_LastMeleeTime += (m_Tick - m_LastActionTime);
+    m_LastMeleeTime += (m_Tick - m_LastActionTime);
 
     m_PMagicState->SetLastCoolTime(m_Tick);
 
@@ -1415,22 +1395,9 @@ void CAICharNormal::ActionJobAbilityStart()
 
 				m_ActionTargetID = 0;
 				TransitionBack();
-				m_PChar->pushPacket(new CMessageBasicPacket(m_PChar,m_PChar,0,0,MSGBASIC_NO_RANGED_WEAPON));
-				return;
-			}
-		}
-		
-		if (m_PJobAbility->getID() == ABILITY_ANGON)
-		{
-			CItemWeapon* PItem = (CItemWeapon*)m_PChar->getStorage(LOC_INVENTORY)->GetItem(m_PChar->equip[SLOT_AMMO]);
-
-				if (PItem == NULL || PItem->getID() != 18259)
-				{
-					m_ActionTargetID = 0;
-					m_ActionType = (m_PChar->animation == ANIMATION_ATTACK ? ACTION_ATTACK : ACTION_NONE);
 					m_PChar->pushPacket(new CMessageBasicPacket(m_PChar,m_PChar,0,0,MSGBASIC_NO_RANGED_WEAPON));
 					return;
-				}
+			}
 		}
 
 		// End of core checks, so call script checks
@@ -1525,6 +1492,7 @@ void CAICharNormal::ActionJobAbilityFinish()
     if(battleutils::IsParalyzed(m_PChar)){
         // display paralyzed
         m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_IS_PARALYZED));
+		 m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar,m_PBattleSubTarget,0,0,MSGBASIC_IS_PARALYZED));
     } else {
 
         // remove invisible if aggresive
@@ -1539,10 +1507,13 @@ void CAICharNormal::ActionJobAbilityFinish()
 	        }
         }
 
-    	if(m_PJobAbility->getID() == ABILITY_REWARD)
-		{
-    		int16 RewardRecastMod = m_PChar->getMod(MOD_REWARD_RECAST);
-    		RecastTime -= (RewardRecastMod *1000);   // remove x seconds
+    	if(m_PJobAbility->getID() == ABILITY_REWARD){
+    		CItem* PItem = m_PChar->getStorage(LOC_INVENTORY)->GetItem(m_PChar->equip[SLOT_HEAD]);
+    		if(PItem->getID() == 15157 || PItem->getID() == 16104){
+    			//TODO: Transform this into an item MOD_REWARD_RECAST perhaps ?
+    			//The Bison Warbonnet & Khimaira Bonnet reduces recast time by 10 seconds.
+    			RecastTime -= (10 *1000);   // remove 10 seconds
+    		}
     	}
 
         apAction_t Action;
@@ -1713,7 +1684,7 @@ void CAICharNormal::ActionJobAbilityFinish()
             }
     	}
 
-        // TODO: mess. also throw away
+        // TODO: бардак. тоже выкинуть отсюда
     	else if (m_PJobAbility->isAvatarAbility())
         {
     		if (m_PChar->PPet != NULL) //is a bp - dont display msg and notify pet
@@ -1725,39 +1696,17 @@ void CAICharNormal::ActionJobAbilityFinish()
     			Action.param      = 0;
     			Action.messageID  = 0;
 
-    			if(m_PJobAbility->getID() == ABILITY_SEARING_LIGHT || m_PJobAbility->getID() == ABILITY_AERIAL_BLAST || m_PJobAbility->getID() == ABILITY_EARTHEN_FURY)
-				{
-    				if(m_PChar->health.mp >= m_PChar->GetMLevel() * 2)
-					{
-						if(rand()%100 <= m_PChar->getMod(MOD_BLOOD_BOON)) // Proc Check
-						{
-							// MP Cost = floor(Old MP Cost * N / 16) N random 8-15 max 50% decrease
-							m_PChar->addMP(-(floor((float)(((m_PChar->GetMLevel() * 2) * (rand()%8 + 8)) / 16.0f))));
-							// ShowDebug(CL_CYAN"Blood Boon Proc \n");
-						}
-						else
-						{
-							m_PChar->addMP(-m_PChar->GetMLevel() * 2);
-						}
+    			if(m_PJobAbility->getID() == ABILITY_SEARING_LIGHT || m_PJobAbility->getID() == ABILITY_AERIAL_BLAST || m_PJobAbility->getID() == ABILITY_EARTHEN_FURY){
+    				if(m_PChar->health.mp >= m_PChar->GetMLevel() * 2){
+    					m_PChar->addMP(-m_PChar->GetMLevel() * 2);
     				}
-    			} 
-				else 
-				{
-					if(rand()%100 <= m_PChar->getMod(MOD_BLOOD_BOON))
-					{
-						m_PChar->addMP(-(floor((float)((m_PJobAbility->getAnimationID() * (rand()%8 + 8)) / 16.0f))));
-						// ShowDebug(CL_CYAN"Blood Boon Proc \n");
-					}
-					else
-					{
-						m_PChar->addMP(-m_PJobAbility->getAnimationID()); // TODO: ...
-					}
+    			} else {
+    				m_PChar->addMP(-m_PJobAbility->getAnimationID()); // TODO: ...
     			}
-				
     			m_PChar->m_ActionList.push_back(Action);
     			m_PChar->PPet->Check_Engagment->SetBattleSubTarget(m_PBattleSubTarget);
 
-    			((CAIPetDummy*)m_PChar->PPet->Check_Engagment)->m_MasterCommand = m_PJobAbility->getID(); // TODO: not a valid approach
+    			((CAIPetDummy*)m_PChar->PPet->Check_Engagment)->m_MasterCommand = m_PJobAbility->getID(); // TODO: не допустимый подход
 
     			m_PChar->PPet->Check_Engagment->SetCurrentAction(ACTION_MOBABILITY_START);
     			charutils::UpdateHealth(m_PChar);
@@ -1836,10 +1785,10 @@ void CAICharNormal::ActionJobAbilityFinish()
         			{
         				pdif *= 1.25; //uncapped
         				Action.speceffect = SPECEFFECT_CRITICAL_HIT;
-						if(m_PBattleSubTarget->objtype == TYPE_MOB)
-						{
-							luautils::OnCriticalHit(m_PBattleSubTarget);
-						}
+                        if(m_PBattleSubTarget->objtype == TYPE_MOB)
+                        {
+    						luautils::OnCriticalHit(m_PBattleSubTarget);
+                        }
         			}
 
         			CItemWeapon* PItem = (CItemWeapon*)m_PChar->getStorage(LOC_INVENTORY)->GetItem(m_PChar->equip[SLOT_RANGED]);
@@ -1850,7 +1799,7 @@ void CAICharNormal::ActionJobAbilityFinish()
         			hitOccured = true;
 
         			damage = (damage + m_PChar->GetRangedWeaponDmg() + battleutils::GetFSTR(m_PChar,m_PBattleSubTarget,SLOT_RANGED)) * pdif * 5;
-        			damage = battleutils::CheckForDamageMultiplier(PItem,damage,0,m_PChar);
+        			damage = battleutils::CheckForDamageMultiplier(PItem,damage, 0);
 
                     damage = battleutils::RangedDmgTaken(m_PBattleSubTarget, damage);
                 }
@@ -1915,90 +1864,9 @@ void CAICharNormal::ActionJobAbilityFinish()
             Action.param = value;
 
     		if( m_PJobAbility->getID() == ABILITY_SHADOWBIND )
-			{
-				uint16 damage = 0;
-				Action.ActionTarget = m_PBattleSubTarget;
-				Action.reaction   = REACTION_HIT;
-				Action.speceffect = SPECEFFECT_HIT;		//0x60 (SPECEFFECT_HIT + SPECEFFECT_RECOIL)
-				Action.animation  = m_PJobAbility->getAnimationID();;
-				Action.messageID  = MSGBASIC_USES_JA;
-				if(m_PBattleSubTarget->objtype == TYPE_MOB && ((CMobEntity*)m_PBattleSubTarget)->m_Type != MOBTYPE_NOTORIOUS)
-				{
-					uint8 shadowbindDur = 30;
-					if(m_PChar->getMod(MOD_SHADOWBIND) >= 1)
-					{
-						shadowbindDur = 45;
-					}
-					m_PBattleSubTarget->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_BIND,EFFECT_BIND,1,0,10));
-				}
-				CItemWeapon* PAmmo = (CItemWeapon*)m_PChar->getStorage(LOC_INVENTORY)->GetItem(m_PChar->equip[SLOT_AMMO]);
-				uint8 recycleChance = m_PChar->getMod(MOD_RECYCLE);
-
-				if (charutils::hasTrait(m_PChar,TRAIT_RECYCLE))
-					recycleChance += m_PChar->PMeritPoints->GetMeritValue(MERIT_RECYCLE,m_PChar);
-
-				if(m_PChar->StatusEffectContainer->HasStatusEffect(EFFECT_UNLIMITED_SHOT))
-				{
-					m_PChar->StatusEffectContainer->DelStatusEffect(EFFECT_UNLIMITED_SHOT);
-					recycleChance = 100;
-				}
-
-				if(PAmmo != NULL && rand()%100 > recycleChance)
-				{
-					if ( (PAmmo->getQuantity()-1) < 1) // ammo will run out after this shot, make sure we remove it from equip
-					{
-						uint8 slot = m_PChar->equip[SLOT_AMMO];
-						charutils::UnequipItem(m_PChar,SLOT_AMMO);
-						charutils::UpdateItem(m_PChar, LOC_INVENTORY, slot, -1);
-					}
-					else
-					{
-						charutils::UpdateItem(m_PChar, LOC_INVENTORY, m_PChar->equip[SLOT_AMMO], -1);
-					}
-				}
-    			m_PChar->pushPacket(new CInventoryFinishPacket());
-				
-			}
-			
-			if( m_PJobAbility->getID() == ABILITY_ANGON )
-			{
-				uint16 damage = 0;
-				Action.ActionTarget = m_PBattleSubTarget;
-				Action.reaction   = REACTION_HIT;
-				Action.speceffect = SPECEFFECT_HIT;		//0x60 (SPECEFFECT_HIT + SPECEFFECT_RECOIL)
-				Action.animation  = m_PJobAbility->getAnimationID();;
-				Action.messageID  = MSGBASIC_USES_JA;
-				
-				uint16 duration = 30;
-				duration += ((m_PChar->PMeritPoints->GetMeritValue(MERIT_ANGON,m_PChar) - 1) * 15);
-				m_PBattleSubTarget->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_DEFENSE_DOWN,EFFECT_DEFENSE_DOWN,20,0,duration));
-				
-				CItemWeapon* PAmmo = (CItemWeapon*)m_PChar->getStorage(LOC_INVENTORY)->GetItem(m_PChar->equip[SLOT_AMMO]);
-				CItemWeapon* PEar1 = (CItemWeapon*)m_PChar->getStorage(LOC_INVENTORY)->GetItem(m_PChar->equip[SLOT_EAR1]);
-				CItemWeapon* PEar2 = (CItemWeapon*)m_PChar->getStorage(LOC_INVENTORY)->GetItem(m_PChar->equip[SLOT_EAR2]);
-				uint8 expendChance = 0;
-				
-				if(PEar1->getID() == 16000 || PEar2->getID() == 16000)
-				{
-					expendChance = 10;
-				}
-
-				if(PAmmo != NULL && rand()%100 > expendChance)
-				{
-					if ( (PAmmo->getQuantity()-1) < 1) // ammo will run out after this shot, make sure we remove it from equip
-					{
-						uint8 slot = m_PChar->equip[SLOT_AMMO];
-						charutils::UnequipItem(m_PChar,SLOT_AMMO);
-						charutils::UpdateItem(m_PChar, LOC_INVENTORY, slot, -1);
-					}
-					else
-					{
-						charutils::UpdateItem(m_PChar, LOC_INVENTORY, m_PChar->equip[SLOT_AMMO], -1);
-					}
-				}
-    			m_PChar->pushPacket(new CInventoryFinishPacket());
-				
-			}
+    		{
+    			//Action.flag = 3;
+    		}
 
     		if (m_PJobAbility->getID() == ABILITY_MIJIN_GAKURE)
 			{
@@ -2006,6 +1874,7 @@ void CAICharNormal::ActionJobAbilityFinish()
 				m_PChar->health.hp = 0;
 		        charutils::UpdateHealth(m_PChar);
 				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
+				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
 			}
 
     		/* TODO: Handle post-Lv. 75 genkai job abilities from support jobs that
@@ -2013,7 +1882,7 @@ void CAICharNormal::ActionJobAbilityFinish()
 			 * Blade of Death quests are active.
 			 */
 
-    		// handle jump abilities---
+			// handle jump abilities---
 
     		// Jump
     		if(m_PJobAbility->getID() == ABILITY_JUMP)
@@ -2023,7 +1892,9 @@ void CAICharNormal::ActionJobAbilityFinish()
     			{
     				Action.messageID = 0;
     				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_BUT_MISSES));
-    			}
+    				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_BUT_MISSES));
+    			
+				}
 				else if (Action.param >= m_PBattleSubTarget->health.hp)
 				{
 					m_PChar->setWeaponSkillKill(true);
@@ -2037,7 +1908,9 @@ void CAICharNormal::ActionJobAbilityFinish()
     			{
     				Action.messageID = 0;
     				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_BUT_MISSES));
-    			}
+    				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_BUT_MISSES));
+    			
+				}
 				else if (Action.param >= m_PBattleSubTarget->health.hp)
 				{
 					m_PChar->setWeaponSkillKill(true);
@@ -2049,27 +1922,9 @@ void CAICharNormal::ActionJobAbilityFinish()
     			battleutils::jumpAbility(m_PChar, m_PBattleSubTarget, 3);
     			Action.messageID = 0;
     			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_JA));
-    		}
-			// Spirit Jump
-    		else if(m_PJobAbility->getID() == ABILITY_SPIRIT_JUMP)
-    		{
-    			Action.param = battleutils::jumpAbility(m_PChar, m_PBattleSubTarget, 4);
-    			if (Action.param == 0)
-    			{
-    				Action.messageID = 0;
-    				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_BUT_MISSES));
-    			}
-    		}
-			// Soul Jump
-    		else if(m_PJobAbility->getID() == ABILITY_SOUL_JUMP)
-    		{
-    			Action.param = battleutils::jumpAbility(m_PChar, m_PBattleSubTarget, 5);
-    			if (Action.param == 0)
-    			{
-    				Action.messageID = 0;
-    				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_BUT_MISSES));
-    			}
-    		}
+    		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_JA));
+    		
+			}
 
     		// handle enmity transfer abilities
     		if (m_PJobAbility->getID() == ABILITY_ACCOMPLICE)
@@ -2092,7 +1947,9 @@ void CAICharNormal::ActionJobAbilityFinish()
     				case TYPE_MOB:
     					((CMobEntity*)PTarget)->PEnmityContainer->LowerEnmityByPercent(m_PChar, 100, m_PBattleSubTarget);
     					m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, 528));  //528 - The <player> uses .. Enmity is transferred to the <player>'s pet.
-    					break;
+    					m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, 0, 528));  //528 - The <player> uses .. Enmity is transferred to the <player>'s pet.
+    					
+						break;
 
     				case TYPE_PET:
     					// pets have no emnity container
@@ -2133,6 +1990,7 @@ void CAICharNormal::ActionJobAbilityFinish()
     		{
     			m_PChar->PPet->UpdateHealth();
     			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, value, MSGBASIC_USES_RECOVERS_HP));
+				m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PBattleSubTarget, m_PJobAbility->getID()+16, value, MSGBASIC_USES_RECOVERS_HP));
 
     			//Reward gives enmity to the pet and not the Beastmaster.
     			CBattleEntity* PTarget = m_PChar->PPet->Check_Engagment->GetBattleTarget();
@@ -2145,7 +2003,7 @@ void CAICharNormal::ActionJobAbilityFinish()
 
             if (m_PJobAbility->getValidTarget() & TARGET_ENEMY)
             {
-                // during pvp to life are the characters, monsters and their pets
+                // во время pvp целью могут быт персонажи, монстры и их питомцы
     			if (m_PBattleSubTarget->objtype == TYPE_MOB &&
     				m_PJobAbility->getID() != ABILITY_ASSAULT &&
     				m_PJobAbility->getID() != ABILITY_FIGHT &&
@@ -2160,56 +2018,28 @@ void CAICharNormal::ActionJobAbilityFinish()
             }
     	}
 
-        // TODO: all moved to the script, as system allows you to get a pointer to the pet
+        // TODO: все перенести в скрипты, т.к. система позволяет получать указатель на питомца
 
-    	if(m_PJobAbility->getID() == ABILITY_CALL_BEAST || m_PJobAbility->getID() == ABILITY_REWARD)
-		{
+    	if(m_PJobAbility->getID() == ABILITY_CALL_BEAST || m_PJobAbility->getID() == ABILITY_REWARD ||
+            (m_PJobAbility->getID() >= ABILITY_FIRE_SHOT && m_PJobAbility->getID() <= ABILITY_DARK_SHOT )){
     		charutils::UpdateItem(m_PChar, LOC_INVENTORY, m_PChar->equip[SLOT_AMMO], -1);
-			m_PChar->pushPacket(new CInventoryFinishPacket());
-    	}
-		if (m_PJobAbility->getID() >= ABILITY_FIRE_SHOT && m_PJobAbility->getID() <= ABILITY_DARK_SHOT )
-		{
-			CItemContainer* inventory = m_PChar->getStorage(LOC_INVENTORY);
-			CItemWeapon* PMain = (CItemWeapon*)m_PChar->getStorage(LOC_INVENTORY)->GetItem(m_PChar->equip[SLOT_MAIN]);
-			CItemWeapon* PSub = (CItemWeapon*)m_PChar->getStorage(LOC_INVENTORY)->GetItem(m_PChar->equip[SLOT_SUB]);
-			if(PMain->getID() == 19135 || PSub->getID() == 19135)
-			{
-				if(rand()%100 > 25)
-				{
-					uint8 slotID = inventory->SearchItem(2176 + m_PJobAbility->getID() - ABILITY_FIRE_SHOT); //Elemental Card
+            if (m_PJobAbility->getID() >= ABILITY_FIRE_SHOT && m_PJobAbility->getID() <= ABILITY_DARK_SHOT )
+            {
+                CItemContainer* inventory = m_PChar->getStorage(LOC_INVENTORY);
+                uint8 slotID = inventory->SearchItem(2176 + m_PJobAbility->getID() - ABILITY_FIRE_SHOT); //Elemental Card
 
-					if (slotID != ERROR_SLOTID)
-					{
-						charutils::UpdateItem(m_PChar, LOC_INVENTORY, slotID, -1);
-					}
-					else
-					{
-						slotID = inventory->SearchItem(2974); //Trump Card
-						DSP_DEBUG_BREAK_IF(slotID == ERROR_SLOTID);
-						charutils::UpdateItem(m_PChar, LOC_INVENTORY, slotID, -1);
-					}
-            
-    				m_PChar->pushPacket(new CInventoryFinishPacket());
-				}
-			}
-			else
-			{
-				uint8 slotID = inventory->SearchItem(2176 + m_PJobAbility->getID() - ABILITY_FIRE_SHOT); //Elemental Card
-
-				if (slotID != ERROR_SLOTID)
-				{
-					charutils::UpdateItem(m_PChar, LOC_INVENTORY, slotID, -1);
-				}
-				else
-				{
-					slotID = inventory->SearchItem(2974); //Trump Card
-					DSP_DEBUG_BREAK_IF(slotID == ERROR_SLOTID);
-					charutils::UpdateItem(m_PChar, LOC_INVENTORY, slotID, -1);
-				}
-            
-    			m_PChar->pushPacket(new CInventoryFinishPacket());
-			}
-				
+                if (slotID != ERROR_SLOTID)
+                {
+                    charutils::UpdateItem(m_PChar, LOC_INVENTORY, slotID, -1);
+                }
+                else
+                {
+                    slotID = inventory->SearchItem(2974); //Trump Card
+                    DSP_DEBUG_BREAK_IF(slotID == ERROR_SLOTID);
+                    charutils::UpdateItem(m_PChar, LOC_INVENTORY, slotID, -1);
+                }
+            }
+    		m_PChar->pushPacket(new CInventoryFinishPacket());
     	}
 
     	if(m_PJobAbility->getID() == ABILITY_SIC && m_PChar->PPet != NULL){//Sic
@@ -2229,22 +2059,22 @@ void CAICharNormal::ActionJobAbilityFinish()
     	}
 
     	m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
-
+		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
     	// Message "player uses..."  for most abilities
         // TODO: all abilities should display their own messages!
     	if(m_PJobAbility->getID() < ABILITY_HEALING_RUBY &&
     		m_PJobAbility->getID() != ABILITY_JUMP &&
     		m_PJobAbility->getID() != ABILITY_HIGH_JUMP &&
     		m_PJobAbility->getID() != ABILITY_SUPER_JUMP &&
-			m_PJobAbility->getID() != ABILITY_SPIRIT_JUMP &&
-			m_PJobAbility->getID() != ABILITY_SOUL_JUMP &&
     		m_PJobAbility->getID() != ABILITY_REWARD &&
     		m_PJobAbility->getID() != ABILITY_SNARL &&
     		m_PJobAbility->getID() != ABILITY_GAUGE)
     	{
     		if (m_PJobAbility->getMessage() == 0)
     			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar, m_PChar, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_JA));
-    	}
+    			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar, m_PChar, m_PJobAbility->getID()+16, 0, MSGBASIC_USES_JA));
+    	
+		}
 
     } // end paralysis if
 
@@ -2355,7 +2185,7 @@ void CAICharNormal::ActionWeaponSkillStart()
 
 /************************************************************************
 *                                                                       *
-*  Can not start weapon skill             		                        *
+*  Невозможно начать weapon skill                                       *
 *                                                                       *
 ************************************************************************/
 
@@ -2540,14 +2370,6 @@ void CAICharNormal::ActionWeaponSkillFinish()
 		m_PChar->health.tp = 0;
 	}
 
-	if(m_PChar->getMod(MOD_CONSERVE_TP) > 0) // Proc Rate
-	{
-		if(rand()%100 <= m_PChar->getMod(MOD_CONSERVE_TP))
-		{
-			m_PChar->health.tp += rand()%20; // Gives back random 1-20 TP
-			// ShowDebug(CL_CYAN"Conserve TP Proc \n");
-		}
-	}
 
 	//incase a TA party member is available
 	CBattleEntity* taChar = NULL;
@@ -2737,7 +2559,7 @@ void CAICharNormal::ActionWeaponSkillFinish()
             if(PTarget->objtype == TYPE_MOB){
 
                 CMobEntity* mob = (CMobEntity*)PTarget;
-                mob->PEnmityContainer->UpdateEnmityFromDamage(m_PChar, Action.param, false);
+                mob->PEnmityContainer->UpdateEnmityFromDamage(m_PChar, Action.param);
             }
 
             if (Action.speceffect == SPECEFFECT_HIT && Action.param > 0)
@@ -2916,7 +2738,7 @@ void CAICharNormal::ActionAttack()
 
 	float Distance = distance(m_PChar->loc.p,m_PBattleTarget->loc.p);
 
-	if (Distance > 30*map_config.engage_dist_mod)
+	if (Distance > 30)
 	{
 		m_PChar->pushPacket(new CMessageBasicPacket(m_PChar,m_PBattleTarget,0,0,MSGBASIC_LOSE_SIGHT));
 
@@ -2952,10 +2774,12 @@ void CAICharNormal::ActionAttack()
 		if (battleutils::IsParalyzed(m_PChar))
 		{
 			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleTarget,0,0,MSGBASIC_IS_PARALYZED));
+			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar,m_PBattleTarget,0,0,MSGBASIC_IS_PARALYZED));
 		}
 		else if (battleutils::IsIntimidated(m_PChar, m_PBattleTarget))
 		{
 			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PChar,m_PBattleTarget,0,0,MSGBASIC_IS_INTIMIDATED));
+			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CMessageBasicPacket(m_PChar,m_PBattleTarget,0,0,MSGBASIC_IS_INTIMIDATED));
 		}
 		else
 		{
@@ -3063,8 +2887,8 @@ void CAICharNormal::ActionAttack()
 				{
 					hitRate = battleutils::GetHitRate(m_PChar,m_PBattleTarget,2);
 				}
-				// First compute the probability of hitting the monster
-				// Then need to calculate the critical strike chance
+				// сначала вычисляем вероятность попадания по монстру
+				// затем нужно вычислить вероятность нанесения критического удара
 				if (m_PBattleTarget->StatusEffectContainer->HasStatusEffect(EFFECT_PERFECT_DODGE,0))
 				{
 					Action.messageID = 32;
@@ -3080,7 +2904,9 @@ void CAICharNormal::ActionAttack()
                         Action.messageID = 0;
                         Action.reaction = REACTION_EVADE;
                         m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,1,31));
-                    }
+                       m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,1,31));
+                   
+					}
                     else
                     {
 						bool ignoreSneakTrickAttack = (i != 0); // Sneak attack critical effect should only be given on the first swing.
@@ -3093,10 +2919,11 @@ void CAICharNormal::ActionAttack()
 							Action.reaction   = REACTION_HIT;
 							Action.speceffect = SPECEFFECT_CRITICAL_HIT;
 							Action.messageID  = 67;
-							if(m_PBattleTarget->objtype == TYPE_MOB)
-							{
-								luautils::OnCriticalHit(m_PBattleTarget);
-							}
+
+                            if(m_PBattleTarget->objtype == TYPE_MOB)
+                            {
+    							luautils::OnCriticalHit(m_PBattleTarget);
+                            }
 						}
 						else
 						{
@@ -3106,18 +2933,12 @@ void CAICharNormal::ActionAttack()
 						}
 
 						uint16 bonusDMG = 0;
-						uint8 sataBonusDMG = 0;
 
 						if(m_PChar->GetMJob() == JOB_THF && (!ignoreSneakTrickAttack) &&
 							m_PChar->StatusEffectContainer->HasStatusEffect(EFFECT_SNEAK_ATTACK) &&
 							abs(m_PBattleTarget->loc.p.rotation - m_PChar->loc.p.rotation) < 23)
 							{
 								bonusDMG = m_PChar->DEX();
-								if(m_PChar->getMod(MOD_SNEAK_ATK_MOD) > 0)
-								{
-									bonusDMG = bonusDMG + (bonusDMG * (m_PChar->getMod(MOD_SNEAK_ATK_MOD)/10));
-								}
-								sataBonusDMG = 1;
 								if(rand()%100 < 4) Monster->m_THLvl +=1;
 							}
 
@@ -3126,11 +2947,6 @@ void CAICharNormal::ActionAttack()
 						if(m_PChar->GetMJob() == JOB_THF && (!ignoreSneakTrickAttack) && taChar != NULL)
 						{
 							bonusDMG += m_PChar->AGI();
-							if(m_PChar->getMod(MOD_TRICK_ATK_MOD) > 0)
-							{
-								bonusDMG = bonusDMG + (bonusDMG * (m_PChar->getMod(MOD_TRICK_ATK_MOD)/100));
-							}
-							sataBonusDMG += 1;
 						}
 
 						if (isHTH)
@@ -3163,14 +2979,6 @@ void CAICharNormal::ActionAttack()
 							}
 						}
 
-						if(sataBonusDMG == 1)
-						{
-							damage = damage * (1 + (m_PChar->getMod(MOD_SATA_DMG)/100));
-						}
-						else if(sataBonusDMG == 2)
-						{
-							damage = damage * ( 1 + ((2 * m_PChar->getMod(MOD_SATA_DMG))/100));
-						}
 
 						// do soul eater effect
 						damage = battleutils::doSoulEaterEffect(m_PChar, damage);
@@ -3214,8 +3022,7 @@ void CAICharNormal::ActionAttack()
 
 				if (Action.reaction == REACTION_HIT || Action.reaction == REACTION_BLOCK || Action.reaction == REACTION_GUARD)
 				{
-					CItemWeapon* PAmmo = (CItemWeapon*)m_PChar->getStorage(LOC_INVENTORY)->GetItem(m_PChar->equip[SLOT_AMMO]);
-					damage = battleutils::CheckForDamageMultiplier(PWeapon,damage,i,m_PChar);
+					damage = battleutils::CheckForDamageMultiplier(PWeapon,damage,i);
 					Action.param = battleutils::TakePhysicalDamage(m_PChar, m_PBattleTarget, damage, isBlocked, fstrslot, 1, taChar, true);
 				}
 				else
@@ -3246,6 +3053,7 @@ void CAICharNormal::ActionAttack()
 
 			m_PChar->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_ATTACK | EFFECTFLAG_DETECTABLE);
 			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
+			m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE, new CActionPacket(m_PChar));
 		}
 	}
 }
@@ -3259,114 +3067,93 @@ void CAICharNormal::ActionAttack()
 void CAICharNormal::ActionRaiseMenuSelection()
 {
     // TODO: Moghancement Experience needs to be factored in here somewhere.
-    DSP_DEBUG_BREAK_IF(m_PChar->m_hasRaise == 0 || m_PChar->m_hasRaise > 4);
+    DSP_DEBUG_BREAK_IF(m_PChar->m_hasRaise == 0 || m_PChar->m_hasRaise > 3);
 
     m_PChar->animation = ANIMATION_NONE;
 
     uint8 weaknessLvl = 1;
-	uint8 weaknessEffect = 1;
+    if(m_PChar->StatusEffectContainer->HasStatusEffect(EFFECT_WEAKNESS))
+    {
+        //double weakness!
+        weaknessLvl = 2;
+    }
 
-	CItemWeapon* PWeapon = (CItemWeapon*)m_PChar->getStorage(LOC_INVENTORY)->GetItem(m_PChar->equip[SLOT_MAIN]);
-	
-	if(PWeapon->getID() == 18525 &&  (rand()%100 < 10)) // Himthige
-	{
-		weaknessEffect = 0;
-	}
-	if(m_PChar->m_hasRaise == 4)
-	{
-		weaknessEffect = 0;
-	}
-	if(weaknessEffect == 1)
-	{
-		if(m_PChar->StatusEffectContainer->HasStatusEffect(EFFECT_WEAKNESS))
-		{
-			//double weakness! Calculate stuff here
-			weaknessLvl = 2;
-		}
-		//add weakness effect (75% reduction in HP/MP)
-    	if (!m_PChar->getMijinGakure() && !m_PChar->m_PVPFlag)
-    	{
-	    	CStatusEffect* PWeaknessEffect = new CStatusEffect(EFFECT_WEAKNESS,EFFECT_WEAKNESS,weaknessLvl,0,300);
-			m_PChar->StatusEffectContainer->AddStatusEffect(PWeaknessEffect);
-		}
+    //add weakness effect (75% reduction in HP/MP)
+    if (!m_PChar->getMijinGakure() && !m_PChar->m_PVPFlag)
+    {
+	    CStatusEffect* PWeaknessEffect = new CStatusEffect(EFFECT_WEAKNESS,EFFECT_WEAKNESS,weaknessLvl,0,300);
+		m_PChar->StatusEffectContainer->AddStatusEffect(PWeaknessEffect);
+    }
 
-		double ratioReturned = 0.0f;
-		uint16 hpReturned = 1;
+    double ratioReturned = 0.0f;
+	uint16 hpReturned = 1;
 
-		apAction_t Action;
-		m_PChar->m_ActionList.clear();
+    apAction_t Action;
+    m_PChar->m_ActionList.clear();
 
-		Action.ActionTarget = m_PChar;
-		if(m_PChar->m_PVPFlag)
-		{
-			// ballista pvp logic
-			Action.animation = 511;
-			hpReturned = m_PChar->GetMaxHP();
+    Action.ActionTarget = m_PChar;
+    if(m_PChar->m_PVPFlag)
+    {
+        // ballista pvp logic
+        Action.animation = 511;
+        hpReturned = m_PChar->GetMaxHP();
 
-			if(m_PChar->GetMPP() < 50.0f)
-			{
-				m_PChar->health.mp = m_PChar->health.maxmp * 0.5f;
-			}
-		}
-		else if(m_PChar->m_hasRaise == 1)
-		{
-			Action.animation = 511;
-			hpReturned = (m_PChar->getMijinGakure()) ? m_PChar->GetMaxHP()*0.5 : m_PChar->GetMaxHP()*0.1;
-			ratioReturned = 0.50f * (1 - map_config.exp_retain);
-		}
-		else if(m_PChar->m_hasRaise == 2)
-		{
-			Action.animation = 512;
-			hpReturned = (m_PChar->getMijinGakure()) ? m_PChar->GetMaxHP()*0.5 : m_PChar->GetMaxHP()*0.25;
-			ratioReturned = ((m_PChar->GetMLevel() <= 50) ? 0.50f : 0.75f) * (1 - map_config.exp_retain);
-		}
-		else if(m_PChar->m_hasRaise == 3)
-		{
-			Action.animation = 496;
-			hpReturned = m_PChar->GetMaxHP()*0.5;
-			ratioReturned = ((m_PChar->GetMLevel() <= 50) ? 0.50f : 0.90f) * (1 - map_config.exp_retain);
-		}
-		else if(m_PChar->m_hasRaise == 4)
-		{
-			Action.animation = 496;
-			hpReturned = m_PChar->GetMaxHP();
-			ratioReturned = ((m_PChar->GetMLevel() <= 50) ? 0.50f : 0.90f) * (1 - map_config.exp_retain);
-		}
+        if(m_PChar->GetMPP() < 50.0f)
+        {
+            m_PChar->health.mp = m_PChar->health.maxmp * 0.5f;
+        }
+    }
+    else if(m_PChar->m_hasRaise == 1)
+    {
+        Action.animation = 511;
+        hpReturned = (m_PChar->getMijinGakure()) ? m_PChar->GetMaxHP()*0.5 : m_PChar->GetMaxHP()*0.1;
+        ratioReturned = 0.50f * (1 - map_config.exp_retain);
+    }
+    else if(m_PChar->m_hasRaise == 2)
+    {
+        Action.animation = 512;
+        hpReturned = (m_PChar->getMijinGakure()) ? m_PChar->GetMaxHP()*0.5 : m_PChar->GetMaxHP()*0.25;
+        ratioReturned = ((m_PChar->GetMLevel() <= 50) ? 0.50f : 0.75f) * (1 - map_config.exp_retain);
+    }
+    else if(m_PChar->m_hasRaise == 3)
+    {
+        Action.animation = 496;
+        hpReturned = m_PChar->GetMaxHP()*0.5;
+        ratioReturned = ((m_PChar->GetMLevel() <= 50) ? 0.50f : 0.90f) * (1 - map_config.exp_retain);
+    }
+	m_PChar->addHP(((hpReturned < 1) ? 1 : hpReturned));
+    Action.reaction   = REACTION_NONE;
+    Action.speceffect = SPECEFFECT_RAISE;
+    Action.messageID  = 0;
 
-		m_PChar->addHP(((hpReturned < 1) ? 1 : hpReturned));
-		Action.reaction   = REACTION_NONE;
-		Action.speceffect = SPECEFFECT_RAISE;
-		Action.messageID  = 0;
+    m_PChar->m_ActionList.push_back(Action);
+    m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
 
-		m_PChar->m_ActionList.push_back(Action);
-		m_PChar->loc.zone->PushPacket(m_PChar, CHAR_INRANGE_SELF, new CActionPacket(m_PChar));
+    m_PChar->pushPacket(new CCharUpdatePacket(m_PChar));
+    charutils::UpdateHealth(m_PChar);
 
-		m_PChar->pushPacket(new CCharUpdatePacket(m_PChar));
-		charutils::UpdateHealth(m_PChar);
+    uint8 mLevel = (m_PChar->m_LevelRestriction != 0 && m_PChar->m_LevelRestriction < m_PChar->GetMLevel()) ? m_PChar->m_LevelRestriction : m_PChar->GetMLevel();
+    uint16 expLost = mLevel <= 67 ? (charutils::GetExpNEXTLevel(mLevel) * 8 ) / 100 : 2400;
 
-		uint8 mLevel = (m_PChar->m_LevelRestriction != 0 && m_PChar->m_LevelRestriction < m_PChar->GetMLevel()) ? m_PChar->m_LevelRestriction : m_PChar->GetMLevel();
-		uint16 expLost = mLevel <= 67 ? (charutils::GetExpNEXTLevel(mLevel) * 8 ) / 100 : 2400;
+    uint16 xpNeededToLevel = charutils::GetExpNEXTLevel(m_PChar->jobs.job[m_PChar->GetMJob()]) - m_PChar->jobs.exp[m_PChar->GetMJob()];
 
-		uint16 xpNeededToLevel = charutils::GetExpNEXTLevel(m_PChar->jobs.job[m_PChar->GetMJob()]) - m_PChar->jobs.exp[m_PChar->GetMJob()];
+    // Exp is enough to level you and (you're not under a level restriction, or the level restriction is higher than your current main level).
+    if(xpNeededToLevel < expLost && (m_PChar->m_LevelRestriction == 0 || m_PChar->GetMLevel() < m_PChar->m_LevelRestriction))
+    {
+        // Player probably leveled down when they died.  Give they xp for the next level.
+        expLost = m_PChar->GetMLevel() <= 67 ? (charutils::GetExpNEXTLevel(m_PChar->jobs.job[m_PChar->GetMJob()] + 1) * 8 ) / 100 : 2400;
+    }
 
-		// Exp is enough to level you and (you're not under a level restriction, or the level restriction is higher than your current main level).
-		if(xpNeededToLevel < expLost && (m_PChar->m_LevelRestriction == 0 || m_PChar->GetMLevel() < m_PChar->m_LevelRestriction))
-		{
-			// Player probably leveled down when they died.  Give they xp for the next level.
-			expLost = m_PChar->GetMLevel() <= 67 ? (charutils::GetExpNEXTLevel(m_PChar->jobs.job[m_PChar->GetMJob()] + 1) * 8 ) / 100 : 2400;
-		}
+    uint16 xpReturned = ceil(expLost * ratioReturned);
 
-		uint16 xpReturned = ceil(expLost * ratioReturned);
+    if (!m_PChar->getMijinGakure() && !m_PChar->m_PVPFlag)
+    {
+		charutils::AddExperiencePoints(true, m_PChar, m_PChar, xpReturned);
+    }
 
-		if (!m_PChar->getMijinGakure() && !m_PChar->m_PVPFlag)
-		{
-			charutils::AddExperiencePoints(true, m_PChar, m_PChar, xpReturned);
-		}
+	m_PChar->setMijinGakure(false);
 
-		m_PChar->setMijinGakure(false);
-
-		m_ActionType = ACTION_NONE;
-	}
+	m_ActionType = ACTION_NONE;
 }
 
 void CAICharNormal::TransitionBack(bool skipWait)

@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2013 Darkstar Dev Teams
+  Copyright (c) 2010-2012 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@
 
 /************************************************************************
 *                                                                       *  
-*  Initialize the owner of the intellectual                             *
+*  Инициализируем владельца интеллекта                                  *
 *                                                                       *
 ************************************************************************/
 
@@ -43,7 +43,7 @@ CAICharPrisoner::CAICharPrisoner(CCharEntity* PChar)
 
 /************************************************************************
 *                                                                       *
-*  The bulk of intelligence - the main loop                             *
+*  Основная часть интеллекта - главный цикл                             *
 *                                                                       *
 ************************************************************************/
 

@@ -132,7 +132,7 @@ public:
 	int32 getYPos(lua_State*);				// Get Entity Y position
 	int32 getZPos(lua_State*);				// Get Entity Z position
 	int32 getRotPos(lua_State*);			// Get Entity Rot position
- 
+    int32 AirShips(lua_State*);				// Set Entity position (x,y,z,rot) or (x,y,z,rot,zone)
     int32 getPos(lua_State*);				// Get Entity position (x,y,z)
 	int32 getZone(lua_State*);				// Get Entity zone
     int32 getZoneName(lua_State*);          // Get Entity zone name
@@ -361,7 +361,7 @@ public:
 	int32 petAttack(lua_State*);			// Despawns Pet
 	int32 petRetreat(lua_State*);
 	int32 petStay(lua_State*);
-	
+	int32 petAbility(lua_State*);
 	int32 hasPet(lua_State*);				// returns true if the player has a pet
 	int32 getPet(lua_State*);				// Creates an LUA reference to a pet entity
 	int32 getPetID(lua_State*);				// If the entity has a pet, returns the PetID to identify pet type.
@@ -377,12 +377,13 @@ public:
 
 	int32 getContainerSize(lua_State*);	    // Gets the current capacity of a container
 	int32 changeContainerSize(lua_State*);  // Increase/Decreases container size
-	
-	
-	
-	
+	int32 resetPlayer(lua_State*);			// if player is stuck, GM command @resetPlayer name
+	int32 setLevel(lua_State*);				// sets the character's level
+	int32 setsLevel(lua_State*);			// sets the character's level
+	int32 changeJob(lua_State*);			// changes the job of a char (testing only!)
+	int32 setMerits(lua_State*);			// set merits (testing only!)
 	int32 getMerit(lua_State*);
-	
+	int32 changesJob(lua_State*);			// changes the sub job of a char (testing only!)
 	int32 getWeaponDmg(lua_State*);			// gets the current equipped weapons' DMG rating
 	int32 getOffhandDmg(lua_State*);		// gets the current equipped offhand's DMG rating (used in WS calcs)
 	int32 getWeaponDmgRank(lua_State*);		// gets the current equipped weapons' DMG rating for Rank calc

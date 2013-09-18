@@ -711,7 +711,8 @@ void SpawnPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone)
     LoadPet(PMaster, PetID, spawningFromZone);
 
     CPetEntity* PPet = (CPetEntity*)PMaster->PPet;
-
+	if(PPet->m_PetID != NULL)
+	{
 	PPet->Check_Engagment = new CAIPetDummy(PPet);
 	PPet->Check_Engagment->SetLastActionTime(gettick());
 	PPet->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
@@ -731,6 +732,7 @@ void SpawnPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone)
 	{
 		PPet->health.tp = ((CCharEntity*)PMaster)->petZoningInfo.petTP;
 		PPet->health.hp = ((CCharEntity*)PMaster)->petZoningInfo.petHP;
+	}
 	}
 
 }
@@ -1054,7 +1056,10 @@ void Familiar(CBattleEntity* PPet)
 
 void LoadPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone)
 {
-	DSP_DEBUG_BREAK_IF(PetID >= g_PPetList.size());
+	if(PetID >= g_PPetList.size())
+	{
+		return;
+	}
 	if(PMaster->GetMJob()!=JOB_DRG && PetID == PETID_WYVERN) {
 		return;
 	}
