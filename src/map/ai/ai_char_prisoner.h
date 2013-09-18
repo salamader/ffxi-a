@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2013 Darkstar Dev Teams
+  Copyright (c) 2010-2012 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@
 
 /************************************************************************
 *                                                                       *
-*  AI character's behavior, taken into custody		                    *
+*  AI поведения персонажа, заключенного под стражу                      *
 *                                                                       *
 ************************************************************************/
 
@@ -46,7 +46,7 @@ public:
 	CAICharPrisoner(CCharEntity* PChar);
 
 protected:
-	virtual void TransitionBack(bool skipWait = false);
+  virtual void TransitionBack(bool skipWait = false);
 
 	CCharEntity* m_PChar;	
 

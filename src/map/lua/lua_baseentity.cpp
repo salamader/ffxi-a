@@ -563,11 +563,11 @@ inline int32 CLuaBaseEntity::setPos(lua_State *L)
 			((CCharEntity*)m_PBaseEntity)->is_zoning = 1;
 			((CCharEntity*)m_PBaseEntity)->clearPacketList();
 			const int8* Query = "UPDATE chars SET returning = '1',deathstate = '0', pos_zone='%u', pos_x='%0.3f', pos_y='%0.3f', pos_z='%0.3f', pos_rot='%u' WHERE charid = %u";
-        Sql_Query(SqlHandle,Query,((CCharEntity*)m_PBaseEntity)->loc.destination,
-			((CCharEntity*)m_PBaseEntity)->loc.p.x,
-			((CCharEntity*)m_PBaseEntity)->loc.p.y,
-			((CCharEntity*)m_PBaseEntity)->loc.p.z,
-			((CCharEntity*)m_PBaseEntity)->loc.p.rotation,
+        Sql_Query(SqlHandle,Query,(uint16)lua_tointeger(L,5),
+			(float) lua_tonumber(L,1),
+			(float) lua_tonumber(L,2),
+			(float) lua_tonumber(L,3),
+			(uint8) lua_tointeger(L,4),
 			((CCharEntity*)m_PBaseEntity)->id);
 			((CCharEntity*)m_PBaseEntity)->pushPacket(new CServerIPPacket((CCharEntity*)m_PBaseEntity,2));
 			
@@ -4335,22 +4335,18 @@ inline int32 CLuaBaseEntity::addMod(lua_State *L)
 
 //==========================================================//
 
+
 inline int32 CLuaBaseEntity::getMod(lua_State *L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
-    
-	if(lua_isnil(L,1) || !lua_isnumber(L,1))
-	{
-		ShowDebug("PLAYER IS MISSING A MOD\n");
-		
-		return false;
-	}
-	
+
+	DSP_DEBUG_BREAK_IF(lua_isnil(L,1) || !lua_isnumber(L,1));
 
     lua_pushinteger(L,((CBattleEntity*)m_PBaseEntity)->getMod(lua_tointeger(L,1)));
-    return false;
+    return 1;
 }
+
 
 //==========================================================//
 
@@ -5142,7 +5138,7 @@ inline int32 CLuaBaseEntity::updateEnmityFromDamage(lua_State *L)
     if (PEntity != NULL &&
         PEntity->GetBaseEntity()->objtype != TYPE_NPC)
 	{
-		((CMobEntity*)m_PBaseEntity)->PEnmityContainer->UpdateEnmityFromDamage((CBattleEntity*)PEntity->GetBaseEntity(),damage,false);
+		((CMobEntity*)m_PBaseEntity)->PEnmityContainer->UpdateEnmityFromDamage((CBattleEntity*)PEntity->GetBaseEntity(),damage);
 	}
 
 	return 0;
@@ -7497,7 +7493,7 @@ inline int32 CLuaBaseEntity::Zone(lua_State *L)
 	if(PChar !=NULL)
 	{
      
-   if(lua_isnil(L,1) || !lua_isnumber(L,1) || !lua_tolstring(L,1,NULL))
+   if(lua_isnil(L,1) || !lua_isnumber(L,1))
 	{
 		sprintf(buf,"COMMAND Example: .zone ID CS", (uint8)lua_tointeger(L,1));
 	               PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));

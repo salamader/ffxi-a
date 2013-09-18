@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2013 Darkstar Dev Teams
+  Copyright (c) 2010-2012 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -32,10 +32,10 @@
 
 enum MASTERCOMMAND //master as in pet's master
 {
-	MASTERCOMMAND_NONE 				= 0,
-	MASTERCOMMAND_ELEMENTAL_BREATH 	= 1,
-	MASTERCOMMAND_HEALING_BREATH 	= 2,
-	MASTERCOMMAND_SIC 				= 3
+	MASTERCOMMAND_NONE = 0,
+	MASTERCOMMAND_ELEMENTAL_BREATH = 1,
+	MASTERCOMMAND_HEALING_BREATH = 2,
+	MASTERCOMMAND_SIC = 3
 };
 
 enum ACTIONTYPE
@@ -81,7 +81,7 @@ enum ACTIONTYPE
 
 /************************************************************************
 *																		*
-*  This design can not be used directly, only the descendants of		*
+*  Данную конструкцию нельзя использовать напрямую, только из потомков	*
 *																		*
 ************************************************************************/
 
@@ -109,17 +109,17 @@ public:
 	bool			GetAutoAttackEnabled();
 	bool			GetMagicCastingEnabled();
     bool            GetMobAbilityEnabled();
-    bool            MoveTo(position_t* pos); 					// move entity to position. Doesn't pathfind
+    bool            MoveTo(position_t* pos); // move entity to position. Doesn't pathfind
     void			Wait(int32 waitTime);
 
     uint32          GetBattleTime();
 
-	void			SetBattleTarget(CBattleEntity* PEntity); 	//used for pets mainly
+	void			SetBattleTarget(CBattleEntity* PEntity); //used for pets mainly
 	void			SetBattleSubTarget(CBattleEntity* PEntity); //used for pets mainly
 	void			SetCurrentSpell(uint16 SpellID);
 	void			SetCurrentWeaponSkill(uint16 WSkillID);
 	void			SetCurrentJobAbility(uint16 JobAbilityID);
-	void			SetCurrentMobSkill(CMobSkill* skill); 		// DEBUG
+	void			SetCurrentMobSkill(CMobSkill* skill); // DEBUG
     void            SetLastActionTime(uint32 time);
 	void			SetLastMagicTime(uint32 time);
 	void			SetCurrentAction(ACTIONTYPE Action, uint16 TargetID = 0);
@@ -134,42 +134,42 @@ public:
     CAIGeneral();
 	~CAIGeneral();
 
-    CPathFind*       m_PPathFind; 							// finds paths
-    bool			 m_interruptSpell; 						// forces interrupt of current spell being cast
+    CPathFind*       m_PPathFind; // finds paths
+    bool			 m_interruptSpell; // forces interrupt of current spell being cast
 
     // states
     CMagicState*     m_PMagicState;
 
 private:
 
-    //uint32			m_StartBattle;		// Battle start time
+    //uint32			m_StartBattle;			// Battle start time
 
 protected:
 
-	virtual void	TransitionBack(bool skipWait) = 0; // transition back to correct state (usually attack or roaming)
+	virtual void			TransitionBack(bool skipWait) = 0; // transition back to correct state (usually attack or roaming)
 
-	ACTIONTYPE		m_ActionType;			// current action (state)
-	uint16			m_ActionTargetID;		// an additional objective, participating in action
-	uint32			m_LastActionTime;		// the start of any action
+	ACTIONTYPE		m_ActionType;			// текущее действие (состояние)
+	uint16			m_ActionTargetID;		// дополнительная цель, участвующая в действии
+	uint32			m_LastActionTime;		// время начала любого действия
 	uint32			m_LastMeleeTime;		// Last time melee hit occurred
 	uint32			m_LastMagicTime;		// Last time magic spell was -attempted-
-    uint32			m_Tick;					// current time value
+    uint32			m_Tick;					// текущее значение времени
     uint32			m_StartBattle;			// Battle start time
 	uint16			m_CorsairDoubleUp;		// Last used corsair roll eligible for DU
 	bool			m_AutoAttackEnabled;    // Flag to enable/disable auto attack
-	bool			m_MobAbilityEnabled;	// Flag to enable/disable mob skills
+	bool			m_MobAbilityEnabled;		// Flag to enable/disable mob skills
 
-	CSpell*			m_PSpell;				// cast a spell
-	CItemUsable*	m_PItemUsable;			// used item
-	CBattleEntity*	m_PBattleTarget;		// battle target - the main
-	CBattleEntity*	m_PBattleSubTarget;		// battle target - an additional
+	CSpell*			m_PSpell;				// читаемое заклинание
+	CItemUsable*	m_PItemUsable;			// используемый предмет
+	CBattleEntity*	m_PBattleTarget;		// боевая цель - основная
+	CBattleEntity*	m_PBattleSubTarget;		// боевая цель - дополнительная
 	CWeaponSkill*   m_PWeaponSkill;
 	CAbility*		m_PJobAbility;
 	CMobSkill*		m_PMobSkill;
-    CTargetFind*	m_PTargetFind; 			// finds targets for AoEs
+    CTargetFind*  m_PTargetFind; // finds targets for AoEs
 
-	uint32			m_WaitTime;
-	uint32			m_LastWaitTime;
+	uint32 m_WaitTime;
+	uint32 m_LastWaitTime;
 
 };
 

@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2013 Darkstar Dev Teams
+  Copyright (c) 2010-2012 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -133,11 +133,11 @@ inline int32 CLuaMobSkill::getParam(lua_State* L)
   return 1;
 }
 
-/************************************************************************
-*																		*
-*			get the TP for calculations									*
-*																		*
-************************************************************************/
+/*************************************************************************
+
+			get the TP for calculations
+
+**************************************************************************/
 
 inline int32 CLuaMobSkill::getTP(lua_State* L)
 {
@@ -163,7 +163,7 @@ Lunar<CLuaMobSkill>::Register_t CLuaMobSkill::methods[] =
     LUNAR_DECLARE_METHOD(CLuaMobSkill,isConal),
     LUNAR_DECLARE_METHOD(CLuaMobSkill,isSingle),
     LUNAR_DECLARE_METHOD(CLuaMobSkill,getParam),
-	LUNAR_DECLARE_METHOD(CLuaMobSkill,getID),
+  LUNAR_DECLARE_METHOD(CLuaMobSkill,getID),
 	LUNAR_DECLARE_METHOD(CLuaMobSkill,getTotalTargets),
 	LUNAR_DECLARE_METHOD(CLuaMobSkill,getTP),
 	{NULL,NULL}

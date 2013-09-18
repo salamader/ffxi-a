@@ -143,9 +143,7 @@ namespace battleutils
 	bool				IsParried(CBattleEntity* PAttacker, CBattleEntity* PDefender);
     bool				IsGuarded(CBattleEntity* PAttacker, CBattleEntity* PDefender);
     bool				IsBlocked(CBattleEntity* PAttacker, CBattleEntity* PDefender);
-	uint8				GetRetaliationRate(CBattleEntity* PAttacker, CBattleEntity* PDefender);
-	void 				HandleRetaliation(CBattleEntity* PAttacker, CBattleEntity* PDefender,apAction_t* Action, uint16 damage);
-	bool                TryInterruptSpell(CBattleEntity* PAttacker, CBattleEntity* PDefender);
+	bool TryInterruptSpell(CBattleEntity* PAttacker, CBattleEntity* PDefender);
 	float				GetRangedPDIF(CBattleEntity* PAttacker, CBattleEntity* PDefender);
 	void				HandleRangedAdditionalEffect(CCharEntity* PAttacker, CBattleEntity* PDefender,apAction_t* Action);
     uint16              CalculateSpikeDamage(CBattleEntity* PAttacker, CBattleEntity* PDefender, uint8 spikesType);
@@ -166,13 +164,10 @@ namespace battleutils
     CItemArmor*			GetEntityArmor(CBattleEntity* PEntity, SLOTTYPE Slot);
 
 	uint32				HandleSpecialPhysicalDamageReduction(CCharEntity* PAttacker, uint32 damage, apAction_t* Action);
-	uint32				HandleDamageToMP(CCharEntity* PAttacker, uint32 damage, apAction_t* Action);
-	uint32				HandleDamageToTP(CCharEntity* PAttacker, uint32 damage, apAction_t* Action);
-	uint32				HandleBlockToMP(CCharEntity* PAttacker, uint32 damage, apAction_t* Action);
     void				MakeEntityStandUp(CBattleEntity* PEntity);
     bool				IsEngauged(CBattleEntity* PEntity);
 	CBattleEntity*		getAvailableTrickAttackChar(CBattleEntity* taUser, CBattleEntity* PMob);
-	uint32				CheckForDamageMultiplier(CItemWeapon* PWeapon, uint32 damage, uint8 hitNumber, CCharEntity* m_PChar);
+	uint32				CheckForDamageMultiplier(CItemWeapon* PWeapon, uint32 damage, uint8 hitNumber);
     bool				HasNinjaTool(CBattleEntity* PEntity, CSpell* PSpell, bool ConsumeTool);
 
 	bool				TryCharm(CBattleEntity* PCharmer, CBattleEntity* PVictim, uint32 base);

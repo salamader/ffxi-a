@@ -87,7 +87,7 @@ public:
 	const int8* getName();
 	void		setName(int8* name);
 
-private:
+//private:
 
 	uint16		m_ID;
     uint16      m_TotalTargets;

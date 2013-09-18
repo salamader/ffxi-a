@@ -1,7 +1,7 @@
 /*
 ===========================================================================
 
-  Copyright (c) 2010-2013 Darkstar Dev Teams
+  Copyright (c) 2010-2012 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -57,9 +57,4 @@ public:
 	CChatMessagePacket(CCharEntity* PChar, CHAT_MESSAGE_TYPE MessageType, int8* buff);
 };
 
-class CNPCMessagePacket : public CBasicPacket
-{
-public:
-	CNPCMessagePacket(int8* name, uint8 zone, int8* dat,uint8 size);
-};
 #endif

@@ -1,7 +1,7 @@
 /*
 ===========================================================================
 
-  Copyright (c) 2010-2013 Darkstar Dev Teams
+  Copyright (c) 2010-2012 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -42,17 +42,17 @@ class CBattleEntity;
 
 enum AOERADIUS
 {
-  AOERADIUS_ATTACKER	= 1,
-  AOERADIUS_TARGET		= 2
+  AOERADIUS_ATTACKER = 1,
+  AOERADIUS_TARGET = 2
 };
 
 enum FINDFLAGS
 {
-  FINDFLAGS_NONE		= 0,
-  FINDFLAGS_DEAD		= 1, // target dead
-  FINDFLAGS_ALLIANCE	= 2, // force target alliance
-  FINDFLAGS_PET			= 4, // force target pet
-  FINDFLAGS_UNLIMITED	= 8 // unlimited distance
+  FINDFLAGS_NONE = 0,
+  FINDFLAGS_DEAD = 1, // target dead
+  FINDFLAGS_ALLIANCE = 2, // force target alliance
+  FINDFLAGS_PET = 4, // force target pet
+  FINDFLAGS_UNLIMITED = 8 // unlimited distance
 };
 
 /*
@@ -75,11 +75,11 @@ Cases:
 
 */
 enum FINDTYPE {
-  FIND_NONE				= 0,
-  FIND_PLAYER_PLAYER	= 1,
-  FIND_MONSTER_MONSTER	= 2,
-  FIND_PLAYER_MONSTER	= 3,
-  FIND_MONSTER_PLAYER	= 4
+  FIND_NONE = 0,
+  FIND_PLAYER_PLAYER = 1,
+  FIND_MONSTER_MONSTER = 2,
+  FIND_PLAYER_MONSTER = 3,
+  FIND_MONSTER_PLAYER = 4
 };
 
 class CTargetFind

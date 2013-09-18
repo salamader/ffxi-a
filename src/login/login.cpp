@@ -45,6 +45,7 @@
 
 const char *LOGIN_CONF_FILENAME = NULL;
 
+//lan_config_t   lan_config;		// lan settings
 login_config_t login_config;	//main settings
 
 
@@ -74,7 +75,8 @@ int32 do_init(int32 argc,char** argv)
 			runflag = 0;
 	}
 
-	
+	//lan_config_default(&lan_config);
+	//lan_config_read(lan_cfgName,&lan_config);
 
 
 	login_config_default();
@@ -82,13 +84,13 @@ int32 do_init(int32 argc,char** argv)
 
 
 	login_fd		   = makeListenBind_tcp(login_config.uiLoginAuthIp,login_config.usLoginAuthPort,connect_client_login);
-
+	ShowStatus("The login-server-auth is " CL_GREEN"ready" CL_RESET" (Server is listening on the port %u).\n\n", login_config.usLoginAuthPort);
 
 	login_lobbydata_fd = makeListenBind_tcp(login_config.uiLobbyDataIp,login_config.usLobbyDataPort,connect_client_lobbydata);
-
+	ShowStatus("The login-server-lobbydata is " CL_GREEN"ready" CL_RESET" (Server is listening on the port %u).\n\n", login_config.usLobbyDataPort);
 
 	login_lobbyview_fd = makeListenBind_tcp(login_config.uiLobbyViewIp,login_config.usLobbyViewPort,connect_client_lobbyview);
-	
+	ShowStatus("The login-server-lobbyview is " CL_GREEN"ready" CL_RESET" (Server is listening on the port %u).\n\n", login_config.usLobbyViewPort);
 
 	SqlHandle = Sql_Malloc();
 	if( Sql_Connect(SqlHandle,login_config.mysql_login,
@@ -110,7 +112,7 @@ int32 do_init(int32 argc,char** argv)
 		ShowError("do_init: Impossible to optimise tables\n");
 	}
 	
-
+	ShowStatus("The login-server is " CL_GREEN"ready" CL_RESET" to work...\n");
 	CTaskMgr::getInstance()->AddTask("Check_Lobby_For_Player_Cleanup", gettick(), NULL, CTaskMgr::TASK_INTERVAL, Check_Login_For_Player_Cleanup, 700);
 	return 0;
 }
@@ -134,18 +136,57 @@ uint32 lobby_time = getSysSecond()+3;
 login_sd_list_t::iterator it = login_sd_list.begin(); 
 while(it != login_sd_list.end())
 {
-	uint32 on_map = 0; 
+	uint32 on_map = 0; /// 0 means no they are not on the map and 1 say they are on map
 	uint32 map_time = 0;
 	uint32 online = 0;
-	
+	//ShowMessage("LOBBY_TIME %u LOGIN LIST %u\n",lobby_time,(*it)->accid);
 	const char * Query = "SELECT map_time,on_map,online FROM accounts WHERE id= '%u';";
 	           int32 ret3 = Sql_Query(SqlHandle,Query,(*it)->accid);
-			   if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+			   if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)//START DATABASE SELECTION
 	            {
 				map_time =  Sql_GetUIntData(SqlHandle,0);
 				on_map =  Sql_GetUIntData(SqlHandle,1);
 				online =  Sql_GetUIntData(SqlHandle,2);
-				
+				//ShowMessage("LOBBY_TIME %u MAP_TIME %u\n",lobby_time,map_time);
+				//const char* Query = "UPDATE accounts SET  lobby_time = '%u' WHERE id = %u";
+                //Sql_Query(SqlHandle,Query,lobby_time,(*it)->accid);
+				if(online == 0)
+				{
+                // ShowMessage("ONLINE STATUS MIGHT NEED LOGOUT_CORRECT %u\n",online);
+				}
+				if(on_map == 1)
+				{
+					//lobby_session  accounts_sessions accid
+                ShowMessage("THIS PLAYER IS ON MAP SO LETS COUNT OUT ACCOUNT ID %u\n",(*it)->accid);
+				/*
+				orderby lobby session list and update targetid by 1 for each user.
+				const char* Query = "UPDATE accounts_sessions SET lobby_session ='%u' WHERE accid = %u";
+                Sql_Query(SqlHandle,Query,map_time ,(*it)->accid);
+				const int8* fmtQuery = "SELECT max(targid) FROM accounts_sessions";
+
+	                  if( Sql_Query(SqlHandle,fmtQuery) == SQL_ERROR )
+	                    {
+		                 return;
+	                    }
+
+	                  uint32 targid = 0;
+
+	                  if( Sql_NumRows(SqlHandle) != 0 )
+	                    {
+		                Sql_NextRow(SqlHandle);
+		
+		                targid = Sql_GetUIntData(SqlHandle,0) + 1;
+						ShowMessage("MAX TARGETID COUNT %u \n" CL_RESET,targid);
+						if(targid == 1)
+						{
+							targid = 1024;
+							ShowMessage("MAX TARGETID NEW COUNT %u \n" CL_RESET,targid);
+						}
+                         PChar->targid = targid;
+					  }
+
+				*/
+				}
 				if(map_time == 0 
 					|| map_time == 1 
 					|| map_time == 2 
@@ -157,15 +198,17 @@ while(it != login_sd_list.end())
 					
 				{ 
 					map_time = lobby_time -7;
-					
+					//ShowMessage("MAP_TIME %u IS LESS THEN LOBBY COUNTER\n",map_time);
                  const char* Query = "UPDATE accounts SET map_time ='%u' WHERE id = %u";
                 Sql_Query(SqlHandle,Query,map_time ,(*it)->accid);
 				}
 				if(lobby_time==map_time)
 				{
-                if(on_map == 1)
+               // ShowMessage("LOBBY_TIME %u == MAP_TIME %u\n",lobby_time,map_time);
+				//OK PLAYER IS FULLY LOGIN LETS UPDATE THE ACCOUTNS TABLE TO SAY ON MAP
+				if(on_map == 1)
 				{
-					
+				//lobby_time +=2;	
                 ShowMessage("CLEAN UP PLAYER LEFT ON MAP SERVER NOW %u\n",on_map);
 				const char* Query = "UPDATE accounts SET online ='0',on_map ='0' WHERE id = %u";
                 Sql_Query(SqlHandle,Query,(*it)->accid);
@@ -173,7 +216,7 @@ while(it != login_sd_list.end())
                 Sql_Query(SqlHandle,Query,(*it)->accid);
 				ShowMessage("ERASE THE ACCOUNT FROM LOBBY SERVER NOW %u\n",(*it)->accid);
 				do_close_lobbydata((*it),(*it)->login_fd);
-				
+				//login_sd_list.erase(it);
 				
 				}
 				return false;

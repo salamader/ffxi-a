@@ -1,7 +1,7 @@
 /*
 ===========================================================================
 
-  Copyright (c) 2010-2013 Darkstar Dev Teams
+  Copyright (c) 2010-2012 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -325,7 +325,7 @@ bool CPathFind::FindPath(position_t* start, position_t* end)
 
   if(m_pathLength <= 0)
   {
-    // ShowError("CPathFind::FindPath Entity (%d) could not find path", m_PTarget->id);
+    ShowError("CPathFind::FindPath Entity (%d) could not find path", m_PTarget->id);
     return false;
   }
 
@@ -339,7 +339,7 @@ bool CPathFind::FindRandomPath(position_t* start, float maxRadius)
 
   if(m_pathLength <= 0)
   {
-    // ShowError("CPathFind::FindRandomPath Entity (%d) could not find path\n", m_PTarget->id);
+    ShowError("CPathFind::FindRandomPath Entity (%d) could not find path\n", m_PTarget->id);
     return false;
   }
 
