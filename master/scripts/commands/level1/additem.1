@@ -1,0 +1,25 @@
+-----------------------------------
+--	[Command name]: addItem
+--	[Author      ]: 
+--	[Description ]: 
+-----------------------------------
+
+-----------------------------------
+-- Action
+-----------------------------------
+ function onTrigger(player,itemID,quantity)
+    local TextIDs = "scripts/zones/" .. player:getZoneName() .. "/TextIDs";
+    package.loaded[TextIDs] = nil;
+    require(TextIDs); 
+    
+	if (player:getFreeSlotsCount() == 0) then 
+		player:messageSpecial(ITEM_CANNOT_BE_OBTAINED,itemID);
+	else if(quantity) then
+		player:add_Item(itemID,quantity);
+                player:messageSpecial(ITEM_OBTAINED,itemID);
+             else 
+                 player:add_Item(itemID,quantity);
+		
+	end
+     end
+end;
