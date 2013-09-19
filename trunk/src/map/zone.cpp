@@ -1138,8 +1138,7 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
           PCurrentMob->PEnmityContainer->AddBaseEnmity(PChar);
         }
 		}
-		else
-		{
+		
 		
 
 		if (PCurrentMob->status == STATUS_UPDATE && CurrentDistance < 50)
@@ -1179,8 +1178,7 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 		}
 	}
 	}
-    }
-	else
+    else
 	{
      ShowDebug(CL_CYAN"SPAWNING MOBS: WITH NO PLAYER \n" CL_RESET);
 	}
@@ -1304,8 +1302,7 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 		PChar->pushPacket(new CEntityUpdatePacket(PCharTarget,ENTITY_UPDATE));
 			
 		}
-		else
-		{
+		
 
 		if (PChar != PCurrentChar)
 		{
@@ -1342,7 +1339,7 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 			}
 		}
 	}
-  }
+  
 }
 
 /************************************************************************
