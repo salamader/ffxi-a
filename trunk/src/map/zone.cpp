@@ -898,8 +898,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 			ShowDebug("Removed %s from the BCNM they were in as they have left the zone.\n",PChar->GetName());
 		}
 
-		if(PChar->loc.destination==0){ //this player is disconnecting/logged out, so move them to the entrance
-			//move depending on zone
+		if(PChar->loc.destination==0){
 			int pos[4] = {0,0,0,0};
 			instanceutils::getStartPosition(m_zoneID,pos);
 			if(pos!=NULL){
@@ -907,7 +906,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 				PChar->loc.p.y = pos[1];
 				PChar->loc.p.z = pos[2];
 				PChar->loc.p.rotation = pos[3];
-				//charutils::SaveCharPosition(PChar);
+				
 			}
 			else{
 				ShowWarning("%s has disconnected from the BCNM but cannot move them to the lobby as the lobby position is unknown!\n",PChar->GetName());
@@ -947,7 +946,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 	}
 	
 
-    // TODO: могут возникать проблемы с переходом между одной и той же зоной (zone == prevzone)
+    
 
 	m_charList.erase(PChar->targid);
 	PChar->SpawnPCList.erase(PChar->id);
@@ -1021,8 +1020,7 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 	}
 	DSP_DEBUG_BREAK_IF(PChar->PTreasurePool != NULL);
 
-    // ищем свободный targid для входящего в зону персонажа
-   // PChar->targid  = 1024;
+   
 	PChar->is_zoning = -1;
 	uint32 targid = 0;
 	uint32 charid = 0;
@@ -1095,14 +1093,7 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 	
 }
 
-/************************************************************************
-*																		*
-*  Проверка видимости монстров персонажем. Дистанцию лучше вынести в	*
-*  глобальную переменную (настройки сервера)							*
-*  Именно в этой функции будем проверять агрессию мостров, чтобы не		*
-*  вычислять distance несколько раз (например в ZoneServer)				*
-*																		*
-************************************************************************/
+
 void CZone::UpdateMOBs(CCharEntity* PChar)
 {
 	
@@ -1125,7 +1116,7 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 		float CurrentDistance = distance(PChar->loc.p, PCurrentMob->loc.p);
 		if (CurrentDistance < 50 && PChar->loc.destination == PCurrentMob->loc.destination )
 		{
-        ShowDebug(CL_CYAN"UPDATING MOBS: TARGET ID %u \n" CL_RESET,PCurrentMob->targid);
+        //ShowDebug(CL_CYAN"UPDATING MOBS: TARGET ID %u \n" CL_RESET,PCurrentMob->targid);
 		PChar->pushPacket(new CEntityUpdatePacket(PMob,ENTITY_UPDATE));
 		uint16 expGain = (uint16)charutils::GetRealExp(PChar->GetMLevel(),PCurrentMob->GetMLevel());
 

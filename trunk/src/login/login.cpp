@@ -147,7 +147,7 @@ while(it != login_sd_list.end())
 				map_time =  Sql_GetUIntData(SqlHandle,0);
 				on_map =  Sql_GetUIntData(SqlHandle,1);
 				online =  Sql_GetUIntData(SqlHandle,2);
-				//ShowMessage("LOBBY_TIME %u MAP_TIME %u\n",lobby_time,map_time);
+				ShowMessage("LOBBY_TIME %u MAP_TIME %u\n",lobby_time,map_time);
 				//const char* Query = "UPDATE accounts SET  lobby_time = '%u' WHERE id = %u";
                 //Sql_Query(SqlHandle,Query,lobby_time,(*it)->accid);
 				if(online == 0)
@@ -204,7 +204,7 @@ while(it != login_sd_list.end())
 				}
 				if(lobby_time==map_time)
 				{
-               // ShowMessage("LOBBY_TIME %u == MAP_TIME %u\n",lobby_time,map_time);
+                 //ShowMessage("LOBBY_TIME %u == MAP_TIME %u\n",lobby_time,map_time);
 				//OK PLAYER IS FULLY LOGIN LETS UPDATE THE ACCOUTNS TABLE TO SAY ON MAP
 				if(on_map == 1)
 				{
@@ -215,7 +215,7 @@ while(it != login_sd_list.end())
 				  Query = "UPDATE chars SET online = '0',shutdown='1' WHERE accid = %u";
                 Sql_Query(SqlHandle,Query,(*it)->accid);
 				ShowMessage("ERASE THE ACCOUNT FROM LOBBY SERVER NOW %u\n",(*it)->accid);
-				do_close_lobbydata((*it),(*it)->login_fd);
+				//do_close_lobbydata((*it),(*it)->login_fd);
 				//login_sd_list.erase(it);
 				
 				}
