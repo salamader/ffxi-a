@@ -4031,7 +4031,11 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	{
 		if(PChar->Account_Level==1 || PChar->Account_Level==2 || PChar->Account_Level==3 || PChar->Account_Level==4)
 		{
-           
+			string_t message = data+6;
+			ShowDebug(CL_BG_RED"LANGUAGE ID = %u\n"CL_RESET,PChar->search.language);
+			const int8* Query = "UPDATE server_message SET server_message = '%s' WHERE id = %u";
+                       Sql_Query(SqlHandle,Query,message.c_str(), PChar->search.language);
+           PacketParser[0x0DB](session, PChar, 0);
 			return;
 		}
 			
@@ -4195,7 +4199,7 @@ void PCharTellSystem(map_session_data_t* session, CCharEntity* PChar, int8* data
 				}
 				return;
 			}
-		if( PTargetChar->status != STATUS_DISAPPEAR)
+		else if( PTargetChar->status != STATUS_DISAPPEAR)
 		{
 			//ShowNotice(CL_GREEN"SENDING MESSAGE: RECEIVER IS NOT ZONING SEND MESSAGE OK\n" CL_RESET);
 			if(PTargetChar == PChar)
@@ -4679,6 +4683,7 @@ void SmallPacket0x0DC(map_session_data_t* session, CCharEntity* PChar, int8* dat
 void SmallPacket0x0DB(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
 	//server_message server_message
+	PChar->search.language = RBUFB(data,(0x24));
 	string_t server_message = "Welcome To Darkstar";
 			   const char * Query = "SELECT server_message FROM server_message WHERE id= '%u';"; //YOU CAN DO THIS WILL IT TO GET THE ID OF THE PLAYER LANGUAGE TO THEN SUBMIT THE CORRECT MESSAGE
 	           int32 ret3 = Sql_Query(SqlHandle,Query,PChar->search.language);
@@ -4687,13 +4692,11 @@ void SmallPacket0x0DB(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				server_message =  Sql_GetData(SqlHandle,0);
 	             char buf[110];
                   sprintf(buf,"%s",server_message.c_str());
-	 
-	            PChar->search.language = RBUFB(data,(0x24));
 	            PChar->pushPacket(new CServerMessagePacket(("%s",buf),PChar->search.language));
 			   }
 			   else
 			   {
-                 PChar->search.language = RBUFB(data,(0x24));
+                 
 	            PChar->pushPacket(new CServerMessagePacket(("%s",server_message.c_str()),PChar->search.language));
 			   }
 	return;
