@@ -1105,73 +1105,11 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 ************************************************************************/
 void CZone::UpdateMOBs(CCharEntity* PChar)
 {
-	if(PChar != NULL && PChar->loc.zone != NULL)
-	{
-		/*UNKOWN NEED THIS FOR NETWORK COULD NOT SEE MOBS MOVE OR DO ANY ACTION WITH OUT IT*/
-	for (EntityList_t::const_iterator it = m_mobList.begin() ; it != m_mobList.end() ; ++it)
-	{
-		CMobEntity* PCurrentMob = (CMobEntity*)it->second;
-		
-        CMobEntity* PMob = (CMobEntity*)PChar->loc.zone->GetEntity(PCurrentMob->targid, TYPE_MOB);
-
-		float CurrentDistance = distance(PChar->loc.p, PCurrentMob->loc.p);
-		if (CurrentDistance < 20)
-		{
-       // ShowDebug(CL_CYAN"UPDATING MOBS: TARGET ID %u \n" CL_RESET,PCurrentMob->targid);
-		PChar->pushPacket(new CEntityUpdatePacket(PMob,ENTITY_UPDATE));
-		}
-		
-     
-	}
-	}
-	else
-	{
-     ShowDebug(CL_CYAN"UPDATING MOBS: WITH NO PLAYER \n" CL_RESET);
-	}
+	
 }
 void CZone::UpdatePChars(CCharEntity* PChar)
 {
-	if(m_charList.empty())
-	{
-		//ShowDebug(CL_RED" THE PLAYER LIST EMPTY??\n"CL_RESET);
-		return;
-	}
-	if(!m_charList.size() != NULL)
-	{
-		//ShowDebug(CL_RED"IS THE PLAYER LIST SIZE NULL??\n"CL_RESET);
-		return;
-	}
-	if(PChar != NULL && PChar->loc.zone != NULL)
-	{
-		/*UNKOWN NEED THIS FOR NETWORK COULD NOT SEE PLAYERS LOGING OUT CORRECTLY MOVE
-		NORMAL WAY SEEN LOGOUT CORRECTLY ON IP 10.0 .0.2 BUT ON IP 10.0.0.4 THE OTHER USERS WAS STILL ON MAP*/
-	for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
-	{
-		CCharEntity* PCurrentPChar = (CCharEntity*)it->second;
-		
-        CCharEntity* PCharTarget = (CCharEntity*)PChar->loc.zone->GetEntity(PCurrentPChar->targid, TYPE_PC);
-
-		float CurrentDistance = distance(PChar->loc.p, PCurrentPChar->loc.p);
-		if (CurrentDistance < 50)
-		{
-			
-        ShowDebug(CL_CYAN"UPDATING PCHARS: TARGET ID %u \n" CL_RESET,PCurrentPChar->targid);
-		PChar->pushPacket(new CEntityUpdatePacket(PCharTarget,ENTITY_UPDATE));
-			
-		}
-		else
-		{
-                 ShowDebug(CL_CYAN"UPDATING PCHARS: TARGET ID %u IS OUT OF RANGE DESPAWN \n" CL_RESET,PCurrentPChar->targid);
-				 PChar->pushPacket(new CEntityUpdatePacket(PCharTarget,ENTITY_DESPAWN));
-		}
-		
-     
-	}
-	}
-	else
-	{
-     ShowDebug(CL_CYAN"UPDATING MOBS: WITH NO PLAYER \n" CL_RESET);
-	}
+	
 }
 
 void CZone::SpawnMOBs(CCharEntity* PChar)
@@ -1182,8 +1120,27 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 	{
 		CMobEntity* PCurrentMob = (CMobEntity*)it->second;
         SpawnIDList_t::iterator MOB = PChar->SpawnMOBList.lower_bound(PCurrentMob->id);
+		CMobEntity* PMob = (CMobEntity*)PChar->loc.zone->GetEntity(PCurrentMob->targid, TYPE_MOB);
 
 		float CurrentDistance = distance(PChar->loc.p, PCurrentMob->loc.p);
+		if (CurrentDistance < 50 && PChar->loc.destination == PCurrentMob->loc.destination )
+		{
+        ShowDebug(CL_CYAN"UPDATING MOBS: TARGET ID %u \n" CL_RESET,PCurrentMob->targid);
+		PChar->pushPacket(new CEntityUpdatePacket(PMob,ENTITY_UPDATE));
+		uint16 expGain = (uint16)charutils::GetRealExp(PChar->GetMLevel(),PCurrentMob->GetMLevel());
+
+        CAIMobDummy* PAIMob = (CAIMobDummy*)PCurrentMob->Check_Engagment;
+
+        bool validAggro = expGain > 50 || PChar->animation == ANIMATION_HEALING || PCurrentMob->getMobMod(MOBMOD_ALWAYS_AGGRO);
+
+        if(validAggro && PAIMob->CanAggroTarget(PChar))
+        {
+          PCurrentMob->PEnmityContainer->AddBaseEnmity(PChar);
+        }
+		}
+		else
+		{
+		
 
 		if (PCurrentMob->status == STATUS_UPDATE && CurrentDistance < 50)
 		{
@@ -1191,10 +1148,7 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 				PChar->SpawnMOBList.key_comp()(PCurrentMob->id, MOB->first))
 			{
 				PChar->SpawnMOBList.insert(MOB, SpawnIDList_t::value_type(PCurrentMob->id, PCurrentMob));
-				PChar->pushPacket(new CEntityUpdatePacket(PCurrentMob, ENTITY_SPAWN));
-				PChar->pushPacket(new CEntityUpdatePacket(PCurrentMob, ENTITY_UPDATE));
-				PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CEntityUpdatePacket(PCurrentMob, ENTITY_SPAWN));
-	            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PCurrentMob, ENTITY_UPDATE));
+				
 			}
 
 			if (PChar->isDead() || PCurrentMob->PMaster != NULL)
@@ -1225,6 +1179,7 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 		}
 	}
 	}
+    }
 	else
 	{
      ShowDebug(CL_CYAN"SPAWNING MOBS: WITH NO PLAYER \n" CL_RESET);
@@ -1339,6 +1294,18 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 	{
 	CCharEntity* PCurrentChar = (CCharEntity*)it->second;
 		SpawnIDList_t::iterator PC = PChar->SpawnPCList.find(PCurrentChar->id);
+		CCharEntity* PCharTarget = (CCharEntity*)PChar->loc.zone->GetEntity(PCurrentChar->targid, TYPE_PC);
+
+		float CurrentDistance = distance(PChar->loc.p, PCurrentChar->loc.p);
+		if (CurrentDistance < 50 && PChar->loc.destination == PCurrentChar->loc.destination )
+		{
+			//IF THEY ARE IN RANGE LETS SEE THEM WITH UPDATE ELSE LETS NOT SEE THEM 
+        //ShowDebug(CL_CYAN"UPDATING PCHARS: TARGET ID %u \n" CL_RESET,PCurrentPChar->targid);
+		PChar->pushPacket(new CEntityUpdatePacket(PCharTarget,ENTITY_UPDATE));
+			
+		}
+		else
+		{
 
 		if (PChar != PCurrentChar)
 		{
@@ -1349,10 +1316,10 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 				if( PC == PChar->SpawnPCList.end() )
 				{
 					ShowDebug(CL_CYAN"SPAWNING PC THISONE \n" CL_RESET);
-					PChar->SpawnPCList[PCurrentChar->id] = PCurrentChar;
+					//PChar->SpawnPCList[PCurrentChar->id] = PCurrentChar;
 					PChar->pushPacket(new CCharPacket(PCurrentChar,ENTITY_SPAWN));
 
-					PCurrentChar->SpawnPCList[PChar->id] = PChar;
+					//PCurrentChar->SpawnPCList[PChar->id] = PChar;
 					PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_SPAWN));
 				}else
 				{
@@ -1366,15 +1333,16 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 				if( PC != PChar->SpawnPCList.end() )
 				{
 					ShowDebug(CL_CYAN"ELSE SPAWNING PC THISONE ERACE \n" CL_RESET);
-					PChar->SpawnPCList.erase(PC);
+					//PChar->SpawnPCList.erase(PC);
 					PChar->pushPacket(new CCharPacket(PCurrentChar,ENTITY_DESPAWN));
 
-					PCurrentChar->SpawnPCList.erase(PChar->id);
+					//PCurrentChar->SpawnPCList.erase(PChar->id);
 					PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_DESPAWN));
 				}
 			}
 		}
 	}
+  }
 }
 
 /************************************************************************
