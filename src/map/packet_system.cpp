@@ -1064,6 +1064,8 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 
 void SmallPacket0x016(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	//PLAYER IS IN EVENT AND THE MAP UPDATEER STOPS HERE SO WE NEED TO CONTINUTE COUNTING
+
 	uint16 targid = RBUFW(data,(0x04));
 
 	if (PChar->targid == targid)
