@@ -1,0 +1,97 @@
+[07/26/2013 4:33 AM] - SUCCESS!
+IPN POST Vars from Paypal:
+mc_gross=20.00, protection_eligibility=Partially Eligible - INR Only, address_status=unconfirmed, payer_id=7LASMCJB7GHZ4, tax=0.00, address_street=alain
+alain, payment_date=04:32:42 Jul 26, 2013 PDT, payment_status=Completed, charset=windows-1252, address_zip=03, first_name=saif, mc_fee=1.08, address_country_code=AE, address_name=saif alketbi, notify_version=3.7, custom=, payer_status=unverified, business=Clarity-Understanding@hotmail.com, address_country=United Arab Emirates, address_city=AD, quantity=0, verify_sign=AGVEEc4wpa8s8HMmbqwXtzwy-R0pAD7TaxJAeZKEMZ-nQEYEYa5mR.C0, payer_email=saif.elketbi@gmail.com, txn_id=6SX88706NW756083S, payment_type=instant, last_name=alketbi, address_state=AD, receiver_email=Clarity-Understanding@hotmail.com, payment_fee=1.08, receiver_id=2F6QRCHAUNS5L, txn_type=web_accept, item_name=Donation, mc_currency=USD, item_number=, residence_country=AE, receipt_id=3026-3254-6271-6775, transaction_subject=, payment_gross=20.00, ipn_track_id=479c07a1c8b3, 
+IPN Response from Paypal Server:
+ HTTP/1.1 200 OK
+Server: Apache
+X-Frame-Options: SAMEORIGIN
+Content-Type: text/html; charset=UTF-8
+Date: Fri, 26 Jul 2013 11:33:15 GMT
+Content-Length: 8
+Connection: close
+Set-Cookie: cwrClyrK4LoCV1fydGbAxiNL6iG=wGiyNeH3iVW3s3hDGPEtq4bJzZ8CFgPXphEOL-I7yc4HHKUVqXUZOUieBBgpP2BxT0tf7ou5gZY2bi5sv4n67Kaleh5moyg17ZFFbBZTZ0u4pFDR9GCvDBD5OsvkQyRbiNtw5JzirTlRwh2wR7caEgho_Lhtu-DWkcSvaN3heBWih3LZSfkXXYt1yDTi4tyUINa7MkbpGh1cVc_ROwWTTCSqv8DAoAAFexgKOwpsjNIXRzwDUxR0IBRLz4c14WIQH4UI89GQ2fZvmnTyQwFkh4b8y2GQQlDa7p5lBoLIm-7gI7_xc01C45MBWGW3HmSjekh8OEJencu8iJOONWHPf3_WMvovgsf3FY6VK8ogC5AkiuLVqeAtrx2TS3XvvZTVEBt_h0WBiPf1iOsfJVNTth5kK9htoDWwoeHjZbOoeic6Diu5BqDRiiuqhpa; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: cookie_check=yes; expires=Mon, 24-Jul-2023 11:33:15 GMT; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: navcmd=_notify-validate; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: navlns=0.0; expires=Thu, 21-Jul-2033 11:33:15 GMT; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: aksession=1374838695~id=cookiePF0d+JzZKil58aluyeb7RTLOz3UZtrAIHIB4YZp11/TaUdJIKQuMiFd7TM6+qRzg3jtR+JgWL4vi4o0JNSMxAbo2KMFmM52LOeIedehpsdE0191VpmQcpOeFlYFBud1D; expires=Fri, 26-Jul-2013 11:38:15 GMT; path=/; domain=.paypal.com
+
+VERIFIED
+
+[07/26/2013 6:25 AM] - SUCCESS!
+IPN POST Vars from Paypal:
+mc_gross=5.00, protection_eligibility=Partially Eligible - INR Only, address_status=unconfirmed, payer_id=7LASMCJB7GHZ4, tax=0.00, address_street=alain
+alain, payment_date=06:25:17 Jul 26, 2013 PDT, payment_status=Completed, charset=windows-1252, address_zip=03, first_name=saif, mc_fee=0.50, address_country_code=AE, address_name=saif alketbi, notify_version=3.7, custom=, payer_status=unverified, business=Clarity-Understanding@hotmail.com, address_country=United Arab Emirates, address_city=AD, quantity=0, verify_sign=ArYhEUXDmXZMiqPL1UiDaNt6htPeAuZjUIf3skKbHOD08S5FSvTe2OvN, payer_email=saif.elketbi@gmail.com, txn_id=9N7503865G478743T, payment_type=instant, last_name=alketbi, address_state=AD, receiver_email=Clarity-Understanding@hotmail.com, payment_fee=0.50, receiver_id=2F6QRCHAUNS5L, txn_type=web_accept, item_name=Donation, mc_currency=USD, item_number=, residence_country=AE, receipt_id=0408-1228-8260-3293, transaction_subject=, payment_gross=5.00, ipn_track_id=828dd75d73afd, 
+IPN Response from Paypal Server:
+ HTTP/1.1 200 OK
+Server: Apache
+X-Frame-Options: SAMEORIGIN
+Content-Type: text/html; charset=UTF-8
+Date: Fri, 26 Jul 2013 13:25:23 GMT
+Content-Length: 8
+Connection: close
+Set-Cookie: cwrClyrK4LoCV1fydGbAxiNL6iG=Wa4UtxGPcrCbWuzAun9PVFmBPWZXg0afjk9_x8XPzW7Vrt121682aWBf-NSQelgP39jjH_H3DsXDCb9NWTuPwUlw8gGEKffD8DiIRTM6OkCfODYwmMw8uXKNJn6zd1SFon5yS4YapKNcxAfW4mIvsyHcU3f0lYCoRQBl-DXiiYe9nYc-jPJ0K5PMuMbUCCycpFltbv475N-zdCp6GxraUqd8x_-w0P9ERrB2FucOk7xR8iI9K_yhlXuIulgyIGIQqjqV-LL0JEnJg5MgrfJ_n7Pk5FiMHBHQT-QPAyNqNxEOSRkXx-OOS0tO05MBPMWXzXTui6CUZFP8LMBF_vAhSZhNz6EbEiowjJSIsEuJhbshindKBxC3zWc6vuaQCZgNpGhszYt8E4S60xtyy7jDZ-4FBzzHc83TChRdGNtMLGyHf__ugxJnKF8FjR8; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: cookie_check=yes; expires=Mon, 24-Jul-2023 13:25:23 GMT; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: navcmd=_notify-validate; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: navlns=0.0; expires=Thu, 21-Jul-2033 13:25:23 GMT; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: aksession=1374845423~id=cookieTPl8A4ShHvU+t5ImVXEvYgHImPUYCLSJYE5/T0rK6NJxMlimioqsPw4/sLOJr3qlp59Znc273yp3fOSOcRgcGvjnrasEGA0DeqAX1TmlDWf2VyRrO+P/B1tQC27i4GcU; expires=Fri, 26-Jul-2013 13:30:23 GMT; path=/; domain=.paypal.com
+
+VERIFIED
+
+[07/31/2013 9:18 PM] - FAIL: IPN Validation Failed.
+IPN POST Vars from Paypal:
+
+IPN Response from Paypal Server:
+ HTTP/1.1 200 OK
+Server: Apache
+X-Frame-Options: SAMEORIGIN
+Content-Type: text/html; charset=UTF-8
+Date: Wed, 31 Jul 2013 19:18:36 GMT
+Content-Length: 7
+Connection: close
+Set-Cookie: cwrClyrK4LoCV1fydGbAxiNL6iG=FUUHXIIWXnW0FK6rm_22XxcvZ3KKsz9JBGaBBp0sPzrnZxdZbGZFQSjUFUHBxcamsEbHHPWm0Me1D6DB5GSIb_GnOYGBh_aEJVFvYJdb82cWZgqu9w8AunZNYxL_YQfPJVfkvAPXH8RtYCWJv1lx0l0nZCS8LNuOcZWRUFNZTSw5T2RZaJSXhEFQr4Z3nCAawBjUIXN9Vu2DSdeVISleflhvJM9d6CND8L7NV_voGwNsApxfsj8zqAZErs4E6O7hFJfMb4IQA3WEZn-UC4t8f3GhvVxrk2AbfGZ2DCY7uwuOji4EBrmnRqffbiqIYQhf_iMZu3liih1wiQdhywvh36yO7Hb2yZmmeqB8KGJ_uEz1Bw_qP6c7jLXD7G_Mo-fA8Tg6WihCR1DUgthPEYI1vsKUGdxizGU81CEVzbIzTwf48hx_-idIkJQDpJ8; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: cookie_check=yes; expires=Sat, 29-Jul-2023 19:18:36 GMT; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: navcmd=_notify-validate; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: navlns=0.0; expires=Tue, 26-Jul-2033 19:18:36 GMT; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: aksession=1375298616~id=cookiebxes+DQpZlqgKF8rotvZwwoVPJAKKJq1nvwTHOm/gyqrZnGK/j92KJ52I+dUzkhnrZgPJ1FW8EsIj7wU+KhqHg+7peTTjW3HSwi8aiwnjVw2tehUf9TvSdfLF2lOpAup; expires=Wed, 31-Jul-2013 19:23:36 GMT; path=/; domain=.paypal.com
+
+INVALID
+
+[07/31/2013 9:20 PM] - FAIL: IPN Validation Failed.
+IPN POST Vars from Paypal:
+
+IPN Response from Paypal Server:
+ HTTP/1.1 200 OK
+Server: Apache
+X-Frame-Options: SAMEORIGIN
+Content-Type: text/html; charset=UTF-8
+Date: Wed, 31 Jul 2013 19:20:33 GMT
+Content-Length: 7
+Connection: close
+Set-Cookie: cwrClyrK4LoCV1fydGbAxiNL6iG=mMBaujYMeU-wyPgXR9U5gl8nwU7M1WFQo-yiXpJfHwkqO1yhpe8YnNxq4Yjxy3fb4SX4Ms3TUZaXAw-g3TY1mD9sW_2EMGFL8C363U9HlIlmxNFzN8B8wmG6XhdE0PAMg2rF39hoyVkjHkSJy37uObd9BQ7kGsWh6gelTffb2Jc1QtJK0WjSZgmg9y_6t09G5YsiEJl-SsfsbVHxmtuaWqTM3QTEENWGgeju_qErx15FEley1fg4s_gsza6dPs0Y1xRllHLD6pysN-OaDOt2MFarpZggKTaK_8mbf6hpwSEBktgD11UYaOB3AHAQV9u-incRQiosbfrKoGfpDj12U45FCu7D9WSaIdxcYGasXmZqu6FMSXsvri_ZojVPpfcNfZ1ciTsgWpqo5sunf-vs-Dxf_oKwepqfyLE1tW; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: cookie_check=yes; expires=Sat, 29-Jul-2023 19:20:33 GMT; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: navcmd=_notify-validate; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: navlns=0.0; expires=Tue, 26-Jul-2033 19:20:33 GMT; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: aksession=1375298733~id=cookieH9eq4zWwlenG6zy9JcozkvMLsy1w+Eig+r34Y79h8Z6ErzOgNaevsBtHW2sb8zNZjCAyfW/Al0T1zSMDm9BZdVCP7W+nhjLfRd/Lqm5MhWKcCzKfTCTExkU8UVoZROY1; expires=Wed, 31-Jul-2013 19:25:33 GMT; path=/; domain=.paypal.com
+
+INVALID
+
+[07/31/2013 9:20 PM] - FAIL: IPN Validation Failed.
+IPN POST Vars from Paypal:
+
+IPN Response from Paypal Server:
+ HTTP/1.1 200 OK
+Server: Apache
+X-Frame-Options: SAMEORIGIN
+Content-Type: text/html; charset=UTF-8
+Date: Wed, 31 Jul 2013 19:20:36 GMT
+Content-Length: 7
+Connection: close
+Set-Cookie: cwrClyrK4LoCV1fydGbAxiNL6iG=Zri3flxvKP4gftNZByXNvQBsMxTVQWU5YsZ6sJnLl7L2P5JaDnC_veuyQ6OUCfzgG45M3VKcShI8MtbLQ3oO57DDQZ2rNefJai6mghy6xkXguQ1SbJj6Sk91m0znMxlOGdVCkU76TsNOKDkw13AdvPiWCk56uv1NNsaqb9eH3AVwn0oGnwFZZvBkmmKI3oexQins-Kf4tXJ9UEa8MPKfCbQ0UJQE-AJRE3h8ECTPy6cFyhWItqUezYbRkZ22C5RLO8Q25MYDbzOFzqawHkPwUgfS28Na9pvLAJP_TrXGpWOWAGpksznfq7mc7YRSsleBKHCcyxOgRHtN7oGarsR8jxsWKtwYZOcdLCXzMiSVIEyhhMH5sZTqNV9MsLW5ZN-S1RH0AI4sUkPY-R9swQxRShx4LAvLw4ZI_ic-vk4uAXVfBZfbKSWmt8eIVmG; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: cookie_check=yes; expires=Sat, 29-Jul-2023 19:20:36 GMT; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: navcmd=_notify-validate; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: navlns=0.0; expires=Tue, 26-Jul-2033 19:20:36 GMT; domain=.paypal.com; path=/; HttpOnly
+Set-Cookie: aksession=1375298736~id=cookieqipgSwa8aIaGsYSreix4qUKlndVcI2oy4Dus5Cj5lth8yhkd8XQ3NZK7wRp+uBzyon4Lk3FWhvpuE0bXwjl957nOu8kyRQZ1Q3JUU/XsDTNMg80q+HjvbsyApvofzkDu; expires=Wed, 31-Jul-2013 19:25:36 GMT; path=/; domain=.paypal.com
+
+INVALID
+

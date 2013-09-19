@@ -1,0 +1,42 @@
+-----------------------------------
+--  Area: Meriphataud Mountains (119)
+--   Mob: Hobgoblin_Dark_Knight
+-----------------------------------
+
+-- require("scripts/zones/Meriphataud_Mountains/MobIDs");
+
+-----------------------------------
+-- onMobInitialize
+-----------------------------------
+
+function onMobInitialize(mob)	
+end;
+
+-----------------------------------
+-- onMobSpawn
+-----------------------------------
+
+function onMobSpawn(mob)	
+end;
+
+-----------------------------------
+-- onMobEngaged
+-----------------------------------
+
+function onMobEngaged(mob,target)	
+end;
+
+-----------------------------------
+-- onMobFight
+-----------------------------------
+
+function onMobFight(mob,target)	
+end;
+
+-----------------------------------
+-- onMobDeath
+-----------------------------------
+
+function onMobDeath(mob,killer)	
+end;
+

@@ -1,0 +1,57 @@
+-----------------------------------
+-- Area: Konschtat Highlands
+-- NPC:  ???
+-- Involved in Quest: Forge Your Destiny
+-- @zone 108
+-- @pos -709 2 102
+-----------------------------------
+package.loaded["scripts/zones/Konschtat_Highlands/TextIDs"] = nil;
+-----------------------------------
+
+require("scripts/globals/quests");
+require("scripts/globals/teleports");
+require("scripts/zones/Konschtat_Highlands/TextIDs");
+
+-----------------------------------
+-- onTrade Action
+-----------------------------------
+
+function onTrade(player,npc,trade)
+	
+	if(player:getQuestStatus(OUTLANDS,FORGE_YOUR_DESTINY) == QUEST_ACCEPTED) then
+		if(trade:getItemCount() == 1 and trade:hasItemQty(1151,1) and GetMobAction(17219999) == 0) then -- Oriental Steel
+			SpawnMob(17219999, 300):updateEnmity(player); -- Spawn Forger, Despawn after inactive for 5 minutes
+			player:tradeComplete();
+		end
+	end
+end; 
+
+-----------------------------------
+-- onTrigger Action
+-----------------------------------
+
+function onTrigger(player,npc)
+	if (player:hasItem(1152)) then
+		debugTeleport(player,17809421); -- Ranemaud
+	else
+		player:messageSpecial(NOTHING_OUT_OF_ORDINARY);
+	end
+end;
+
+-----------------------------------
+-- onEventUpdate
+-----------------------------------
+
+function onEventUpdate(player,csid,option)
+--printf("CSID2: %u",csid);
+--printf("RESULT2: %u",option);
+end;
+
+-----------------------------------
+-- onEventFinish
+-----------------------------------
+
+function onEventFinish(player,csid,option)
+--printf("CSID: %u",csid);
+--printf("RESULT: %u",option);
+end;
