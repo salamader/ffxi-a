@@ -4031,11 +4031,11 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	{
 		if(PChar->Account_Level==1 || PChar->Account_Level==2 || PChar->Account_Level==3 || PChar->Account_Level==4)
 		{
-			string_t message = data+6;
+			string_t message = data+7;
 			ShowDebug(CL_BG_RED"LANGUAGE ID = %u\n"CL_RESET,PChar->search.language);
 			const int8* Query = "UPDATE server_message SET server_message = '%s' WHERE id = %u";
                        Sql_Query(SqlHandle,Query,message.c_str(), PChar->search.language);
-           PacketParser[0x0DB](session, PChar, 0);
+           
 			return;
 		}
 			
