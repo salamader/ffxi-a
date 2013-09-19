@@ -444,7 +444,7 @@ void CAIMobDummy::ActionDropItems()
 				*/
 
 				uint8 Pzone = PChar->getZone();
-				bool validZone = ((Pzone > 0 && Pzone < 39) || (Pzone > 42 && Pzone < 134) || (Pzone > 135 && Pzone < 185) || (Pzone > 188 && Pzone < 255));
+				bool validZone = ((Pzone > MIN_ZONEID && Pzone < 39) || (Pzone > 42 && Pzone < 134) || (Pzone > 135 && Pzone < 185) || (Pzone > 188 && Pzone < MAX_ZONEID));
 
 				if(validZone && charutils::GetRealExp(PChar->GetMLevel(),m_PMob->GetMLevel())>0 && m_PMob->m_Type == MOBTYPE_NORMAL){ //exp-yielding monster and drop is successful
 					//TODO: The drop is actually based on a 5 minute timer, and not a probability of dropping!
