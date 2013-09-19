@@ -3346,7 +3346,7 @@ int32 OnUseWeaponSkill(CCharEntity* PChar, CBaseEntity* PMob, uint16* tpHitsLand
 
 	string_t name = "noname";
 	const char * Query = "SELECT name FROM weapon_skills WHERE weaponskillid = '%u';";
-	          int32 ret3 = Sql_Query(SqlHandle,Query,wskill);
+	          int32 ret3 = Sql_Query(SqlHandle,Query,wskill->getID());
 			
 
 	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)

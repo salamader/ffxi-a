@@ -2115,18 +2115,21 @@ void CAICharNormal::ActionWeaponSkillStart()
 
     if(m_PChar->StatusEffectContainer->HasStatusEffect(EFFECT_AMNESIA))
     {
+	ShowDebug("ActionWeaponSkillStart() 1\n");
         WeaponSkillStartError(89);
         return;
     }
 
     if (!charutils::hasWeaponSkill(m_PChar, m_PWeaponSkill->getID()))
     {
+		ShowDebug("ActionWeaponSkillStart() 2\n");
         WeaponSkillStartError(MSGBASIC_CANNOT_USE_WS);
         return;
     }
 
     if (m_PChar->health.tp < 100)
     {
+		ShowDebug("ActionWeaponSkillStart() 3\n");
         WeaponSkillStartError(MSGBASIC_NOT_ENOUGH_TP);
         return;
     }
@@ -2135,6 +2138,7 @@ void CAICharNormal::ActionWeaponSkillStart()
     {
         if (!IsMobOwner(m_PBattleSubTarget))
 	    {
+			ShowDebug("ActionWeaponSkillStart() 4\n");
             WeaponSkillStartError(MSGBASIC_ALREADY_CLAIMED);
 		    return;
 	    }
@@ -2143,11 +2147,13 @@ void CAICharNormal::ActionWeaponSkillStart()
 
 	    if ((Distance - m_PBattleSubTarget->m_ModelSize) > m_PWeaponSkill->getRange())
 	    {
+			ShowDebug("ActionWeaponSkillStart() 5\n");
             WeaponSkillStartError(MSGBASIC_TOO_FAR_AWAY);
 		    return;
 	    }
 	    if (!isFaceing(m_PChar->loc.p, m_PBattleSubTarget->loc.p, 40))
 	    {
+			ShowDebug("ActionWeaponSkillStart() 6\n");
             WeaponSkillStartError(MSGBASIC_UNABLE_TO_SEE_TARG);
 		    return;
 	    }
@@ -2162,11 +2168,13 @@ void CAICharNormal::ActionWeaponSkillStart()
               !m_PChar->m_Weapons[SLOT_RANGED]->isRanged() ||	// make sure range weapon is a range weapon
 			  m_PChar->equip[SLOT_AMMO] == 0)					// make sure ammo is equiped (the ammo qty checks the inventory slot and not the ammo slot)
 			{
+				ShowDebug("ActionWeaponSkillStart() 7\n");
 				WeaponSkillStartError(MSGBASIC_NO_RANGED_WEAPON); // You do not have an appropriate ranged weapon equipped
 				return;
 			}
 
 		}
+		ShowDebug("ActionWeaponSkillStart() 8\n");
         m_ActionType = ACTION_WEAPONSKILL_FINISH;
         return;
     }
@@ -2175,11 +2183,13 @@ void CAICharNormal::ActionWeaponSkillStart()
     {
 		if(battleutils::isValidSelfTargetWeaponskill(m_PWeaponSkill->getID()))
         {
+			ShowDebug("ActionWeaponSkillStart() 9\n");
 			m_ActionType = ACTION_WEAPONSKILL_FINISH;
 
 			return;
 		}
 	}
+	ShowDebug("ActionWeaponSkillStart() 10\n");
     WeaponSkillStartError(MSGBASIC_CANNOT_ATTACK_TARGET);
 }
 

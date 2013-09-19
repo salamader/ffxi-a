@@ -1152,18 +1152,17 @@ void CZone::UpdatePChars(CCharEntity* PChar)
         CCharEntity* PCharTarget = (CCharEntity*)PChar->loc.zone->GetEntity(PCurrentPChar->targid, TYPE_PC);
 
 		float CurrentDistance = distance(PChar->loc.p, PCurrentPChar->loc.p);
-		if (CurrentDistance < 20)
+		if (CurrentDistance < 50)
 		{
-			if(PCurrentPChar->shutdown_status == 1)
-			{
-				 ShowDebug(CL_CYAN"UPDATING PCHARS: TARGET ID %u IS SHUTING DOWN \n" CL_RESET,PCurrentPChar->targid);
-				 PChar->pushPacket(new CEntityUpdatePacket(PCharTarget,ENTITY_DESPAWN));
-			}
-			else
-			{
+			
         ShowDebug(CL_CYAN"UPDATING PCHARS: TARGET ID %u \n" CL_RESET,PCurrentPChar->targid);
 		PChar->pushPacket(new CEntityUpdatePacket(PCharTarget,ENTITY_UPDATE));
-			}
+			
+		}
+		else
+		{
+                 ShowDebug(CL_CYAN"UPDATING PCHARS: TARGET ID %u IS OUT OF RANGE DESPAWN \n" CL_RESET,PCurrentPChar->targid);
+				 PChar->pushPacket(new CEntityUpdatePacket(PCharTarget,ENTITY_DESPAWN));
 		}
 		
      

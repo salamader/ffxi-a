@@ -4340,10 +4340,25 @@ inline int32 CLuaBaseEntity::getMod(lua_State *L)
 {
     DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
     DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype == TYPE_NPC);
+	CBattleEntity* caster = (CBattleEntity*)m_PBaseEntity;
+	if(caster == NULL)
+	{
+		return false;
+	}
+	if(lua_isnil(L,1) || !lua_isnumber(L,1))
+	{
+		ShowDebug("GETMOD HAS NO VAULE\n");
+		uint8 mod = caster->getMod(MOD_DEF);
+		lua_pushinteger(L,((CBattleEntity*)m_PBaseEntity)->getMod(mod));
+	}
+	else
+	{
+       ShowDebug("GETMOD HAS VAULE\n");
+		uint8 mod = lua_tointeger(L,1);
+		lua_pushinteger(L,((CBattleEntity*)m_PBaseEntity)->getMod(mod));
+	}
 
-	DSP_DEBUG_BREAK_IF(lua_isnil(L,1) || !lua_isnumber(L,1));
-
-    lua_pushinteger(L,((CBattleEntity*)m_PBaseEntity)->getMod(lua_tointeger(L,1)));
+    
     return 1;
 }
 
