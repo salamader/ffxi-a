@@ -552,9 +552,9 @@ int32 do_close_lobbydata(login_session_data_t *loginsd,int32 fd)
 	                {
 					 Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE accid = %u",loginsd->accid);
 					 //AND UPDATE SHUTDOWN STATUS AND ONLINE STATUS
-					 Query = "UPDATE chars SET  online = '0', shutdown = '1' WHERE accid = %u";
+					 Query = "UPDATE chars SET  online = '0', shutdown = '1', sessions ='0' WHERE accid = %u";
                      Sql_Query(SqlHandle,Query,loginsd->accid);
-					 Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
+					 Query = "UPDATE accounts SET  online = '0', sessions ='0', on_map ='0', map_time = '0', launcher = '0' WHERE id = %u";
                      Sql_Query(SqlHandle,Query,loginsd->accid);
 				    }
 		erase_loginsd_byaccid(loginsd->accid);
@@ -634,15 +634,17 @@ int32 lobbyview_parse(int32 fd)
 			{
 				uint8 SendBuffSize = 0x28;
 				uint32 expansions = 0;
+				uint8 using_launcher = 0;
 				LOBBY_026_RESERVEPACKET(ReservPacket);
 				
-				const char * Query = "SELECT expansions FROM accounts WHERE id = '%u';";
+				const char * Query = "SELECT expansions, launcher FROM accounts WHERE id = '%u';";
           int32 ret3 = Sql_Query(SqlHandle,Query,sd->accid);
          if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
 	       {
 			expansions =  Sql_GetIntData(SqlHandle,0);
+			using_launcher =  Sql_GetIntData(SqlHandle,1);
 			ShowDebug(CL_WHITE"lobbyview_parse:Expansion: %u \n"CL_RESET,expansions);
-			if(expansions == 4094)
+			if(expansions == 4094 && using_launcher == 1)
 			{
              WBUFW(ReservPacket,32) = expansions;	// BitMask for expansions;
 			 //Хеширование пакета, и запись значения Хеш функции в пакет

@@ -711,6 +711,10 @@ void SpawnPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone)
     LoadPet(PMaster, PetID, spawningFromZone);
 
     CPetEntity* PPet = (CPetEntity*)PMaster->PPet;
+	if(PPet == NULL)
+	{
+		return;
+	}
 	if(PPet->m_PetID != NULL)
 	{
 	PPet->Check_Engagment = new CAIPetDummy(PPet);

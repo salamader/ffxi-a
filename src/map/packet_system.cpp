@@ -981,7 +981,8 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 	if (PChar->shutdown_status == 0 && PChar->loc.zone != NULL)
 		//IT COULD ALSO MAYBE USE THE POINTER PCHAR->IS_ZONING = -1  meaning they are not zoning so its ok to update
 	{
-		//ShowMessage(CL_GREEN"UPDATE: PLAYER ID =%u \n"CL_RESET,PChar->id);
+		uint32 map_time = CVanaTime::getInstance()->getSysSecond();
+		ShowMessage(CL_GREEN"UPDATE: PLAYER ID =%u \n"CL_RESET,PChar->id);
 		
 		
         
@@ -993,10 +994,10 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 		PChar->loc.p.rotation = RBUFB(data,(0x14));
 
 		PChar->m_TargID = RBUFW(data,(0x16));
-		 const int8* Query = "UPDATE chars SET online = '1',shutdown = '0' WHERE charid = %u";
+		const char * Query = "UPDATE chars SET online = '1',shutdown = '0' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,PChar->id);
-		 Query = "UPDATE accounts SET online = '1',on_map ='1' WHERE id = %u";
-                       Sql_Query(SqlHandle,Query,PChar->accid);
+		 Query = "UPDATE accounts SET online = '1',on_map ='1',map_time = '%u' WHERE id = %u";
+                       Sql_Query(SqlHandle,Query,map_time,PChar->accid);
 			
             PChar->loc.zone->SpawnPCs(PChar);
 			PChar->loc.zone->SpawnNPCs(PChar);
