@@ -997,7 +997,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 		
 		const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE charid = %u";
         Sql_Query(SqlHandle,Query,PChar->id);
-		Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
+		Query = "UPDATE accounts SET  online = '0', sessions ='0', on_map ='0', map_time = '0', launcher = '0' WHERE id = %u";
         Sql_Query(SqlHandle,Query,PChar->accid);
 		
 	}
@@ -1190,6 +1190,15 @@ void CZone::SpawnPETs(CCharEntity* PChar)
 	{
 		CPetEntity* PCurrentPet = (CPetEntity*)it->second;
 		SpawnIDList_t::iterator PET = PChar->SpawnPETList.lower_bound(PCurrentPet->id);
+		CPetEntity* PPet = (CPetEntity*)PChar->loc.zone->GetEntity(PCurrentPet->targid, TYPE_MOB);
+
+		float CurrentDistance = distance(PChar->loc.p, PCurrentPet->loc.p);
+		if (CurrentDistance < 50 && PChar->loc.destination == PCurrentPet->loc.destination )
+		{
+        ShowDebug(CL_CYAN"UPDATING PETS: TARGET ID %u \n" CL_RESET,PCurrentPet->targid);
+		PChar->pushPacket(new CEntityUpdatePacket(PPet,ENTITY_UPDATE));
+		
+		}
 
 		if ((PCurrentPet->status == STATUS_NORMAL || PCurrentPet->status == STATUS_UPDATE) &&
 			distance(PChar->loc.p, PCurrentPet->loc.p) < 50)

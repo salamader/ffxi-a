@@ -357,9 +357,7 @@ void CAIPetDummy::ActionAbilityUsing()
 		}
 	}
 
-	//TODO: Any checks whilst the pet is preparing.
-	//NOTE: RANGE CHECKS ETC ONLY ARE DONE AFTER THE ABILITY HAS FINISHED PREPARING.
-	//      THE ONLY CHECK IN HERE SHOULD BE WITH STUN/SLEEP/TERROR/ETC
+	
 
 	if ((m_Tick - m_LastActionTime) > m_PMobSkill->getActivationTime())
     {
