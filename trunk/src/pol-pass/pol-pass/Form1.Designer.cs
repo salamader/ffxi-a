@@ -52,6 +52,7 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.success = new System.Windows.Forms.PictureBox();
             this.bv = new System.Windows.Forms.PictureBox();
+            this.webcall = new System.Windows.Forms.WebBrowser();
             ((System.ComponentModel.ISupportInitialize)(this.soe)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.error1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pass)).BeginInit();
@@ -338,13 +339,23 @@
             this.bv.TabIndex = 24;
             this.bv.TabStop = false;
             // 
+            // webcall
+            // 
+            this.webcall.Location = new System.Drawing.Point(279, 12);
+            this.webcall.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webcall.Name = "webcall";
+            this.webcall.Size = new System.Drawing.Size(421, 43);
+            this.webcall.TabIndex = 36;
+            this.webcall.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(233, 382);
+            this.ClientSize = new System.Drawing.Size(231, 382);
+            this.Controls.Add(this.webcall);
             this.Controls.Add(this.soe);
             this.Controls.Add(this.reboot);
             this.Controls.Add(this.chatclose);
@@ -414,6 +425,7 @@
         private System.Windows.Forms.Button home;
         private System.Windows.Forms.Button reboot;
         private System.Windows.Forms.PictureBox soe;
+        private System.Windows.Forms.WebBrowser webcall;
     }
 }
 
