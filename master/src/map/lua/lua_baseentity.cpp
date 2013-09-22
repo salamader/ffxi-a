@@ -4353,7 +4353,7 @@ inline int32 CLuaBaseEntity::getMod(lua_State *L)
 	}
 	else
 	{
-       ShowDebug("GETMOD HAS VAULE\n");
+      // ShowDebug("GETMOD HAS VAULE\n");
 		uint8 mod = lua_tointeger(L,1);
 		lua_pushinteger(L,((CBattleEntity*)m_PBaseEntity)->getMod(mod));
 	}
@@ -10224,6 +10224,7 @@ inline int32 CLuaBaseEntity::add_All_Weaponskils(lua_State *L)
 					name    = Sql_GetData(SqlHandle,1);
 				
 	                charutils::addWeaponSkill(PChar, spellid);
+	
                     PChar->pushPacket(new CCharAbilitiesPacket(PChar));
 					sprintf(buf,"Learned New WeaponSkill: ID: %u NAME: %s",spellid , name.c_str() );
 	                PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));

@@ -2502,6 +2502,7 @@ int32 hasWeaponSkill(CCharEntity* PChar, uint16 WeaponSkillID)
 
 int32 addWeaponSkill(CCharEntity* PChar, uint16 WeaponSkillID)
 {
+
 	return addBit(WeaponSkillID, PChar->m_WeaponSkills, sizeof(PChar->m_WeaponSkills));
 }
 

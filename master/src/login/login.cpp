@@ -148,6 +148,7 @@ while(it != login_sd_list.end())
 				on_map =  Sql_GetUIntData(SqlHandle,1);
 				online =  Sql_GetUIntData(SqlHandle,2);
 				//ShowMessage("LOBBY_TIME %u MAP_TIME %u\n",lobby_time,map_time);
+				//ShowMessage("THIS PLAYER IS IN LOBBY SESSIONS ID %u\n",it);
 				//const char* Query = "UPDATE accounts SET  lobby_time = '%u' WHERE id = %u";
                 //Sql_Query(SqlHandle,Query,lobby_time,(*it)->accid);
 				if(online == 0)
@@ -157,7 +158,7 @@ while(it != login_sd_list.end())
 				if(on_map == 1)
 				{
 					//lobby_session  accounts_sessions accid
-                ShowMessage("THIS PLAYER IS ON MAP SO LETS COUNT OUT ACCOUNT ID %u\n",(*it)->accid);
+                //ShowMessage(CL_BG_YELLOW"THIS PLAYER IS ON MAP SO LETS COUNT OUT ACCOUNT ID %u\n"CL_RESET,(*it)->accid);
 				/*
 				orderby lobby session list and update targetid by 1 for each user.
 				const char* Query = "UPDATE accounts_sessions SET lobby_session ='%u' WHERE accid = %u";
@@ -204,7 +205,7 @@ while(it != login_sd_list.end())
 				}
 				if(lobby_time==map_time)
 				{
-               // ShowMessage("LOBBY_TIME %u == MAP_TIME %u\n",lobby_time,map_time);
+                 //ShowMessage("LOBBY_TIME %u == MAP_TIME %u\n",lobby_time,map_time);
 				//OK PLAYER IS FULLY LOGIN LETS UPDATE THE ACCOUTNS TABLE TO SAY ON MAP
 				if(on_map == 1)
 				{

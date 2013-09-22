@@ -1,0 +1,8 @@
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\bin\Debug\DownloadProgressBar1.exe
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\bin\Debug\DownloadProgressBar1.pdb
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\obj\Debug\DownloadProgressBar1.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\obj\Debug\DownloadProgressBar1.Form1.resources
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\obj\Debug\DownloadProgressBar1.Properties.Resources.resources
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\obj\Debug\DownloadProgressBar1.csproj.GenerateResource.Cache
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\obj\Debug\DownloadProgressBar1.exe
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\obj\Debug\DownloadProgressBar1.pdb

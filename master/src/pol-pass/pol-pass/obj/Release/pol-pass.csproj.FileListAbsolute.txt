@@ -1,0 +1,13 @@
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\bin\Release\pol-pass.exe.config
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\bin\Release\pol-pass.exe.manifest
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\bin\Release\pol-pass.application
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\bin\Release\pol-pass.exe
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\bin\Release\pol-pass.pdb
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Release\pol_pass.Form1.resources
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Release\pol_pass.Properties.Resources.resources
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Release\pol-pass.csproj.GenerateResource.Cache
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Release\pol-pass.exe.manifest
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Release\pol-pass.application
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Release\pol-pass.exe
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Release\pol-pass.pdb
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\pol-pass\pol-pass\obj\Release\pol-pass.csprojResolveAssemblyReference.cache

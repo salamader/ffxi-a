@@ -1,0 +1,15 @@
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\obj\Debug\DownloadProgressBar1.Form1.resources
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\obj\Debug\ffxi-a-downloader.csproj.GenerateResource.Cache
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\bin\Debug\FFXI-A-Client-Downloader.exe
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\bin\Debug\FFXI-A-Client-Downloader.pdb
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\obj\Debug\ffxiclientdownload.Properties.Resources.resources
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\obj\Debug\FFXI-A-Client-Downloader.exe
+C:\Users\Administrator\Desktop\testdownloadbar\DownloadProgressBar1\obj\Debug\FFXI-A-Client-Downloader.pdb
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\client-downloader\obj\Debug\FFXI-A-Client-Downloader.exe
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\client-downloader\obj\Debug\FFXI-A-Client-Downloader.pdb
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\client-downloader\bin\Debug\FFXI-A-Client-Downloader.exe
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\client-downloader\bin\Debug\FFXI-A-Client-Downloader.pdb
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\client-downloader\obj\Debug\ffxi-a-downloader.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\client-downloader\obj\Debug\DownloadProgressBar1.Form1.resources
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\client-downloader\obj\Debug\ffxiclientdownload.Properties.Resources.resources
+C:\Users\Administrator\Desktop\ffix-a\trunk\src\client-downloader\obj\Debug\ffxi-a-downloader.csproj.GenerateResource.Cache
