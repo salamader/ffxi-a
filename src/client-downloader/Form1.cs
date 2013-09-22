@@ -7,6 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Diagnostics;
+using System.Collections.Specialized;
+using System.Runtime.InteropServices;
 
 namespace DownloadProgressBar1
 {
@@ -167,25 +172,52 @@ namespace DownloadProgressBar1
                 backgroundWorker1.RunWorkerAsync();
                 return;
             }
-            
-            
-			MessageBox.Show("File download complete");
+            string part10 = @"C:/FFXI_INSTALL/wrar500.exe";
+            Console.WriteLine(File.Exists(part10) ? true : false);
+            if (File.Exists(part10) == false)
+            {
+                error.Text = "C:/FFXI_INSTALL/wrar500.exe";
+                textBoxSourceFile.Text = "http://www.ffxi-a.com/download/wrar500.exe";
+                backgroundWorker1.RunWorkerAsync();
+                return;
+            }
+            ectract.Visible = true;
+            progressBar1.Visible = false;
+            Process.Start("C:/FFXI_INSTALL/wrar500.exe");
+           // Process.Start("C:/FFXI_INSTALL/wrar500.exe");
+			//MessageBox.Show("File download complete");
 		}
 
-		private void btnTestDownload_Click(object sender, EventArgs e)
-		{
-			if (textBoxSourceFile.Text.Length == 0)
-			{
-				MessageBox.Show("Please enter a source file");
-				return;
-			}
+		
 
-			if (textBoxDestinationFolder.Text.Length == 0)
-			{
-				MessageBox.Show("Please enter a destination file");
-			}
+        private void Download_Click(object sender, EventArgs e)
+        {
+            if (textBoxSourceFile.Text.Length == 0)
+            {
+                MessageBox.Show("Please enter a source file");
+                return;
+            }
 
-			backgroundWorker1.RunWorkerAsync();
-		}
+            if (textBoxDestinationFolder.Text.Length == 0)
+            {
+                MessageBox.Show("Please enter a destination file");
+            }
+
+            backgroundWorker1.RunWorkerAsync();
+            Download.Visible = false;
+            nowdownloading.Visible = true;
+            nowextracting.Visible = false;
+
+        }
+
+        private void install_Click(object sender, EventArgs e)
+        {
+            Process.Start("C:/FFXI_INSTALL/FFXI.part01.rar");
+            nowdownloading.Visible = false;
+            nowextracting.Visible = true;
+            ectract.Visible = false;
+        }
+
+        
 	}
 }
