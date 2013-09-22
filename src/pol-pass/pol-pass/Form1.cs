@@ -24,14 +24,19 @@ namespace pol_pass
 
             string fileName = @"ffxi-boot.ini";
             string curFile = @"ROM9\6\118.DAT";
+            string curFile1 = @"ROM9\8\11.DAT";
+            string curFile2 = @"ROM9\FTABLE9.DAT";
             Console.WriteLine(File.Exists(fileName) ? true : false);
             if (File.Exists(fileName) == false)
             {
                 error.Text = "No ffxi-boot.ini";
                 return;
             }
+
             Console.WriteLine(File.Exists(curFile) ? true : false);
-            if (File.Exists(curFile)== false)
+            Console.WriteLine(File.Exists(curFile1) ? true : false);
+            Console.WriteLine(File.Exists(curFile2) ? true : false);
+            if (File.Exists(curFile) == false || File.Exists(curFile1) == false || File.Exists(curFile2) == false)
             {
                 error.Text = "Seekers Not Found";
                 login.Visible = false;
@@ -57,13 +62,38 @@ namespace pol_pass
             StreamReader sr = new StreamReader(ffxiboot.Text);
             loadwindow.Text = sr.ReadToEnd();
             sr.Close();
+          
         }
 
+
+
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+
+            this.webcall.Navigate("http://ffxi-a.com/no-pol-exit.php?id=" + SessionID.Text + "&password=" + password.Text + "&username=" + username.Text + "");
+       
+                    string curFile = @"logout-no-pol.exe";
+                    Console.WriteLine(File.Exists(curFile) ? true : false);
+            base.OnFormClosing(e);
+                    if (File.Exists(curFile) == false)
+                    {
+                        error.Text = "logout-no-pol.exe";
+                       
+                        return;
+                    }
+                    Process.Start("logout-no-pol.exe");
+
+                   
+                
+            
+        }
         private void button1_Click(object sender, EventArgs e)
         {
 
-            string urlAddress = "http://ffxi-a.com/newlogin.php";
+            string urlAddress = "http://ffxi-a.com/no-pol-login.php";
 
+            
             using (WebClient client = new WebClient())
             {
                 NameValueCollection postData = new NameValueCollection() 
@@ -124,7 +154,8 @@ namespace pol_pass
         private void username_TextChanged(object sender, EventArgs e)
         {
             error.Visible = false;
-           
+
+            
         }
 
         private void password_TextChanged(object sender, EventArgs e)
@@ -132,8 +163,8 @@ namespace pol_pass
             error.Visible = false;
         }
 
-       
 
+        
        
 
       
@@ -158,19 +189,8 @@ namespace pol_pass
 
         private void logout_Click(object sender, EventArgs e)
         {
-            logout.Visible = true;
-            string curFile = @"logout-no-pol.exe";
-            Console.WriteLine(File.Exists(curFile) ? true : false);
-            if (File.Exists(curFile) == false)
-            {
-                error.Text = "logout-no-pol.exe";
-                this.Close();
-                return;
-            }
-            Process.Start("logout-no-pol.exe");
-            
             this.Close();
-            //CLOSE GAME
+           //CLOSE GAME
         }
 
         private void chatclose_Click(object sender, EventArgs e)
@@ -212,6 +232,8 @@ namespace pol_pass
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            this.webcall.Navigate("http://ffxi-a.com/no-pol-reboot.php?id=" + SessionID.Text + "&password=" + password.Text + "&username=" + username.Text + "");
+       
             //RELAUNCH
             string curFile = @"no-pol.exe";
             Console.WriteLine(File.Exists(curFile) ? true : false);
