@@ -998,7 +998,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 		
 		const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE charid = %u";
         Sql_Query(SqlHandle,Query,PChar->id);
-		Query = "UPDATE accounts SET  online = '0' WHERE id = %u";
+		Query = "UPDATE accounts SET  online = '0', sessions ='0', on_map ='0', map_time = '0', launcher = '0 WHERE id = %u";
         Sql_Query(SqlHandle,Query,PChar->accid);
 		
 	}

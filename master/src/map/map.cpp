@@ -161,7 +161,7 @@ int32 do_init(int32 argc, int8** argv)
 
     // отчищаем таблицу сессий при старте сервера (временное решение, т.к. в кластере это не будет работать)
     Sql_Query(SqlHandle, "TRUNCATE TABLE accounts_sessions");
-	const char *Query = "UPDATE accounts SET online ='0' WHERE online = '1'";
+	const char *Query = "UPDATE accounts SET online ='0', sessions ='0' WHERE online = '1'";
         Sql_Query(SqlHandle,Query);
 		Query = "UPDATE accounts SET on_map ='0' WHERE on_map = '1'";
         Sql_Query(SqlHandle,Query);
@@ -705,7 +705,7 @@ int32 send_parse(int8 *buff, size_t* buffsize, sockaddr_in* from, map_session_da
 		//AS THIS HAPPESN WE NEED TO GET THEM OFF THE MAP 
 		const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE sessions = %u";
                 Sql_Query(SqlHandle,Query,map_session_data);
-		        Query = "UPDATE accounts SET  online = '0' WHERE sessions = %u";
+		        Query = "UPDATE accounts SET  online = '0', sessions ='0', on_map ='0', map_time = '0', launcher = '0' WHERE sessions = %u";
                 Sql_Query(SqlHandle,Query,map_session_data);
 		 
 	}
@@ -731,7 +731,9 @@ int32 Close_Session_Clean_Map(uint32 tick, CTaskMgr::CTask* PTask)
 		Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE charid = %u",map_session_data->PChar->id);
         
 		//ShowMessage(CL_YELLOW"FINISHED MAP CLEAN FOR PLAYERS ACCOUNT ID = %u GET\n"CL_RESET,map_session_data->PChar->accid);
-		const char *Query = "UPDATE accounts SET  on_map ='0' WHERE id = %u";
+		const char *Query = "UPDATE accounts SET online = '0', sessions ='0', on_map ='0', map_time = '0', launcher = '0' WHERE id = %u";
+                Sql_Query(SqlHandle,Query,map_session_data->PChar->id);
+					Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE charid = %u";
                 Sql_Query(SqlHandle,Query,map_session_data->PChar->id);
 		uint64 port64 = map_session_data->client_port;
 		uint64 ipp	  = map_session_data->client_addr;
@@ -866,7 +868,7 @@ int32 Check_Map_For_Player_Cleanup(uint32 tick, CTaskMgr::CTask* PTask)
                // ShowWarning(CL_YELLOW"map_cleanup: WHITHOUT CHAR timed out, session closed\n" CL_RESET);
 				const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE sessions = %u";
                 Sql_Query(SqlHandle,Query,map_session_data);
-		        Query = "UPDATE accounts SET  online = '0' WHERE sessions = %u";
+		        Query = "UPDATE accounts SET  online = '0', sessions ='0', on_map ='0', map_time = '0', launcher = '0' WHERE sessions = %u";
                 Sql_Query(SqlHandle,Query,map_session_data);
 		        Sql_Query(SqlHandle,"DELETE FROM accounts_sessions WHERE sessions = %u",map_session_data);
                 aFree(map_session_data->server_packet_data);
