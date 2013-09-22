@@ -10224,6 +10224,7 @@ inline int32 CLuaBaseEntity::add_All_Weaponskils(lua_State *L)
 					name    = Sql_GetData(SqlHandle,1);
 				
 	                charutils::addWeaponSkill(PChar, spellid);
+	
                     PChar->pushPacket(new CCharAbilitiesPacket(PChar));
 					sprintf(buf,"Learned New WeaponSkill: ID: %u NAME: %s",spellid , name.c_str() );
 	                PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));

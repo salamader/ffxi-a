@@ -981,8 +981,7 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 	if (PChar->shutdown_status == 0 && PChar->loc.zone != NULL)
 		//IT COULD ALSO MAYBE USE THE POINTER PCHAR->IS_ZONING = -1  meaning they are not zoning so its ok to update
 	{
-		uint32 map_time = CVanaTime::getInstance()->getSysSecond();
-		ShowMessage(CL_GREEN"UPDATE: PLAYER ID =%u \n"CL_RESET,PChar->id);
+		//ShowMessage(CL_GREEN"UPDATE: PLAYER ID =%u \n"CL_RESET,PChar->id);
 		
 		
         
@@ -994,10 +993,10 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 		PChar->loc.p.rotation = RBUFB(data,(0x14));
 
 		PChar->m_TargID = RBUFW(data,(0x16));
-		const char * Query = "UPDATE chars SET online = '1',shutdown = '0' WHERE charid = %u";
+		 const int8* Query = "UPDATE chars SET online = '1',shutdown = '0' WHERE charid = %u";
                        Sql_Query(SqlHandle,Query,PChar->id);
-		 Query = "UPDATE accounts SET online = '1',on_map ='1',map_time = '%u' WHERE id = %u";
-                       Sql_Query(SqlHandle,Query,map_time,PChar->accid);
+		 Query = "UPDATE accounts SET online = '1',on_map ='1' WHERE id = %u";
+                       Sql_Query(SqlHandle,Query,PChar->accid);
 			
             PChar->loc.zone->SpawnPCs(PChar);
 			PChar->loc.zone->SpawnNPCs(PChar);
@@ -1065,8 +1064,6 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 
 void SmallPacket0x016(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	//PLAYER IS IN EVENT AND THE MAP UPDATEER STOPS HERE SO WE NEED TO CONTINUTE COUNTING
-
 	uint16 targid = RBUFW(data,(0x04));
 
 	if (PChar->targid == targid)
@@ -4034,11 +4031,11 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	{
 		if(PChar->Account_Level==1 || PChar->Account_Level==2 || PChar->Account_Level==3 || PChar->Account_Level==4)
 		{
-			string_t message = data+7;
+			string_t message = data+6;
 			ShowDebug(CL_BG_RED"LANGUAGE ID = %u\n"CL_RESET,PChar->search.language);
 			const int8* Query = "UPDATE server_message SET server_message = '%s' WHERE id = %u";
                        Sql_Query(SqlHandle,Query,message.c_str(), PChar->search.language);
-           
+           PacketParser[0x0DB](session, PChar, 0);
 			return;
 		}
 			

@@ -1,7 +1,7 @@
 /*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,26 +21,22 @@
 ===========================================================================
 */
 
-#ifndef _CPETSYNCPACKET_H
-#define _CPETSYNCPACKET_H
+#ifndef _PUPUTILS_H
+#define _PUPUTILS_H
 
-#include "../../common/cbasetypes.h"
+#include "../entities/charentity.h"
+#include "../items/item_puppet.h"
 
-#include "basic.h"
-
-/************************************************************************
-*																		*
-*  																		*
-*																		*
-************************************************************************/
-
-class CCharEntity;
-
-class CPetSyncPacket : public CBasicPacket
+namespace puppetutils
 {
-public:
-
-	CPetSyncPacket(CCharEntity* PChar);
+	void LoadAutomaton(CCharEntity* PChar);
+	void SaveAutomaton(CCharEntity* PChar);
+	bool UnlockAttachment(CCharEntity* PChar, CItem* PItem);
+    void setAttachment(CCharEntity* PChar, uint8 slotId, uint8 attachment);
+    void setFrame(CCharEntity* PChar, uint8 frame);
+    void setHead(CCharEntity* PChar, uint8 head);
+    uint16 getSkillCap(CCharEntity* PChar, SKILLTYPE skill);
+    void LoadAutomatonStats(CCharEntity* PChar);
 };
 
 #endif
