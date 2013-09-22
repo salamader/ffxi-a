@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2013 Darkstar Dev Teams
+  Copyright (c) 2010-2012 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -48,27 +48,27 @@
 
 struct Pet_t
 {
-	look_t		look;		// appearance
-	string_t	name;		// name
-	ECOSYSTEM	EcoSystem;	// eco-system
+	look_t		look;		// внешний вид
+	string_t	name;		// имя
+	ECOSYSTEM	EcoSystem;	// эко-система
 
-	uint8		minLevel;	// lowest possible level
-	uint8		maxLevel;	// maximum possible level
+	uint8		minLevel;	// минимально-возможный  уровень
+	uint8		maxLevel;	// максимально-возможный уровень
 
     uint8       name_prefix;
-	uint8		size;		// size of the model
+	uint8		size;		// размер модели
 	uint16		m_Family;
-	uint32		time;		// lifetime (to be used to set the duration of the status effect)
+	uint32		time;		// время существования (будет использоваться для задания длительности статус эффекта)
 
 	uint8		mJob;
 	uint8		m_Element;
-    float       HPscale;    // HP boost percentage
-    float       MPscale;    // MP boost percentage
+  float       HPscale;                             // HP boost percentage
+    float       MPscale;                             // MP boost percentage
 
     uint16      cmbDelay;
     uint8 		speed;
     // stat ranks
-    uint8        strRank;
+     uint8        strRank;
     uint8        dexRank;
     uint8        vitRank;
     uint8        agiRank;
@@ -116,7 +116,7 @@ namespace petutils
 
 /************************************************************************
 *																		*
-*  Load the list of prototypes pets										*
+*  Загружаем список прототипов питомцев									*
 *																		*
 ************************************************************************/
 
@@ -228,7 +228,7 @@ void LoadPetList()
 
 /************************************************************************
 *																		*
-*  Free the list of prototypes pets										*
+*  Освобождаем список прототипов питомцев								*
 *																		*
 ************************************************************************/
 
@@ -413,18 +413,18 @@ void LoadJugStats(CPetEntity* PMob, Pet_t* petStats){
 
 void LoadAutomatonStats(CCharEntity* PMaster, CPetEntity* PPet, Pet_t* petStats)
 {
-	// Declare variables needed for the calculation.
-	float raceStat  = 0;			// Finite number of HP for the level on the basis of race.
-	float jobStat   = 0;			// Finite number of HP for a level based on primary profession.
-	float sJobStat  = 0;			// Finite number of HP for a level based on a secondary profession.
-	int32 bonusStat = 0;			// HP bonus number is added under certain conditions.
-	int32 baseValueColumn   = 0;	// Number of the column to the base of HP
-	int32 scaleTo60Column   = 1;	// Column number with the modifier level 60
-	int32 scaleOver30Column = 2;	// Column number with the modifier after level 30
-	int32 scaleOver60Column = 3;	// Column number with the modifier after level 60
-	int32 scaleOver75Column = 4;	// Column number with the modifier after level 75
-	int32 scaleOver60 = 2;			// Number of the column with a modifier to calculate the MP after level 60
-	int32 scaleOver75 = 3;			// Number of the column with a modifier to calculate the article after level 75
+	// Объявление переменных, нужных для рассчета.
+	float raceStat  = 0;			// конечное число HP для уровня на основе расы.
+	float jobStat   = 0;			// конечное число HP для уровня на основе первичной профессии.
+	float sJobStat  = 0;			// коенчное число HP для уровня на основе вторичной профессии.
+	int32 bonusStat = 0;			// бонусное число HP которое добавляется при соблюдении некоторых условий.
+	int32 baseValueColumn   = 0;	// номер колонки с базовым количеством HP
+	int32 scaleTo60Column   = 1;	// номер колонки с модификатором до 60 уровня
+	int32 scaleOver30Column = 2;	// номер колонки с модификатором после 30 уровня
+	int32 scaleOver60Column = 3;	// номер колонки с модификатором после 60 уровня
+	int32 scaleOver75Column = 4;	// номер колонки с модификатором после 75 уровня
+	int32 scaleOver60 = 2;			// номер колонки с модификатором для расчета MP после 60 уровня
+	int32 scaleOver75 = 3;			// номер колонки с модификатором для расчета Статов после 75-го уровня
 
 	uint8 grade;
 
@@ -432,19 +432,19 @@ void LoadAutomatonStats(CCharEntity* PMaster, CPetEntity* PPet, Pet_t* petStats)
     uint8 slvl = PPet->GetSLevel();
     JOBTYPE mjob = PPet->GetMJob();
     JOBTYPE sjob = PPet->GetSJob();
-	// The calculation of growth from HP main job
-	int32 mainLevelOver30 = dsp_cap(mlvl - 30, 0, 30);				// Calculation conditions +1 HP each lvl after level 30
-	int32 mainLevelUpTo60 = (mlvl < 60 ? mlvl - 1 : 59 );			// The first mode of calculation to level 60 (also used for the MP)
-	int32 mainLevelOver60To75 = dsp_cap(mlvl - 60, 0, 15);			// The second mode of calculation after level 60
-	int32 mainLevelOver75 = (mlvl < 75 ? 0 : mlvl - 75);			// The third mode of calculation after level 75
+	// Расчет прироста HP от main job
+	int32 mainLevelOver30 = dsp_cap(mlvl - 30, 0, 30);			// Расчет условия +1HP каждый лвл после 30 уровня
+	int32 mainLevelUpTo60 = (mlvl < 60 ? mlvl - 1 : 59 );			// Первый режим рассчета до 60 уровня (Используется так же и для MP)
+	int32 mainLevelOver60To75 = dsp_cap(mlvl - 60, 0, 15);		// Второй режим расчета после 60 уровня
+	int32 mainLevelOver75 = (mlvl < 75 ? 0 : mlvl - 75);			// Третий режим расчета после 75 уровня
 
-	// The calculation of the amount of bonus HP
-	int32 mainLevelOver10 = (mlvl < 10 ? 0 : mlvl - 10);			// +2 HP every level after 10
-	int32 mainLevelOver50andUnder60 = dsp_cap(mlvl - 50, 0, 10);	// +2 HP at each level in the range of 50 to level 60
+	//Расчет бонусного количества HP
+	int32 mainLevelOver10 = (mlvl < 10 ? 0 : mlvl - 10);			// +2HP на каждом уровне после 10
+	int32 mainLevelOver50andUnder60 = dsp_cap(mlvl - 50, 0, 10);	// +2HP на каждом уровне в промежутке от 50 до 60 уровня
 	int32 mainLevelOver60 = (mlvl < 60 ? 0 : mlvl - 60);
 
-	// Packet raceStat jobStat bonusStat sJobStat
-	// Calculation by race
+	// Расчет raceStat jobStat bonusStat sJobStat
+	// Расчет по расе
 
 	grade = 4;
 
@@ -456,7 +456,7 @@ void LoadAutomatonStats(CCharEntity* PMaster, CPetEntity* PPet, Pet_t* petStats)
 
 	// raceStat = (int32)(statScale[grade][baseValueColumn] + statScale[grade][scaleTo60Column] * (mlvl - 1));
 
-	// Calculation by main job
+	// Расчет по main job
 	grade = grade::GetJobGrade(mjob,0);
 
 	jobStat = grade::GetHPScale(grade,baseValueColumn) +
@@ -465,29 +465,29 @@ void LoadAutomatonStats(CCharEntity* PMaster, CPetEntity* PPet, Pet_t* petStats)
 		(grade::GetHPScale(grade,scaleOver60Column) * mainLevelOver60To75) +
 		(grade::GetHPScale(grade,scaleOver75Column) * mainLevelOver75);
 
-	// Calculation of bonus HP
+	// Расчет бонусных HP
 	bonusStat = (mainLevelOver10 + mainLevelOver50andUnder60) * 2;
 	PPet->health.maxhp = (int16)(raceStat + jobStat + bonusStat + sJobStat) * petStats->HPscale;
 	PPet->health.hp = PPet->health.maxhp;
 
-	// Start calculation MP
+	//Начало расчера MP
 	raceStat = 0;
 	jobStat  = 0;
 	sJobStat = 0;
 
-	// Calculation MP race.
+	// Расчет MP расе.
 	grade = 4;
 
-	//If no mainjob MP rating, expect racial bonus based on the level subjob level (assuming that he has a MP rating)
+	//Если у main job нет МП рейтинга, расчитиваем расовый бонус на основе уровня subjob уровня(при условии, что у него есть МП рейтинг)
     if (!(grade::GetJobGrade(mjob,1) == 0 && grade::GetJobGrade(sjob,1) == 0))
 	{
-		// Calculation of the racial bonus
+		//Расчет нормального расового бонуса
 		raceStat = grade::GetMPScale(grade,0) +
 			grade::GetMPScale(grade,scaleTo60Column) * mainLevelUpTo60 +
 			grade::GetMPScale(grade,scaleOver60) * mainLevelOver60;
 	}
 
-	// For the main profession
+	//Для главной профессии
 	grade = grade::GetJobGrade(mjob,1);
 	if (grade > 0)
 	{
@@ -566,38 +566,38 @@ void LoadAutomatonStats(CCharEntity* PMaster, CPetEntity* PPet, Pet_t* petStats)
 
 void LoadAvatarStats(CPetEntity* PChar)
 {
-	// Declare variables needed for the calculation.
-	float raceStat  = 0;			// Finite number of HP for the level on the basis of race.
-	float jobStat   = 0;			// Finite number of HP for a level based on primary profession.
-	float sJobStat  = 0;			// Finite number of HP for a level based on a secondary profession.
-	int32 bonusStat = 0;			// HP bonus number is added under certain conditions.
-	int32 baseValueColumn   = 0;	// Number of the column to the base of HP
-	int32 scaleTo60Column   = 1;	// Column number with the modifier level 60
-	int32 scaleOver30Column = 2;	// Column number with the modifier after level 30
-	int32 scaleOver60Column = 3;	// Column number with the modifier after level 60
-	int32 scaleOver75Column = 4;	// Column number with the modifier after level 75
-	int32 scaleOver60 = 2;			// Number of the column with a modifier to calculate the MP after level 60
-	int32 scaleOver75 = 3;			// Number of the column with a modifier to calculate the article after level 75
+	// Объявление переменных, нужных для рассчета.
+	float raceStat  = 0;			// конечное число HP для уровня на основе расы.
+	float jobStat   = 0;			// конечное число HP для уровня на основе первичной профессии.
+	float sJobStat  = 0;			// коенчное число HP для уровня на основе вторичной профессии.
+	int32 bonusStat = 0;			// бонусное число HP которое добавляется при соблюдении некоторых условий.
+	int32 baseValueColumn   = 0;	// номер колонки с базовым количеством HP
+	int32 scaleTo60Column   = 1;	// номер колонки с модификатором до 60 уровня
+	int32 scaleOver30Column = 2;	// номер колонки с модификатором после 30 уровня
+	int32 scaleOver60Column = 3;	// номер колонки с модификатором после 60 уровня
+	int32 scaleOver75Column = 4;	// номер колонки с модификатором после 75 уровня
+	int32 scaleOver60 = 2;			// номер колонки с модификатором для расчета MP после 60 уровня
+	int32 scaleOver75 = 3;			// номер колонки с модификатором для расчета Статов после 75-го уровня
 
 	uint8 grade;
 
 	uint8 mlvl = PChar->GetMLevel();
 	JOBTYPE mjob = PChar->GetMJob();
-    uint8 race = 3;					//Tarutaru
+	uint8 race = 3;					//Tarutaru
 
-	// The calculation of growth from HP main job
-	int32 mainLevelOver30 = dsp_cap(mlvl - 30, 0, 30);				// Calculation conditions +1 HP each lvl after level 30
-	int32 mainLevelUpTo60 = (mlvl < 60 ? mlvl - 1 : 59 );			// The first mode of calculation to level 60 (also used for the MP)
-	int32 mainLevelOver60To75 = dsp_cap(mlvl - 60, 0, 15);			// The second mode of calculation after level 60
-	int32 mainLevelOver75 = (mlvl < 75 ? 0 : mlvl - 75);			// The third mode of calculation after level 75
+	// Расчет прироста HP от main job
+	int32 mainLevelOver30 = dsp_cap(mlvl - 30, 0, 30);			// Расчет условия +1HP каждый лвл после 30 уровня
+	int32 mainLevelUpTo60 = (mlvl < 60 ? mlvl - 1 : 59 );			// Первый режим рассчета до 60 уровня (Используется так же и для MP)
+	int32 mainLevelOver60To75 = dsp_cap(mlvl - 60, 0, 15);		// Второй режим расчета после 60 уровня
+	int32 mainLevelOver75 = (mlvl < 75 ? 0 : mlvl - 75);			// Третий режим расчета после 75 уровня
 
-	//The calculation of the amount of bonus HP
-	int32 mainLevelOver10 = (mlvl < 10 ? 0 : mlvl - 10);			// +2 HP every level after 10
-	int32 mainLevelOver50andUnder60 = dsp_cap(mlvl - 50, 0, 10);	// +2 HP at each level in the range of 50 to level 60
+	//Расчет бонусного количества HP
+	int32 mainLevelOver10 = (mlvl < 10 ? 0 : mlvl - 10);			// +2HP на каждом уровне после 10
+	int32 mainLevelOver50andUnder60 = dsp_cap(mlvl - 50, 0, 10);	// +2HP на каждом уровне в промежутке от 50 до 60 уровня
 	int32 mainLevelOver60 = (mlvl < 60 ? 0 : mlvl - 60);
 
-	// Packet raceStat jobStat bonusStat sJobStat
-	// Calculation by race
+	// Расчет raceStat jobStat bonusStat sJobStat
+	// Расчет по расе
 
 	grade = grade::GetRaceGrades(race,0);
 
@@ -609,7 +609,7 @@ void LoadAvatarStats(CPetEntity* PChar)
 
 	// raceStat = (int32)(statScale[grade][baseValueColumn] + statScale[grade][scaleTo60Column] * (mlvl - 1));
 
-	// Calculation by main job
+	// Расчет по main job
 	grade = grade::GetJobGrade(mjob,0);
 
 	jobStat = grade::GetHPScale(grade,baseValueColumn) +
@@ -618,30 +618,30 @@ void LoadAvatarStats(CPetEntity* PChar)
 		(grade::GetHPScale(grade,scaleOver60Column) * mainLevelOver60To75) +
 		(grade::GetHPScale(grade,scaleOver75Column) * mainLevelOver75);
 
-	// Calculation of bonus HP
+	// Расчет бонусных HP
 	bonusStat = (mainLevelOver10 + mainLevelOver50andUnder60) * 2;
 	PChar->health.maxhp = (int16)(raceStat + jobStat + bonusStat + sJobStat);
 	PChar->health.hp = PChar->health.maxhp;
 
-	// Start calculation MP
+	//Начало расчера MP
 	raceStat = 0;
 	jobStat  = 0;
 	sJobStat = 0;
 
-	// Calculation MP race.
+	// Расчет MP расе.
 	grade = grade::GetRaceGrades(race,1);
 
-	//If no mainjob MP rating, expect racial bonus based on the level subjob level (assuming that he has a MP rating)
-    if (grade::GetJobGrade(mjob,1) == 0)
+	//Если у main job нет МП рейтинга, расчитиваем расовый бонус на основе уровня subjob уровня(при условии, что у него есть МП рейтинг)
+	if (grade::GetJobGrade(mjob,1) == 0)
 	{
 	}else{
-		// Calculation of the racial bonus
+		//Расчет нормального расового бонуса
 		raceStat = grade::GetMPScale(grade,0) +
 			grade::GetMPScale(grade,scaleTo60Column) * mainLevelUpTo60 +
 			grade::GetMPScale(grade,scaleOver60) * mainLevelOver60;
 	}
 
-	// For the main profession
+	//Для главной профессии
 	grade = grade::GetJobGrade(mjob,1);
 	if (grade > 0)
 	{
@@ -650,7 +650,7 @@ void LoadAvatarStats(CPetEntity* PChar)
 			grade::GetMPScale(grade,scaleOver60) * mainLevelOver60;
 	}
 
-	PChar->health.maxmp = (int16)(raceStat + jobStat + sJobStat); // calculation result MP
+	PChar->health.maxmp = (int16)(raceStat + jobStat + sJobStat); // результат расчета MP
 	//add in evasion from skill
 	int16 evaskill = PChar->GetSkill(SKILL_EVA);
 	int16 eva = evaskill;
@@ -659,11 +659,12 @@ void LoadAvatarStats(CPetEntity* PChar)
 	}
 	PChar->setModifier(MOD_EVA,eva);
 
-	// Start the calculation of the characteristics
+
+	//Начало расчета характеристик
 	uint8 counter = 0;
 	for (uint8 StatIndex = 2; StatIndex <=8; ++StatIndex)
 	{
-		// Calculation for race
+		// расчет по расе
 		grade = grade::GetRaceGrades(race,StatIndex);
 		raceStat = grade::GetStatScale(grade,0) + grade::GetStatScale(grade,scaleTo60Column) * mainLevelUpTo60;
 
@@ -676,7 +677,7 @@ void LoadAvatarStats(CPetEntity* PChar)
 			}
 		}
 
-		// Calculation of the profession
+		// расчет по профессии
 		grade = grade::GetJobGrade(mjob,StatIndex);
 		jobStat = grade::GetStatScale(grade,0) + grade::GetStatScale(grade,scaleTo60Column) * mainLevelUpTo60;
 
@@ -692,7 +693,7 @@ void LoadAvatarStats(CPetEntity* PChar)
 
 		jobStat = jobStat * 1.5; //stats from subjob (assuming BLM/BLM for avatars)
 
-		// Output values
+		// Вывод значения
 		WBUFW(&PChar->stats,counter) = (uint16)(raceStat + jobStat);
 		counter += 2;
 	}
@@ -710,7 +711,12 @@ void SpawnPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone)
     LoadPet(PMaster, PetID, spawningFromZone);
 
     CPetEntity* PPet = (CPetEntity*)PMaster->PPet;
-
+	if(PPet == NULL)
+	{
+		return;
+	}
+	if(PPet->m_PetID != NULL)
+	{
 	PPet->Check_Engagment = new CAIPetDummy(PPet);
 	PPet->Check_Engagment->SetLastActionTime(gettick());
 	PPet->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
@@ -730,6 +736,7 @@ void SpawnPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone)
 	{
 		PPet->health.tp = ((CCharEntity*)PMaster)->petZoningInfo.petTP;
 		PPet->health.hp = ((CCharEntity*)PMaster)->petZoningInfo.petHP;
+	}
 	}
 
 }
@@ -766,19 +773,19 @@ void SpawnMobPet(CBattleEntity* PMaster, uint32 PetID)
 	PPet->setModifier(MOD_HTHRES, petData->hthres);
 	PPet->setModifier(MOD_IMPACTRES, petData->impactres);
 
-    PPet->setModifier(MOD_FIREDEF,    petData->firedef);	// These are stored as floating percentages
-    PPet->setModifier(MOD_ICEDEF,     petData->icedef);		// and need to be adjusted into modifier units.
-    PPet->setModifier(MOD_WINDDEF,    petData->winddef);	// Higher DEF = lower damage.
-    PPet->setModifier(MOD_EARTHDEF,   petData->earthdef);	// Negatives signify increased damage.
+    PPet->setModifier(MOD_FIREDEF,    petData->firedef); // These are stored as floating percentages
+    PPet->setModifier(MOD_ICEDEF,     petData->icedef); // and need to be adjusted into modifier units.
+    PPet->setModifier(MOD_WINDDEF,    petData->winddef); // Higher DEF = lower damage.
+    PPet->setModifier(MOD_EARTHDEF,   petData->earthdef); // Negatives signify increased damage.
     PPet->setModifier(MOD_THUNDERDEF, petData->thunderdef); // Positives signify reduced damage.
-    PPet->setModifier(MOD_WATERDEF,   petData->waterdef);	// Ex: 125% damage would be 1.25, 50% damage would be 0.50
-    PPet->setModifier(MOD_LIGHTDEF,   petData->lightdef);	// (1.25 - 1) * -1000 = -250 DEF
-    PPet->setModifier(MOD_DARKDEF,    petData->darkdef);	// (0.50 - 1) * -1000 = 500 DEF
+    PPet->setModifier(MOD_WATERDEF,   petData->waterdef); // Ex: 125% damage would be 1.25, 50% damage would be 0.50
+    PPet->setModifier(MOD_LIGHTDEF,   petData->lightdef); // (1.25 - 1) * -1000 = -250 DEF
+    PPet->setModifier(MOD_DARKDEF,    petData->darkdef); // (0.50 - 1) * -1000 = 500 DEF
 
-    PPet->setModifier(MOD_FIRERES,    petData->fireres);	// These are stored as floating percentages
-    PPet->setModifier(MOD_ICERES,     petData->iceres);		// and need to be adjusted into modifier units.
-    PPet->setModifier(MOD_WINDRES,    petData->windres);	// Higher RES = lower damage.
-    PPet->setModifier(MOD_EARTHRES,   petData->earthres);	// Negatives signify lower resist chance.
+    PPet->setModifier(MOD_FIRERES,    petData->fireres); // These are stored as floating percentages
+    PPet->setModifier(MOD_ICERES,     petData->iceres); // and need to be adjusted into modifier units.
+    PPet->setModifier(MOD_WINDRES,    petData->windres); // Higher RES = lower damage.
+    PPet->setModifier(MOD_EARTHRES,   petData->earthres); // Negatives signify lower resist chance.
     PPet->setModifier(MOD_THUNDERRES, petData->thunderres); // Positives signify increased resist chance.
     PPet->setModifier(MOD_WATERRES,   petData->waterres);
     PPet->setModifier(MOD_LIGHTRES,   petData->lightres);
@@ -881,13 +888,14 @@ void DespawnPet(CBattleEntity* PMaster)
 					PChar->PPet = NULL;
 					PChar->pushPacket(new CCharUpdatePacket(PChar));
 					PMob->loc.zone->PushPacket(PMob, CHAR_INRANGE, new CEntityUpdatePacket(PMob, ENTITY_UPDATE));
+					PMob->loc.zone->PushPacket(PMob, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PMob, ENTITY_UPDATE));
 				}
 
 		}
 		break;
 		case TYPE_PC:
 		{
-			// Set the character of control
+			// освобождаем персонажа из под контроля
 		}
 		break;
 	}
@@ -1052,7 +1060,10 @@ void Familiar(CBattleEntity* PPet)
 
 void LoadPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone)
 {
-	DSP_DEBUG_BREAK_IF(PetID >= g_PPetList.size());
+	if(PetID >= g_PPetList.size())
+	{
+		return;
+	}
 	if(PMaster->GetMJob()!=JOB_DRG && PetID == PETID_WYVERN) {
 		return;
 	}
@@ -1182,8 +1193,8 @@ void LoadPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone)
 
     if (petType != PETTYPE_AUTOMATON)
     {
-		PPet->look = g_PPetList.at(PetID)->look;
-		PPet->name = g_PPetList.at(PetID)->name;
+	    PPet->look = g_PPetList.at(PetID)->look;
+	    PPet->name = g_PPetList.at(PetID)->name;
     }
     else
     {

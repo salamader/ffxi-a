@@ -154,7 +154,7 @@ namespace luautils
 	int32 UpdateNMSpawnPoint(lua_State* L);                                     // Update the spawn point of an NM
 	int32 SetDropRate(lua_State*);												// Set drop rate of a mob setDropRate(dropid,itemid,newrate)
 	int32 UpdateTreasureSpawnPoint(lua_State* L);                               // Update the spawn point of an Treasure
-	int32 UpdateServerMessage(lua_State*);										// update server message, first modify in conf and update
+										// update server message, first modify in conf and update
 };
 
 #endif //- _LUAUTILS_H -
