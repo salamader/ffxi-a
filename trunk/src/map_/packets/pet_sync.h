@@ -1,7 +1,7 @@
-﻿/*
+/*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -21,35 +21,26 @@
 ===========================================================================
 */
 
-#include "../../common/socket.h"
+#ifndef _CPETSYNCPACKET_H
+#define _CPETSYNCPACKET_H
 
-#include "pet_sync.h"
+#include "../../common/cbasetypes.h"
 
-#include "../entities/charentity.h"
+#include "basic.h"
 
 /************************************************************************
 *																		*
-*  Синхронизация питомца с персонажем (владельцем)						*
+*  																		*
 *																		*
 ************************************************************************/
 
-CPetSyncPacket::CPetSyncPacket(CCharEntity* PChar)
+class CCharEntity;
+
+class CPetSyncPacket : public CBasicPacket
 {
-	this->type = 0x67;
-	this->size = 0x12;
+public:
 
-    DSP_DEBUG_BREAK_IF(PChar->PPet == NULL);
+	CPetSyncPacket(CCharEntity* PChar);
+};
 
-	WBUFB(data,(0x04)-4) = 0x44; 	// назначение неизвестно
-	WBUFB(data,(0x05)-4) = 0x08; 	// назначение неизвестно
-
-	WBUFW(data,(0x06)-4) = PChar->targid;
-	WBUFL(data,(0x08)-4) = PChar->id;
-
-	WBUFW(data,(0x0C)-4) = PChar->PPet->targid;
-	WBUFB(data,(0x0E)-4) = PChar->PPet->GetHPP();
-  int16 petTp = ((int16)PChar->PPet->health.tp) * 3.35  * 3;
-  WBUFW(data,(0x10)-4) = petTp;
-
-	// 0x14 - начинается имя питомца, но мы его записывать не будем, "мы экономить будем" © Матроскин
-}
+#endif

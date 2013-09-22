@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -63,7 +63,7 @@ CAIPetDummy::CAIPetDummy(CPetEntity* PPet)
 
 /************************************************************************
 *																		*
-*  Основная часть интеллекта - главный цикл								*
+*  The bulk of intelligence - the main loop								*
 *																		*
 ************************************************************************/
 
@@ -357,7 +357,9 @@ void CAIPetDummy::ActionAbilityUsing()
 		}
 	}
 
-	
+	//TODO: Any checks whilst the pet is preparing.
+	//NOTE: RANGE CHECKS ETC ONLY ARE DONE AFTER THE ABILITY HAS FINISHED PREPARING.
+	//      THE ONLY CHECK IN HERE SHOULD BE WITH STUN/SLEEP/TERROR/ETC
 
 	if ((m_Tick - m_LastActionTime) > m_PMobSkill->getActivationTime())
     {
@@ -734,7 +736,7 @@ void CAIPetDummy::ActionAttack()
 		int32 WeaponDelay = m_PPet->m_Weapons[SLOT_MAIN]->getDelay();
 		//try to attack
 		if((m_Tick - m_LastActionTime) > WeaponDelay){
-			if (battleutils::IsParalyzed(m_PPet))
+			if (battleutils::IsParalyzed(m_PPet)) 
 			{
 				m_PPet->loc.zone->PushPacket(m_PPet, CHAR_INRANGE, new CMessageBasicPacket(m_PPet,m_PBattleTarget,0,0,29));
 			}
@@ -836,7 +838,7 @@ void CAIPetDummy::ActionSleep()
     if (!m_PPet->StatusEffectContainer->HasPreventActionEffect())
     {
     	TransitionBack();
-    }
+		}
 
 	m_PPet->loc.zone->PushPacket(m_PPet,CHAR_INRANGE, new CEntityUpdatePacket(m_PPet, ENTITY_UPDATE));
 
@@ -1005,8 +1007,8 @@ void CAIPetDummy::ActionMagicInterrupt()
 
 /************************************************************************
 *																		*
-*  При появлении питомца задержка в 4.5 секунды перед началом			*
-*  следования за персонажем. Состояние может быть перезаписано.			*
+*  When the pet delay of 4.5 seconds before following the character. 	*
+*  The condition can be overwritten.									*
 *																		*
 ************************************************************************/
 

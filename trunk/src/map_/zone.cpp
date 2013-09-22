@@ -1213,13 +1213,7 @@ void CZone::SpawnPETs(CCharEntity* PChar)
 	{
 		CPetEntity* PCurrentPet = (CPetEntity*)it->second;
 		SpawnIDList_t::iterator PET = PChar->SpawnPETList.lower_bound(PCurrentPet->id);
-		CPetEntity* PPet = (CPetEntity*)PChar->loc.zone->GetEntity(PCurrentPet->targid, TYPE_PET);
 
-		float CurrentDistance = distance(PChar->loc.p, PCurrentPet->loc.p);
-		if (CurrentDistance < 50 && PChar->loc.destination == PCurrentPet->loc.destination )
-		{
-			PChar->pushPacket(new CEntityUpdatePacket(PCurrentPet,ENTITY_UPDATE));
-		}
 		if ((PCurrentPet->status == STATUS_NORMAL || PCurrentPet->status == STATUS_UPDATE) &&
 			distance(PChar->loc.p, PCurrentPet->loc.p) < 50)
 		{

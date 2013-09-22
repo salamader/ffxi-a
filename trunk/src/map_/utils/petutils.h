@@ -1,7 +1,7 @@
 /*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -67,18 +67,18 @@ class CBattleEntity;
 
 namespace petutils
 {
-	void	LoadPetList();
-	void	FreePetList();
+	void  LoadPetList();
+	void  FreePetList();
 
-	void	SpawnPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone);
-  void  SpawnMobPet(CBattleEntity* PMaster, uint32 PetID);
-  void  DespawnPet(CBattleEntity* PMaster);
-  void  AttackTarget(CBattleEntity* PMaster, CBattleEntity* PTarget);
-  void  RetreatToMaster(CBattleEntity* PMaster);
-  void  MakePetStay(CBattleEntity* PMaster);
-  int16 PerpetuationCost(uint32 id, uint8 level);
-  void  Familiar(CBattleEntity* PPet);
-  void  LoadPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone);
+	void  SpawnPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone);
+	void  SpawnMobPet(CBattleEntity* PMaster, uint32 PetID);
+	void  DespawnPet(CBattleEntity* PMaster);
+	void  AttackTarget(CBattleEntity* PMaster, CBattleEntity* PTarget);
+	void  RetreatToMaster(CBattleEntity* PMaster);
+	void  MakePetStay(CBattleEntity* PMaster);
+	int16 PerpetuationCost(uint32 id, uint8 level);
+	void  Familiar(CBattleEntity* PPet);
+	void  LoadPet(CBattleEntity* PMaster, uint32 PetID, bool spawningFromZone);
 };
 
 #endif

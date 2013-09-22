@@ -1,7 +1,7 @@
 ﻿/*
 ===========================================================================
 
-  Copyright (c) 2010-2012 Darkstar Dev Teams
+  Copyright (c) 2010-2013 Darkstar Dev Teams
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -48,8 +48,8 @@ enum WYVERNTYPE
 class CPetEntity : public CBattleEntity
 {
 public:
-	 CPetEntity(PETTYPE petType);						// конструктор
-	~CPetEntity();						// деструктор
+	 CPetEntity(PETTYPE petType);		// Designer
+	~CPetEntity();						// Destructor
 	PETTYPE getPetType();
     bool isBstPet();
 	uint16 m_Family;
