@@ -2924,7 +2924,7 @@ void DistributeExperiencePoints(CCharEntity* PChar, CMobEntity* PMob)
                         continue;
                     }
 					uint8 Pzone = PMember->getZone();
-                    if (PMob->m_Type == MOBTYPE_NORMAL && ((Pzone > 0 && Pzone < 39) || (Pzone > 42 && Pzone < 134) || (Pzone > 135 && Pzone < 185) || (Pzone > 188 && Pzone < 255)))
+                    if (PMob->m_Type == MOBTYPE_NORMAL && ((Pzone > MIN_ZONEID && Pzone < 39) || (Pzone > 42 && Pzone < 134) || (Pzone > 135 && Pzone < 185) || (Pzone > 188 && Pzone < MAX_ZONEID)))
 					{
 						if (PMember->StatusEffectContainer->HasStatusEffect(EFFECT_SIGNET) && PMob->m_Element > 0 && rand()%100 < 20 &&
                         PMember->loc.zone == PMob->loc.zone) // Need to move to SIGNET_CHANCE constant

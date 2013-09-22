@@ -4353,7 +4353,7 @@ inline int32 CLuaBaseEntity::getMod(lua_State *L)
 	}
 	else
 	{
-       ShowDebug("GETMOD HAS VAULE\n");
+      // ShowDebug("GETMOD HAS VAULE\n");
 		uint8 mod = lua_tointeger(L,1);
 		lua_pushinteger(L,((CBattleEntity*)m_PBaseEntity)->getMod(mod));
 	}

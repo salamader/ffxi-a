@@ -444,7 +444,7 @@ void CAIMobDummy::ActionDropItems()
 				*/
 
 				uint8 Pzone = PChar->getZone();
-				bool validZone = ((Pzone > 0 && Pzone < 39) || (Pzone > 42 && Pzone < 134) || (Pzone > 135 && Pzone < 185) || (Pzone > 188 && Pzone < 255));
+				bool validZone = ((Pzone > MIN_ZONEID && Pzone < 39) || (Pzone > 42 && Pzone < 134) || (Pzone > 135 && Pzone < 185) || (Pzone > 188 && Pzone < MAX_ZONEID));
 
 				if(validZone && charutils::GetRealExp(PChar->GetMLevel(),m_PMob->GetMLevel())>0 && m_PMob->m_Type == MOBTYPE_NORMAL){ //exp-yielding monster and drop is successful
 					//TODO: The drop is actually based on a 5 minute timer, and not a probability of dropping!
@@ -1152,6 +1152,7 @@ void CAIMobDummy::ActionAttack()
 
 	if(TryDeaggro())
 	{
+		ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 1\n"CL_RESET);
 		Deaggro();
 		m_ActionType = ACTION_DISENGAGE;
 		ActionDisengage();
@@ -1168,22 +1169,26 @@ void CAIMobDummy::ActionAttack()
     if(m_PMob->StatusEffectContainer->HasStatusEffect(EFFECT_BIND))
     {
     	// bind prevents deaggro
+		ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 2\n"CL_RESET);
     	m_DeaggroTime = m_Tick;
     }
 
 	// Try to spellcast (this is done first so things like Chainspell spam is prioritised over TP moves etc.
 	if(m_PSpecialSkill != NULL && !m_PMob->StatusEffectContainer->HasStatusEffect(EFFECT_CHAINSPELL) && (m_Tick - m_LastSpecialTime) >= m_PMob->getBigMobMod(MOBMOD_SPECIAL_COOL) && TrySpecialSkill())
 	{
+		ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 3\n"CL_RESET);
 		FinishAttack();
 		return;
 	}
 	else if (currentDistance <= MOB_SPELL_MAX_RANGE && (m_Tick - m_LastMagicTime) >= m_PMob->getBigMobMod(MOBMOD_MAGIC_COOL) && TryCastSpell())
 	{
+		ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 4\n"CL_RESET);
 		FinishAttack();
 		return;
 	}
 	else if (rand()%100 < m_PMob->TPUseChance())
 	{
+		ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 5\n"CL_RESET);
 		m_ActionType = ACTION_MOBABILITY_START;
 		ActionAbilityStart();
 		FinishAttack();
@@ -1195,11 +1200,13 @@ void CAIMobDummy::ActionAttack()
 	{
 		if(currentDistance > 28)
 		{
+			ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 6\n"CL_RESET);
 			// you're so far away i'm going to standback when I get closer
 			m_CanStandback = true;
 		}
 		else if(m_PSpecialSkill == NULL && !CanCastSpells() || m_PMob->GetHPP() <= 65)
 		{
+			ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 7\n"CL_RESET);
 			// can't standback anymore cause I don't have any ranged moves
 			m_CanStandback = false;
 
@@ -1211,6 +1218,7 @@ void CAIMobDummy::ActionAttack()
 
 			if(m_CanStandback && currentDistance > m_PMob->m_ModelSize)
 		    {
+				ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 8\n"CL_RESET);
 		    	uint16 halfStandback = (float)m_PMob->getBigMobMod(MOBMOD_STANDBACK_TIME)/3;
 		    	m_LastStandbackTime = m_Tick + m_PMob->getBigMobMod(MOBMOD_STANDBACK_TIME) - rand()%(halfStandback);
 		    	m_CanStandback = false;
@@ -1218,6 +1226,7 @@ void CAIMobDummy::ActionAttack()
 
 			if((m_Tick - m_LastStandbackTime) > m_PMob->getBigMobMod(MOBMOD_STANDBACK_TIME))
 			{
+				ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 9\n"CL_RESET);
 				// speed up my ranged attacks cause i'm waiting here
 				m_LastSpecialTime -= 1000;
 				m_LastMagicTime -= 500;
@@ -1229,6 +1238,7 @@ void CAIMobDummy::ActionAttack()
 		else
 		{
 			// if i'm chasing too much, just melee attack
+			ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 10\n"CL_RESET);
 			m_LastStandbackTime -= 1000;
 		}
 	}
@@ -1245,6 +1255,7 @@ void CAIMobDummy::ActionAttack()
 			// this causing draw in to happen twice unless this if is here
 			if(!m_drawnIn)
 			{
+				ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 11\n"CL_RESET);
 				battleutils::DrawIn(m_PBattleTarget, &m_PMob->loc.p, m_PMob->m_ModelSize - 0.2f);
 
 				luautils::OnMobDrawIn(m_PMob, m_PBattleTarget);
@@ -1257,6 +1268,7 @@ void CAIMobDummy::ActionAttack()
 			}
 			else
 			{
+				ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 12\n"CL_RESET);
 				m_drawnIn = false;
 			}
 		}
@@ -1266,12 +1278,14 @@ void CAIMobDummy::ActionAttack()
 			// this is so the server is not overloaded
 			if(!m_PPathFind->IsFollowingPath() || ++m_ChaseThrottle == 4)
 			{
+				ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 13\n"CL_RESET);
 				m_ChaseThrottle = 0;
 				m_PPathFind->PathAround(m_PBattleTarget->loc.p, 2.0f, PATHFLAG_WALLHACK | PATHFLAG_RUN);
 			}
 
 			if(m_PPathFind->IsFollowingPath())
 			{
+				ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 14\n"CL_RESET);
 				// m_PPathFind->CurvePath(0.5f);
 				m_PPathFind->FollowPath();
 
@@ -1288,8 +1302,10 @@ void CAIMobDummy::ActionAttack()
 		int32 WeaponDelay = m_PMob->m_Weapons[SLOT_MAIN]->getDelay();
 		if (m_PMob->StatusEffectContainer->HasStatusEffect(EFFECT_HUNDRED_FISTS,0))
 		{
+			ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 15\n"CL_RESET);
 			WeaponDelay = 600;
 		} else {
+			ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 16\n"CL_RESET);
 			int16 hasteMagic = (m_PMob->getMod(MOD_HASTE_MAGIC) > 448) ? 448 : m_PMob->getMod(MOD_HASTE_MAGIC);
 			int16 hasteAbility = (m_PMob->getMod(MOD_HASTE_ABILITY) > 256) ? 256 : m_PMob->getMod(MOD_HASTE_ABILITY);
 			WeaponDelay -= (((float)(hasteMagic + hasteAbility) * WeaponDelay) / 1024);
@@ -1299,15 +1315,18 @@ void CAIMobDummy::ActionAttack()
 		{
 			if (battleutils::IsParalyzed(m_PMob))
 			{
+				ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 17\n"CL_RESET);
 				m_PMob->loc.zone->PushPacket(m_PMob, CHAR_INRANGE, new CMessageBasicPacket(m_PMob,m_PBattleTarget,0,0, MSGBASIC_IS_PARALYZED));
 			}
 			else if (battleutils::IsIntimidated(m_PMob, m_PBattleTarget))
 			{
+				ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 18\n"CL_RESET);
 				m_PMob->loc.zone->PushPacket(m_PMob, CHAR_INRANGE, new CMessageBasicPacket(m_PMob,m_PBattleTarget,0,0, MSGBASIC_IS_INTIMIDATED));
 			}
 			else
 			{
-	            m_PBattleTarget->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DETECTABLE);
+	          ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 19\n"CL_RESET);
+				m_PBattleTarget->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DETECTABLE);
 
 				apAction_t Action;
 				m_PMob->m_ActionList.clear();
@@ -1323,6 +1342,7 @@ void CAIMobDummy::ActionAttack()
 					Action.param	  = 0;
 					Action.messageID  = 15;
 					if(m_PBattleTarget->isDead()){
+						ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 20\n"CL_RESET);
 						break;
 					}
 
@@ -1334,6 +1354,7 @@ void CAIMobDummy::ActionAttack()
 
 					if (m_PBattleTarget->StatusEffectContainer->HasStatusEffect(EFFECT_PERFECT_DODGE))
 					{
+						ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 21\n"CL_RESET);
 						Action.messageID = 32;
 						isDodge = true;
 					}
@@ -1341,6 +1362,7 @@ void CAIMobDummy::ActionAttack()
 					{
 						if (battleutils::IsParried(m_PMob, m_PBattleTarget))
 						{
+							ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 22\n"CL_RESET);
 							isParried = true;
 							Action.messageID = 70;
 							Action.reaction   = REACTION_PARRY;
@@ -1348,11 +1370,13 @@ void CAIMobDummy::ActionAttack()
 						}
 						else if (battleutils::IsAbsorbByShadow(m_PBattleTarget))
 						{
+							ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 23\n"CL_RESET);
 							Action.messageID = 0;
 							m_PBattleTarget->loc.zone->PushPacket(m_PBattleTarget,CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PBattleTarget,m_PBattleTarget,0,1, MSGBASIC_SHADOW_ABSORB));
 						}
 						else if (battleutils::IsAnticipated(m_PBattleTarget,false,false))
 						{
+							ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 24\n"CL_RESET);
 							Action.messageID = 30;
 						}
 						else
@@ -1366,7 +1390,10 @@ void CAIMobDummy::ActionAttack()
 							if (m_PBattleTarget->objtype == TYPE_PC && charutils::hasTrait((CCharEntity*)m_PBattleTarget,TRAIT_COUNTER))
 							{
 								if (m_PBattleTarget->GetMJob() == JOB_MNK || m_PBattleTarget->GetMJob() == JOB_PUP)
+								{
+									ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 25\n"CL_RESET);
 									meritCounter = ((CCharEntity*)m_PBattleTarget)->PMeritPoints->GetMeritValue(MERIT_COUNTER_RATE,(CCharEntity*)m_PBattleTarget);
+								}
 							}
 
 
@@ -1376,6 +1403,7 @@ void CAIMobDummy::ActionAttack()
 								(charutils::hasTrait((CCharEntity*)m_PBattleTarget,TRAIT_COUNTER) ||
 								m_PBattleTarget->StatusEffectContainer->HasStatusEffect(EFFECT_SEIGAN)))
 							{
+								ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 26\n"CL_RESET);
 								isCountered = true;
 								Action.messageID = 33; //counter msg  32
 								Action.reaction   = REACTION_HIT;
@@ -1385,11 +1413,13 @@ void CAIMobDummy::ActionAttack()
 								bool isHTH = m_PBattleTarget->m_Weapons[SLOT_MAIN]->getDmgType() == DAMAGE_HTH;
 								if (!isHTH && m_PBattleTarget->objtype == TYPE_MOB && m_PBattleTarget->GetMJob() == JOB_MNK)
 								{
+									ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 27\n"CL_RESET);
 									isHTH = true;
 								}
 								int16 naturalh2hDMG = 0;
 								if (isHTH)
 								{
+									ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 28\n"CL_RESET);
 									naturalh2hDMG = (float)(m_PBattleTarget->GetSkill(SKILL_H2H) * 0.11f)+3;
 								}
 
@@ -1402,6 +1432,7 @@ void CAIMobDummy::ActionAttack()
 							}
 							else if (m_PBattleTarget->StatusEffectContainer->HasStatusEffect(EFFECT_PERFECT_COUNTER))
 							{ //Perfect Counter only counters hits that normal counter misses
+								ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 29\n"CL_RESET);
 								isCountered = true;
 
 							}
@@ -1411,6 +1442,7 @@ void CAIMobDummy::ActionAttack()
 
 								if(m_PMob->StatusEffectContainer->HasStatusEffect(EFFECT_MIGHTY_STRIKES,0))
 								{
+									ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 30\n"CL_RESET);
 									isCritical=true;
 								}
 
@@ -1418,6 +1450,7 @@ void CAIMobDummy::ActionAttack()
 
 								if(isCritical)
 								{
+									ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 31\n"CL_RESET);
 									Action.speceffect = SPECEFFECT_CRITICAL_HIT;
 									Action.messageID  = 67;
 								}
@@ -1425,6 +1458,7 @@ void CAIMobDummy::ActionAttack()
 								// Guard
 								if(battleutils::IsGuarded(m_PMob, m_PBattleTarget))
 								{
+									ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 32\n"CL_RESET);
 									isGuarded = true;
 									//Action.messageID = 0;
 									Action.reaction = REACTION_GUARD;
@@ -1439,6 +1473,7 @@ void CAIMobDummy::ActionAttack()
 								{
 									if(battleutils::GetGuardRate(m_PMob, m_PBattleTarget) > 0)
 									{
+										ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 33\n"CL_RESET);
 										charutils::TrySkillUP((CCharEntity*)m_PBattleTarget,SKILL_GRD, m_PBattleTarget->GetMLevel());
 									}
 								} // Guard skill up
@@ -1450,6 +1485,7 @@ void CAIMobDummy::ActionAttack()
 								if(isBlocked){ Action.reaction = REACTION_BLOCK; }
 								if (m_PBattleTarget->objtype == TYPE_PC)
 								{
+									ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 34\n"CL_RESET);
 									damage = battleutils::HandleSpecialPhysicalDamageReduction((CCharEntity*)m_PBattleTarget,damage,&Action);
 								}
 
@@ -1461,6 +1497,7 @@ void CAIMobDummy::ActionAttack()
 								{
 									if(battleutils::GetBlockRate(m_PMob, m_PBattleTarget) > 0)
 									{
+										ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 35\n"CL_RESET);
 										charutils::TrySkillUP((CCharEntity*)m_PBattleTarget, SKILL_SHL, m_PMob->GetMLevel());
 									}
 								} // Block skill up
@@ -1476,6 +1513,7 @@ void CAIMobDummy::ActionAttack()
 								Action.param = battleutils::TakePhysicalDamage(m_PBattleTarget, m_PMob, damage, false, SLOT_MAIN, 1, NULL, true);
 								if(m_PBattleTarget->objtype == TYPE_PC)
 								{
+									ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 36\n"CL_RESET);
 									uint8 skilltype = (m_PBattleTarget->m_Weapons[SLOT_MAIN] == NULL ? SKILL_H2H : m_PBattleTarget->m_Weapons[SLOT_MAIN]->getSkillType());
 									charutils::TrySkillUP((CCharEntity*)m_PBattleTarget, (SKILLTYPE)skilltype, m_PMob->GetMLevel());
 								}
@@ -1488,6 +1526,7 @@ void CAIMobDummy::ActionAttack()
 						{
 							if(battleutils::GetParryRate(m_PMob, m_PBattleTarget) > 0)
 							{
+								ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 37\n"CL_RESET);
 								charutils::TrySkillUP((CCharEntity*)m_PBattleTarget,SKILL_PAR,m_PBattleTarget->GetMLevel());
 							}
 						} // Parry skill up
@@ -1495,11 +1534,15 @@ void CAIMobDummy::ActionAttack()
 
 					if (m_PBattleTarget->objtype == TYPE_PC && !isCountered && !isParried && !isDodge)
 					{
+						ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 38\n"CL_RESET);
 						charutils::TrySkillUP((CCharEntity*)m_PBattleTarget, SKILL_EVA, m_PMob->GetMLevel());
 					}
 
                     if (Action.speceffect == SPECEFFECT_HIT && Action.param > 0)
+					{
+						ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 39\n"CL_RESET);
                         Action.speceffect = SPECEFFECT_RECOIL;
+					}
 
 					m_PMob->m_ActionList.push_back(Action);
 				}
@@ -1514,6 +1557,7 @@ void CAIMobDummy::ActionAttack()
 	{
 		// not in range to attack my target
 		// so try an other tp move
+		ShowDebug(CL_BG_YELLOW"MOB ATTACK ACTION 40\n"CL_RESET);
 		m_ActionType = ACTION_MOBABILITY_START;
 		ActionAbilityStart();
 	}

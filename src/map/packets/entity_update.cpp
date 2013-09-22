@@ -37,7 +37,10 @@ CEntityUpdatePacket::CEntityUpdatePacket(CBaseEntity* PEntity, ENTITYUPDATE type
 {
 	this->type = 0x0E;
 	this->size = 0x1C;
-
+	if(PEntity ==NULL)
+	{
+		return;
+	}
 	WBUFL(data,(0x04)-4) = PEntity->id;
 	WBUFW(data,(0x08)-4) = PEntity->targid;
 
