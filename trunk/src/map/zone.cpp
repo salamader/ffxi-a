@@ -670,13 +670,14 @@ void CZone::InsertPET(CBaseEntity* PPet)
 	if ((PPet != NULL) && (PPet->objtype == TYPE_PET))
 	{
         uint16 targid = 0x700;
-
+		ShowError(CL_RED"CZone::InsertPET : TARGETID %u\n" CL_RESET, targid);
         for (EntityList_t::const_iterator it = m_petList.begin() ; it != m_petList.end() ; ++it)
 	    {
             if (targid != it->first)
             {
                 break;
             }
+			ShowError(CL_RED"CZone::InsertPET : COUNT TARGETID %u\n" CL_RESET, targid++);
 		    targid++;
 	    }
         if (targid >= 0x800)
@@ -686,6 +687,7 @@ void CZone::InsertPET(CBaseEntity* PPet)
         }
         PPet->id = 0x1000000 + (m_zoneID << 12) + targid;
         PPet->targid = targid;
+		ShowError(CL_RED"CZone::InsertPET : PET TARGETID %u\n" CL_RESET, PPet->targid);
         PPet->loc.zone = this;
 		m_petList[PPet->targid] = PPet;
 
@@ -1125,7 +1127,7 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 		float CurrentDistance = distance(PChar->loc.p, PCurrentMob->loc.p);
 		if (CurrentDistance < 50 && PChar->loc.destination == PCurrentMob->loc.destination )
 		{
-        ShowDebug(CL_CYAN"UPDATING MOBS: TARGET ID %u \n" CL_RESET,PCurrentMob->targid);
+       // ShowDebug(CL_CYAN"UPDATING MOBS: TARGET ID %u \n" CL_RESET,PCurrentMob->targid);
 		PChar->pushPacket(new CEntityUpdatePacket(PMob,ENTITY_UPDATE));
 		uint16 expGain = (uint16)charutils::GetRealExp(PChar->GetMLevel(),PCurrentMob->GetMLevel());
 
@@ -1195,6 +1197,16 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 
 void CZone::SpawnPETs(CCharEntity* PChar)
 {
+	if(m_petList.empty())
+	{
+		ShowDebug(CL_RED" THE PET LIST EMPTY??\n"CL_RESET);
+		return;
+	}
+	if(!m_petList.size() != NULL)
+	{
+		//ShowDebug(CL_RED"IS THE PLAYER LIST SIZE NULL??\n"CL_RESET);
+		return;
+	}
 	if(PChar != NULL && PChar->loc.zone != NULL)
 	{
 	for (EntityList_t::const_iterator it = m_petList.begin() ; it != m_petList.end() ; ++it)
@@ -1211,11 +1223,13 @@ void CZone::SpawnPETs(CCharEntity* PChar)
 				PChar->SpawnPETList.insert(PET, SpawnIDList_t::value_type(PCurrentPet->id, PCurrentPet));
 				PChar->pushPacket(new CEntityUpdatePacket(PCurrentPet,ENTITY_UPDATE));
 			}
-		}else{
+		}
+		else
+		{
 			if( PET != PChar->SpawnPETList.end() &&
 			  !(PChar->SpawnPETList.key_comp()(PCurrentPet->id, PET->first)))
 			{
-				PChar->SpawnPETList.erase(PET);
+				//PChar->SpawnPETList.erase(PET);
 				PChar->pushPacket(new CEntityUpdatePacket(PCurrentPet,ENTITY_DESPAWN));
 			}
 		}
@@ -1235,6 +1249,7 @@ void CZone::SpawnPETs(CCharEntity* PChar)
 
 void CZone::SpawnNPCs(CCharEntity* PChar)
 {
+	
 	if(PChar != NULL && PChar->loc.zone != NULL)
 	{
 	for (EntityList_t::const_iterator it = m_npcList.begin() ; it != m_npcList.end() ; ++it)
@@ -1625,6 +1640,9 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 		for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 				{
 					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					CCharEntity* PCharTarget = (CCharEntity*)PEntity->loc.zone->GetEntity(PCurrentChar->targid, TYPE_PC);
+
+		float CurrentDistance = distance(PEntity->loc.p, PCurrentChar->loc.p);
 					if(PCurrentChar != NULL && PCurrentChar->is_zoning ==-1 )
 					{
 
@@ -1632,9 +1650,9 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 						{
                              if (PEntity != PCurrentChar)
 					            {
-						          if(distance(PEntity->loc.p, PCurrentChar->loc.p) < 50)
+						          if(CurrentDistance < 50)
 						            {
-							         PCurrentChar->pushPacket(new CBasicPacket(*packet));
+							         PCharTarget->pushPacket(new CBasicPacket(*packet));
 									 delete packet;
 									 break;
 						            }
@@ -1642,9 +1660,9 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 						}
 						if(message_type == CHAR_INRANGE_SELF)
 						{
-                             if (PEntity->objtype == TYPE_PC)
+                             if (PCharTarget  == PCurrentChar)
 				                {
-					                 ((CCharEntity*)PEntity)->pushPacket(new CBasicPacket(*packet));
+					                 PCharTarget->pushPacket(new CBasicPacket(*packet));
 									 delete packet;
 									 break;
 				                }
@@ -1653,9 +1671,9 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 						{
                              if (PEntity != PCurrentChar)
 					            {
-						          if(distance(PEntity->loc.p, PCurrentChar->loc.p) < 180)
+						          if(CurrentDistance < 180)
 						            {
-							         PCurrentChar->pushPacket(new CBasicPacket(*packet));
+							         PCharTarget->pushPacket(new CBasicPacket(*packet));
 									 delete packet;
 									 break;
 						            }
@@ -1666,7 +1684,7 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 						{
                              if (PEntity != PCurrentChar)
 					            {
-						       PCurrentChar->pushPacket(new CBasicPacket(*packet));
+						       PCharTarget->pushPacket(new CBasicPacket(*packet));
 							   delete packet;
 							   break;
 					            }
