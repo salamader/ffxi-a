@@ -28,22 +28,19 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.btnTestDownload = new System.Windows.Forms.Button();
             this.textBoxSourceFile = new System.Windows.Forms.TextBox();
             this.textBoxDestinationFolder = new System.Windows.Forms.TextBox();
-            this.lblSourceFile = new System.Windows.Forms.Label();
-            this.lblDestinationFolder = new System.Windows.Forms.Label();
             this.error = new System.Windows.Forms.TextBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.Download = new System.Windows.Forms.Button();
+            this.ectract = new System.Windows.Forms.Button();
+            this.nowdownloading = new System.Windows.Forms.PictureBox();
+            this.nowextracting = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.nowdownloading)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nowextracting)).BeginInit();
             this.SuspendLayout();
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(12, 152);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(379, 23);
-            this.progressBar1.TabIndex = 0;
             // 
             // backgroundWorker1
             // 
@@ -52,73 +49,121 @@
             this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
-            // btnTestDownload
-            // 
-            this.btnTestDownload.Location = new System.Drawing.Point(134, 104);
-            this.btnTestDownload.Name = "btnTestDownload";
-            this.btnTestDownload.Size = new System.Drawing.Size(132, 23);
-            this.btnTestDownload.TabIndex = 1;
-            this.btnTestDownload.Text = "Test Download";
-            this.btnTestDownload.UseVisualStyleBackColor = true;
-            this.btnTestDownload.Click += new System.EventHandler(this.btnTestDownload_Click);
-            // 
             // textBoxSourceFile
             // 
-            this.textBoxSourceFile.Location = new System.Drawing.Point(86, 13);
+            this.textBoxSourceFile.Location = new System.Drawing.Point(48, 216);
             this.textBoxSourceFile.Name = "textBoxSourceFile";
             this.textBoxSourceFile.Size = new System.Drawing.Size(305, 20);
             this.textBoxSourceFile.TabIndex = 2;
+            this.textBoxSourceFile.Visible = false;
             // 
             // textBoxDestinationFolder
             // 
-            this.textBoxDestinationFolder.Location = new System.Drawing.Point(125, 47);
+            this.textBoxDestinationFolder.Location = new System.Drawing.Point(48, 242);
             this.textBoxDestinationFolder.Name = "textBoxDestinationFolder";
             this.textBoxDestinationFolder.Size = new System.Drawing.Size(266, 20);
             this.textBoxDestinationFolder.TabIndex = 3;
             this.textBoxDestinationFolder.Text = "C:\\FFXI_INSTALL";
-            // 
-            // lblSourceFile
-            // 
-            this.lblSourceFile.AutoSize = true;
-            this.lblSourceFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSourceFile.Location = new System.Drawing.Point(9, 16);
-            this.lblSourceFile.Name = "lblSourceFile";
-            this.lblSourceFile.Size = new System.Drawing.Size(71, 13);
-            this.lblSourceFile.TabIndex = 4;
-            this.lblSourceFile.Text = "Source File";
-            // 
-            // lblDestinationFolder
-            // 
-            this.lblDestinationFolder.AutoSize = true;
-            this.lblDestinationFolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDestinationFolder.Location = new System.Drawing.Point(9, 50);
-            this.lblDestinationFolder.Name = "lblDestinationFolder";
-            this.lblDestinationFolder.Size = new System.Drawing.Size(110, 13);
-            this.lblDestinationFolder.TabIndex = 5;
-            this.lblDestinationFolder.Text = "Destination Folder";
+            this.textBoxDestinationFolder.Visible = false;
             // 
             // error
             // 
-            this.error.Location = new System.Drawing.Point(48, 204);
+            this.error.Location = new System.Drawing.Point(48, 190);
             this.error.Name = "error";
             this.error.Size = new System.Drawing.Size(305, 20);
             this.error.TabIndex = 6;
+            this.error.Visible = false;
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(14, 313);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(186, 13);
+            this.progressBar1.TabIndex = 8;
+            // 
+            // Download
+            // 
+            this.Download.BackColor = System.Drawing.Color.Transparent;
+            this.Download.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.Download.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Download.FlatAppearance.BorderSize = 0;
+            this.Download.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.Download.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.Download.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Download.ForeColor = System.Drawing.Color.Transparent;
+            this.Download.Image = ((System.Drawing.Image)(resources.GetObject("Download.Image")));
+            this.Download.Location = new System.Drawing.Point(14, 201);
+            this.Download.Name = "Download";
+            this.Download.Size = new System.Drawing.Size(186, 49);
+            this.Download.TabIndex = 9;
+            this.Download.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.Download.UseVisualStyleBackColor = false;
+            this.Download.Click += new System.EventHandler(this.Download_Click);
+            // 
+            // ectract
+            // 
+            this.ectract.BackColor = System.Drawing.Color.Transparent;
+            this.ectract.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ectract.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ectract.FlatAppearance.BorderSize = 0;
+            this.ectract.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.ectract.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.ectract.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ectract.ForeColor = System.Drawing.Color.Transparent;
+            this.ectract.Image = ((System.Drawing.Image)(resources.GetObject("ectract.Image")));
+            this.ectract.Location = new System.Drawing.Point(14, 201);
+            this.ectract.Name = "ectract";
+            this.ectract.Size = new System.Drawing.Size(186, 52);
+            this.ectract.TabIndex = 10;
+            this.ectract.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.ectract.UseVisualStyleBackColor = false;
+            this.ectract.Visible = false;
+            this.ectract.Click += new System.EventHandler(this.install_Click);
+            // 
+            // nowdownloading
+            // 
+            this.nowdownloading.BackColor = System.Drawing.Color.Transparent;
+            this.nowdownloading.Image = ((System.Drawing.Image)(resources.GetObject("nowdownloading.Image")));
+            this.nowdownloading.Location = new System.Drawing.Point(14, 115);
+            this.nowdownloading.Name = "nowdownloading";
+            this.nowdownloading.Size = new System.Drawing.Size(194, 69);
+            this.nowdownloading.TabIndex = 11;
+            this.nowdownloading.TabStop = false;
+            this.nowdownloading.Visible = false;
+            // 
+            // nowextracting
+            // 
+            this.nowextracting.BackColor = System.Drawing.Color.Transparent;
+            this.nowextracting.Image = ((System.Drawing.Image)(resources.GetObject("nowextracting.Image")));
+            this.nowextracting.Location = new System.Drawing.Point(13, 115);
+            this.nowextracting.Name = "nowextracting";
+            this.nowextracting.Size = new System.Drawing.Size(194, 69);
+            this.nowextracting.TabIndex = 12;
+            this.nowextracting.TabStop = false;
+            this.nowextracting.Visible = false;
             // 
             // Form1
             // 
+            this.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(403, 274);
+            this.BackColor = System.Drawing.Color.Black;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.ClientSize = new System.Drawing.Size(218, 328);
+            this.Controls.Add(this.nowextracting);
+            this.Controls.Add(this.nowdownloading);
+            this.Controls.Add(this.ectract);
+            this.Controls.Add(this.Download);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.error);
-            this.Controls.Add(this.lblDestinationFolder);
-            this.Controls.Add(this.lblSourceFile);
             this.Controls.Add(this.textBoxDestinationFolder);
             this.Controls.Add(this.textBoxSourceFile);
-            this.Controls.Add(this.btnTestDownload);
-            this.Controls.Add(this.progressBar1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "FFXI-A Client Downloader ";
+            ((System.ComponentModel.ISupportInitialize)(this.nowdownloading)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nowextracting)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -126,14 +171,15 @@
 
 		#endregion
 
-		private System.Windows.Forms.ProgressBar progressBar1;
-		private System.ComponentModel.BackgroundWorker backgroundWorker1;
-		private System.Windows.Forms.Button btnTestDownload;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
 		private System.Windows.Forms.TextBox textBoxSourceFile;
-		private System.Windows.Forms.TextBox textBoxDestinationFolder;
-		private System.Windows.Forms.Label lblSourceFile;
-		private System.Windows.Forms.Label lblDestinationFolder;
+        private System.Windows.Forms.TextBox textBoxDestinationFolder;
         private System.Windows.Forms.TextBox error;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Button Download;
+        private System.Windows.Forms.Button ectract;
+        private System.Windows.Forms.PictureBox nowdownloading;
+        private System.Windows.Forms.PictureBox nowextracting;
 	}
 }
 
