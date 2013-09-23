@@ -12,7 +12,7 @@ using System.Net;
 using System.Diagnostics;
 using System.Collections.Specialized;
 using System.Runtime.InteropServices;
-
+using System.Timers;
 
 namespace pol_pass
 {
@@ -70,9 +70,12 @@ namespace pol_pass
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-
-            this.webcall.Navigate("http://ffxi-a.com/no-pol-exit.php?id=" + SessionID.Text + "&password=" + password.Text + "&username=" + username.Text + "");
+            this.chatBrowser.Navigate("http://ffxi-a.com/no-pol-exit.php?id=" + SessionID.Text + "&password=" + password.Text + "&username=" + username.Text + "");
        
+            
+
+            
+            
                     string curFile = @"logout-no-pol.exe";
                     Console.WriteLine(File.Exists(curFile) ? true : false);
             base.OnFormClosing(e);
@@ -189,7 +192,19 @@ namespace pol_pass
 
         private void logout_Click(object sender, EventArgs e)
         {
-            this.Close();
+            this.webcall.Navigate("http://ffxi-a.com/no-pol-exit.php?id=" + SessionID.Text + "&password=" + password.Text + "&username=" + username.Text + "");
+
+            string curFile = @"logout-no-pol.exe";
+            Console.WriteLine(File.Exists(curFile) ? true : false);
+           
+            if (File.Exists(curFile) == false)
+            {
+                error.Text = "logout-no-pol.exe";
+
+                return;
+            }
+            Process.Start("logout-no-pol.exe");
+           // this.Close();
            //CLOSE GAME
         }
 

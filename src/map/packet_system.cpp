@@ -993,9 +993,9 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 		PChar->loc.p.rotation = RBUFB(data,(0x14));
 
 		PChar->m_TargID = RBUFW(data,(0x16));
-		 const int8* Query = "UPDATE chars SET online = '1',shutdown = '0' WHERE charid = %u";
-                       Sql_Query(SqlHandle,Query,PChar->id);
-		 Query = "UPDATE accounts SET online = '1',on_map ='1' WHERE id = %u";
+		// const int8* Query = "UPDATE chars SET online = '1',shutdown = '0' WHERE charid = %u";
+          //             Sql_Query(SqlHandle,Query,PChar->id);
+		const int8* Query = "UPDATE accounts SET online = '1',on_map ='1' WHERE id = %u";
                        Sql_Query(SqlHandle,Query,PChar->accid);
 			
             PChar->loc.zone->SpawnPCs(PChar);
@@ -4035,7 +4035,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			ShowDebug(CL_BG_RED"LANGUAGE ID = %u\n"CL_RESET,PChar->search.language);
 			const int8* Query = "UPDATE server_message SET server_message = '%s' WHERE id = %u";
                        Sql_Query(SqlHandle,Query,message.c_str(), PChar->search.language);
-           PacketParser[0x0DB](session, PChar, 0);
+           
 			return;
 		}
 			
@@ -4682,6 +4682,10 @@ void SmallPacket0x0DC(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x0DB(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	if(data == NULL)
+	{
+		return;
+	}
 	//server_message server_message
 	PChar->search.language = RBUFB(data,(0x24));
 	string_t server_message = "Welcome To Darkstar";

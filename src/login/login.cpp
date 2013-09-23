@@ -139,14 +139,25 @@ while(it != login_sd_list.end())
 	uint32 on_map = 0; /// 0 means no they are not on the map and 1 say they are on map
 	uint32 map_time = 0;
 	uint32 online = 0;
+	uint8 reboot = 0;
 	//ShowMessage("LOBBY_TIME %u LOGIN LIST %u\n",lobby_time,(*it)->accid);
-	const char * Query = "SELECT map_time,on_map,online FROM accounts WHERE id= '%u';";
+	const char * Query = "SELECT map_time,on_map,online,reboot FROM accounts WHERE id= '%u';";
 	           int32 ret3 = Sql_Query(SqlHandle,Query,(*it)->accid);
 			   if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)//START DATABASE SELECTION
 	            {
 				map_time =  Sql_GetUIntData(SqlHandle,0);
 				on_map =  Sql_GetUIntData(SqlHandle,1);
 				online =  Sql_GetUIntData(SqlHandle,2);
+				reboot =  Sql_GetUIntData(SqlHandle,3);
+				if(reboot == 1)
+				{
+
+					ShowMessage("PLAYER IS REBOOTING %u\n",reboot );
+				const char* Query = "UPDATE accounts SET launcher ='1' WHERE id = %u";
+                Sql_Query(SqlHandle,Query,(*it)->accid);
+				 
+				
+				}
 				//ShowMessage("LOBBY_TIME %u MAP_TIME %u\n",lobby_time,map_time);
 				//ShowMessage("THIS PLAYER IS IN LOBBY SESSIONS ID %u\n",it);
 				//const char* Query = "UPDATE accounts SET  lobby_time = '%u' WHERE id = %u";
@@ -211,7 +222,7 @@ while(it != login_sd_list.end())
 				{
 				//lobby_time +=2;	
                 ShowMessage("CLEAN UP PLAYER LEFT ON MAP SERVER NOW %u\n",on_map);
-				const char* Query = "UPDATE accounts SET online ='0',on_map ='0' WHERE id = %u";
+				const char* Query = "UPDATE accounts SET online ='0',on_map ='0',launcher ='0',reboot ='0' WHERE id = %u";
                 Sql_Query(SqlHandle,Query,(*it)->accid);
 				  Query = "UPDATE chars SET online = '0',shutdown='1' WHERE accid = %u";
                 Sql_Query(SqlHandle,Query,(*it)->accid);
