@@ -998,10 +998,10 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 	{
 		//ShowMessage(CL_YELLOW"I AM NOW GOING TO FINISH MAP CLEAN UP\n"CL_RESET);
 		
-		const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE charid = %u";
-        Sql_Query(SqlHandle,Query,PChar->id);
-		Query = "UPDATE accounts SET  online = '0', sessions ='0', on_map ='0', map_time = '0', launcher = '0 WHERE id = %u";
-        Sql_Query(SqlHandle,Query,PChar->accid);
+		const char *Query = "UPDATE chars SET  online = '0', shutdown = '1', zoning = '-1', returning = '0' WHERE accid = %u";
+                Sql_Query(SqlHandle,Query,PChar->accid);
+		        Query = "UPDATE accounts SET  online = '0', sessions ='0', on_map ='0', map_time = '0', launcher = '0' WHERE id = %u";
+                Sql_Query(SqlHandle,Query,PChar->accid);
 		
 	}
 }

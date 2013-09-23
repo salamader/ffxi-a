@@ -560,7 +560,7 @@ int32 do_close_lobbydata(login_session_data_t *loginsd,int32 fd)
 		erase_loginsd_byaccid(loginsd->accid);
 		ShowMessage(CL_GREEN"CLOSED LOBBY DATA:\n"CL_RESET );
 		if( session[fd]->session_data )
-		aFree(session[fd]->session_data);
+		//aFree(session[fd]->session_data);
 		do_close_tcp(fd);
 		return 0;
 	}
