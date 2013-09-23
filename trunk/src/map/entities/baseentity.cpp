@@ -60,6 +60,10 @@ const int8* CBaseEntity::GetName()
 
 uint16 CBaseEntity::getZone()
 {
+	 if(loc.destination >= MAX_ZONEID)
+		{
+			return false;
+	    }
     return loc.zone != NULL ? loc.zone->GetID() : loc.destination;
 }
 

@@ -102,7 +102,11 @@ bool CState::CheckValidTarget(CBattleEntity* PTarget)
             return false;
         }
     }
-
+	if(PTarget->getZone() >= MAX_ZONEID || m_PEntity->getZone() >= MAX_ZONEID)
+		{
+			PushError(MSGBASIC_CANNOT_ON_THAT_TARG);
+			return false;
+	    } 
 
 	return !(m_PEntity->loc.zone == NULL || PTarget->getZone() != m_PEntity->getZone() || PTarget->IsNameHidden());
 }
