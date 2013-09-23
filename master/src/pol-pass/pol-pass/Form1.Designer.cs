@@ -354,7 +354,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(231, 382);
+            this.ClientSize = new System.Drawing.Size(232, 382);
             this.Controls.Add(this.webcall);
             this.Controls.Add(this.soe);
             this.Controls.Add(this.reboot);
