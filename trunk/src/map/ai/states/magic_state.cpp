@@ -66,9 +66,11 @@ STATESTATUS CMagicState::CastSpell(CSpell* PSpell, CBattleEntity* PTarget, uint8
 	action.param	  = m_PSpell->getID();
 	action.messageID  = 327; // starts casting
 
-    m_PEntity->m_ActionList.clear();
+    
+	
+	m_PEntity->m_ActionList.clear();
 	m_PEntity->m_ActionList.push_back(action);
-	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE_SELF, new CActionPacket(m_PEntity));
+	
 	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE, new CActionPacket(m_PEntity));
 	return STATESTATUS_START;
 }
@@ -449,10 +451,11 @@ void CMagicState::InterruptSpell()
     action.param      = 0;
     action.messageID  = 0;
 
+	
     m_PEntity->m_ActionList.clear();
     m_PEntity->m_ActionList.push_back(action);
 
-    m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE_SELF, new CActionPacket(m_PEntity));
+   
 	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE, new CActionPacket(m_PEntity));
     Clear();
 }
@@ -586,11 +589,11 @@ void CMagicState::FinishSpell()
     }
 
     CharAfterFinish();
-
+	
     m_PEntity->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_MAGIC_END);
 
     DSP_DEBUG_BREAK_IF(m_PEntity->Check_Engagment->GetCurrentAction() != ACTION_MAGIC_FINISH);
-	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE_SELF, new CActionPacket(m_PEntity));
+	
 	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE, new CActionPacket(m_PEntity));
 	Clear();
 }

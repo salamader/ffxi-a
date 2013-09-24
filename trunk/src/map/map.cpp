@@ -144,7 +144,7 @@ int32 do_init(int32 argc, int8** argv)
 	ShowMessage("\t\t - " CL_GREEN"[OK]" CL_RESET"\n");
 
 	luautils::init();
-	CmdHandler.init("conf/commands.conf", luautils::LuaHandle);
+	
     PacketParserInitialize();
 	SqlHandle = Sql_Malloc();
 
@@ -413,6 +413,10 @@ int32 map_decipher_packet(int8* buff, size_t size, sockaddr_in* from, map_sessio
 	if( checksum((uint8*)(buff+FFXI_HEADER_SIZE),size-(FFXI_HEADER_SIZE+16),buff+size-16) == 0)
 	{
 		map_session_data->shuttingDown =false;
+		uint32 map_time = CVanaTime::getInstance()->getSysSecond();
+		//ShowMessage(CL_BG_RED"CHECK MAP TIME NOW %u \n"CL_RESET,map_time);
+	const char *Query = "UPDATE accounts SET  map_time = '%u', on_map='1' WHERE sessions = %u";
+                Sql_Query(SqlHandle,Query,map_time,map_session_data);
 		
 		return 0;
 	}
@@ -539,7 +543,7 @@ int32 recv_parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_da
 
 int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t* map_session_data)
 {
-	uint32 checktime = CVanaTime::getInstance()->getSysSecond();
+	
 
 	
 	//ShowDebug(" BUFF SIZE IS  %u\n",*buffsize);
@@ -549,7 +553,8 @@ int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t*
 		ShowDebug("BUFF SIZE IS TO LARGER WILL DC THE PLAYER SKIP SENDING %u\n",*buffsize);
      return false;
 	}
-	uint32 map_time = CVanaTime::getInstance()->getSysSecond();
+	
+	
 	
 	int8* PacketData_Begin = &buff[FFXI_HEADER_SIZE];
 	int8* PacketData_End   = &buff[*buffsize];
@@ -562,8 +567,7 @@ int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t*
 
 	for(int8* SmallPD_ptr = PacketData_Begin;SmallPD_ptr + (RBUFB(SmallPD_ptr,1) & 0xFE)*2 <= PacketData_End && (RBUFB(SmallPD_ptr,1) & 0xFE);SmallPD_ptr = SmallPD_ptr + SmallPD_Size*2)
 	{
-		const char *Query = "UPDATE accounts SET  map_time = '%u', on_map='1' WHERE sessions = %u";
-                Sql_Query(SqlHandle,Query,map_time,map_session_data);
+		
 		
 		SmallPD_Size = (RBUFB(SmallPD_ptr,1) & 0x0FE);
 		SmallPD_Type = (RBUFW(SmallPD_ptr,0) & 0x1FF);

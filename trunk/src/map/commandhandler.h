@@ -33,18 +33,11 @@
 #include <string>
 #include <list>
 
-#define USERLEVEL_ALL		0xff
-#define USERLEVEL_PLAYER	0x01
-#define USERLEVEL_GM		0x02
-#define USERLEVEL_SGM		0x04
-
-/************************************************************************
-*																		*
-*  Структура инициализирующего файла CmdHandler, представлена			*
-*  записями следующего типа.											*
-*																		*
-************************************************************************/
-
+#define PLAYER_ACCOUNT		0
+#define GM_ACCOUNT  	    1
+#define SGM_ACCOUNT		    2
+#define LGM_ACCOUNT		    3
+#define PRODUCER_ACCOUNT	4
 const uint32 MaxCmdNameSize  = 32;
 const uint32 MaxCmdPathSize  = 256;
 const uint32 MaxAmntParams   = 6;
@@ -60,12 +53,6 @@ struct cmd_t
 };
 
 typedef std::list<cmd_t> ListCmds_t;
-
-/************************************************************************
-*																		*
-*																		*
-*																		*
-************************************************************************/
 
 class CCharEntity;
 
@@ -86,14 +73,10 @@ public:
 		//m_CmdInIPath += InitCmdInIPath;
 	};
 
-	bool	init(const int8* InitCmdInIPath, lua_State* InitLState);	// Инициализация списка команд.
-	bool	free();														// Освобождение занятых заранее ресурсов 
+	bool  init(const int8* InitCmdInIPath, lua_State* InitLState);
+	int32 CallCommand(CCharEntity* PChar, int8* data);
+	
 
-	int32	pcall(CCharEntity* PChar, const int8* commandline);			// Вызов сценария.
-	int32	gcall(CCharEntity* PChar, const int8* commandline);			// Вызов сценария.
-	int32	mgcall(CCharEntity* PChar, const int8* commandline);			// Вызов сценария.
-	int32	agcall(CCharEntity* PChar, const int8* commandline);			// Вызов сценария.
-	int32	procall(CCharEntity* PChar, const int8* commandline);			// Вызов сценария.
 	~CCommandHandler() {}
 };
 #endif

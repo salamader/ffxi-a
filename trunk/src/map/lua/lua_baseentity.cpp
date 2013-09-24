@@ -517,8 +517,7 @@ inline int32 CLuaBaseEntity::setPos(lua_State *L)
     if( m_PBaseEntity->objtype != TYPE_PC)
     {
         m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_DESPAWN));
-		m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_DESPAWN));
-    }
+	 }
 
 	if(lua_isnumber(L, 1))
 	{
@@ -580,8 +579,7 @@ inline int32 CLuaBaseEntity::setPos(lua_State *L)
     else
     {
         m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_SPAWN));
-		 m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_SPAWN));
-    }
+	 }
 	return 0;
 }
 inline int32 CLuaBaseEntity::getYPos(lua_State *L)
@@ -2376,10 +2374,7 @@ inline int32 CLuaBaseEntity::showText(lua_State *L)
 				PBaseEntity,
 				CHAR_INRANGE,
 				new CEntityUpdatePacket(PBaseEntity,ENTITY_UPDATE));
-			PBaseEntity->loc.zone->PushPacket(
-				PBaseEntity,
-				CHAR_INRANGE_SELF,
-				new CEntityUpdatePacket(PBaseEntity,ENTITY_UPDATE));
+			
 		}
 
         uint32 param0 = 0;
@@ -2403,8 +2398,7 @@ inline int32 CLuaBaseEntity::showText(lua_State *L)
         else
         {
 			m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE,new CMessageSpecialPacket(PBaseEntity, messageID, param0, param1, param3));
-			m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF,new CMessageSpecialPacket(PBaseEntity, messageID, param0, param1, param3));
-        }
+		 }
 	}
 	return 0;
 }
@@ -3120,7 +3114,6 @@ inline int32 CLuaBaseEntity::messageBasic(lua_State* L)
 	}
 	else{//broadcast in range
 		m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE,new CMessageBasicPacket(m_PBaseEntity, m_PBaseEntity, param0, param1, messageID));
-		m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF,new CMessageBasicPacket(m_PBaseEntity, m_PBaseEntity, param0, param1, messageID));
 	}
 	return 0;
 }
@@ -3150,7 +3143,6 @@ inline int32 CLuaBaseEntity::messagePublic(lua_State* L)
 	    if( !lua_isnil(L,3) && lua_isnumber(L,4) )
 	        param1 = (uint32)lua_tointeger(L,4);
 
-		m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF,new CMessageBasicPacket(m_PBaseEntity, PEntity->GetBaseEntity(), param0, param1, messageID));
 		m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE,new CMessageBasicPacket(m_PBaseEntity, PEntity->GetBaseEntity(), param0, param1, messageID));
     }
 	return 0;
@@ -3162,7 +3154,6 @@ inline int32 CLuaBaseEntity::clearTargID(lua_State* L)
 
 	m_PBaseEntity->m_TargID = 0;
     m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity,ENTITY_UPDATE));
-	m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity,ENTITY_UPDATE));
 	return 0;
 }
 
@@ -3491,7 +3482,6 @@ inline int32 CLuaBaseEntity::setAnimation(lua_State *L)
 			((CCharEntity*)m_PBaseEntity)->pushPacket(new CCharUpdatePacket((CCharEntity*)m_PBaseEntity));
 		} else {
             m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity,ENTITY_UPDATE));
-			m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity,ENTITY_UPDATE));
 		}
 	}
 	return 0;
@@ -3520,8 +3510,7 @@ inline int32 CLuaBaseEntity::speed(lua_State *L)
 			    ((CCharEntity*)m_PBaseEntity)->pushPacket(new CCharUpdatePacket((CCharEntity*)m_PBaseEntity));
             } else {
                 m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE));
-				  m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE));
-            }
+			 }
         }
         return 0;
 	}
@@ -3552,8 +3541,7 @@ inline int32 CLuaBaseEntity::AnimationSub(lua_State *L)
 			    ((CCharEntity*)m_PBaseEntity)->pushPacket(new CCharUpdatePacket((CCharEntity*)m_PBaseEntity));
             } else {
                 m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE));
-				 m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE));
-            }
+			}
         }
         return 0;
 	}
@@ -3642,7 +3630,6 @@ inline int32 CLuaBaseEntity::setStatus(lua_State *L)
 
 	m_PBaseEntity->status = (STATUSTYPE)lua_tointeger(L, 1);
 	m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE));
-	m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CEntityUpdatePacket(m_PBaseEntity, ENTITY_UPDATE));
 	return 0;
 }
 
@@ -6192,7 +6179,7 @@ inline int32 CLuaBaseEntity::injectActionPacket(lua_State* L) {
 	PChar->Check_Engagment->SetCurrentSpell(1);
 	PChar->Check_Engagment->SetCurrentAction(actiontype);
     PChar->m_ActionList.push_back(Action);
-	PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CActionPacket(PChar));
+	PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CActionPacket(PChar));
 	PChar->Check_Engagment->SetCurrentAction(oldAction);
 
 	return 0;
@@ -7080,7 +7067,7 @@ inline int32 CLuaBaseEntity::PrintToPlayer(lua_State* L)
 	{
 		zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(
 			m_PBaseEntity,
-			CHAR_INRANGE_SELF,
+			CHAR_INRANGE,
 			new CChatMessagePacket((CCharEntity*)m_PBaseEntity,MESSAGE_SYSTEM_1,(char*)lua_tostring(L,1)));
 	}
 	return 0;
@@ -7850,8 +7837,7 @@ inline int32 CLuaBaseEntity::set_speed(lua_State *L)
 		PPet->speed = speed;
 		PChar->pushPacket(new CEntityUpdatePacket(PPet, ENTITY_UPDATE));
 		PPet->loc.zone->PushPacket(PPet, CHAR_INRANGE, new CEntityUpdatePacket(PPet, ENTITY_UPDATE));
-		PPet->loc.zone->PushPacket(PPet, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PPet, ENTITY_UPDATE));
-     PChar->pushPacket(new CCharUpdatePacket(PChar));
+	 PChar->pushPacket(new CCharUpdatePacket(PChar));
     
      char buf[110];
      sprintf(buf,"Setting Speed: %u", speed);

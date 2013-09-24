@@ -995,8 +995,12 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 		PChar->m_TargID = RBUFW(data,(0x16));
 		// const int8* Query = "UPDATE chars SET online = '1',shutdown = '0' WHERE charid = %u";
           //             Sql_Query(SqlHandle,Query,PChar->id);
-		const int8* Query = "UPDATE accounts SET online = '1',on_map ='1' WHERE id = %u";
-                       Sql_Query(SqlHandle,Query,PChar->accid);
+		//const int8* Query = "UPDATE accounts SET online = '1',on_map ='1' WHERE id = %u";
+                      // Sql_Query(SqlHandle,Query,PChar->accid);
+		uint32 map_time = CVanaTime::getInstance()->getSysSecond();
+		//ShowMessage(CL_BG_RED"CHECK MAP TIME NOW %u \n"CL_RESET,map_time);
+	const char *Query = "UPDATE accounts SET  map_time = '%u', on_map='1' WHERE id = %u";
+                Sql_Query(SqlHandle,Query,map_time,PChar->accid);
 			
             PChar->loc.zone->SpawnPCs(PChar);
 			PChar->loc.zone->SpawnNPCs(PChar);
@@ -1130,7 +1134,6 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 				{
 					PNpc->animation = ANIMATION_CLOSE_DOOR;
 					PChar->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CEntityUpdatePacket(PNpc,ENTITY_UPDATE));
-					PChar->loc.zone->PushPacket(PNpc, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PNpc,ENTITY_UPDATE));
 					CTaskMgr::getInstance()->AddTask(new CTaskMgr::CTask("close_door", gettick()+7000, PNpc, CTaskMgr::TASK_ONCE, close_door));
 				}
 			}
@@ -1180,7 +1183,6 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					MOB->Check_Engagment->GetBattleTarget() == PChar)
 				{
 					MOB->m_CallForHelp = 0x20;
-					PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(PChar,PChar,0,0,19));
 					PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CMessageBasicPacket(PChar,PChar,0,0,19));
 					break;
 				}
@@ -3078,7 +3080,6 @@ void SmallPacket0x05D(map_session_data_t* session, CCharEntity* PChar, int8* dat
         return;
     }
 
-	PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCharEmotionPacket(PChar,data));
 	PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CCharEmotionPacket(PChar,data));
 	return;
 }
@@ -3855,7 +3856,6 @@ void SmallPacket0x0A2(map_session_data_t* session, CCharEntity* PChar, int8* dat
 {
 	uint16 diceroll = 1 + rand()%1000;
 
-	PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageStandardPacket(PChar, diceroll, 88));
 	PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CMessageStandardPacket(PChar, diceroll, 88));
 	return;
 }
@@ -3930,7 +3930,7 @@ void SmallPacket0x0AD(map_session_data_t* session, CCharEntity* PChar, int8* dat
 *																		*
 ************************************************************************/
 
-void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* data)
+void PlayerChatSystem(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
 	
 		ShowNotice("PCHAR CHAT SYSTEM CALLED\n");
@@ -3956,129 +3956,26 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	           {
 		        secuitylevel= (int32)Sql_GetIntData(SqlHandle,0);
 				PChar->Account_Level = secuitylevel;
-				
-                    if(PChar->Account_Level==0)
-				     {
-                 ////ShowNotice(CL_RED"COMMAND TRACER: Player called Command \n" CL_RESET);	
-				       CmdHandler.pcall(PChar, (const int8*)data+7);
-					   return;
-				     }
-				     if(PChar->Account_Level==1)
-				     {
-               //  //ShowNotice(CL_RED"COMMAND TRACER: GM called Command \n" CL_RESET);	
-				     CmdHandler.gcall(PChar, (const int8*)data+7);
-					 return;
-				     }
-				    if(PChar->Account_Level==2)
-				     {
-                // //ShowNotice(CL_RED"COMMAND TRACER: Mod GM called Command \n" CL_RESET);	
-				     CmdHandler.mgcall(PChar, (const int8*)data+7);
-					 return;
-				     }
-				     if(PChar->Account_Level==3)
-				     {
-                // //ShowNotice(CL_RED"COMMAND TRACER: Admin GM called Command \n" CL_RESET);
-				     CmdHandler.agcall(PChar, (const int8*)data+7);
-					 return;
-				     }
-					 if(PChar->Account_Level==4)
-				     {
-                // //ShowNotice(CL_RED"COMMAND TRACER: Admin GM called Command \n" CL_RESET);
-				     CmdHandler.procall(PChar, (const int8*)data+7);
-					 return;
-				     }
-				
-				//return;
-	            
-	           }
-			else
-			{
-				//ShowNotice("SOME OTHER COMAMND WAS CALLED UNKNOWN\n");
-
-            return;
-			}
-			//return;
+				CmdHandler.CallCommand(PChar, data+7);
+			   }
+			
+			
 	        }
 		
 		
-		}
+	}
 		
 		
 		
 	
-	else if (RBUFB(data,(0x06)) == '#')
-	{
-		if(PChar->Account_Level==1 || PChar->Account_Level==2 || PChar->Account_Level==3 || PChar->Account_Level==4)
-		{
-            for (uint16 zone = MIN_ZONEID; zone < MAX_ZONEID; ++zone)
-            {
-            zoneutils::GetZone(zone)->PushPacket(
-                PChar,
-                CHAR_INZONE,
-                new CChatMessagePacket(PChar, MESSAGE_SYSTEM_1, data+7));
-			ShowMessage("MESSAGE SENT TO  ZONE ID %u\n",zone);
-			
-            }
-			PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SYSTEM_1,     data+6)); 
-			PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SYSTEM_1,     data+6)); 
-			return;
-		}
-			
-          
-		
-	}
-	else if (RBUFB(data,(0x06)) == '@')
-	{
-		if(PChar->Account_Level==1 || PChar->Account_Level==2 || PChar->Account_Level==3 || PChar->Account_Level==4)
-		{
-			string_t message = data+6;
-			ShowDebug(CL_BG_RED"LANGUAGE ID = %u\n"CL_RESET,PChar->search.language);
-			const int8* Query = "UPDATE server_message SET server_message = '%s' WHERE id = %u";
-                       Sql_Query(SqlHandle,Query,message.c_str(), PChar->search.language);
-           
-			return;
-		}
-			
-          
-		
-	}
-	else if (RBUFB(data,(0x06)) == '?')
-	{
-		int32 accid=0;
-	    const int8* GetCharAccountID = "SELECT accid FROM chars WHERE charid = '%u';";
-	    int32 ret = Sql_Query(SqlHandle,GetCharAccountID,PChar->id);
-		string_t message =data+7;
-		if (ret != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
-	       {
-		    accid= (int32)Sql_GetIntData(SqlHandle,0);
-	      const int8* fmtQuery = "INSERT INTO chat SET user_id = %u, message = '%s', count = 1 ;";
-
-		  Sql_Query(SqlHandle,fmtQuery,accid, message.c_str());
-			
-			
-		}
-            for (uint16 zone = MIN_ZONEID; zone < MAX_ZONEID; ++zone)
-            {
-            zoneutils::GetZone(zone)->PushPacket(
-                PChar,
-                CHAR_INZONE,
-                new CChatMessagePacket(PChar, MESSAGE_SHOUT, data+7));
-			ShowMessage("MESSAGE SENT TO  ZONE ID %u\n",zone);
-			
-            }
-		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SHOUT,     data+6)); 
-		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SHOUT,     data+6)); 	
-          return;
-		
-	}
-    else
-    {
+	
+	
+	
         if(jailutils::InPrison(PChar))
         {
             if(RBUFB(data,(0x04)) == MESSAGE_SAY)
             {
                 PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY, data+6));
-				PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SAY, data+6));
 				return;
             }
             else
@@ -4157,7 +4054,7 @@ void SmallPacket0x0B5(map_session_data_t* session, CCharEntity* PChar, int8* dat
             }
         }
 	}
-	}
+	
 
 	return;
 }
@@ -5752,7 +5649,7 @@ void PacketParserInitialize()
     PacketSize[0x0AB] = 0x00; PacketParser[0x0AB] = &SmallPacket0x0AB;
     PacketSize[0x0AC] = 0x00; PacketParser[0x0AC] = &SmallPacket0x0AC;
     PacketSize[0x0AD] = 0x00; PacketParser[0x0AD] = &SmallPacket0x0AD;
-    PacketSize[0x0B5] = 0x00; PacketParser[0x0B5] = &SmallPacket0x0B5;
+    PacketSize[0x0B5] = 0x00; PacketParser[0x0B5] = &PlayerChatSystem;
     PacketSize[0x0B6] = 0x00; PacketParser[0x0B6] = &PCharTellSystem; // PLAYER TELL SYSTEM
     PacketSize[0x0BE] = 0x00; PacketParser[0x0BE] = &SmallPacket0x0BE;	//  merit packet
     PacketSize[0x0C3] = 0x00; PacketParser[0x0C3] = &SmallPacket0x0C3;
