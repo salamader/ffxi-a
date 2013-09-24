@@ -38,8 +38,12 @@ void CState::PushMessage(MSGBASIC_ID msgID, int32 param, int32 value)
 	{
 		PTarget = m_PEntity;
 	}
-
-	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE_SELF, new CMessageBasicPacket(m_PEntity,PTarget,param,value,msgID));
+	if(m_PEntity->objtype == TYPE_PC)
+	{
+		CCharEntity* PChar = (CCharEntity*)m_PEntity;
+	PChar->pushPacket(new CMessageBasicPacket(PChar,PTarget,param,value,msgID));
+	}
+	m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE, new CMessageBasicPacket(m_PEntity,PTarget,param,value,msgID));
 }
 
 void CState::PushError(MSGBASIC_ID msgID, int32 param, int32 value)
@@ -57,6 +61,8 @@ void CState::PushError(MSGBASIC_ID msgID, int32 param, int32 value)
 		}
 
 		PChar->pushPacket(new CMessageBasicPacket(PChar,PTarget,param,value,msgID));
+		m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE, new CMessageBasicPacket(m_PEntity,PTarget,param,value,msgID));
+   
 	}
 }
 

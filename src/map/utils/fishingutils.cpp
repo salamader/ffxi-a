@@ -376,8 +376,7 @@ void FishingAction(CCharEntity* PChar, FISHACTION action, uint16 stamina)
                 // TODO: анализируем RodFlag
 
 				charutils::AddItem(PChar, LOC_INVENTORY, PFish->getID(), 1);
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCaughtFishPacket(PChar, PFish->getID(), MessageOffset + 0x27));
-				PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CCaughtFishPacket(PChar, PFish->getID(), MessageOffset + 0x27));
+               PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CCaughtFishPacket(PChar, PFish->getID(), MessageOffset + 0x27));
 				if (PFish->isType(ITEM_USABLE))
 				{
 					LureLoss(PChar, false);

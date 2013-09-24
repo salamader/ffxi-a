@@ -3149,7 +3149,7 @@ void DelExperiencePoints(CCharEntity* PChar, float retainPercent)
        // SaveCharStats(PChar);
        // SaveCharJob(PChar, PChar->GetMJob());
 
-		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageDebugPacket(PChar, PChar, PChar->jobs.job[PChar->GetMJob()], 0, 11));
+		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CMessageDebugPacket(PChar, PChar, PChar->jobs.job[PChar->GetMJob()], 0, 11));
 	}
 	else
     {
@@ -3271,7 +3271,7 @@ void AddExperiencePoints(bool expFromRaise, CCharEntity* PChar, CBaseEntity* PMo
 		//add limit points
 		if (PChar->PMeritPoints->AddLimitPoints(exp))
         {
-			PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageDebugPacket(PChar, PMob, PChar->PMeritPoints->GetMeritPoints(), 0, 368));
+			PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CMessageDebugPacket(PChar, PMob, PChar->PMeritPoints->GetMeritPoints(), 0, 368));
 		}
 	}
 	else
@@ -3340,7 +3340,7 @@ void AddExperiencePoints(bool expFromRaise, CCharEntity* PChar, CBaseEntity* PMo
             PChar->pushPacket(new CCharSyncPacket(PChar));
 
             UpdateHealth(PChar);
-            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageDebugPacket(PChar, PMob, PChar->jobs.job[PChar->GetMJob()], 0, 9));
+            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CMessageDebugPacket(PChar, PMob, PChar->jobs.job[PChar->GetMJob()], 0, 9));
 			PChar->pushPacket(new CCharStatsPacket(PChar));
 			return;
         }

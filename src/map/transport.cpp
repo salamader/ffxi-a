@@ -223,10 +223,8 @@ void CTransportHandler::TransportTimer()
 
             WBUFL(&PTransport->PTransportNPC->name[0],4) = CVanaTime::getInstance()->getVanaTime();
 
-            PTransport->Dock.zone->PushPacket(NULL, CHAR_INZONE, new CEntityUpdatePacket(PTransport->PTransportNPC, ENTITY_SPAWN));
-			PTransport->Dock.zone->PushPacket(NULL, CHAR_INRANGE, new CEntityUpdatePacket(PTransport->PTransportNPC, ENTITY_SPAWN));
-			//PTransport->Dock.zone->PushPacket(NULL, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PTransport->PTransportNPC, ENTITY_SPAWN));
-        }
+            PTransport->Dock.zone->PushPacket(NULL, CHAR_INRANGE, new CEntityUpdatePacket(PTransport->PTransportNPC, ENTITY_SPAWN));
+		 }
         // персонажи видят корабль, иначе ждем следующего прибытия
         else if (PTransport->PTransportNPC->status == STATUS_NORMAL) 
         {
@@ -240,10 +238,8 @@ void CTransportHandler::TransportTimer()
             else if (ShipTimerOffset == PTransport->TimeAnimationArrive)
             {
                 PTransport->PDoorNPC->animation = ANIMATION_CLOSE_DOOR;
-                PTransport->Dock.zone->PushPacket(PTransport->PDoorNPC, CHAR_INZONE, new CEntityUpdatePacket(PTransport->PDoorNPC, ENTITY_UPDATE)); 
-				PTransport->Dock.zone->PushPacket(PTransport->PDoorNPC, CHAR_INRANGE, new CEntityUpdatePacket(PTransport->PDoorNPC, ENTITY_UPDATE)); 
-				//PTransport->Dock.zone->PushPacket(PTransport->PDoorNPC, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PTransport->PDoorNPC, ENTITY_UPDATE)); 
-            }
+               PTransport->Dock.zone->PushPacket(PTransport->PDoorNPC, CHAR_INRANGE, new CEntityUpdatePacket(PTransport->PDoorNPC, ENTITY_UPDATE)); 
+			 }
             //корабль отчаливает
             else if (ShipTimerOffset == PTransport->TimeAnimationArrive + PTransport->TimeWaiting)
             {
@@ -254,22 +250,16 @@ void CTransportHandler::TransportTimer()
                 WBUFL(&PTransport->PTransportNPC->name[0],4) = CVanaTime::getInstance()->getVanaTime();
 
                 PTransport->Dock.zone->TransportDepart(PTransport->PTransportNPC);
-				PTransport->Dock.zone->PushPacket(PTransport->PDoorNPC, CHAR_INZONE, new CEntityUpdatePacket(PTransport->PDoorNPC, ENTITY_UPDATE)); 
-                PTransport->Dock.zone->PushPacket(PTransport->PDoorNPC, CHAR_INRANGE, new CEntityUpdatePacket(PTransport->PDoorNPC, ENTITY_UPDATE));
-				//PTransport->Dock.zone->PushPacket(PTransport->PDoorNPC, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PTransport->PDoorNPC, ENTITY_UPDATE)); 
-                PTransport->Dock.zone->PushPacket(NULL, CHAR_INZONE, new CEntityUpdatePacket(PTransport->PTransportNPC, ENTITY_UPDATE));
+				PTransport->Dock.zone->PushPacket(PTransport->PDoorNPC, CHAR_INRANGE, new CEntityUpdatePacket(PTransport->PDoorNPC, ENTITY_UPDATE));
 				PTransport->Dock.zone->PushPacket(NULL, CHAR_INRANGE, new CEntityUpdatePacket(PTransport->PTransportNPC, ENTITY_UPDATE));
-				//PTransport->Dock.zone->PushPacket(NULL, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PTransport->PTransportNPC, ENTITY_UPDATE));
 				
             }
             //корабль исчезает
             else if (ShipTimerOffset == PTransport->TimeAnimationArrive + PTransport->TimeWaiting + PTransport->TimeAnimationDepart)
             {
                 PTransport->PTransportNPC->status = STATUS_DISAPPEAR;
-                PTransport->Dock.zone->PushPacket(NULL, CHAR_INZONE, new CEntityUpdatePacket(PTransport->PTransportNPC, ENTITY_DESPAWN));
-				PTransport->Dock.zone->PushPacket(NULL, CHAR_INRANGE, new CEntityUpdatePacket(PTransport->PTransportNPC, ENTITY_DESPAWN));
-				//PTransport->Dock.zone->PushPacket(NULL, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PTransport->PTransportNPC, ENTITY_DESPAWN));
-            }
+                PTransport->Dock.zone->PushPacket(NULL, CHAR_INRANGE, new CEntityUpdatePacket(PTransport->PTransportNPC, ENTITY_DESPAWN));
+			 }
         }
     }
 	
@@ -392,35 +382,25 @@ void CTransportHandler::ELEVATOR__PALBOROUGH__MINES__ELVTR(Elevator_t * elevator
 						
                         ShowDebug(CL_GREEN"UP %u \n"CL_RESET,elevator->Elevator->animation );
 						elevator->LowerDoor->animation =ANIMATION_CLOSE_DOOR ? elevator->LowerDoor->animation =ANIMATION_OPEN_DOOR :elevator->LowerDoor->animation =ANIMATION_CLOSE_DOOR;
-						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
 						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INRANGE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
-						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
-
+						
 						elevator->UpperDoor->animation =ANIMATION_OPEN_DOOR ? elevator->UpperDoor->animation =ANIMATION_CLOSE_DOOR :elevator->UpperDoor->animation =ANIMATION_OPEN_DOOR;
-						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
 						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INRANGE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
-						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
-
+						
 						}
 						if(elevator->Elevator->animation == ANIMATION_ELEVATOR_DOWN)
 						{
 						
                         ShowDebug(CL_GREEN"DOWN %u \n"CL_RESET,elevator->Elevator->animation );
 						elevator->LowerDoor->animation =ANIMATION_OPEN_DOOR ? elevator->LowerDoor->animation =ANIMATION_CLOSE_DOOR :elevator->LowerDoor->animation =ANIMATION_OPEN_DOOR;
-						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INZONE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
 						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INRANGE, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
-						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF, new CEntityUpdatePacket(elevator->LowerDoor,ENTITY_UPDATE));
-
+						
 						
 						elevator->UpperDoor->animation =ANIMATION_CLOSE_DOOR ? elevator->UpperDoor->animation =ANIMATION_OPEN_DOOR :elevator->UpperDoor->animation =ANIMATION_CLOSE_DOOR;
-						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INZONE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
 						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INRANGE, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
-						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF, new CEntityUpdatePacket(elevator->UpperDoor,ENTITY_UPDATE));
-
+						
 						}
-						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INZONE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
 						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INRANGE, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
-						zoneutils::GetZone(m_PBaseEntity->getZone())->PushPacket(m_PBaseEntity,CHAR_INRANGE_SELF, new CEntityUpdatePacket(elevator->Elevator,ENTITY_UPDATE));
 						
 						ShowDebug(CL_GREEN"MOVING NOW FOR PCHAR = %s ZONE %u \n"CL_RESET,m_PBaseEntity->GetName(),m_PBaseEntity->loc.zone ); 
 						

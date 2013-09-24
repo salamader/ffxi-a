@@ -172,7 +172,6 @@ namespace instanceutils{
 						PNpc->status = STATUS_NORMAL;
 						PNpc->animation = 0;
 						PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CEntityUpdatePacket(PNpc, ENTITY_SPAWN));
-						PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE_SELF, new CEntityUpdatePacket(PNpc, ENTITY_SPAWN));
 						instance->addNpc(PNpc);
 						ShowDebug(CL_CYAN"Spawned %s id %i inst %i \n",PNpc->status,PNpc->id,instance->getInstanceNumber());
 				    }else

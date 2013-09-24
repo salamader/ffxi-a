@@ -966,8 +966,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 	else
 	{
 		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CCharPacket(PChar,ENTITY_DESPAWN));
-		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCharPacket(PChar,ENTITY_DESPAWN));
-		//PChar->pushPacket(new CCharPacket(PChar,ENTITY_DESPAWN));
+		
 	}
 	if (PChar->m_LevelRestriction != 0)
 	{
@@ -1197,7 +1196,7 @@ void CZone::SpawnPETs(CCharEntity* PChar)
 {
 	if(m_petList.empty())
 	{
-		ShowDebug(CL_RED" THE PET LIST EMPTY??\n"CL_RESET);
+		//ShowDebug(CL_RED" THE PET LIST EMPTY??\n"CL_RESET);
 		return;
 	}
 	if(!m_petList.size() != NULL)
@@ -1304,7 +1303,7 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 {
 	if(m_charList.empty())
 	{
-		ShowDebug(CL_RED" THE PLAYER LIST EMPTY??\n"CL_RESET);
+		//ShowDebug(CL_RED" THE PLAYER LIST EMPTY??\n"CL_RESET);
 		return;
 	}
 	if(!m_charList.size() != NULL)
@@ -1336,7 +1335,7 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 				//ShowDebug(CL_CYAN"SPAWNING PC 2 \n" CL_RESET);
 				if( PC == PChar->SpawnPCList.end() )
 				{
-					ShowDebug(CL_CYAN"SPAWNING PC THISONE \n" CL_RESET);
+					//ShowDebug(CL_CYAN"SPAWNING PC THISONE \n" CL_RESET);
 					//PChar->SpawnPCList[PCurrentChar->id] = PCurrentChar;
 					PChar->pushPacket(new CCharPacket(PCurrentChar,ENTITY_SPAWN));
 
@@ -1353,7 +1352,7 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 				//ShowDebug(CL_CYAN"ELSE SPAWNING PC THISONE \n" CL_RESET);
 				if( PC != PChar->SpawnPCList.end() )
 				{
-					ShowDebug(CL_CYAN"ELSE SPAWNING PC THISONE ERACE \n" CL_RESET);
+					ShowDebug(CL_CYAN"ELSE DESPAWNING PC THISONE ERACE \n" CL_RESET);
 					//PChar->SpawnPCList.erase(PC);
 					PChar->pushPacket(new CCharPacket(PCurrentChar,ENTITY_DESPAWN));
 
@@ -1654,46 +1653,74 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 
 						if(message_type == CHAR_INRANGE)
 						{
+							//ShowDebug("CHAR_INRAGE 1\n");
                              if (PEntity != PCurrentChar)
 					            {
+									//ShowDebug("CHAR_INRAGE 2\n");
 						          if(CurrentDistance < 50)
 						            {
+										//ShowDebug("CHAR_INRAGE 3\n");
 							         PCharTarget->pushPacket(new CBasicPacket(*packet));
 									 delete packet;
 									 break;
 						            }
 						        }
+							 else
+							 {
+								 PCharTarget->pushPacket(new CBasicPacket(*packet));
+								 delete packet;
+								 ShowDebug("ELSE CHAR_INRAGE 4\n");
+							 }
 						}
 						if(message_type == CHAR_INRANGE_SELF)
 						{
+							//ShowDebug("CHAR_INRAGE_SELF 1\n");
                              if (PCharTarget  == PCurrentChar)
 				                {
+									//ShowDebug("CHAR_INRAGE_SELF 2\n");
 					                 PCharTarget->pushPacket(new CBasicPacket(*packet));
 									 delete packet;
 									 break;
 				                }
+							 else
+							 {
+								 ShowDebug("ELSE CHAR_INRAGE_SELF 3\n");
+							 }
 						}
 						if(message_type == CHAR_INSHOUT)
 						{
+							//ShowDebug("CHAR_INSHOUT 1\n");
                              if (PEntity != PCurrentChar)
 					            {
+									//ShowDebug("CHAR_INSHOUT 2\n");
 						          if(CurrentDistance < 180)
 						            {
+										//ShowDebug("CHAR_INSHOUT 3\n");
 							         PCharTarget->pushPacket(new CBasicPacket(*packet));
 									 delete packet;
 									 break;
 						            }
 						
 					            }
+							 else
+							 {
+								 ShowDebug("ELSE CHAR_INSHOUT 4\n");
+							 }
 						}
 						if(message_type == CHAR_INZONE)
 						{
+							//ShowDebug("CHAR_INZONE 1\n");
                              if (PEntity != PCurrentChar)
 					            {
+									//ShowDebug("CHAR_INZONE 2\n");
 						       PCharTarget->pushPacket(new CBasicPacket(*packet));
 							   delete packet;
 							   break;
 					            }
+							 else
+							 {
+								 ShowDebug("ELSE CHAR_INZONE 3\n");
+							 }
 						}
 					}
 		}
