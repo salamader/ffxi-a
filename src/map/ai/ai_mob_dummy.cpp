@@ -168,8 +168,14 @@ void CAIMobDummy::ActionRoaming()
 	if(m_PPathFind->IsFollowingPath())
 	{
 		FollowPath();
-
+		if(m_PMob->loc.zone->m_InstanceHandler == NULL)
+	    {
+			//ShowDebug("CRASH NULL INSTANCE\n");
+	    }
+	    else
+	    {
 		m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
+	    }
 
 	}
 	else if ((m_Tick - m_LastActionTime) >= m_PMob->getBigMobMod(MOBMOD_ROAM_COOL))
