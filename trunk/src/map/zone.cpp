@@ -1633,10 +1633,18 @@ CCharEntity* CZone::GetCharByName(int8* name)
 
 void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, CBasicPacket* packet)
 {
-
-
+	if (m_charList.empty())
+	{
+		ShowDebug(CL_CYAN"EMPTY PLAYER PACKETS %u \n" CL_RESET,packet);
+		return;
+	}
+	if (!m_charList.size() != NULL)
+	{
+		ShowDebug(CL_CYAN"SIZE PLAYER PACKETS %u \n" CL_RESET,packet);
+		return;
+	}
 	
-	//ShowDebug(CL_CYAN"PACKETS %u \n" CL_RESET,packet);
+	
 	if(PEntity != NULL)
 	{
 	if (!m_charList.empty())
@@ -1646,8 +1654,12 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 				{
 					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
 					CCharEntity* PCharTarget = (CCharEntity*)PEntity->loc.zone->GetEntity(PCurrentChar->targid, TYPE_PC);
-
-		float CurrentDistance = distance(PEntity->loc.p, PCurrentChar->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						PCurrentChar->pushPacket(new CBasicPacket(*packet));
+					ShowDebug("PCurrentChar ID %u NAME %s \n",PCurrentChar->id,PCurrentChar->GetName());
+					}
+		/*float CurrentDistance = distance(PEntity->loc.p, PCurrentChar->loc.p);
 					if(PCurrentChar != NULL && PCurrentChar->is_zoning ==-1 )
 					{
 
@@ -1664,12 +1676,20 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 									 delete packet;
 									 break;
 						            }
+								  else
+								  {
+                                     PCharTarget->pushPacket(new CBasicPacket(*packet));
+								 delete packet;
+								// ShowDebug("ELSE CHAR_INRAGE 4\n");
+								 break;
+								  }
 						        }
 							 else
 							 {
 								 PCharTarget->pushPacket(new CBasicPacket(*packet));
 								 delete packet;
-								 ShowDebug("ELSE CHAR_INRAGE 4\n");
+								 //ShowDebug("ELSE CHAR_INRAGE 5\n");
+								 break;
 							 }
 						}
 						if(message_type == CHAR_INRANGE_SELF)
@@ -1722,7 +1742,7 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 								 ShowDebug("ELSE CHAR_INZONE 3\n");
 							 }
 						}
-					}
+					}*/
 		}
 	
 //		delete packet; CAN NOT DELETE WHAS ALREADY BEEN DELETED
