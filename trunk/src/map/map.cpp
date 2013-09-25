@@ -624,7 +624,7 @@ int32 parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_data_t*
 
 		*buffsize += PSmallPacket->getSize()*2;
 
-		delete PSmallPacket;
+//		delete PSmallPacket;
 	
 	}
 	return 0;

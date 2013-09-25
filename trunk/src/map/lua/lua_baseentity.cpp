@@ -5636,7 +5636,11 @@ inline int32 CLuaBaseEntity::bcnmRegister(lua_State *L){
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
 	int instance = 0;
 
-	DSP_DEBUG_BREAK_IF(PChar->loc.zone->m_InstanceHandler == NULL);
+	if(PChar->loc.zone->m_InstanceHandler == NULL)
+	{
+		ShowDebug("CRASH ON INSTANCE HANDER AGAIN\n");
+		return false;
+	}
 	int Pzone = PChar->getZone();
 	  if(Pzone == 37 || Pzone == 38){
 		           if(PChar->loc.zone->m_InstanceHandler->hasFreeSpecialInstance(lua_tointeger(L,1))){
@@ -5694,11 +5698,18 @@ inline int32 CLuaBaseEntity::bcnmRegister(lua_State *L){
 ****************************************************************/
 
 inline int32 CLuaBaseEntity::bcnmEnter(lua_State *L){
-	DSP_DEBUG_BREAK_IF(m_PBaseEntity == NULL);
+	if(m_PBaseEntity == NULL)
+	{
+		return false;
+	}
 	DSP_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
 	CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
-	DSP_DEBUG_BREAK_IF(PChar->loc.zone->m_InstanceHandler == NULL);
+	if(PChar->loc.zone->m_InstanceHandler == NULL)
+	{
+		ShowDebug("INSTANCE HANDER IS NULL\n");
+		return false;
+	}
 
 	int Pzone = PChar->getZone();
 	if(Pzone > 184 && Pzone < 189 || Pzone > 133 && Pzone < 136 || Pzone > 38  && Pzone < 43 ){
