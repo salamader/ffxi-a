@@ -378,7 +378,6 @@
     <ClInclude Include="..\..\src\map\spell.h" />
     <ClInclude Include="..\..\src\map\status_effect.h" />
     <ClInclude Include="..\..\src\map\status_effect_container.h" />
-    <ClInclude Include="..\..\src\map\time_server.h" />
     <ClInclude Include="..\..\src\map\trade_container.h" />
     <ClInclude Include="..\..\src\map\trait.h" />
     <ClInclude Include="..\..\src\map\transport.h" />
@@ -591,7 +590,6 @@
     <ClCompile Include="..\..\src\map\spell.cpp" />
     <ClCompile Include="..\..\src\map\status_effect.cpp" />
     <ClCompile Include="..\..\src\map\status_effect_container.cpp" />
-    <ClCompile Include="..\..\src\map\time_server.cpp" />
     <ClCompile Include="..\..\src\map\trade_container.cpp" />
     <ClCompile Include="..\..\src\map\trait.cpp" />
     <ClCompile Include="..\..\src\map\transport.cpp" />
