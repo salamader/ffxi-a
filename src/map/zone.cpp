@@ -965,7 +965,18 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 	}
 	else
 	{
-		PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CCharPacket(PChar,ENTITY_DESPAWN));
+		if(!m_charList.empty())
+		{
+		for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
+	    {
+	    CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+		PCurrentChar->loc.zone->PushPacket(PCurrentChar , CHAR_INRANGE, new CCharPacket(PChar,ENTITY_DESPAWN));
+		}
+		}
+		else
+		{
+			PChar->loc.zone->PushPacket(PChar , CHAR_INRANGE, new CCharPacket(PChar,ENTITY_DESPAWN));
+		}
 		
 	}
 	if (PChar->m_LevelRestriction != 0)
@@ -1653,7 +1664,7 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 		for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 				{
 					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-					CCharEntity* PCharTarget = (CCharEntity*)PEntity->loc.zone->GetEntity(PCurrentChar->targid, TYPE_PC);
+					//CCharEntity* PCharTarget = (CCharEntity*)PEntity->loc.zone->GetEntity(PCurrentChar->targid, TYPE_PC);
 					if(PCurrentChar !=NULL)
 					{
 						PCurrentChar->pushPacket(new CBasicPacket(*packet));

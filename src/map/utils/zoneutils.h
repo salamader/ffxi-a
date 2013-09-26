@@ -45,7 +45,8 @@ namespace zoneutils
 
   // Update the Treasure spawn point to a new point, retrieved from the database
   void UpdateTreasureSpawnPoint(uint32 npcid, uint32 respawnTime = 300000);
-    void UpdateWeather();                                                           // обновляем погоду в зонах
+    void UpdateWeather();   
+	void UpdateZoneWeather(uint16 ZoneID);// обновляем погоду в зонах
 	void TOTDCharnge(TIMETYPE TOTD);                                                // реакция мира на смену времени суток
 
     REGIONTYPE    GetCurrentRegion(uint16 ZoneID);
