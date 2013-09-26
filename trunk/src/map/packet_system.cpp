@@ -54,6 +54,12 @@
 #include "utils/zoneutils.h"
 
 #include "items/item_shop.h"
+#include "utils/guildutils.h"
+
+#include "transport.h"
+#include "vana_time.h"
+
+#include "conquest_system.h"
 
 #include "lua/luautils.h"
 #include "packets/chat_message_string.h"
@@ -478,27 +484,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		{
 		
 			
-       /*  const int8* fmtQuery = "UPDATE accounts_sessions SET targid = %u, session_key = x'%s', server_addr = %u, client_port = %u WHERE charid = %u";
-		
-	// if(PChar->id > 40000 && !(wildcmp("10.1.10.*",ip2str(session->client_addr,NULL)))) // External Accounts are assigned much higher IDs.
-	if(PChar->id > 40000) // External Accounts are assigned much higher IDs.
-	{
-		ShowInfo("SmallPacket0x00A: WAN IP\n");
-		Sql_Query(SqlHandle,fmtQuery,
-			PChar->targid,
-			session_key,
-            PChar->loc.zone->GetWANIP(),
-			session->client_port,
-			PChar->id);
-	} else {
-		 ShowInfo("SmallPacket0x00A: LAN IP\n");
-		Sql_Query(SqlHandle,fmtQuery,
-			PChar->targid,
-			session_key,
-            PChar->loc.zone->GetLANIP(),
-			session->client_port,
-			PChar->id);
-	}*/
+       
 
  
 		const int8* deathTsQuery = "SELECT death FROM char_stats where charid = %u;";
@@ -983,7 +969,10 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 	{
 		//ShowMessage(CL_GREEN"UPDATE: PLAYER ID =%u \n"CL_RESET,PChar->id);
 		
-		
+	if (CVanaTime::getInstance()->getHour() % 4 == 0 && CVanaTime::getInstance()->getMinute() == 30)
+	{
+		zoneutils::UpdateZoneWeather(PChar->loc.destination);
+	}
         
 		PChar->loc.p.x = RBUFF(data,(0x04));
 		PChar->loc.p.y = RBUFF(data,(0x08));
@@ -993,19 +982,46 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 		PChar->loc.p.rotation = RBUFB(data,(0x14));
 
 		PChar->m_TargID = RBUFW(data,(0x16));
-		// const int8* Query = "UPDATE chars SET online = '1',shutdown = '0' WHERE charid = %u";
-          //             Sql_Query(SqlHandle,Query,PChar->id);
-		//const int8* Query = "UPDATE accounts SET online = '1',on_map ='1' WHERE id = %u";
-                      // Sql_Query(SqlHandle,Query,PChar->accid);
+		 const int8* Query = "UPDATE chars SET online = '1',shutdown = '0' WHERE charid = %u";
+                     Sql_Query(SqlHandle,Query,PChar->id);
+		 Query = "UPDATE accounts SET online = '1',on_map ='1' WHERE id = %u";
+                      Sql_Query(SqlHandle,Query,PChar->accid);
 		uint32 map_time = CVanaTime::getInstance()->getSysSecond();
+		if(map_time == 0)
+		{
+			luautils::OnGameHourAutomatisation();
+		}
+		TIMETYPE VanadielTOTD = CVanaTime::getInstance()->SyncTime();
+
+	
+
+	
+
+    if (VanadielTOTD != TIME_NONE)
+	{
+		zoneutils::TOTDCharnge(VanadielTOTD);
+
+        if (VanadielTOTD == TIME_MIDNIGHT)
+        {
+            guildutils::UpdateGuildsStock();
+			luautils::OnGameDayAutomatisation();
+			conquest::UpdateConquestSystem();
+
+            // weekly update for conquest (monday at midnight)
+	        if (CVanaTime::getInstance()->getSysWeekDay() == 1)
+	        {
+		        conquest::UpdateWeekConquest();
+	        }
+        }
+	}
+	CTransportHandler::getInstance()->TransportTimer();
 		//ShowMessage(CL_BG_RED"CHECK MAP TIME NOW %u \n"CL_RESET,map_time);
-	const char *Query = "UPDATE accounts SET  map_time = '%u', on_map='1' WHERE id = %u";
+	Query = "UPDATE accounts SET  map_time = '%u', on_map='1' WHERE id = %u";
                 Sql_Query(SqlHandle,Query,map_time,PChar->accid);
 			
             PChar->loc.zone->SpawnPCs(PChar);
 			PChar->loc.zone->SpawnNPCs(PChar);
-		PChar->loc.zone->UpdateMOBs(PChar);
-			PChar->loc.zone->UpdatePChars(PChar);
+		
 		PChar->loc.zone->SpawnMOBs(PChar);
 		PChar->loc.zone->SpawnPETs(PChar);
 	if(PChar->godmode==1)

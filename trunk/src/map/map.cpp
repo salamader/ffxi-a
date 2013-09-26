@@ -51,7 +51,7 @@
 #include "party.h"
 #include "utils/petutils.h"
 #include "spell.h"
-#include "time_server.h"
+
 #include "transport.h"
 #include "vana_time.h"
 #include "utils/zoneutils.h"
@@ -218,7 +218,6 @@ int32 do_init(int32 argc, int8** argv)
 
     CVanaTime::getInstance()->setCustomOffset(map_config.vanadiel_time_offset);
 
-	CTaskMgr::getInstance()->AddTask("time_server", gettick(), NULL, CTaskMgr::TASK_INTERVAL, time_server, 2400);
 	CTaskMgr::getInstance()->AddTask("Check_Map_For_Player_Cleanup", gettick(), NULL, CTaskMgr::TASK_INTERVAL, Check_Map_For_Player_Cleanup, 700);
 	
 

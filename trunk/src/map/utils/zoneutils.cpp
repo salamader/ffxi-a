@@ -123,6 +123,36 @@ void UpdateWeather()
     }
     ShowDebug(CL_CYAN"UpdateWeather Finished\n" CL_RESET);
 }
+void UpdateZoneWeather(uint16 ZoneID)
+{
+    uint8 WeatherChange = 0;
+    uint8 WeatherFrequency = 0;
+	if(ZoneID > MAX_ZONEID)
+	{
+     return;
+	}
+    
+        if (!g_PZoneList[ZoneID]->IsWeatherStatic())
+        {
+            WeatherFrequency = 0;
+            WeatherChange = rand()%100;
+
+            for (uint8 weather = 0; weather < MAX_WEATHER_ID; ++weather)
+            {
+                WeatherFrequency += g_PZoneList[ZoneID]->m_WeatherFrequency[weather];
+
+                if (WeatherChange < WeatherFrequency)
+                {
+
+                    g_PZoneList[ZoneID]->SetWeather((WEATHER)weather);
+          					luautils::OnZoneWeatherChange(ZoneID, weather);
+          					break;
+                }
+            }
+        }
+    
+    ShowDebug(CL_CYAN"UpdateWeather Finished\n" CL_RESET);
+}
 
 /************************************************************************
 *																		*
