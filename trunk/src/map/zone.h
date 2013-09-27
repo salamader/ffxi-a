@@ -530,7 +530,7 @@ public:
 	
 	void            TOTDZoneChange(TIMETYPE TOTD,CCharEntity* PChar,CMobEntity* PMob);// обработка реакции мира на смену времени суток
 	void			PushPacket(CBaseEntity*, GLOBAL_MESSAGE_TYPE, CBasicPacket*);	// отправляем глобальный пакет в пределах зоны
-
+	void            PushPlayerChatPacket(CBaseEntity*,CCharEntity*, GLOBAL_MESSAGE_TYPE, CBasicPacket*);
 	uint32			m_RegionCheckTime;												// время последней проверки регионов
     uint8           m_WeatherFrequency[MAX_WEATHER_ID];                             // вероятность появления каждого типа погоды
 

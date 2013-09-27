@@ -3434,8 +3434,26 @@ int32 OnMobWeaponSkill(CBaseEntity* PTarget, CBaseEntity* PMob, CMobSkill* PMobS
 
     lua_pushnil(LuaHandle);
     lua_setglobal(LuaHandle, "OnMobWeaponSkill");
+	string_t mob_skill_name = "noname";
+	const char * Query = "SELECT mob_skill_name FROM mob_skill WHERE mob_skill_id = '%u';";
+	          int32 ret3 = Sql_Query(SqlHandle,Query,PMobSkill->getID());
+			
 
-	snprintf(File, sizeof(File), "scripts/globals/mobskills/%s.lua", PMobSkill->getName());
+	             if (ret3 != SQL_ERROR && Sql_NumRows(SqlHandle) != 0 && Sql_NextRow(SqlHandle) == SQL_SUCCESS)
+	                {
+						
+				   mob_skill_name =  Sql_GetData(SqlHandle,0);
+				   snprintf(File, sizeof(File), "scripts/globals/mobskills/%s.lua", mob_skill_name.c_str());
+				  // snprintf(File, sizeof(File), "scripts/globals/weaponskills/%s.lua", wskill->getName());
+				   
+				 }
+				 else
+				 {
+					 //snprintf(File, sizeof(File), "scripts/zones/Residential_Area/Zone.lua");
+					 return false;
+				 }
+
+	//snprintf(File, sizeof(File), "scripts/globals/mobskills/%s.lua", PMobSkill->getName());
 
 	if( luaL_loadfile(LuaHandle,File) || lua_pcall(LuaHandle,0,0,0) )
 	{

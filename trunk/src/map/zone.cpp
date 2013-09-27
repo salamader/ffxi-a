@@ -1524,7 +1524,51 @@ CCharEntity* CZone::GetCharByName(int8* name)
 *  Отправляем глобальные пакеты											*
 *																		*
 ************************************************************************/
+void CZone::PushPlayerChatPacket(CBaseEntity* PEntity,CCharEntity* PChar, GLOBAL_MESSAGE_TYPE message_type, CBasicPacket* packet)
+{
+	if (m_charList.empty())
+	{
+		//ShowDebug(CL_CYAN"EMPTY PLAYER PACKETS %u \n" CL_RESET,packet);
+		return;
+	}
+	if (!m_charList.size() != NULL)
+	{
+		//ShowDebug(CL_CYAN"SIZE PLAYER PACKETS %u \n" CL_RESET,packet);
+		return;
+	}
+	
+	
+	if(PEntity != NULL)
+	{
+		PChar->pushPacket(new CBasicPacket(*packet));
+	if (!m_charList.empty())
+	{
 
+		for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					
+					if(PCurrentChar !=NULL)
+					{
+						
+						PCurrentChar->pushPacket(new CBasicPacket(*packet));
+						
+					}
+		
+		       }
+	
+
+		return;
+	
+	}
+	}
+	else
+	{
+      // ShowDebug(CL_CYAN"A PACKET WAS CALLED WITH NO PENTITY %u\n" CL_RESET,packet);
+	   delete packet;
+	   return;
+	}
+}
 void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, CBasicPacket* packet)
 {
 	if (m_charList.empty())
@@ -1558,6 +1602,7 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 								 ShowDebug("I AM MY SELF\n");
 								 if(message_type ==  CHAR_INRANGE_SELF || message_type ==  CHAR_INSHOUT)
 								 {
+								 ((CCharEntity*)PEntity)->pushPacket(new CBasicPacket(*packet));
                                  ShowDebug("I AM MY SELF DO NOT PRINT OUT TO SELF SHOUT\n");
 								 return;
 								 }
