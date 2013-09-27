@@ -27,6 +27,8 @@
 
 #include "../packets/entity_update.h"
 
+#include "../utils/charutils.h"
+
 #include "../entities/npcentity.h"
 #include "../zone.h"
 
@@ -48,7 +50,7 @@ void CAINpcDummy::CheckCurrentAction(uint32 tick)
     case ACTION_NONE: break;
     case ACTION_SPAWN:  ActionSpawn();  break;
     case ACTION_ROAMING:  ActionRoaming();  break;
-    default : DSP_DEBUG_BREAK_IF(true);
+    default : if(true);
   }
 }
 
@@ -60,13 +62,32 @@ void CAINpcDummy::WeatherChange(WEATHER weather, uint8 element)
 void CAINpcDummy::ActionSpawn()
 {
   luautils::OnNpcSpawn(m_PNpc);
-
+  ShowDebug("SPAWNING NPC \n"); 
   m_ActionType = ACTION_ROAMING;
 }
 
 void CAINpcDummy::ActionRoaming()
 {
 
+	if(m_PNpc != NULL)
+	{
+		if (!m_PNpc->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PNpc->loc.zone->m_charList.begin() ; it != m_PNpc->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PNpc->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
+							if(m_PNpc->objtype == TYPE_NPC)
+						      {
+								ShowDebug("ROAMING NPC \n");  
+				             m_PNpc->loc.zone->PushPacket(m_PNpc,CHAR_INRANGE, new CEntityUpdatePacket(m_PNpc,ENTITY_UPDATE));
+							}
+				}
   // wait my time
   if(m_Tick - m_LastWaitTime < m_WaitTime){
     return;
@@ -88,6 +109,10 @@ void CAINpcDummy::ActionRoaming()
     m_PNpc->loc.zone->PushPacket(m_PNpc,CHAR_INRANGE, new CEntityUpdatePacket(m_PNpc,ENTITY_UPDATE));
 
   }
+					}
+		}
+		}
+	}
 }
 
 void CAINpcDummy::TransitionBack(bool skipWait)

@@ -47,7 +47,7 @@ namespace zoneutils
   void UpdateTreasureSpawnPoint(uint32 npcid, uint32 respawnTime = 300000);
     void UpdateWeather();   
 	void UpdateZoneWeather(uint16 ZoneID, CCharEntity* PChar);
-	void TOTDCharnge(TIMETYPE TOTD);                                                // реакция мира на смену времени суток
+	void TOTDZoneCharnge(TIMETYPE TOTD,uint16 ZoneID, CCharEntity* PChar,CMobEntity* PMob);// реакция мира на смену времени суток
 
     REGIONTYPE    GetCurrentRegion(uint16 ZoneID);
     CONTINENTTYPE GetCurrentContinent(uint16 ZoneID);

@@ -3163,6 +3163,7 @@ int32 OnGameDayAutomatisation()
         ShowError("luatils::OnGameDayAutomisation (%s): 0 returns expected, got %d\n", File, returns);
         lua_pop(LuaHandle, returns);
     }
+	 ShowError("luatils::OnGameDayAutomisation Finished!\n");
 	return 0;
 }
 
@@ -3210,6 +3211,7 @@ int32 OnGameHourAutomatisation()
         ShowError("luatils::OnGameHourAutomisation (%s): 0 returns expected, got %d\n", File, returns);
         lua_pop(LuaHandle, returns);
     }
+	ShowError("luatils::OnGameHourAutomisation Finished!\n");
 	return 0;
 }
 

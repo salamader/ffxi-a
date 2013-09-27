@@ -32,6 +32,7 @@
 #include "../utils/mobutils.h"
 #include "../status_effect.h"
 #include "../entities/petentity.h"
+#include "../utils/zoneutils.h"
 #include "../utils/petutils.h"
 #include "../spell.h"
 #include "../zone.h"
@@ -123,6 +124,20 @@ void CAIMobDummy::CheckCurrentAction(uint32 tick)
 
 void CAIMobDummy::ActionRoaming()
 {
+	// call every 3 seconds
+	// NOTE: a lot of NMs use this like Taisai
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						
 	// If there's someone on our enmity list, go from roaming -> engaging
 	if (m_PMob->PEnmityContainer->GetHighestEnmity() != NULL && !(m_PMob->m_roamFlags & ROAMFLAG_IGNORE))
 	{
@@ -152,7 +167,13 @@ void CAIMobDummy::ActionRoaming()
 
 	// wait my time
 	if(m_Tick - m_LastWaitTime < m_WaitTime){
-		m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
+		if(CurrentDistance < 20) // THIS IS GOOD FOR SPAWNING
+						{
+							if(m_PMob->objtype == TYPE_MOB)
+						      {
+				m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
+							}
+				}
 		return;
 	}
 
@@ -174,7 +195,13 @@ void CAIMobDummy::ActionRoaming()
 	    }
 	    else
 	    {
-		m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
+		if(CurrentDistance < 20) // THIS IS GOOD FOR SPAWNING
+						{
+							if(m_PMob->objtype == TYPE_MOB)
+						      {
+				m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
+							}
+				}
 	    }
 
 	}
@@ -203,7 +230,13 @@ void CAIMobDummy::ActionRoaming()
 
 				FollowPath();
 
+				if(CurrentDistance < 20) // THIS IS GOOD FOR SPAWNING
+						{
+							if(m_PMob->objtype == TYPE_MOB)
+						      {
 				m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
+							}
+				}
 
 				// move back every 5 seconds
 				m_LastActionTime = m_Tick - m_PMob->getBigMobMod(MOBMOD_ROAM_COOL) + MOB_NEUTRAL_TIME;
@@ -236,7 +269,13 @@ void CAIMobDummy::ActionRoaming()
 				m_PMob->HideModel(true);
 				m_PMob->animationsub = 0;
 
+				if(CurrentDistance < 20) // THIS IS GOOD FOR SPAWNING
+						{
+							if(m_PMob->objtype == TYPE_MOB)
+						      {
 				m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
+							}
+				}
 			}
 			else if(m_PMob->m_roamFlags & ROAMFLAG_EVENT)
 			{
@@ -244,7 +283,13 @@ void CAIMobDummy::ActionRoaming()
 				luautils::OnMobRoamAction(m_PMob);
 				m_LastActionTime = m_Tick;
 
+				if(CurrentDistance < 20) // THIS IS GOOD FOR SPAWNING
+						{
+							if(m_PMob->objtype == TYPE_MOB)
+						      {
 				m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
+							}
+				}
 			}
 			else if(m_PMob->CanRoam() && m_PPathFind->RoamAround(m_PMob->m_SpawnPoint, m_PMob->m_roamFlags))
 			{
@@ -267,7 +312,13 @@ void CAIMobDummy::ActionRoaming()
 				{
 			      return;
 				}
+				if(CurrentDistance < 20) // THIS IS GOOD FOR SPAWNING
+						{
+							if(m_PMob->objtype == TYPE_MOB)
+						      {
 				m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
+							}
+				}
 				
 
 			}
@@ -280,22 +331,10 @@ void CAIMobDummy::ActionRoaming()
 
 	}
 
-	// call every 3 seconds
-	// NOTE: a lot of NMs use this like Taisai
-	if(m_PMob != NULL)
-	{
-		if (!m_PMob->loc.zone->m_charList.empty())
-	{
-
-		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
-				{
-					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
-					if(PCurrentChar !=NULL)
-					{
+	
 						
 						
-						if(CurrentDistance < 80) // THIS IS GOOD FOR SPAWNING
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
 						{
 							if(m_PMob->objtype == TYPE_MOB)
 						      {
@@ -313,10 +352,15 @@ void CAIMobDummy::ActionRoaming()
 							  m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
 						      }
 						}
-						if(CurrentDistance < 5) // THIS IS GOOD FOR AGRESSO
+						if(CurrentDistance < 10) // THIS IS GOOD FOR AGRESSO
 						{
 							if(m_PMob->objtype == TYPE_MOB)
 						      {
+								  if(PCurrentChar->isDead())
+								  {
+                                    ShowDebug("%s is in distance %0.3f of %s DEAD?? \n",PCurrentChar->GetName(),CurrentDistance,m_PMob->GetName());
+                                     
+								  }
 								  if(PCurrentChar->animation == ANIMATION_HEALING || 
 									  m_PMob->getMobMod(MOBMOD_ALWAYS_AGGRO) ||
 									  PCurrentChar->GetMLevel() < m_PMob->GetMLevel() )
@@ -336,11 +380,12 @@ void CAIMobDummy::ActionRoaming()
 	}
 
 	
-	}
+	
 	if ((m_Tick - m_SpawnTime) % 3000 <= 400)
 	{
 		luautils::OnMobRoam(m_PMob);
 	}
+  }
 }
 
 /************************************************************************
@@ -351,6 +396,20 @@ void CAIMobDummy::ActionRoaming()
 
 void CAIMobDummy::ActionEngage()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
+							
 	SetupEngage();
 
 	m_ActionType = ACTION_ATTACK;
@@ -379,6 +438,11 @@ void CAIMobDummy::ActionEngage()
 	}
 
 	m_PMob->loc.zone->PushPacket(m_PMob, CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE));
+						}
+					}
+		}
+		}
+	}
 }
 
 /************************************************************************
@@ -390,6 +454,19 @@ void CAIMobDummy::ActionEngage()
 
 void CAIMobDummy::ActionDisengage()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	m_PPathFind->Clear();
 
 	// this will let me decide to walk home or despawn
@@ -414,6 +491,11 @@ void CAIMobDummy::ActionDisengage()
 	luautils::OnMobDisengage(m_PMob);
 
 	m_PMob->loc.zone->PushPacket(m_PMob, CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE));
+						}
+					}
+		}
+		}
+	}
 }
 
 /************************************************************************
@@ -424,6 +506,7 @@ void CAIMobDummy::ActionDisengage()
 
 void CAIMobDummy::ActionFall()
 {
+	ShowDebug("ACTION FALL HOW MUCH ARE YOU CALLED\n");
 	m_PMob->PEnmityContainer->Clear();
 	m_PPathFind->Clear();
 
@@ -439,6 +522,7 @@ void CAIMobDummy::ActionFall()
 	}
 
 	m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
+						
 }
 
 /************************************************************************
@@ -450,6 +534,19 @@ void CAIMobDummy::ActionFall()
 
 void CAIMobDummy::ActionDropItems()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
     if ((m_Tick - m_LastActionTime) >= m_PMob->m_DropItemTime)
 	{
         CCharEntity* PChar = (CCharEntity*)m_PMob->loc.zone->GetEntity(m_PMob->m_OwnerID.targid, TYPE_PC);
@@ -571,6 +668,11 @@ void CAIMobDummy::ActionDropItems()
 		}
         m_ActionType = ACTION_DEATH;
 	}
+	}
+	}
+	}
+	}
+	}
 }
 
 /************************************************************************
@@ -581,6 +683,7 @@ void CAIMobDummy::ActionDropItems()
 
 void CAIMobDummy::ActionDeath()
 {
+	ShowDebug("ACTION DEATH HOW MUCH ARE YOU CALLED\n");
 	if ((m_Tick - m_LastActionTime) > 12000)
 	{
         m_PMob->StatusEffectContainer->KillAllStatusEffect();
@@ -591,6 +694,7 @@ void CAIMobDummy::ActionDeath()
 
 		luautils::OnMobDespawn(m_PMob);
 	}
+						
 
 }
 
@@ -605,6 +709,7 @@ void CAIMobDummy::ActionDeath()
 
 void CAIMobDummy::ActionFadeOut()
 {
+	ShowDebug("ACTION FADEOUT HOW MUCH ARE YOU CALLED\n");
 	if ((m_Tick - m_LastActionTime) > 15000 )
 	{
 		// reset pet cast time to now
@@ -617,14 +722,17 @@ void CAIMobDummy::ActionFadeOut()
 		m_LastActionTime = m_Tick;
 		m_PMob->status = STATUS_DISAPPEAR;
         m_PMob->PEnmityContainer->Clear();
-
+		m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_DESPAWN));
         m_ActionType  = m_PMob->m_AllowRespawn ? ACTION_SPAWN : ACTION_NONE;
+		ActionSpawn();
 
 	}
+						
 }
 
 void CAIMobDummy::ActionDespawn()
 {
+	ShowDebug("ACTION DESPAWN HOW MUCH ARE YOU CALLED\n");
 	ActionFadeOut();
 
 	// do not go into action spawn!!!
@@ -632,6 +740,7 @@ void CAIMobDummy::ActionDespawn()
 	{
 		m_ActionType = ACTION_NONE;
 	}
+						
 }
 
 /************************************************************************
@@ -644,6 +753,7 @@ void CAIMobDummy::ActionDespawn()
 
 void CAIMobDummy::ActionSpawn()
 {
+	
 	if ((m_Tick - m_LastActionTime) >= m_PMob->m_RespawnTime)
 	{
 		m_NeutralTime = m_Tick;
@@ -716,9 +826,12 @@ void CAIMobDummy::ActionSpawn()
 		}
 
         luautils::OnMobSpawn( m_PMob );
-
+		ShowDebug("SPAWNING MOB\n");
+		TIMETYPE VanadielTOTD = CVanaTime::getInstance()->SyncTime();
+		zoneutils::TOTDZoneCharnge(VanadielTOTD,m_PMob->loc.destination,NULL,m_PMob);
 		m_PMob->loc.zone->PushPacket(m_PMob, CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_SPAWN));
 	}
+						
 }
 
 /************************************************************************
@@ -729,6 +842,19 @@ void CAIMobDummy::ActionSpawn()
 
 void CAIMobDummy::ActionAbilityStart()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	DSP_DEBUG_BREAK_IF(m_PBattleTarget == NULL);
 
     std::vector<CMobSkill*> MobSkills = battleutils::GetMobSkillsByFamily(m_PMob->getMobMod(MOBMOD_SKILLS));
@@ -866,6 +992,11 @@ void CAIMobDummy::ActionAbilityStart()
 		m_PMob->loc.zone->PushPacket(m_PMob, CHAR_INRANGE, new CActionPacket(m_PMob));
 		m_ActionType = ACTION_MOBABILITY_USING;
 	}
+	}
+	}
+	}
+	}
+	}
 
 }
 
@@ -874,6 +1005,19 @@ void CAIMobDummy::ActionAbilityStart()
 ************************************************************************/
 void CAIMobDummy::ActionAbilityUsing()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	DSP_DEBUG_BREAK_IF(m_PMobSkill == NULL);
 	DSP_DEBUG_BREAK_IF(m_PBattleSubTarget == NULL);
 
@@ -909,7 +1053,11 @@ void CAIMobDummy::ActionAbilityUsing()
 		ActionAbilityFinish();
 	}
 	m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE)); //need to keep HP updating
-
+						}
+					}
+		}
+		}
+	}
 }
 
 /************************************************************************
@@ -922,6 +1070,19 @@ void CAIMobDummy::ActionAbilityUsing()
 
 void CAIMobDummy::ActionAbilityFinish()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
     DSP_DEBUG_BREAK_IF(m_PMobSkill == NULL);
 
 	// crash fix, a null target made it into CActionPacket
@@ -1028,6 +1189,11 @@ void CAIMobDummy::ActionAbilityFinish()
 
 		m_ActionType = ACTION_ATTACK;
 	}
+	}
+	}
+	}
+	}
+	}
 
 }
 
@@ -1039,6 +1205,19 @@ void CAIMobDummy::ActionAbilityFinish()
 
 void CAIMobDummy::ActionAbilityInterrupt()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
     m_LastActionTime = m_Tick;
 	//cancel the whole readying animation
 	apAction_t Action;
@@ -1056,6 +1235,11 @@ void CAIMobDummy::ActionAbilityInterrupt()
 
     m_PMobSkill = NULL;
     m_ActionType = ACTION_ATTACK;
+						}
+					}
+		}
+		}
+	}
 }
 
 /************************************************************************
@@ -1066,6 +1250,19 @@ void CAIMobDummy::ActionAbilityInterrupt()
 
 void CAIMobDummy::ActionSleep()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	if (m_PMob->isDead()) {
 		m_ActionType = ACTION_FALL;
 		ActionFall();
@@ -1085,12 +1282,29 @@ void CAIMobDummy::ActionSleep()
 	}
 
 	m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE));
+						}
+					}
+		}
+		}
+	}
 }
 
 
 void CAIMobDummy::ActionStun()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
 
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	m_DeaggroTime = m_Tick;
 
 	// lets just chill here for a bit
@@ -1106,10 +1320,28 @@ void CAIMobDummy::ActionStun()
 	}
 
 	m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE));
+						}
+					}
+		}
+		}
+	}
 }
 
 void CAIMobDummy::ActionMagicStart()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	DSP_DEBUG_BREAK_IF(m_PSpell == NULL);
 	DSP_DEBUG_BREAK_IF(m_PBattleSubTarget == NULL);
 
@@ -1128,11 +1360,29 @@ void CAIMobDummy::ActionMagicStart()
 	{
 		TransitionBack(true);
 	}
+						}
+					}
+		}
+		}
+	}
 
 }
 
 void CAIMobDummy::ActionMagicCasting()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	m_PPathFind->LookAt(m_PMagicState->GetTarget()->loc.p);
 
 	STATESTATUS status = m_PMagicState->Update(m_Tick);
@@ -1155,11 +1405,28 @@ void CAIMobDummy::ActionMagicCasting()
 	{
 		m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE));
 	}
+						}
+					}
+		}
+		}
+	}
 }
 
 void CAIMobDummy::ActionMagicFinish()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
 
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	m_LastActionTime = m_Tick;
 	m_LastMagicTime = m_Tick - rand()%(uint32)((float)m_PMob->getBigMobMod(MOBMOD_MAGIC_COOL) / 2);
 	m_DeaggroTime = m_Tick;
@@ -1185,10 +1452,28 @@ void CAIMobDummy::ActionMagicFinish()
 
 	// display animation, then continue fighting
 	Stun(1000);
+						}
+					}
+		}
+		}
+	}
 }
 
 void CAIMobDummy::ActionMagicInterrupt()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	m_LastActionTime = m_Tick;
 
 	m_PMagicState->InterruptSpell();
@@ -1199,6 +1484,11 @@ void CAIMobDummy::ActionMagicInterrupt()
 	m_PBattleSubTarget = NULL;
 
 	TransitionBack();
+						}
+					}
+		}
+		}
+	}
 }
 
 /************************************************************************
@@ -1209,6 +1499,19 @@ void CAIMobDummy::ActionMagicInterrupt()
 
 void CAIMobDummy::ActionAttack()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	m_PBattleTarget = m_PMob->PEnmityContainer->GetHighestEnmity();
 
 	if(TryDeaggro())
@@ -1580,10 +1883,28 @@ void CAIMobDummy::ActionAttack()
 	}
 
 	FinishAttack();
+	}
+	}
+	}
+	}
+	}
 }
 
 void CAIMobDummy::FinishAttack()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	// launch OnMobFight every 3 sec (not everytime at 0 but 0~400)
 	if((m_PMob->m_Type & MOBTYPE_NOTORIOUS) && (m_Tick - m_StartBattle) % 3000 <= 400)
 	{
@@ -1597,11 +1918,28 @@ void CAIMobDummy::FinishAttack()
 	}
 
 	m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE));
+						}
+					}
+		}
+		}
+	}
 }
 
 bool CAIMobDummy::TryDeaggro()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
 
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	if(m_PBattleTarget == NULL) // we have no target, so disengage
     {
 		return true;
@@ -1647,12 +1985,29 @@ bool CAIMobDummy::TryDeaggro()
 	{
 		return true;
 	}
-
+						}
+					}
+		}
+		}
+	}
 	return false;
 }
 
 void CAIMobDummy::TryLink()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	if(m_PBattleTarget == NULL)
 	{
 		return;
@@ -1700,12 +2055,29 @@ void CAIMobDummy::TryLink()
 	        PMaster->PEnmityContainer->AddLinkEnmity(m_PBattleTarget);
         }
     }
+						}
+					}
+		}
+		}
+	}
 
 }
 
 bool CAIMobDummy::CanCastSpells()
 {
+if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
 
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	if (!m_PMob->SpellContainer->HasSpells()) return false;
 
 	// check for spell blockers e.g. silence
@@ -1718,12 +2090,29 @@ bool CAIMobDummy::CanCastSpells()
 	if(m_PMob->GetMJob() == JOB_SMN && m_PMob->PPet == NULL){
 		return false;
 	}
-
+						}
+					}
+		}
+		}
+}
 	return true;
 }
 
 bool CAIMobDummy::TryCastSpell()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	if(!CanCastSpells())
 	{
 		return false;
@@ -1767,12 +2156,29 @@ bool CAIMobDummy::TryCastSpell()
 
 	// the script doesn't want to cast a spell at the moment, but it should still be treated as a magic attempt
 	m_LastMagicTime = m_Tick;
+						}
+					}
+		}
+		}
+	}
 	return false;
 }
 
 void CAIMobDummy::ActionSpecialSkill()
 {
+if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
 
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	if(m_PSpecialSkill == NULL){
 		m_PBattleSubTarget = NULL;
 		TransitionBack();
@@ -1830,10 +2236,28 @@ void CAIMobDummy::ActionSpecialSkill()
 	Stun(m_PMobSkill->getAnimationTime());
 
 	m_PMobSkill = NULL;
+						}
+					}
+		}
+		}
+}
 }
 
 void CAIMobDummy::CastSpell(uint16 spellId, CBattleEntity* PTarget)
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	m_PSpell = spell::GetSpell(spellId);
 
 	if(m_PSpell == NULL){
@@ -1888,10 +2312,28 @@ void CAIMobDummy::CastSpell(uint16 spellId, CBattleEntity* PTarget)
 		m_ActionType = ACTION_MAGIC_START;
 		ActionMagicStart();
 	}
+						}
+					}
+		}
+		}
+	}
 }
 
 bool CAIMobDummy::TrySpecialSkill()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	if(m_PSpecialSkill == NULL) return false;
 
 	if((m_PMob->m_specialFlags & SPECIALFLAG_HIDDEN) && !m_PMob->IsNameHidden())
@@ -1927,12 +2369,29 @@ bool CAIMobDummy::TrySpecialSkill()
 		ActionSpecialSkill();
 		return true;
 	}
-
+						}
+					}
+		}
+		}
+	}
 	return false;
 }
 
 void CAIMobDummy::FollowPath()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	m_PPathFind->FollowPath();
 
 	if(m_ActionType == ACTION_ROAMING)
@@ -1978,17 +2437,53 @@ void CAIMobDummy::FollowPath()
 			luautils::OnMobPath(m_PMob);
 		}
 	}
+						}
+					}
+		}
+		}
+	}
 }
 
 void CAIMobDummy::Stun(uint32 stunTime)
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	m_StunTime = stunTime;
     m_LastStunTime = m_Tick;
 	m_ActionType = ACTION_STUN;
+						}
+					}
+		}
+		}
+	}
 }
 
 void CAIMobDummy::SetupEngage()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	m_checkDespawn = false;
 	m_PMob->animation = ANIMATION_ATTACK;
 	m_StartBattle = m_Tick;
@@ -2016,11 +2511,28 @@ void CAIMobDummy::SetupEngage()
 	{
 		luautils::OnMobEngaged(m_PMob, m_PBattleTarget);
 	}
+						}
+					}
+		}
+		}
+	}
 }
 
 void CAIMobDummy::WeatherChange(WEATHER weather, uint8 element)
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
 
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	// can't detect by scent in this weather
 	if(m_PMob->m_Behaviour & BEHAVIOUR_SCENT)
 	{
@@ -2080,26 +2592,31 @@ void CAIMobDummy::WeatherChange(WEATHER weather, uint8 element)
 			m_PMob->delModifier(MOD_REGAIN, 5);
 		}
 	}
+						}
+					}
+		}
+		}
+	}
 	// TODO: slug auto-regen rain
 }
 
-bool CAIMobDummy::CanAggroTarget(CBattleEntity* PTarget)
-{
-	// don't aggro i'm neutral
-	if(m_PMob->m_neutral) return false;
 
-	if(PTarget->isDead() || PTarget->animation == ANIMATION_CHOCOBO) return false;
-
-	if(m_PMob->PMaster == NULL && m_ActionType == ACTION_ROAMING && m_PMob->CanDetectTarget(PTarget))
-	{
-		return true;
-	}
-
-	return false;
-}
 
 void CAIMobDummy::Deaggro()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
+						{
 	if(m_PBattleTarget != NULL)
 	{
 		m_PMob->PEnmityContainer->Clear(m_PBattleTarget->id);
@@ -2116,10 +2633,16 @@ void CAIMobDummy::Deaggro()
 
 
 	m_PBattleTarget = NULL;
+						}
+					}
+		}
+		}
+	}
 }
 
 void CAIMobDummy::TransitionBack(bool skipWait)
 {
+	
 	if(m_PMob->isDead())
 	{
 		m_ActionType = ACTION_FALL;
@@ -2141,4 +2664,5 @@ void CAIMobDummy::TransitionBack(bool skipWait)
 			ActionRoaming();
 		}
 	}
+						
 }

@@ -825,7 +825,7 @@ void SmallPacket0x00C(map_session_data_t* session, CCharEntity* PChar, int8* dat
 	{
 		PChar->PTreasurePool->UpdatePool(PChar);
 	}
-    PChar->loc.zone->SpawnTransport(PChar);
+    //PChar->loc.zone->SpawnTransport(PChar);
 
 
 
@@ -963,11 +963,10 @@ void SmallPacket0x011(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	//ShowMessage(CL_GREEN"UPDATE: PLAYER SHUTDOWN STATUS =%u \n"CL_RESET,PChar->shutdown_status);
+	
 	if (PChar->shutdown_status == 0 && PChar->loc.zone != NULL)
-		//IT COULD ALSO MAYBE USE THE POINTER PCHAR->IS_ZONING = -1  meaning they are not zoning so its ok to update
 	{
-		//ShowMessage(CL_GREEN"UPDATE: PLAYER ID =%u \n"CL_RESET,PChar->id);
+		
 		
 	
         
@@ -983,49 +982,57 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
                      Sql_Query(SqlHandle,Query,PChar->id);
 		 Query = "UPDATE accounts SET online = '1',on_map ='1' WHERE id = %u";
                       Sql_Query(SqlHandle,Query,PChar->accid);
-		uint32 map_time = CVanaTime::getInstance()->getSysSecond();
-		if(map_time == 0)
+		uint32 gameminute = CVanaTime::getInstance()->getSysSecond();
+		//uint32 gamehour = CVanaTime::getInstance()->getSysMinute();
+		//uint32 gameday = CVanaTime::getInstance()->getSysHour();
+		Query = "UPDATE accounts SET  map_time = '%u', on_map='1' WHERE id = %u";
+                Sql_Query(SqlHandle,Query,gameminute,PChar->accid);
+		/*if(gamehour == 0 && gameminute == 0) //EVER MINUTE 1:00 ONLY ONCE NOT 1:01
 		{
 			luautils::OnGameHourAutomatisation();
 		}
 		
 		zoneutils::UpdateZoneWeather(PChar->loc.destination,PChar);
+		if(gameday == 0 && gamehour == 0 && gameminute== 0) //AT NOON AND MIDNIGHT REAL DAY TIME
+		{
+		guildutils::UpdateGuildsStock();
+		luautils::OnGameDayAutomatisation();
+		conquest::UpdateConquestSystem();
+		conquest::UpdateWeekConquest();
+		}*/
 		
-		
-		
-		TIMETYPE VanadielTOTD = CVanaTime::getInstance()->SyncTime();
 
 	
-
-	
-
-    if (VanadielTOTD != TIME_NONE)
+if (!PChar->loc.zone->m_charList.empty())
 	{
-		zoneutils::TOTDCharnge(VanadielTOTD);
 
-        if (VanadielTOTD == TIME_MIDNIGHT)
-        {
-            guildutils::UpdateGuildsStock();
-			luautils::OnGameDayAutomatisation();
-			conquest::UpdateConquestSystem();
+		for (EntityList_t::const_iterator it = PChar->loc.zone->m_charList.begin() ; it != PChar->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, PChar->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						if(CurrentDistance < 40 && PCurrentChar->loc.destination == PChar->loc.destination) // THIS IS GOOD FOR SPAWNING
+						{
+							
+					          PChar->pushPacket(new CCharPacket(PCurrentChar,ENTITY_SPAWN));
+                              PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_SPAWN));
+							 
+						}
+						if(CurrentDistance > 40 && PCurrentChar->loc.destination == PChar->loc.destination) // THIS IS GOOD FOR DESPAWNING
+						{
+							
+					          PChar->pushPacket(new CCharPacket(PCurrentChar,ENTITY_DESPAWN));
+                              PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_DESPAWN));
+							  
+						}
+					}
+	        	}
+    }
 
-            // weekly update for conquest (monday at midnight)
-	        if (CVanaTime::getInstance()->getSysWeekDay() == 1)
-	        {
-		        conquest::UpdateWeekConquest();
-	        }
-        }
-	}
-	CTransportHandler::getInstance()->TransportTimer();
-		//ShowMessage(CL_BG_RED"CHECK MAP TIME NOW %u \n"CL_RESET,map_time);
-	Query = "UPDATE accounts SET  map_time = '%u', on_map='1' WHERE id = %u";
-                Sql_Query(SqlHandle,Query,map_time,PChar->accid);
-			
-            PChar->loc.zone->SpawnPCs(PChar);
-			PChar->loc.zone->SpawnNPCs(PChar);
+    
+	//CTransportHandler::getInstance()->TransportTimer();
 		
-		//PChar->loc.zone->SpawnMOBs(PChar);
-		PChar->loc.zone->SpawnPETs(PChar);
 	if(PChar->godmode==1)
 	{
 		
@@ -1463,9 +1470,10 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			}
 			else
 			{
-				PChar->loc.zone->SpawnPCs(PChar);
+				PChar->loc.zone->SpawnPETs(PChar);
 				PChar->loc.zone->SpawnNPCs(PChar);
-				//PChar->loc.zone->SpawnMOBs(PChar);
+				PChar->loc.zone->SpawnTransport(PChar);
+				
 			}
 			
 			if(PChar->is_inevent != 0)//A CHECK SWITCH SAYING THE USER WAS IN A EVENT AND NOT IS SWITCH BACK TO NOT BEING IN IT BECASUE THEY ARE IN IT
