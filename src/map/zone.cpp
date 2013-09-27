@@ -1550,6 +1550,20 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 					
 					if(PCurrentChar !=NULL)
 					{
+						if(PEntity->objtype == TYPE_PC)
+						{
+						   if(PCurrentChar ==PEntity)
+						     {
+							//this is self
+								 ShowDebug("I AM MY SELF\n");
+								 if(message_type ==  CHAR_INRANGE_SELF || message_type ==  CHAR_INSHOUT)
+								 {
+                                 ShowDebug("I AM MY SELF DO NOT PRINT OUT TO SELF SHOUT\n");
+								 return;
+								 }
+
+						     }
+						}
 						PCurrentChar->pushPacket(new CBasicPacket(*packet));
 						
 					}

@@ -293,11 +293,12 @@ void CAIMobDummy::ActionRoaming()
 			}
 			else if(m_PMob->CanRoam() && m_PPathFind->RoamAround(m_PMob->m_SpawnPoint, m_PMob->m_roamFlags))
 			{
-				m_PMob->speed = 20;
-				m_PMob->speedsub = 20;
+				
 				if(m_PMob->m_roamFlags & ROAMFLAG_WORM)
 				{
 					// move down
+					m_PMob->speed = 0;
+				    m_PMob->speedsub = 0;
 					m_PMob->animationsub = 1;
 					m_PMob->HideName(true);
 
@@ -307,6 +308,8 @@ void CAIMobDummy::ActionRoaming()
 				else
 				{
 					FollowPath();
+					m_PMob->speed = 20;
+				    m_PMob->speedsub = 20;
 				}
 
 				if(m_PSpecialSkill == NULL)
@@ -339,28 +342,7 @@ void CAIMobDummy::ActionRoaming()
 						{
 							if(m_PMob->objtype == TYPE_MOB)
 						      {
-					          /*ShowDebug("PChar ID %u NAME %s \n",PCurrentChar->id,PCurrentChar->GetName());
-					          ShowDebug("PChar x %0.3f \n",PCurrentChar->loc.p.x);
-					          ShowDebug("PChar y %0.3f \n",PCurrentChar->loc.p.y);
-					          ShowDebug("PChar z %0.3f \n",PCurrentChar->loc.p.z);
-					          ShowDebug("PChar zone %u \n",PCurrentChar->loc.destination);
-					          ShowDebug("m_PMob ID %u NAME %s \n",m_PMob->id,m_PMob->GetName());
-					          ShowDebug("m_PMob x %0.3f \n",m_PMob->loc.p.x);
-					          ShowDebug("m_PMob y %0.3f \n",m_PMob->loc.p.y);
-					          ShowDebug("m_PMob z %0.3f \n",m_PMob->loc.p.z);
-					          ShowDebug("m_PMob zone %u \n",m_PMob->loc.destination);
-					          ShowDebug("CurrentDistance distance %0.3f \n",CurrentDistance);*/
-								  if (m_PMob->Check_Engagment->GetCurrentAction() == ACTION_NONE || m_PMob->Check_Engagment->GetCurrentAction() == ACTION_SPAWN)
-                                       {
-										ShowDebug(CL_CYAN"SpawnMob: <%s> is spawneding\n" CL_RESET, m_PMob->GetName());
-	                                    m_PMob->Check_Engagment->SetLastActionTime(0);
-                                        m_PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
-                                       } 
-								      // else 
-									   //{
-                                       //  ShowDebug(CL_CYAN"SpawnMob: <%s> is alredy spawned\n" CL_RESET, m_PMob->GetName());
-                                      // }
-							  m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
+					           m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
 						      }
 						}
 						if(CurrentDistance < 10) // THIS IS GOOD FOR AGRESSO
@@ -383,8 +365,16 @@ void CAIMobDummy::ActionRoaming()
 								  {
 									  ShowDebug("%s is in distance %0.3f of %s Attack \n",PCurrentChar->GetName(),CurrentDistance,m_PMob->GetName());
                                      //LETS BE A DICK AND MATCH THE PLAYERS SPEED
-									  m_PMob->speed = PCurrentChar->speed;
-				                      m_PMob->speedsub = PCurrentChar->speedsub;
+									  if(m_PMob->m_roamFlags & ROAMFLAG_WORM)
+				                        {
+					                    m_PMob->speed = 0;
+				                        m_PMob->speedsub = 0;
+					                    }
+									    else
+									    {
+									    m_PMob->speed = PCurrentChar->speed;
+				                        m_PMob->speedsub = PCurrentChar->speedsub;
+									    }
 									  m_PMob->PEnmityContainer->AddBaseEnmity(PCurrentChar);
 									  //Lets send a pointer to the player telling all mobs this player is already
 									  //being chanced or is engaged
