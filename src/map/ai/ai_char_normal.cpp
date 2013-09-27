@@ -2617,13 +2617,12 @@ void CAICharNormal::ActionSleep()
 
 void CAICharNormal::ActionAttack()
 {
-	DSP_DEBUG_BREAK_IF(m_PBattleTarget == NULL);
+	if(m_PBattleTarget == NULL)
+	{
+		return;
+	}
 
 	
-
-	
-		//disengage if player has charmed the mob
-		ShowDebug(CL_RED"ELSE ATTACK ACTION 1\n"CL_RESET);
 	if (m_PChar->PPet != NULL && m_PChar->PPet == m_PBattleTarget)
 	{
 		m_PChar->Check_Engagment->SetCurrentAction(ACTION_DISENGAGE);

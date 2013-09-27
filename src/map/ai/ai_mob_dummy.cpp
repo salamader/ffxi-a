@@ -282,6 +282,61 @@ void CAIMobDummy::ActionRoaming()
 
 	// call every 3 seconds
 	// NOTE: a lot of NMs use this like Taisai
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
+						
+						
+						if(CurrentDistance < 80) // THIS IS GOOD FOR SPAWNING
+						{
+							if(m_PMob->objtype == TYPE_MOB)
+						      {
+					          /*ShowDebug("PChar ID %u NAME %s \n",PCurrentChar->id,PCurrentChar->GetName());
+					          ShowDebug("PChar x %0.3f \n",PCurrentChar->loc.p.x);
+					          ShowDebug("PChar y %0.3f \n",PCurrentChar->loc.p.y);
+					          ShowDebug("PChar z %0.3f \n",PCurrentChar->loc.p.z);
+					          ShowDebug("PChar zone %u \n",PCurrentChar->loc.destination);
+					          ShowDebug("m_PMob ID %u NAME %s \n",m_PMob->id,m_PMob->GetName());
+					          ShowDebug("m_PMob x %0.3f \n",m_PMob->loc.p.x);
+					          ShowDebug("m_PMob y %0.3f \n",m_PMob->loc.p.y);
+					          ShowDebug("m_PMob z %0.3f \n",m_PMob->loc.p.z);
+					          ShowDebug("m_PMob zone %u \n",m_PMob->loc.destination);
+					          ShowDebug("CurrentDistance distance %0.3f \n",CurrentDistance);*/
+							  m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
+						      }
+						}
+						if(CurrentDistance < 5) // THIS IS GOOD FOR AGRESSO
+						{
+							if(m_PMob->objtype == TYPE_MOB)
+						      {
+								  if(PCurrentChar->animation == ANIMATION_HEALING || 
+									  m_PMob->getMobMod(MOBMOD_ALWAYS_AGGRO) ||
+									  PCurrentChar->GetMLevel() < m_PMob->GetMLevel() )
+								  {
+									  ShowDebug("%s is in distance %0.3f of %s Attack \n",PCurrentChar->GetName(),CurrentDistance,m_PMob->GetName());
+                                     m_PMob->PEnmityContainer->AddBaseEnmity(PCurrentChar);
+								  }
+                              }
+						}
+					}
+		
+		       }
+	
+
+		
+	
+	}
+
+	
+	}
 	if ((m_Tick - m_SpawnTime) % 3000 <= 400)
 	{
 		luautils::OnMobRoam(m_PMob);

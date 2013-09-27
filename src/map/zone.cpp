@@ -690,7 +690,8 @@ void CZone::InsertPET(CBaseEntity* PPet)
 		ShowError(CL_RED"CZone::InsertPET : PET TARGETID %u\n" CL_RESET, PPet->targid);
         PPet->loc.zone = this;
 		m_petList[PPet->targid] = PPet;
-
+		if(!m_charList.empty())
+		{
 		for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 		{
 			CCharEntity* PCurrentChar = (CCharEntity*)it->second;
@@ -700,6 +701,7 @@ void CZone::InsertPET(CBaseEntity* PPet)
 				PCurrentChar->SpawnPETList[PPet->id] = PPet;
 				PCurrentChar->pushPacket(new CEntityUpdatePacket(PPet, ENTITY_SPAWN));
 			}
+		}
 		}
 		return;
 	}
@@ -771,6 +773,8 @@ void CZone::FindPartyForMob(CBaseEntity* PEntity)
 
 void CZone::TransportDepart(CBaseEntity* PTransportNPC)
 {
+	if(!m_charList.empty())
+	{
     for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 	{
 		CCharEntity* PCurrentChar = (CCharEntity*)it->second;
@@ -780,6 +784,7 @@ void CZone::TransportDepart(CBaseEntity* PTransportNPC)
             luautils::OnTransportEvent(PCurrentChar, PTransportNPC->loc.prevzone);
         }
     }
+	}
 }
 
 /************************************************************************
@@ -833,6 +838,51 @@ void CZone::SetWeather(WEATHER weather)
 
     PushPacket(NULL, CHAR_INZONE, new CWeatherPacket(m_WeatherChangeTime, m_Weather));
 }
+void CZone::SetZoneWeather(WEATHER weather,CCharEntity* PChar)
+{
+    if(weather >= MAX_WEATHER_ID)
+	{
+		return;
+	}
+
+	if (m_Weather == weather)
+		return;
+
+    static uint8 Element[] =
+    {
+        WEATHER_NONE,
+	    WEATHER_SUNSHINE,
+	    WEATHER_CLOUDS,
+	    WEATHER_FOG,
+	    WEATHER_HOT_SPELL,
+	    WEATHER_HEAT_WAVE,
+	    WEATHER_RAIN,
+	    WEATHER_SQUALL,
+	    WEATHER_DUST_STORM,
+	    WEATHER_SAND_STORM,
+	    WEATHER_WIND,
+	    WEATHER_GALES,
+	    WEATHER_SNOW,
+	    WEATHER_BLIZZARDS,
+	    WEATHER_THUNDER,
+	    WEATHER_THUNDERSTORMS,
+	    WEATHER_AURORAS,
+	    WEATHER_STELLAR_GLARE,
+	    WEATHER_GLOOM,
+	    WEATHER_DARKNESS,
+    };
+
+	for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
+	{
+		CMobEntity* PCurrentMob = (CMobEntity*)it->second;
+    PCurrentMob->Check_Engagment->WeatherChange(weather, Element[weather]);
+	}
+
+    m_Weather = weather;
+    m_WeatherChangeTime = CVanaTime::getInstance()->getVanaTime();
+
+    PushPacket(PChar, CHAR_INZONE, new CWeatherPacket(m_WeatherChangeTime, m_Weather));
+}
 
 /************************************************************************
 *																		*
@@ -876,7 +926,8 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 		if(PChar->PPet != NULL) {
 			PChar->PPet->Check_Engagment->SetCurrentAction(ACTION_NONE);
 			DeletePET(PChar->PPet);//remove the TID for this pet
-
+			if(!m_charList.empty())
+		    {
 			for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 			{
 				//inform other players of the pets removal
@@ -888,6 +939,7 @@ void CZone::DecreaseZoneCounter(CCharEntity* PChar)
 					PCurrentChar->SpawnPETList.erase(PET);
 					PCurrentChar->pushPacket(new CEntityUpdatePacket(PChar->PPet, ENTITY_DESPAWN));
 				}
+			}
 			}
 			PChar->PPet = NULL;
 		}
@@ -1132,10 +1184,10 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
 	{
 		CMobEntity* PCurrentMob = (CMobEntity*)it->second;
         SpawnIDList_t::iterator MOB = PChar->SpawnMOBList.lower_bound(PCurrentMob->id);
-		CMobEntity* PMob = (CMobEntity*)PChar->loc.zone->GetEntity(PCurrentMob->targid, TYPE_MOB);
+		//CMobEntity* PMob = (CMobEntity*)PChar->loc.zone->GetEntity(PCurrentMob->targid, TYPE_MOB);
 
 		float CurrentDistance = distance(PChar->loc.p, PCurrentMob->loc.p);
-		if (CurrentDistance < 50 && PChar->loc.destination == PCurrentMob->loc.destination )
+		/*if (CurrentDistance < 50 && PChar->loc.destination == PCurrentMob->loc.destination )
 		{
        // ShowDebug(CL_CYAN"UPDATING MOBS: TARGET ID %u \n" CL_RESET,PCurrentMob->targid);
 		PChar->pushPacket(new CEntityUpdatePacket(PMob,ENTITY_UPDATE));
@@ -1149,7 +1201,7 @@ void CZone::SpawnMOBs(CCharEntity* PChar)
         {
           PCurrentMob->PEnmityContainer->AddBaseEnmity(PChar);
         }
-		}
+		}*/
 		
 		
 
@@ -1602,13 +1654,16 @@ void CZone::TOTDChange(TIMETYPE TOTD)
     }
 	if (ScriptType != SCRIPT_NONE)
 	{
+		if(!m_charList.empty())
+		{
 		for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
 		{
 			CCharEntity* PCurrentChar = (CCharEntity*)it->second;
 			if(PCurrentChar != NULL && PCurrentChar->loc.zone != NULL)
 			{
-		//	charutils::CheckEquipLogic(PCurrentChar, ScriptType, TOTD);
+		    charutils::CheckEquipLogic(PCurrentChar, ScriptType, TOTD);
 			}
+		}
 		}
 	}
     luautils::OnTOTDChange(m_zoneID, TOTD);
@@ -1646,12 +1701,12 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 {
 	if (m_charList.empty())
 	{
-		ShowDebug(CL_CYAN"EMPTY PLAYER PACKETS %u \n" CL_RESET,packet);
+		//ShowDebug(CL_CYAN"EMPTY PLAYER PACKETS %u \n" CL_RESET,packet);
 		return;
 	}
 	if (!m_charList.size() != NULL)
 	{
-		ShowDebug(CL_CYAN"SIZE PLAYER PACKETS %u \n" CL_RESET,packet);
+		//ShowDebug(CL_CYAN"SIZE PLAYER PACKETS %u \n" CL_RESET,packet);
 		return;
 	}
 	
@@ -1664,99 +1719,29 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 		for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 				{
 					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-					//CCharEntity* PCharTarget = (CCharEntity*)PEntity->loc.zone->GetEntity(PCurrentChar->targid, TYPE_PC);
+					float CurrentDistance = distance(PCurrentChar->loc.p, PEntity->loc.p);
 					if(PCurrentChar !=NULL)
 					{
 						PCurrentChar->pushPacket(new CBasicPacket(*packet));
-					ShowDebug("PCurrentChar ID %u NAME %s \n",PCurrentChar->id,PCurrentChar->GetName());
+						if(PEntity->targid == 453 && PEntity->objtype == TYPE_MOB)
+						{
+					    ShowDebug("PChar ID %u NAME %s \n",PCurrentChar->id,PCurrentChar->GetName());
+					    ShowDebug("PChar x %0.3f \n",PCurrentChar->loc.p.x);
+					    ShowDebug("PChar y %0.3f \n",PCurrentChar->loc.p.y);
+					    ShowDebug("PChar z %0.3f \n",PCurrentChar->loc.p.z);
+					    ShowDebug("PChar zone %u \n",PCurrentChar->loc.destination);
+					    ShowDebug("PEntity ID %u NAME %s \n",PEntity->id,PEntity->GetName());
+					    ShowDebug("PEntity x %0.3f \n",PEntity->loc.p.x);
+					    ShowDebug("PEntity y %0.3f \n",PEntity->loc.p.y);
+					    ShowDebug("PEntity z %0.3f \n",PEntity->loc.p.z);
+					    ShowDebug("PEntity zone %u \n",PEntity->loc.destination);
+					    ShowDebug("CurrentDistance distance %0.3f \n",CurrentDistance);
+						}
 					}
-		/*float CurrentDistance = distance(PEntity->loc.p, PCurrentChar->loc.p);
-					if(PCurrentChar != NULL && PCurrentChar->is_zoning ==-1 )
-					{
-
-						if(message_type == CHAR_INRANGE)
-						{
-							//ShowDebug("CHAR_INRAGE 1\n");
-                             if (PEntity != PCurrentChar)
-					            {
-									//ShowDebug("CHAR_INRAGE 2\n");
-						          if(CurrentDistance < 50)
-						            {
-										//ShowDebug("CHAR_INRAGE 3\n");
-							         PCharTarget->pushPacket(new CBasicPacket(*packet));
-									 delete packet;
-									 break;
-						            }
-								  else
-								  {
-                                     PCharTarget->pushPacket(new CBasicPacket(*packet));
-								 delete packet;
-								// ShowDebug("ELSE CHAR_INRAGE 4\n");
-								 break;
-								  }
-						        }
-							 else
-							 {
-								 PCharTarget->pushPacket(new CBasicPacket(*packet));
-								 delete packet;
-								 //ShowDebug("ELSE CHAR_INRAGE 5\n");
-								 break;
-							 }
-						}
-						if(message_type == CHAR_INRANGE_SELF)
-						{
-							//ShowDebug("CHAR_INRAGE_SELF 1\n");
-                             if (PCharTarget  == PCurrentChar)
-				                {
-									//ShowDebug("CHAR_INRAGE_SELF 2\n");
-					                 PCharTarget->pushPacket(new CBasicPacket(*packet));
-									 delete packet;
-									 break;
-				                }
-							 else
-							 {
-								 ShowDebug("ELSE CHAR_INRAGE_SELF 3\n");
-							 }
-						}
-						if(message_type == CHAR_INSHOUT)
-						{
-							//ShowDebug("CHAR_INSHOUT 1\n");
-                             if (PEntity != PCurrentChar)
-					            {
-									//ShowDebug("CHAR_INSHOUT 2\n");
-						          if(CurrentDistance < 180)
-						            {
-										//ShowDebug("CHAR_INSHOUT 3\n");
-							         PCharTarget->pushPacket(new CBasicPacket(*packet));
-									 delete packet;
-									 break;
-						            }
-						
-					            }
-							 else
-							 {
-								 ShowDebug("ELSE CHAR_INSHOUT 4\n");
-							 }
-						}
-						if(message_type == CHAR_INZONE)
-						{
-							//ShowDebug("CHAR_INZONE 1\n");
-                             if (PEntity != PCurrentChar)
-					            {
-									//ShowDebug("CHAR_INZONE 2\n");
-						       PCharTarget->pushPacket(new CBasicPacket(*packet));
-							   delete packet;
-							   break;
-					            }
-							 else
-							 {
-								 ShowDebug("ELSE CHAR_INZONE 3\n");
-							 }
-						}
-					}*/
-		}
+		
+		       }
 	
-//		delete packet; CAN NOT DELETE WHAS ALREADY BEEN DELETED
+
 		return;
 	
 	}
@@ -1923,14 +1908,7 @@ void CZone::ZoneServer(uint32 tick)
    
 }
 
-/************************************************************************
-*																		*
-*  Cервер для обработки активности и статус-эффектов сущностей в зоне.	*
-*  Дополнительно обрабатывается проверка на вход и выход персонажей из	*
-*  активных областей (пока реализован только вход в область).			*
-*  При любом раскладе последними должны обрабатываться персонажи		*
-*																		*
-************************************************************************/
+
 
 void CZone::ZoneServerRegion(uint32 tick)
 {
@@ -2031,22 +2009,6 @@ EntityList_t CZone::GetCharList()
 	return m_charList;
 }
 
-//===========================================================
 
-/*
-id				CBaseEntity
-name			CBaseEntity
-pos_rot			CBaseEntity
-pos_x			CBaseEntity
-pos_y			CBaseEntity
-pos_z			CBaseEntity
-speed			CBaseEntity
-speedsub		CBaseEntity
-animation		CBaseEntity
-animationsub	CBaseEntity
-namevis			npc+mob
-status			CBaseEntity
-unknown
-look			CBaseEntity
-name_prefix
-*/
+
+
