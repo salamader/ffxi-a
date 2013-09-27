@@ -4027,7 +4027,7 @@ void PlayerChatSystem(map_session_data_t* session, CCharEntity* PChar, int8* dat
         {
             if(RBUFB(data,(0x04)) == MESSAGE_SAY)
             {
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SAY, data+6));
+                PChar->loc.zone->PushPlayerChatPacket(PChar,PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SAY, data+6));
 				return;
             }
             else
@@ -4043,20 +4043,20 @@ void PlayerChatSystem(map_session_data_t* session, CCharEntity* PChar, int8* dat
                 case MESSAGE_SAY:
 					{
 						
-						PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SAY,     data+6)); 
+						PChar->loc.zone->PushPlayerChatPacket(PChar,PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SAY,     data+6)); 
 						break;
 					}
 					
                 case MESSAGE_EMOTION:
 					{
-						PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_EMOTION, data+6));
+						PChar->loc.zone->PushPlayerChatPacket(PChar,PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_EMOTION, data+6));
 						break;
 					}
 					
                 case MESSAGE_SHOUT:	
 					{
 						
-						PChar->loc.zone->PushPacket(PChar, CHAR_INSHOUT, new CChatMessagePacket(PChar, MESSAGE_SHOUT,   data+6));
+						PChar->loc.zone->PushPlayerChatPacket(PChar,PChar, CHAR_INSHOUT, new CChatMessagePacket(PChar, MESSAGE_SHOUT,   data+6));
 						break; 
 					}
 					
@@ -4099,7 +4099,7 @@ void PlayerChatSystem(map_session_data_t* session, CCharEntity* PChar, int8* dat
                 case MESSAGE_YELL:
 					{
 						
-						PChar->loc.zone->PushPacket(PChar, CHAR_INSHOUT, new CChatMessagePacket(PChar, MESSAGE_YELL,   data+6)); 
+						PChar->loc.zone->PushPlayerChatPacket(PChar,PChar, CHAR_INSHOUT, new CChatMessagePacket(PChar, MESSAGE_YELL,   data+6)); 
 						break;
 					}
 					

@@ -280,7 +280,7 @@ void CAIMobDummy::ActionRoaming()
 			else if(m_PMob->m_roamFlags & ROAMFLAG_EVENT)
 			{
 				// allow custom event action
-				luautils::OnMobRoamAction(m_PMob);
+				//luautils::OnMobRoamAction(m_PMob);
 				m_LastActionTime = m_Tick;
 
 				if(CurrentDistance < 20) // THIS IS GOOD FOR SPAWNING
@@ -393,10 +393,10 @@ void CAIMobDummy::ActionRoaming()
 
 	
 	
-	if ((m_Tick - m_SpawnTime) % 3000 <= 400)
-	{
-		luautils::OnMobRoam(m_PMob);
-	}
+	//if ((m_Tick - m_SpawnTime) % 3000 <= 400)
+	//{
+	//	luautils::OnMobRoam(m_PMob);
+	//}
   }
 }
 
@@ -947,10 +947,13 @@ void CAIMobDummy::ActionAbilityStart()
 
 		std::random_shuffle(MobSkills.begin(), MobSkills.end()); //Start the selection process by randomizing the container
 
-		for(int i=0;i<MobSkills.size();i++){
+		for(int i=0;i<MobSkills.size();i++)
+		{
 			m_PMobSkill = MobSkills.at(i);
-			if(!m_PMobSkill->isTwoHour() && luautils::OnMobSkillCheck(m_PBattleTarget, m_PMob, m_PMobSkill) == 0){ //A script says that the move in question is valid
-				if(currentDistance <= m_PMobSkill->getDistance()) {
+			if(!m_PMobSkill->isTwoHour() && luautils::OnMobSkillCheck(m_PBattleTarget, m_PMob, m_PMobSkill) == 0)
+			{ //A script says that the move in question is valid
+				if(currentDistance <= m_PMobSkill->getDistance()) 
+				{
 					valid = true;
 					break;
 				}
@@ -959,17 +962,20 @@ void CAIMobDummy::ActionAbilityStart()
 	}
 
 
-	if(!valid) {
+	if(!valid) 
+	{
 		// couldn't find anything so go back to attack
 		m_PMob->health.tp = 0;
 		TransitionBack(true);
 		return;
 	}
 
-	if(m_PMobSkill->getValidTargets() == TARGET_ENEMY){ //enemy
+	if(m_PMobSkill->getValidTargets() == TARGET_ENEMY)
+	{ //enemy
 	    m_PBattleSubTarget = m_PBattleTarget;
 	}
-	else if(m_PMobSkill->getValidTargets() == TARGET_SELF){ //self
+	else if(m_PMobSkill->getValidTargets() == TARGET_SELF)
+	{ //self
 	    m_PBattleSubTarget = m_PMob;
 	}
 	else
@@ -997,9 +1003,9 @@ void CAIMobDummy::ActionAbilityStart()
 	} else {
 		m_PMob->health.tp = 0;
 	}
-
-	m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE));
-
+    //luautils::OnMobWeaponSkill(m_PBattleTarget, m_PMob, m_PMobSkill);
+	//m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE));
+	ShowWarning("CAIMobDummy::ActionAbilityStart found for family (%d)\n", m_PMob->m_Family);
 	if( m_PMobSkill->getActivationTime() == 0)
 	{
 		m_ActionType = ACTION_MOBABILITY_FINISH;
@@ -1017,9 +1023,10 @@ void CAIMobDummy::ActionAbilityStart()
 		Action.animation  = 0;
 		Action.param	  = m_PMobSkill->getMsgForAction();
 		Action.messageID  = 43; //readies message
-
+		
 		m_PMob->m_ActionList.push_back(Action);
 		m_PMob->loc.zone->PushPacket(m_PMob, CHAR_INRANGE, new CActionPacket(m_PMob));
+		ShowWarning("CAIMobDummy::ActionAbilityStart found for family 4 (%d)\n", m_PMob->m_Family);
 		m_ActionType = ACTION_MOBABILITY_USING;
 	}
 	}
@@ -2464,9 +2471,9 @@ void CAIMobDummy::FollowPath()
 		}
 
 
-		if(m_PPathFind->OnPoint()){
-			luautils::OnMobPath(m_PMob);
-		}
+		//if(m_PPathFind->OnPoint()){
+			//luautils::OnMobPath(m_PMob);
+		//}
 	}
 						}
 					}
