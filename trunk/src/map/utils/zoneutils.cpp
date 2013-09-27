@@ -123,35 +123,100 @@ void UpdateWeather()
     }
     ShowDebug(CL_CYAN"UpdateWeather Finished\n" CL_RESET);
 }
-void UpdateZoneWeather(uint16 ZoneID)
+void UpdateZoneWeather(uint16 ZoneID, CCharEntity* PChar)
 {
-    uint8 WeatherChange = 0;
-    uint8 WeatherFrequency = 0;
+    
 	if(ZoneID > MAX_ZONEID)
 	{
      return;
 	}
     
-        if (!g_PZoneList[ZoneID]->IsWeatherStatic())
-        {
-            WeatherFrequency = 0;
-            WeatherChange = rand()%100;
-
-            for (uint8 weather = 0; weather < MAX_WEATHER_ID; ++weather)
-            {
-                WeatherFrequency += g_PZoneList[ZoneID]->m_WeatherFrequency[weather];
-
-                if (WeatherChange < WeatherFrequency)
-                {
-
-                    g_PZoneList[ZoneID]->SetWeather((WEATHER)weather);
-          					luautils::OnZoneWeatherChange(ZoneID, weather);
-          					break;
-                }
-            }
-        }
-    
-    ShowDebug(CL_CYAN"UpdateWeather Finished\n" CL_RESET);
+       uint32 weather_type = CVanaTime::getInstance()->getSysMinute();
+	  // ShowDebug("SET WEATHER TYPE %u\n",weather_type);
+	   if(weather_type == 0 || weather_type == 20 || weather_type == 40)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_NONE,PChar);
+	   }
+	   if(weather_type == 1|| weather_type == 21 || weather_type == 41)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_SUNSHINE,PChar);
+	   }
+	   if(weather_type == 2|| weather_type == 22|| weather_type == 42)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_CLOUDS,PChar);
+	   }
+	   if(weather_type == 3|| weather_type == 23|| weather_type == 43)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_FOG,PChar);
+	   }
+	   
+	   if(weather_type == 4|| weather_type == 24|| weather_type == 44)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_HOT_SPELL,PChar);
+	   }
+	   if(weather_type == 5|| weather_type == 25|| weather_type == 45)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_HEAT_WAVE,PChar);
+	   }
+	   if(weather_type == 6|| weather_type == 26|| weather_type == 46)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_RAIN,PChar);
+	   }
+	   if(weather_type == 7|| weather_type == 27|| weather_type == 47)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_SQUALL,PChar);
+	   }
+	   if(weather_type == 8|| weather_type == 28|| weather_type == 48)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_DUST_STORM,PChar);
+	   }
+	   
+	   if(weather_type == 9|| weather_type == 29|| weather_type == 49)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_SAND_STORM,PChar);
+	   }
+	   if(weather_type == 10|| weather_type == 30|| weather_type == 50)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_WIND,PChar);
+	   }
+	   if(weather_type == 11|| weather_type == 31|| weather_type == 51)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_GALES,PChar);
+	   }
+	   if(weather_type == 12|| weather_type == 32|| weather_type == 52)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_SNOW,PChar);
+	   }
+	   if(weather_type == 13|| weather_type == 33|| weather_type == 53)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_BLIZZARDS,PChar);
+	   }
+	   if(weather_type == 14|| weather_type == 34|| weather_type == 54)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_THUNDER,PChar);
+	   }
+	   if(weather_type == 15|| weather_type == 35|| weather_type == 55)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_THUNDERSTORMS,PChar);
+	   }
+	   if(weather_type == 16|| weather_type == 36|| weather_type == 56)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_AURORAS,PChar);
+	   }
+	   if(weather_type == 17|| weather_type == 37|| weather_type == 57)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_STELLAR_GLARE,PChar);
+	   }
+	   if(weather_type == 18|| weather_type == 38|| weather_type == 58)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_GLOOM,PChar);
+	   }
+	   if(weather_type == 19|| weather_type == 39|| weather_type == 59)//WEATHER_NONE
+	   {
+        GetZone(ZoneID)->SetZoneWeather((WEATHER)WEATHER_DARKNESS,PChar);
+	   }
+	   
+	 
 }
 
 /************************************************************************

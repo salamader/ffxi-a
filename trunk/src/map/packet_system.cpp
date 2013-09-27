@@ -969,10 +969,7 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 	{
 		//ShowMessage(CL_GREEN"UPDATE: PLAYER ID =%u \n"CL_RESET,PChar->id);
 		
-	if (CVanaTime::getInstance()->getHour() % 4 == 0 && CVanaTime::getInstance()->getMinute() == 30)
-	{
-		zoneutils::UpdateZoneWeather(PChar->loc.destination);
-	}
+	
         
 		PChar->loc.p.x = RBUFF(data,(0x04));
 		PChar->loc.p.y = RBUFF(data,(0x08));
@@ -991,6 +988,11 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 		{
 			luautils::OnGameHourAutomatisation();
 		}
+		
+		zoneutils::UpdateZoneWeather(PChar->loc.destination,PChar);
+		
+		
+		
 		TIMETYPE VanadielTOTD = CVanaTime::getInstance()->SyncTime();
 
 	
@@ -1022,7 +1024,7 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
             PChar->loc.zone->SpawnPCs(PChar);
 			PChar->loc.zone->SpawnNPCs(PChar);
 		
-		PChar->loc.zone->SpawnMOBs(PChar);
+		//PChar->loc.zone->SpawnMOBs(PChar);
 		PChar->loc.zone->SpawnPETs(PChar);
 	if(PChar->godmode==1)
 	{
@@ -1463,7 +1465,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 			{
 				PChar->loc.zone->SpawnPCs(PChar);
 				PChar->loc.zone->SpawnNPCs(PChar);
-				PChar->loc.zone->SpawnMOBs(PChar);
+				//PChar->loc.zone->SpawnMOBs(PChar);
 			}
 			
 			if(PChar->is_inevent != 0)//A CHECK SWITCH SAYING THE USER WAS IN A EVENT AND NOT IS SWITCH BACK TO NOT BEING IN IT BECASUE THEY ARE IN IT

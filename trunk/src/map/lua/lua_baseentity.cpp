@@ -32,7 +32,6 @@
 #include "lua_trade_container.h"
 #include "luautils.h"
 #include "../packets/char.h"
-#include "../packets/mob.h"
 #include "../packets/action.h"
 #include "../packets/auction_house.h"
 #include "../packets/char_abilities.h"
@@ -8915,7 +8914,7 @@ inline int32 CLuaBaseEntity::gettarget(lua_State* L)
         sprintf(buf,"Getting Mob Target");
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	    char buf1[110];
-        sprintf(buf1,"TargetID: %u",PMob->m_TargID);
+        sprintf(buf1,"TargetID: %u",PMob->targid);
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 		char buf2[110];
         sprintf(buf2,"RealID: %u",PMob->id);
@@ -8956,7 +8955,7 @@ inline int32 CLuaBaseEntity::gettarget(lua_State* L)
         sprintf(buf,"Getting Npc Target");
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	    char buf1[110];
-        sprintf(buf1,"TargetID: %u",PNpc->m_TargID);
+        sprintf(buf1,"TargetID: %u",PNpc->targid);
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 		char buf2[110];
         sprintf(buf2,"RealID: %u",PNpc->id);
@@ -8997,7 +8996,7 @@ inline int32 CLuaBaseEntity::gettarget(lua_State* L)
         sprintf(buf,"Getting PChar Target");
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf)));
 	    char buf1[110];
-        sprintf(buf1,"TargetID: %u",PChars->m_TargID);
+        sprintf(buf1,"TargetID: %u",PChars->targid);
 	    PChar->pushPacket(new CChatMessageStringPacket(PChar, MESSAGE_STRING_SAY , ("%s",buf1)));
 		char buf2[110];
         sprintf(buf2,"RealID: %u",PChars->id);
@@ -9716,8 +9715,8 @@ inline int32 CLuaBaseEntity::MobMorph(lua_State *L)
 		  PMob->name ="MOB";
         
            
-	//EXTRA MOB PACKET SO I CAN KEEP DARKSTARS WORK LOOKING FOR THINGS ONLY PRINT OUT NOT IN USE
-           PChar->pushPacket(new CMobPacket(PMob,ENTITY_UPDATE));
+	
+          
             PChar->pushPacket(new CEntityUpdatePacket(PMob,ENTITY_UPDATE));
 
 			char buf[110];
