@@ -293,7 +293,8 @@ void CAIMobDummy::ActionRoaming()
 			}
 			else if(m_PMob->CanRoam() && m_PPathFind->RoamAround(m_PMob->m_SpawnPoint, m_PMob->m_roamFlags))
 			{
-
+				m_PMob->speed = 20;
+				m_PMob->speedsub = 20;
 				if(m_PMob->m_roamFlags & ROAMFLAG_WORM)
 				{
 					// move down
@@ -349,6 +350,16 @@ void CAIMobDummy::ActionRoaming()
 					          ShowDebug("m_PMob z %0.3f \n",m_PMob->loc.p.z);
 					          ShowDebug("m_PMob zone %u \n",m_PMob->loc.destination);
 					          ShowDebug("CurrentDistance distance %0.3f \n",CurrentDistance);*/
+								  if (m_PMob->Check_Engagment->GetCurrentAction() == ACTION_NONE || m_PMob->Check_Engagment->GetCurrentAction() == ACTION_SPAWN)
+                                       {
+										ShowDebug(CL_CYAN"SpawnMob: <%s> is spawneding\n" CL_RESET, m_PMob->GetName());
+	                                    m_PMob->Check_Engagment->SetLastActionTime(0);
+                                        m_PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
+                                       } 
+								      // else 
+									   //{
+                                       //  ShowDebug(CL_CYAN"SpawnMob: <%s> is alredy spawned\n" CL_RESET, m_PMob->GetName());
+                                      // }
 							  m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_UPDATE));
 						      }
 						}
@@ -359,14 +370,25 @@ void CAIMobDummy::ActionRoaming()
 								  if(PCurrentChar->isDead())
 								  {
                                     ShowDebug("%s is in distance %0.3f of %s DEAD?? \n",PCurrentChar->GetName(),CurrentDistance,m_PMob->GetName());
-                                     
+                                     return;
+								  }
+								  if(PCurrentChar->is_being_chased == true)
+								  {
+                                   ShowDebug("%s is in distance %0.3f of %s Being Chased?? \n",PCurrentChar->GetName(),CurrentDistance,m_PMob->GetName());
+                                     return;
 								  }
 								  if(PCurrentChar->animation == ANIMATION_HEALING || 
 									  m_PMob->getMobMod(MOBMOD_ALWAYS_AGGRO) ||
 									  PCurrentChar->GetMLevel() < m_PMob->GetMLevel() )
 								  {
 									  ShowDebug("%s is in distance %0.3f of %s Attack \n",PCurrentChar->GetName(),CurrentDistance,m_PMob->GetName());
-                                     m_PMob->PEnmityContainer->AddBaseEnmity(PCurrentChar);
+                                     //LETS BE A DICK AND MATCH THE PLAYERS SPEED
+									  m_PMob->speed = PCurrentChar->speed;
+				                      m_PMob->speedsub = PCurrentChar->speedsub;
+									  m_PMob->PEnmityContainer->AddBaseEnmity(PCurrentChar);
+									  //Lets send a pointer to the player telling all mobs this player is already
+									  //being chanced or is engaged
+									  PCurrentChar->is_being_chased = true;
 								  }
                               }
 						}
@@ -407,6 +429,7 @@ void CAIMobDummy::ActionEngage()
 					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
 					if(PCurrentChar !=NULL)
 					{
+						
 						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
 						{
 							
@@ -436,7 +459,7 @@ void CAIMobDummy::ActionEngage()
 	{
 		m_ActionType = ACTION_DISENGAGE;
 	}
-
+	
 	m_PMob->loc.zone->PushPacket(m_PMob, CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE));
 						}
 					}
@@ -489,7 +512,7 @@ void CAIMobDummy::ActionDisengage()
 	TransitionBack();
 
 	luautils::OnMobDisengage(m_PMob);
-
+	PCurrentChar->is_being_chased = false;
 	m_PMob->loc.zone->PushPacket(m_PMob, CHAR_INRANGE, new CEntityUpdatePacket(m_PMob, ENTITY_UPDATE));
 						}
 					}
@@ -545,6 +568,7 @@ void CAIMobDummy::ActionDropItems()
 					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
 					if(PCurrentChar !=NULL)
 					{
+						PCurrentChar->is_being_chased = false;
 						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
 						{
     if ((m_Tick - m_LastActionTime) >= m_PMob->m_DropItemTime)
@@ -691,7 +715,7 @@ void CAIMobDummy::ActionDeath()
 		m_ActionType = ACTION_FADE_OUT;
 		m_PMob->loc.zone->PushPacket(m_PMob, CHAR_INRANGE, new CFadeOutPacket(m_PMob));
 		//if (m_PMob->animationsub == 2) m_PMob->animationsub = 1;
-
+		
 		luautils::OnMobDespawn(m_PMob);
 	}
 						
@@ -709,6 +733,17 @@ void CAIMobDummy::ActionDeath()
 
 void CAIMobDummy::ActionFadeOut()
 {
+	if(m_PMob != NULL)
+	{
+		if (!m_PMob->loc.zone->m_charList.empty())
+	{
+
+		for (EntityList_t::const_iterator it = m_PMob->loc.zone->m_charList.begin() ; it != m_PMob->loc.zone->m_charList.end() ; ++it)
+				{
+					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
+					if(PCurrentChar !=NULL)
+					{
 	ShowDebug("ACTION FADEOUT HOW MUCH ARE YOU CALLED\n");
 	if ((m_Tick - m_LastActionTime) > 15000 )
 	{
@@ -723,9 +758,14 @@ void CAIMobDummy::ActionFadeOut()
 		m_PMob->status = STATUS_DISAPPEAR;
         m_PMob->PEnmityContainer->Clear();
 		m_PMob->loc.zone->PushPacket(m_PMob,CHAR_INRANGE, new CEntityUpdatePacket(m_PMob,ENTITY_DESPAWN));
+		PCurrentChar->is_being_chased = false;
         m_ActionType  = m_PMob->m_AllowRespawn ? ACTION_SPAWN : ACTION_NONE;
 		ActionSpawn();
 
+	}
+					}
+		}
+		}
 	}
 						
 }
@@ -1510,6 +1550,7 @@ void CAIMobDummy::ActionAttack()
 					float CurrentDistance = distance(PCurrentChar->loc.p, m_PMob->loc.p);
 					if(PCurrentChar !=NULL)
 					{
+						
 						if(CurrentDistance < 40) // THIS IS GOOD FOR SPAWNING
 						{
 	m_PBattleTarget = m_PMob->PEnmityContainer->GetHighestEnmity();

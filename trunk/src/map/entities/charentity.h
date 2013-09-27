@@ -271,6 +271,7 @@ public:
 	int32             is_zoning;
 	int32             is_returning;
 	int32             is_inevent;
+	bool              is_being_chased;
 	int32             is_dead;
 	int32             online_status;
 	int32             shutdown_status;

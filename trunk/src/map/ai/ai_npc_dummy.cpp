@@ -26,7 +26,7 @@
 #include "../lua/luautils.h"
 
 #include "../packets/entity_update.h"
-
+#include "../packets/chat_message_string.h"
 #include "../utils/charutils.h"
 
 #include "../entities/npcentity.h"
@@ -85,9 +85,7 @@ void CAINpcDummy::ActionRoaming()
 							if(m_PNpc->objtype == TYPE_NPC)
 						      {
 								ShowDebug("ROAMING NPC \n");  
-				             m_PNpc->loc.zone->PushPacket(m_PNpc,CHAR_INRANGE, new CEntityUpdatePacket(m_PNpc,ENTITY_UPDATE));
-							}
-				}
+				             
   // wait my time
   if(m_Tick - m_LastWaitTime < m_WaitTime){
     return;
@@ -97,7 +95,7 @@ void CAINpcDummy::ActionRoaming()
   {
 
     // stop npc from looking at other things while walking
-    m_PNpc->m_TargID = 0;
+   // m_PNpc->m_TargID = 0;
 
     m_PPathFind->FollowPath();
 
@@ -105,8 +103,13 @@ void CAINpcDummy::ActionRoaming()
     {
       luautils::OnNpcPath(m_PNpc);
     }
-
+	
     m_PNpc->loc.zone->PushPacket(m_PNpc,CHAR_INRANGE, new CEntityUpdatePacket(m_PNpc,ENTITY_UPDATE));
+	//char buf[110];
+	//sprintf(buf,"%s: Hellow %s doo you have one moment to speeak wiith me?",m_PNpc->GetName(),PCurrentChar->GetName());
+	               // PCurrentChar->pushPacket(new CChatMessageStringPacket(PCurrentChar, MESSAGE_STRING_SAY , ("%s",buf)));
+							}
+				}
 
   }
 					}
