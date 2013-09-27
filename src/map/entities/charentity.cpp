@@ -49,6 +49,7 @@ CCharEntity::CCharEntity()
 	is_zoning = -1;
 	is_returning = 0;
 	is_inevent = 0;
+	is_being_chased = false;
 	is_dead = 0;
 	online_status = 0;
 	shutdown_status = 0;

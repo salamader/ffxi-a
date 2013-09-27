@@ -44,10 +44,10 @@ bool CPathFind::RoamAround(position_t point, uint8 roamFlags)
   Clear();
 
   m_roamFlags = roamFlags;
-
-  if(isNavMeshEnabled())
+  
+ /* if(isNavMeshEnabled())
   {
-
+ShowMessage("ROAMING AROUND THE MAP 1\n");
     // all mobs will default to this distance
     float maxRadius = 10.0f;
 
@@ -71,7 +71,7 @@ bool CPathFind::RoamAround(position_t point, uint8 roamFlags)
     }
   }
   else
-  {
+  {*/
 
     // no point worm roaming cause it'll move one inch
     if(m_roamFlags & ROAMFLAG_WORM)
@@ -83,11 +83,12 @@ bool CPathFind::RoamAround(position_t point, uint8 roamFlags)
     // ew, we gotta use the old way
     m_pathLength = 1;
 
-    m_points[0].x = point.x - 1 + rand()%2;
+    m_points[0].x = point.x - 1 + rand()%20;
     m_points[0].y = point.y;
-    m_points[0].z = point.z - 1 + rand()%2;
+    m_points[0].z = point.z - 1 + rand()%20;
+	ShowMessage("ROAMING AROUND THE MAP 2\n");
 
-  }
+  //}
 
   return true;
 }

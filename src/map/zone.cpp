@@ -1252,7 +1252,7 @@ void CZone::SpawnNPCs(CCharEntity* PChar)
 
 		if (PCurrentNpc->status == STATUS_NORMAL)
 		{
-			if(distance(PChar->loc.p, PCurrentNpc->loc.p) < 100)
+			if(PChar->loc.destination == PCurrentNpc->loc.destination)
 			{
 				if( NPC == PChar->SpawnNPCList.end() || PChar->SpawnNPCList.key_comp()(PCurrentNpc->id, NPC->first))
 				{

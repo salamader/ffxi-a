@@ -152,7 +152,7 @@ void (*PacketParser[512])(map_session_data_t*, CCharEntity*, int8*);
 
 void SmallPacket0x000(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-    ////ShowWarning(CL_YELLOW"parse: Unhandled game packet %03hX from user: %s\n" CL_RESET, (RBUFW(data,0) & 0x1FF), PChar->GetName());
+    ShowWarning(CL_YELLOW"parse: Unhandled game packet %03hX from user: %s\n" CL_RESET, (RBUFW(data,0) & 0x1FF), PChar->GetName());
     return;
 }
 
@@ -805,6 +805,7 @@ void SmallPacket0x00A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x00C(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x00C \n");
 	if(PChar->loc.zone == NULL)
 	{
 		return;
@@ -915,6 +916,7 @@ void SmallPacket0x00D(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x00F(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x00F \n");
 	charutils::SendKeyItems(PChar);
 	charutils::SendQuestMissionLog(PChar);
 
@@ -938,6 +940,7 @@ void SmallPacket0x00F(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x011(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x011 \n");
     session->blowfish.status = BLOWFISH_ACCEPTED;
 
 	PChar->health.tp = 0;
@@ -983,11 +986,11 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 		 Query = "UPDATE accounts SET online = '1',on_map ='1' WHERE id = %u";
                       Sql_Query(SqlHandle,Query,PChar->accid);
 		uint32 gameminute = CVanaTime::getInstance()->getSysSecond();
-		//uint32 gamehour = CVanaTime::getInstance()->getSysMinute();
-		//uint32 gameday = CVanaTime::getInstance()->getSysHour();
+		uint32 gamehour = CVanaTime::getInstance()->getSysMinute();
+		uint32 gameday = CVanaTime::getInstance()->getSysHour();
 		Query = "UPDATE accounts SET  map_time = '%u', on_map='1' WHERE id = %u";
                 Sql_Query(SqlHandle,Query,gameminute,PChar->accid);
-		/*if(gamehour == 0 && gameminute == 0) //EVER MINUTE 1:00 ONLY ONCE NOT 1:01
+		if(gamehour == 0 && gameminute == 0) //EVER MINUTE 1:00 ONLY ONCE NOT 1:01
 		{
 			luautils::OnGameHourAutomatisation();
 		}
@@ -999,9 +1002,10 @@ void Player_Update(map_session_data_t* session, CCharEntity* PChar, int8* data)
 		luautils::OnGameDayAutomatisation();
 		conquest::UpdateConquestSystem();
 		conquest::UpdateWeekConquest();
-		}*/
+		}
 		
-
+		
+			
 	
 if (!PChar->loc.zone->m_charList.empty())
 	{
@@ -1093,6 +1097,7 @@ if (!PChar->loc.zone->m_charList.empty())
 
 void SmallPacket0x016(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x016 \n");
 	uint16 targid = RBUFW(data,(0x04));
 
 	if (PChar->targid == targid)
@@ -1119,6 +1124,7 @@ void SmallPacket0x016(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x017(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x017 \n");
 	uint16 targid = RBUFW(data,(0x04));
 	uint32 npcid  = RBUFL(data,(0x08));
 	uint8  type   = RBUFB(data,(0x12));
@@ -1136,6 +1142,7 @@ void SmallPacket0x017(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x01A \n");
 	uint32 ID     = RBUFL(data,(0x04));
 	uint16 TargID =	RBUFW(data,(0x08));
 	uint8  action = RBUFB(data,(0x0A));
@@ -1566,7 +1573,7 @@ void SmallPacket0x01A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 void SmallPacket0x01B(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
     // 0 - world pass, 2 - gold world pass; +1 - purchase
-
+	ShowDebug("SmallPacket0x01B \n");
     PChar->pushPacket(new CWorldPassPacket(RBUFB(data,(0x04)) & 1 ? rand() % 9999999999 : 0));
     return;
 }
@@ -1581,7 +1588,7 @@ void SmallPacket0x01B(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x01C(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	
+	ShowDebug("SmallPacket0x01C \n");
 	return;
 }
 
@@ -1593,6 +1600,7 @@ void SmallPacket0x01C(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x028(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x028 \n");
 	int32 quantity = RBUFB(data,(0x04));
 	uint8  slotID  = RBUFB(data,(0x09));
 
@@ -1623,6 +1631,7 @@ void SmallPacket0x028(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x029(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x029 \n");
 	uint32 quantity       = RBUFB(data,(0x04));
 	uint8  FromLocationID = RBUFB(data,(0x08));
 	uint8  ToLocationID   = RBUFB(data,(0x09));
@@ -1735,6 +1744,7 @@ void SmallPacket0x029(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x032(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x032 \n");
     uint32 charid = RBUFL(data,(0x04));
     uint16 targid = RBUFW(data,(0x08));
 
@@ -1777,6 +1787,7 @@ void SmallPacket0x032(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x033(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x033 \n");
     CCharEntity* PTarget = (CCharEntity*)PChar->loc.zone->GetEntity(PChar->TradePending.targid, TYPE_PC);
 
     if (PTarget != NULL && PChar->TradePending.id == PTarget->id)
@@ -1883,6 +1894,7 @@ void SmallPacket0x033(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x034(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x034 \n");
     uint32 quantity    = RBUFL(data,(0x04));
     uint16 itemID      = RBUFW(data,(0x08));
     uint8  invSlotID   = RBUFB(data,(0x0A));
@@ -1916,6 +1928,7 @@ void SmallPacket0x034(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x036(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x036 \n");
 	uint32 npcid  = RBUFL(data,(0x04));
 	uint16 targid = RBUFW(data,(0x3A));
 
@@ -1966,6 +1979,7 @@ void SmallPacket0x036(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x037(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x037 \n");
 	uint32 EntityID = RBUFL(data,(0x04));
 	uint16 TargetID = RBUFW(data,(0x0C));
 	uint8  SlotID   = RBUFB(data,(0x0E));
@@ -2077,7 +2091,7 @@ void SmallPacket0x03A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x03C(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	//ShowWarning(CL_YELLOW"SmallPacket0x03C\n" CL_RESET);
+	ShowDebug("SmallPacket0x03C \n");
 	return;
 }
 
@@ -2090,7 +2104,7 @@ void SmallPacket0x03C(map_session_data_t* session, CCharEntity* PChar, int8* dat
 void SmallPacket0x041(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
 	
-
+	ShowDebug("SmallPacket0x041\n");
     uint8 SlotID  = RBUFB(data,(0x04));
 
 	PChar->PTreasurePool->LotItem(PChar, SlotID, 1+(rand()%999)); //1 ~ 998+1
@@ -2105,7 +2119,7 @@ void SmallPacket0x041(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x042(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	
+	ShowDebug("SmallPacket0x042 \n");
 
 	uint8 SlotID  = RBUFB(data,(0x04));
 
@@ -2141,6 +2155,7 @@ void SmallPacket0x04B(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x04D(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x04D \n");
 	uint8 action  = RBUFB(data,(0x04));
 	uint8 boxtype = RBUFB(data,(0x05));
 	uint8 slotID  = RBUFB(data,(0x06));
@@ -2737,6 +2752,7 @@ void SmallPacket0x04D(map_session_data_t* session, CCharEntity* PChar, int8* dat
 ************************************************************************/
 void SmallPacket0x04E(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x04E \n");
 	uint8  action   = RBUFB(data,(0x04));
     uint8  slotid   = RBUFB(data,(0x05));
     uint32 price    = RBUFL(data,(0x08));
@@ -2994,9 +3010,9 @@ void SmallPacket0x04E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x050(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-	if (PChar->status != STATUS_NORMAL &&
-        PChar->status != STATUS_UPDATE)
-		return;
+	ShowDebug("SmallPacket0x050 \n");
+	if(PChar->loc.zone != NULL)
+	{
 
 	uint8 slotID      = RBUFB(data,(0x04));		// inventory slot
 	uint8 equipSlotID = RBUFB(data,(0x05));		// charequip slot
@@ -3006,6 +3022,7 @@ void SmallPacket0x050(map_session_data_t* session, CCharEntity* PChar, int8* dat
     //charutils::SaveCharEquip(PChar);
 
 	luautils::CheckForGearSet(PChar); // check for gear set on gear change
+	}
 	return;
 }
 
@@ -3017,6 +3034,7 @@ void SmallPacket0x050(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x059(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x059 \n");
 	synthutils::sendSynthDone(PChar);
 	return;
 }
@@ -3029,13 +3047,10 @@ void SmallPacket0x059(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x05A(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x05A RANDOM DC FOUND HERE\n");
 	PChar->pushPacket(new CConquestPacket(PChar));
 	PChar->pushPacket(new CCampaingPacket(PChar,0));
 	PChar->pushPacket(new CCampaingPacket(PChar,1));
-
-	// пакет не на своем месте, возможно 0x0F
-	PChar->pushPacket(new CStopDownloadingPacket(PChar));
-//	luautils::CheckForGearSet(PChar); // also check for gear set
 	return;
 }
 
@@ -3047,6 +3062,7 @@ void SmallPacket0x05A(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x05B(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x05B \n");
 	uint16 EventID = RBUFW(data,(0x12));
 	uint32 Result  = RBUFL(data,(0x08));
 
@@ -3072,6 +3088,7 @@ void SmallPacket0x05B(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x05C(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x05C \n");
 	uint16 EventID = RBUFW(data,(0x1A));
 
 	PChar->loc.p.x = RBUFF(data,(0x04));
@@ -3100,6 +3117,7 @@ void SmallPacket0x05C(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x05D(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x05D \n");
     if(jailutils::InPrison(PChar))
     {
         PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 316));
@@ -3118,7 +3136,7 @@ void SmallPacket0x05D(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-
+	ShowDebug("SmallPacket0x05E \n");
 	// handle pets on zone
 	if (PChar->PPet != NULL)
 	{
@@ -3282,7 +3300,7 @@ void SmallPacket0x05E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 void SmallPacket0x060(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
 	
-
+	ShowDebug("SmallPacket0x060 \n");
   //luautils::OnEventUpdate(PChar, 0, 0);
   //PChar->pushPacket(new CReleasePacket(PChar,RELEASE_EVENT));
 	return;
@@ -3297,14 +3315,14 @@ void SmallPacket0x060(map_session_data_t* session, CCharEntity* PChar, int8* dat
 void SmallPacket0x061(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
 	//TODO MAKE A ONE TIME PACKET SYSTEM CALL FOR EACH ACTION
-	PChar->pushPacket(new CCharUpdatePacket(PChar));
+	//PChar->pushPacket(new CCharUpdatePacket(PChar));
 	PChar->pushPacket(new CCharHealthPacket(PChar));
 	PChar->pushPacket(new CCharStatsPacket(PChar));
 	PChar->pushPacket(new CCharSkillsPacket(PChar));
 	PChar->pushPacket(new CMenuMeritPacket(PChar));
 	PChar->pushPacket(new CCharJobExtraPacket(PChar, true));
-    PChar->pushPacket(new CCharJobExtraPacket(PChar, false));
-
+    
+	ShowDebug("SmallPacket0x061 \n");
 	return;
 }
 
@@ -3316,6 +3334,7 @@ void SmallPacket0x061(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x063(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x063 \n");
 	return;
 }
 
@@ -3327,6 +3346,7 @@ void SmallPacket0x063(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x064(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x064 \n");
 	uint8 KeyTable = RBUFB(data,(0x4A));
 	memcpy(PChar->keys.seenList+(0x40*KeyTable),data+(0x08),0x40);
 
@@ -3343,7 +3363,7 @@ void SmallPacket0x064(map_session_data_t* session, CCharEntity* PChar, int8* dat
 void SmallPacket0x066(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
 	
-
+	ShowDebug("SmallPacket0x066 \n");
 	uint16 stamina = RBUFW(data,(0x08));
 	uint8  action  = RBUFB(data,(0x0E));
 
@@ -3359,6 +3379,7 @@ void SmallPacket0x066(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x06E(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x06E \n");
 	uint32 charid = RBUFL(data,0x04);
 	uint16 targid = RBUFW(data,0x08);
 
@@ -3446,7 +3467,7 @@ void SmallPacket0x06E(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x06F(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
-
+	ShowDebug("SmallPacket0x06F \n");
 	//alliance - party leader dispands dropping the party from the alliance
 	if (PChar->PParty != NULL)
 	{
@@ -3487,6 +3508,7 @@ void SmallPacket0x06F(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x070(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x070 \n");
 	//this is where alliance leader can dissolve alliance completely
 	if (PChar->PParty != NULL && PChar->PParty->GetLeader() == PChar)
 	{
@@ -3512,6 +3534,7 @@ void SmallPacket0x070(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x071(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x071 \n");
 	switch(RBUFB(data,(0x0A)))
 	{
 		case 0: // party
@@ -3555,6 +3578,7 @@ void SmallPacket0x071(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x074(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x074 \n");
     CCharEntity* PInviter = zoneutils::GetCharFromRegion(
         PChar->InvitePending.id,
         PChar->InvitePending.targid,
@@ -3636,6 +3660,7 @@ void SmallPacket0x074(map_session_data_t* session, CCharEntity* PChar, int8* dat
 
 void SmallPacket0x076(map_session_data_t* session, CCharEntity* PChar, int8* data)
 {
+	ShowDebug("SmallPacket0x076 \n");
 	//alliance
 	if (PChar->PParty != NULL)
 	{
@@ -4274,7 +4299,7 @@ void SmallPacket0x0BE(map_session_data_t* session, CCharEntity* PChar, int8* dat
 					PChar->pushPacket(new CCharSkillsPacket(PChar));
 					PChar->pushPacket(new CCharAbilitiesPacket(PChar));
                     PChar->pushPacket(new CCharJobExtraPacket(PChar, true));
-                    PChar->pushPacket(new CCharJobExtraPacket(PChar, true));
+                 
 					PChar->pushPacket(new CCharSyncPacket(PChar));
 				}
             }
@@ -5267,7 +5292,6 @@ void SmallPacket0x100(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		PChar->pushPacket(new CCharSkillsPacket(PChar));
 		PChar->pushPacket(new CCharAbilitiesPacket(PChar));
 		PChar->pushPacket(new CCharJobExtraPacket(PChar, true));
-        PChar->pushPacket(new CCharJobExtraPacket(PChar, false));
 		PChar->pushPacket(new CMenuMeritPacket(PChar));
 		PChar->pushPacket(new CCharSyncPacket(PChar));
 	}
@@ -5332,7 +5356,7 @@ void SmallPacket0x102(map_session_data_t* session, CCharEntity* PChar, int8* dat
                         charutils::BuildingCharTraitsTable(PChar);
 			            PChar->status = STATUS_UPDATE;
 			            PChar->pushPacket(new CCharJobExtraPacket(PChar, true));
-			            PChar->pushPacket(new CCharJobExtraPacket(PChar, false));
+			            
 			            PChar->pushPacket(new CCharStatsPacket(PChar));
 			            charutils::CalculateStats(PChar);
 			            PChar->UpdateHealth();
