@@ -85,7 +85,7 @@ inline int32 CLuaZone::registerRegion(lua_State *L)
 			Region->SetULCorner(lua_tointeger(L,2),lua_tointeger(L,3),lua_tointeger(L,4));
 			Region->SetLRCorner(lua_tointeger(L,5),lua_tointeger(L,6),lua_tointeger(L,7));
 
-			m_pLuaZone->InsertRegion(Region);
+			//m_pLuaZone->InsertRegion(Region);
 		} else {
 			ShowWarning(CL_YELLOW"Region cannot be registered. Please check the parameters.\n" CL_RESET);
 		}

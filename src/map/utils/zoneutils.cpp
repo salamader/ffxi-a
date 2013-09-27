@@ -54,12 +54,16 @@ namespace zoneutils
 *																		*
 ************************************************************************/
 
-void TOTDCharnge(TIMETYPE TOTD)
+
+
+void TOTDZoneCharnge(TIMETYPE TOTD,uint16 ZoneID, CCharEntity* PChar,CMobEntity* PMob)
 {
-	for (uint16 ZoneID = MIN_ZONEID; ZoneID < MAX_ZONEID; ZoneID++)
+	if(ZoneID > MAX_ZONEID)
 	{
-		g_PZoneList[ZoneID]->TOTDChange(TOTD);
+     return;
 	}
+		g_PZoneList[ZoneID]->TOTDZoneChange(TOTD,PChar,PMob);
+	
 }
 
 void UpdateTreasureSpawnPoint(uint32 npcid, uint32 respawnTime)
@@ -467,7 +471,8 @@ void LoadNPCList(CZone* PZone)
 			PNpc->animationsub = (uint8)Sql_GetIntData(SqlHandle,10);
 
 			PNpc->namevis = (uint8)Sql_GetIntData(SqlHandle,11);
-			PNpc->status  = (STATUSTYPE)Sql_GetIntData(SqlHandle,12);
+			PNpc->status = STATUS_NORMAL;
+			//PNpc->status  = (STATUSTYPE)Sql_GetIntData(SqlHandle,12);
 			PNpc->unknown = (uint32)Sql_GetUIntData(SqlHandle,13);
 
 			PNpc->name_prefix = (uint8)Sql_GetIntData(SqlHandle,15);

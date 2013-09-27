@@ -502,10 +502,9 @@ public:
     void            SetWeather(WEATHER weatherCondition);
 	void            SetZoneWeather(WEATHER weather,CCharEntity* PChar);
 
-	void			SpawnPCs(CCharEntity* PChar);									// отображаем персонажей в зоне
-	void            UpdateMOBs(CCharEntity* PChar);
-	void            UpdatePChars(CCharEntity* PChar);
-	void			SpawnMOBs(CCharEntity* PChar);									// отображаем MOBs в зоне
+	
+
+									// отображаем MOBs в зоне
 	void			SpawnPETs(CCharEntity* PChar);									// отображаем PETs в зоне
 	void			SpawnNPCs(CCharEntity* PChar);									// отображаем NPCs в зоне
 	int32			SpawnMoogle(CCharEntity* PChar);								// отображаем Moogle в MogHouse
@@ -528,7 +527,8 @@ public:
 
 	void			InsertRegion(CRegion* Region);									// добавляем в зону активную область
 
-	void			TOTDChange(TIMETYPE TOTD);										// обработка реакции мира на смену времени суток
+	
+	void            TOTDZoneChange(TIMETYPE TOTD,CCharEntity* PChar,CMobEntity* PMob);// обработка реакции мира на смену времени суток
 	void			PushPacket(CBaseEntity*, GLOBAL_MESSAGE_TYPE, CBasicPacket*);	// отправляем глобальный пакет в пределах зоны
 
 	uint32			m_RegionCheckTime;												// время последней проверки регионов

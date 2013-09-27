@@ -59,12 +59,9 @@ public:
 
 	virtual void WeatherChange(WEATHER weather, uint8 element);
 
-  // checks if the given target can be aggroed by this mob
-  bool CanAggroTarget(CBattleEntity* PTarget);
+  
 
-  // time of day change, update mobs
-  // TODO:
-  //void TOTDChange();
+ 
 
 
 protected:

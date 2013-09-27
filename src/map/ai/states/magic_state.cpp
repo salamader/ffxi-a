@@ -462,8 +462,14 @@ void CMagicState::InterruptSpell()
 
 void CMagicState::FinishSpell()
 {
-    DSP_DEBUG_BREAK_IF(m_PSpell == NULL);
-	DSP_DEBUG_BREAK_IF(m_PEntity->Check_Engagment->GetCurrentAction() != ACTION_MAGIC_FINISH);
+    if(m_PSpell == NULL)
+	{
+		return;
+	}
+	if(m_PEntity->Check_Engagment->GetCurrentAction() != ACTION_MAGIC_FINISH)
+		{
+		return;
+	}
 
     SpendCost(m_PSpell);
     SetRecast(m_PSpell);

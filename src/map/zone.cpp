@@ -1167,86 +1167,10 @@ void CZone::IncreaseZoneCounter(CCharEntity* PChar)
 *  вычислять distance несколько раз (например в ZoneServer)				*
 *																		*
 ************************************************************************/
-void CZone::UpdateMOBs(CCharEntity* PChar)
-{
-	
-}
-void CZone::UpdatePChars(CCharEntity* PChar)
-{
-	
-}
 
-void CZone::SpawnMOBs(CCharEntity* PChar)
-{
-	if(PChar != NULL && PChar->loc.zone != NULL)
-	{
-	for (EntityList_t::const_iterator it = m_mobList.begin() ; it != m_mobList.end() ; ++it)
-	{
-		CMobEntity* PCurrentMob = (CMobEntity*)it->second;
-        SpawnIDList_t::iterator MOB = PChar->SpawnMOBList.lower_bound(PCurrentMob->id);
-		//CMobEntity* PMob = (CMobEntity*)PChar->loc.zone->GetEntity(PCurrentMob->targid, TYPE_MOB);
 
-		float CurrentDistance = distance(PChar->loc.p, PCurrentMob->loc.p);
-		/*if (CurrentDistance < 50 && PChar->loc.destination == PCurrentMob->loc.destination )
-		{
-       // ShowDebug(CL_CYAN"UPDATING MOBS: TARGET ID %u \n" CL_RESET,PCurrentMob->targid);
-		PChar->pushPacket(new CEntityUpdatePacket(PMob,ENTITY_UPDATE));
-		uint16 expGain = (uint16)charutils::GetRealExp(PChar->GetMLevel(),PCurrentMob->GetMLevel());
 
-        CAIMobDummy* PAIMob = (CAIMobDummy*)PCurrentMob->Check_Engagment;
 
-        bool validAggro = expGain > 50 || PChar->animation == ANIMATION_HEALING || PCurrentMob->getMobMod(MOBMOD_ALWAYS_AGGRO);
-
-        if(validAggro && PAIMob->CanAggroTarget(PChar))
-        {
-          PCurrentMob->PEnmityContainer->AddBaseEnmity(PChar);
-        }
-		}*/
-		
-		
-
-		if (PCurrentMob->status == STATUS_UPDATE && CurrentDistance < 50)
-		{
-			if( MOB == PChar->SpawnMOBList.end() ||
-				PChar->SpawnMOBList.key_comp()(PCurrentMob->id, MOB->first))
-			{
-				PChar->SpawnMOBList.insert(MOB, SpawnIDList_t::value_type(PCurrentMob->id, PCurrentMob));
-				
-			}
-
-			if (PChar->isDead() || PCurrentMob->PMaster != NULL)
-				continue;
-
-        // проверка ночного/дневного сна монстров уже учтена в проверке CurrentAction, т.к. во сне монстры не ходят ^^
-
-        uint16 expGain = (uint16)charutils::GetRealExp(PChar->GetMLevel(),PCurrentMob->GetMLevel());
-
-        CAIMobDummy* PAIMob = (CAIMobDummy*)PCurrentMob->Check_Engagment;
-
-        bool validAggro = expGain > 50 || PChar->animation == ANIMATION_HEALING || PCurrentMob->getMobMod(MOBMOD_ALWAYS_AGGRO);
-
-        if(validAggro && PAIMob->CanAggroTarget(PChar))
-        {
-          PCurrentMob->PEnmityContainer->AddBaseEnmity(PChar);
-        }
-
-  		}
-      else
-      {
-			if( MOB != PChar->SpawnMOBList.end() &&
-			  !(PChar->SpawnMOBList.key_comp()(PCurrentMob->id, MOB->first)))
-			{
-				PChar->SpawnMOBList.erase(MOB);
-				PChar->pushPacket(new CEntityUpdatePacket(PCurrentMob,ENTITY_DESPAWN));
-			}
-		}
-	}
-	}
-	else
-	{
-     ShowDebug(CL_CYAN"SPAWNING MOBS: WITH NO PLAYER \n" CL_RESET);
-	}
-}
 
 /************************************************************************
 *																		*
@@ -1273,15 +1197,15 @@ void CZone::SpawnPETs(CCharEntity* PChar)
 	{
 		CPetEntity* PCurrentPet = (CPetEntity*)it->second;
 		SpawnIDList_t::iterator PET = PChar->SpawnPETList.lower_bound(PCurrentPet->id);
-		CPetEntity* PPet = (CPetEntity*)PChar->loc.zone->GetEntity(PCurrentPet->targid, TYPE_PET);
+		//CPetEntity* PPet = (CPetEntity*)PChar->loc.zone->GetEntity(PCurrentPet->targid, TYPE_PET);
 
 		float CurrentDistance = distance(PChar->loc.p, PCurrentPet->loc.p);
 
-		if (CurrentDistance < 50 && PChar->loc.destination == PCurrentPet->loc.destination )
-		{
+		//if (CurrentDistance < 50 && PChar->loc.destination == PCurrentPet->loc.destination )
+		//{
        // ShowDebug(CL_CYAN"UPDATING MOBS: TARGET ID %u \n" CL_RESET,PCurrentMob->targid);
-		PChar->pushPacket(new CEntityUpdatePacket(PPet,ENTITY_UPDATE));
-		}
+		//PChar->pushPacket(new CEntityUpdatePacket(PPet,ENTITY_UPDATE));
+		//}
 
 		if ((PCurrentPet->status == STATUS_NORMAL || PCurrentPet->status == STATUS_UPDATE) &&
 			distance(PChar->loc.p, PCurrentPet->loc.p) < 50)
@@ -1328,21 +1252,23 @@ void CZone::SpawnNPCs(CCharEntity* PChar)
 
 		if (PCurrentNpc->status == STATUS_NORMAL)
 		{
-			if(distance(PChar->loc.p, PCurrentNpc->loc.p) < 50)
+			if(distance(PChar->loc.p, PCurrentNpc->loc.p) < 100)
 			{
-				if( NPC == PChar->SpawnNPCList.end() ||
-					PChar->SpawnNPCList.key_comp()(PCurrentNpc->id, NPC->first))
+				if( NPC == PChar->SpawnNPCList.end() || PChar->SpawnNPCList.key_comp()(PCurrentNpc->id, NPC->first))
 				{
+					ShowDebug("SPAWNING NPC NOW\n");
 					PChar->SpawnNPCList.insert(NPC, SpawnIDList_t::value_type(PCurrentNpc->id, PCurrentNpc));
 					PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_SPAWN));
 				}
-			}else{
-				if( NPC != PChar->SpawnNPCList.end() &&
-				  !(PChar->SpawnNPCList.key_comp()(PCurrentNpc->id, NPC->first)))
-				{
-					PChar->SpawnNPCList.erase(NPC);
-					PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_DESPAWN));
-				}
+			}
+			else
+			{
+				//if( NPC != PChar->SpawnNPCList.end() &&
+				//  !(PChar->SpawnNPCList.key_comp()(PCurrentNpc->id, NPC->first)))
+				//{
+					//PChar->SpawnNPCList.erase(NPC);
+					//PChar->pushPacket(new CEntityUpdatePacket(PCurrentNpc,ENTITY_DESPAWN));
+				//}
 			}
 		}
 	}
@@ -1353,80 +1279,7 @@ void CZone::SpawnNPCs(CCharEntity* PChar)
 	}
 }
 
-/************************************************************************
-*																		*
-*  Проверка видимости персонажей. Смысл действий в том, что персонажи	*
-*  сами себя обновляют и добавляются в списки других персонажей.        *
-*  В оригинальной версии размер списка ограничен и изменяется в			*
-*  пределах 25-50 видимых персонажей.									*
-*																		*
-************************************************************************/
 
-void CZone::SpawnPCs(CCharEntity* PChar)
-{
-	if(m_charList.empty())
-	{
-		//ShowDebug(CL_RED" THE PLAYER LIST EMPTY??\n"CL_RESET);
-		return;
-	}
-	if(!m_charList.size() != NULL)
-	{
-		//ShowDebug(CL_RED"IS THE PLAYER LIST SIZE NULL??\n"CL_RESET);
-		return;
-	}
-	for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
-	{
-	CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-		SpawnIDList_t::iterator PC = PChar->SpawnPCList.find(PCurrentChar->id);
-		CCharEntity* PCharTarget = (CCharEntity*)PChar->loc.zone->GetEntity(PCurrentChar->targid, TYPE_PC);
-
-		float CurrentDistance = distance(PChar->loc.p, PCurrentChar->loc.p);
-		if (CurrentDistance < 50 && PChar->loc.destination == PCurrentChar->loc.destination )
-		{
-			//IF THEY ARE IN RANGE LETS SEE THEM WITH UPDATE ELSE LETS NOT SEE THEM 
-        //ShowDebug(CL_CYAN"UPDATING PCHARS: TARGET ID %u \n" CL_RESET,PCurrentPChar->targid);
-		PChar->pushPacket(new CEntityUpdatePacket(PCharTarget,ENTITY_UPDATE));
-			
-		}
-		
-
-		if (PChar != PCurrentChar)
-		{
-			//ShowDebug(CL_CYAN"SPAWNING PC 1 \n" CL_RESET);
-			if(distance(PChar->loc.p, PCurrentChar->loc.p) < 50)
-			{
-				//ShowDebug(CL_CYAN"SPAWNING PC 2 \n" CL_RESET);
-				if( PC == PChar->SpawnPCList.end() )
-				{
-					//ShowDebug(CL_CYAN"SPAWNING PC THISONE \n" CL_RESET);
-					//PChar->SpawnPCList[PCurrentChar->id] = PCurrentChar;
-					PChar->pushPacket(new CCharPacket(PCurrentChar,ENTITY_SPAWN));
-
-					//PCurrentChar->SpawnPCList[PChar->id] = PChar;
-					PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_SPAWN));
-				}else
-				{
-					//ShowDebug(CL_CYAN"SPAWNING PC THISONE 1 \n" CL_RESET);
-					PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_UPDATE));
-				}
-			} 
-			else 
-			{
-				//ShowDebug(CL_CYAN"ELSE SPAWNING PC THISONE \n" CL_RESET);
-				if( PC != PChar->SpawnPCList.end() )
-				{
-					ShowDebug(CL_CYAN"ELSE DESPAWNING PC THISONE ERACE \n" CL_RESET);
-					//PChar->SpawnPCList.erase(PC);
-					PChar->pushPacket(new CCharPacket(PCurrentChar,ENTITY_DESPAWN));
-
-					//PCurrentChar->SpawnPCList.erase(PChar->id);
-					PCurrentChar->pushPacket(new CCharPacket(PChar,ENTITY_DESPAWN));
-				}
-			}
-		}
-	
-  }
-}
 
 /************************************************************************
 *																		*
@@ -1542,7 +1395,7 @@ CBaseEntity* CZone::GetEntity(uint16 targid, uint8 filter)
 *																		*
 ************************************************************************/
 
-void CZone::TOTDChange(TIMETYPE TOTD)
+void CZone::TOTDZoneChange(TIMETYPE TOTD,CCharEntity* PChar,CMobEntity* PMob)
 {
 	SCRIPTTYPE ScriptType = SCRIPT_NONE;
 
@@ -1555,9 +1408,7 @@ void CZone::TOTDChange(TIMETYPE TOTD)
         break;
         case TIME_FOG:
         {
-            for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
-			{
-				CMobEntity* PMob = (CMobEntity*)it->second;
+            
 
 				if (PMob->m_SpawnType == SPAWNTYPE_FOG)
 				{
@@ -1565,53 +1416,47 @@ void CZone::TOTDChange(TIMETYPE TOTD)
                     PMob->m_AllowRespawn = true;
                     PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
 				}
-			}
+			
         }
         break;
 		case TIME_NEWDAY:
 		{
-			for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
-			{
-				CMobEntity* PMob = (CMobEntity*)it->second;
+			
 
                 if (PMob->m_SpawnType == SPAWNTYPE_ATNIGHT)
                 {
                     PMob->SetDespawnTimer(1);
                     PMob->m_AllowRespawn = false;
                 }
-			}
+			
 		}
 		break;
 		case TIME_DAWN:
 		{
 			ScriptType = SCRIPT_TIME_DAWN;
 
-			for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
-			{
-				CMobEntity* PMob = (CMobEntity*)it->second;
+			
 
 				if (PMob->m_SpawnType == SPAWNTYPE_ATEVENING)
 				{
                     PMob->SetDespawnTimer(1);
                     PMob->m_AllowRespawn = false;
 				}
-			}
+			
 		}
 		break;
 		case TIME_DAY:
 		{
 			ScriptType = SCRIPT_TIME_DAY;
 
-            for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
-			{
-				CMobEntity* PMob = (CMobEntity*)it->second;
+            
 
                 if (PMob->m_SpawnType ==  SPAWNTYPE_FOG)
                 {
                     PMob->SetDespawnTimer(1);
                     PMob->m_AllowRespawn = false;
                 }
-			}
+		
 		}
 		break;
 		case TIME_DUSK:
@@ -1623,9 +1468,7 @@ void CZone::TOTDChange(TIMETYPE TOTD)
 		{
 			ScriptType = SCRIPT_TIME_EVENING;
 
-			for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
-			{
-				CMobEntity* PMob = (CMobEntity*)it->second;
+			
 
 				if (PMob->m_SpawnType == SPAWNTYPE_ATEVENING)
 				{
@@ -1633,14 +1476,12 @@ void CZone::TOTDChange(TIMETYPE TOTD)
                     PMob->m_AllowRespawn = true;
 					PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
 				}
-			}
+			
 		}
 		break;
 		case TIME_NIGHT:
 		{
-			for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
-			{
-				CMobEntity* PMob = (CMobEntity*)it->second;
+			
 
 				if (PMob->m_SpawnType == SPAWNTYPE_ATNIGHT)
 				{
@@ -1648,24 +1489,11 @@ void CZone::TOTDChange(TIMETYPE TOTD)
                     PMob->m_AllowRespawn = true;
 					PMob->Check_Engagment->SetCurrentAction(ACTION_SPAWN);
 				}
-			}
+			
 		}
 		break;
     }
-	if (ScriptType != SCRIPT_NONE)
-	{
-		if(!m_charList.empty())
-		{
-		for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
-		{
-			CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-			if(PCurrentChar != NULL && PCurrentChar->loc.zone != NULL)
-			{
-		    charutils::CheckEquipLogic(PCurrentChar, ScriptType, TOTD);
-			}
-		}
-		}
-	}
+	
     luautils::OnTOTDChange(m_zoneID, TOTD);
 }
 
@@ -1719,24 +1547,11 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, C
 		for (EntityList_t::const_iterator it = m_charList.begin() ; it != m_charList.end() ; ++it)
 				{
 					CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-					float CurrentDistance = distance(PCurrentChar->loc.p, PEntity->loc.p);
+					
 					if(PCurrentChar !=NULL)
 					{
 						PCurrentChar->pushPacket(new CBasicPacket(*packet));
-						if(PEntity->targid == 453 && PEntity->objtype == TYPE_MOB)
-						{
-					    ShowDebug("PChar ID %u NAME %s \n",PCurrentChar->id,PCurrentChar->GetName());
-					    ShowDebug("PChar x %0.3f \n",PCurrentChar->loc.p.x);
-					    ShowDebug("PChar y %0.3f \n",PCurrentChar->loc.p.y);
-					    ShowDebug("PChar z %0.3f \n",PCurrentChar->loc.p.z);
-					    ShowDebug("PChar zone %u \n",PCurrentChar->loc.destination);
-					    ShowDebug("PEntity ID %u NAME %s \n",PEntity->id,PEntity->GetName());
-					    ShowDebug("PEntity x %0.3f \n",PEntity->loc.p.x);
-					    ShowDebug("PEntity y %0.3f \n",PEntity->loc.p.y);
-					    ShowDebug("PEntity z %0.3f \n",PEntity->loc.p.z);
-					    ShowDebug("PEntity zone %u \n",PEntity->loc.destination);
-					    ShowDebug("CurrentDistance distance %0.3f \n",CurrentDistance);
-						}
+						
 					}
 		
 		       }
@@ -1833,6 +1648,9 @@ void CZone::ZoneServer(uint32 tick)
 				{
 			PChar->StatusEffectContainer->CheckRegen(tick);
 				}
+				SpawnPETs(PChar);
+				SpawnNPCs(PChar);
+				SpawnTransport(PChar);
 			}
 			
         }
