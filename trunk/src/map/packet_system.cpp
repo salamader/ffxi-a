@@ -4008,6 +4008,7 @@ void PlayerChatSystem(map_session_data_t* session, CCharEntity* PChar, int8* dat
 		        secuitylevel= (int32)Sql_GetIntData(SqlHandle,0);
 				PChar->Account_Level = secuitylevel;
 				CmdHandler.CallCommand(PChar, data+7);
+				return;
 			   }
 			
 			
@@ -4026,7 +4027,7 @@ void PlayerChatSystem(map_session_data_t* session, CCharEntity* PChar, int8* dat
         {
             if(RBUFB(data,(0x04)) == MESSAGE_SAY)
             {
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY, data+6));
+                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SAY, data+6));
 				return;
             }
             else
@@ -4042,13 +4043,13 @@ void PlayerChatSystem(map_session_data_t* session, CCharEntity* PChar, int8* dat
                 case MESSAGE_SAY:
 					{
 						
-						PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY,     data+6)); 
+						PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_SAY,     data+6)); 
 						break;
 					}
 					
                 case MESSAGE_EMOTION:
 					{
-						PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_EMOTION, data+6));
+						PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, MESSAGE_EMOTION, data+6));
 						break;
 					}
 					
